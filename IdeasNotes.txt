@@ -1,0 +1,30 @@
+ISSUES
+parenting player(or knife or anything really) to objects gets really screwy with parent scale.
+possible alternative is to just store the object to be 'parented' and manually copy/update from its
+position/rotation?
+
+Puzzles:
+	use gravity rotation and direction to move objects
+
+giant clock:
+	walk around particular cylinder to wind clock forward/back
+	clock time controls progression of scenery?
+	collapsing castle?
+
+Uru time machine level
+	Skybox exists as physical entity - world contained in artificial sphere
+	Can eventually reach by disabling machine that resets player on travelling too far
+
+Jump pads?
+	to play with warping keeping momentum
+
+
+Other Character ideas?
+wall boost jump? - directional? just vertical?
+wall-run
+momentum glide?
+sniper - warp hang from surface?
+hang in air and aim
+grapple
+flatten to 2d? on surface or in 3d space (cut things by running through them?)
+pass through walls/ghost

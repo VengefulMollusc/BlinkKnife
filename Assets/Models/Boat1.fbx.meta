@@ -1,0 +1,242 @@
+fileFormatVersion: 2
+guid: eb8d2b9a45b9b3542815dd3d500ed503
+timeCreated: 1487225310
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: group1
+    100004: group10
+    100006: group2
+    100008: group3
+    100010: group4
+    100012: group5
+    100014: group6
+    100016: group7
+    100018: group8
+    100020: group9
+    100022: JetEngine:pSphere1
+    100024: pasted__pCylinder10
+    100026: pasted__pCylinder3
+    100028: pasted__pCylinder4
+    100030: pasted__pCylinder5
+    100032: pasted__pCylinder6
+    100034: pasted__pCylinder7
+    100036: pasted__pCylinder8
+    100038: pasted__pCylinder9
+    100040: pCube1
+    100042: pCylinder1
+    100044: pCylinder6
+    100046: pCylinder7
+    100048: pCylinder7 1
+    100050: pCylinder8
+    100052: pCylinder8 1
+    100054: polySurface1
+    100056: polySurface2
+    100058: polySurface3
+    100060: polySurface4
+    100062: polySurface4 1
+    100064: polySurface5
+    100066: pSphere1
+    100068: Sinething
+    100070: transform1
+    100072: transform2
+    100074: transform3
+    100076: transform4
+    100078: transform5
+    100080: transform6
+    100082: transform7
+    100084: transform8
+    100086: wheel1:curve1
+    100088: wheel1:curve2
+    100090: wheel1:curve3
+    100092: wheel1:curve4
+    100094: wheel1:curve5
+    100096: wheel1:curve6
+    100098: wheel1:curve6 1
+    100100: wheel1:pCube1
+    100102: wheel1:pCylinder1
+    100104: wheel1:pCylinder2
+    100106: wheel1:pCylinder3
+    100108: wheel1:pTorus1
+    100110: wheel1:pTorus2
+    100112: wheel1:pTorus3
+    100114: wheel1:pTorus4
+    100116: wheel1:transform1
+    100118: wheel1:transform10
+    100120: wheel1:transform11
+    100122: wheel1:transform12
+    100124: wheel1:transform13
+    100126: wheel1:transform14
+    100128: wheel1:transform15
+    100130: wheel1:transform16
+    100132: wheel1:transform17
+    100134: wheel1:transform18
+    100136: wheel1:transform19
+    100138: wheel1:transform2
+    100140: wheel1:transform20
+    100142: wheel1:transform21
+    100144: wheel1:transform22
+    100146: wheel1:transform23
+    100148: wheel1:transform24
+    100150: wheel1:transform25
+    100152: wheel1:transform3
+    100154: wheel1:transform4
+    100156: wheel1:transform5
+    100158: wheel1:transform6
+    100160: wheel1:transform7
+    100162: wheel1:transform8
+    100164: wheel1:transform9
+    100166: wing2:pCylinder6
+    400000: //RootNode
+    400002: group1
+    400004: group10
+    400006: group2
+    400008: group3
+    400010: group4
+    400012: group5
+    400014: group6
+    400016: group7
+    400018: group8
+    400020: group9
+    400022: JetEngine:pSphere1
+    400024: pasted__pCylinder10
+    400026: pasted__pCylinder3
+    400028: pasted__pCylinder4
+    400030: pasted__pCylinder5
+    400032: pasted__pCylinder6
+    400034: pasted__pCylinder7
+    400036: pasted__pCylinder8
+    400038: pasted__pCylinder9
+    400040: pCube1
+    400042: pCylinder1
+    400044: pCylinder6
+    400046: pCylinder7
+    400048: pCylinder7 1
+    400050: pCylinder8
+    400052: pCylinder8 1
+    400054: polySurface1
+    400056: polySurface2
+    400058: polySurface3
+    400060: polySurface4
+    400062: polySurface4 1
+    400064: polySurface5
+    400066: pSphere1
+    400068: Sinething
+    400070: transform1
+    400072: transform2
+    400074: transform3
+    400076: transform4
+    400078: transform5
+    400080: transform6
+    400082: transform7
+    400084: transform8
+    400086: wheel1:curve1
+    400088: wheel1:curve2
+    400090: wheel1:curve3
+    400092: wheel1:curve4
+    400094: wheel1:curve5
+    400096: wheel1:curve6
+    400098: wheel1:curve6 1
+    400100: wheel1:pCube1
+    400102: wheel1:pCylinder1
+    400104: wheel1:pCylinder2
+    400106: wheel1:pCylinder3
+    400108: wheel1:pTorus1
+    400110: wheel1:pTorus2
+    400112: wheel1:pTorus3
+    400114: wheel1:pTorus4
+    400116: wheel1:transform1
+    400118: wheel1:transform10
+    400120: wheel1:transform11
+    400122: wheel1:transform12
+    400124: wheel1:transform13
+    400126: wheel1:transform14
+    400128: wheel1:transform15
+    400130: wheel1:transform16
+    400132: wheel1:transform17
+    400134: wheel1:transform18
+    400136: wheel1:transform19
+    400138: wheel1:transform2
+    400140: wheel1:transform20
+    400142: wheel1:transform21
+    400144: wheel1:transform22
+    400146: wheel1:transform23
+    400148: wheel1:transform24
+    400150: wheel1:transform25
+    400152: wheel1:transform3
+    400154: wheel1:transform4
+    400156: wheel1:transform5
+    400158: wheel1:transform6
+    400160: wheel1:transform7
+    400162: wheel1:transform8
+    400164: wheel1:transform9
+    400166: wing2:pCylinder6
+    2300000: wheel1:curve6
+    3300000: wheel1:curve6
+    4300000: wheel1:curve6
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 100
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 0
+    normalImportMode: 1
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
