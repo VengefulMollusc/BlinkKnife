@@ -1,4 +1,6 @@
-﻿Shader "Custom/Lighting/CelShader"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/Lighting/CelShader"
 {
 	Properties
 	{
@@ -39,7 +41,7 @@
 	v2f vert(appdata_full v)
 	{
 		v2f o;
-		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+		o.pos = UnityObjectToClipPos(v.vertex);
 		o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 		o.worldNormal = mul(v.normal.xyz, (float3x3) unity_WorldToObject);
 		return o;

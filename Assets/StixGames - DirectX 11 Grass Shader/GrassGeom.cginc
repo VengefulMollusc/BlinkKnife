@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
 #ifndef GRASS_GEOM
 #define GRASS_GEOM
@@ -24,7 +26,7 @@ FS_INPUT geomToFrag(GS_OUTPUT v)
 	#endif
 
 	#ifndef SHADOWPASS
-		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+		o.pos = UnityObjectToClipPos(v.vertex);
 
 		o.color = v.color;
 

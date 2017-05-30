@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
 Shader "FX/Cg shader with refraction mapping" {
@@ -38,7 +40,7 @@ Shader "FX/Cg shader with refraction mapping" {
 			- _WorldSpaceCameraPos;
 		output.normalDir = normalize(
 			mul(float4(input.normal, 0.0), modelMatrixInverse).xyz);
-		output.pos = mul(UNITY_MATRIX_MVP, input.vertex);
+		output.pos = UnityObjectToClipPos(input.vertex);
 		return output;
 	}
 

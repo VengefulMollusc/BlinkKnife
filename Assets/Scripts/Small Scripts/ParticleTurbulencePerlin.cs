@@ -64,7 +64,7 @@ public class ParticlePerlinTurbulence : MonoBehaviour {
 
             var targetVelocity = new Vector3(noiseX, noiseY, noiseZ) * force;
 
-            var t = 1.0f - particles[i].lifetime / particles[i].startLifetime;
+            var t = 1.0f - particles[i].remainingLifetime / particles[i].startLifetime;
             var apply = OverLifetime.Evaluate(t);
 
             particles[i].velocity += targetVelocity * dt * apply;
