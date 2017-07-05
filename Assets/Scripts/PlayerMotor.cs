@@ -14,8 +14,8 @@ public class PlayerMotor : MonoBehaviour {
     [SerializeField]
     private GameObject transitionCameraPrefab;
 
-    [SerializeField]
-    private float gravity = 0.3f;
+    //[SerializeField]
+    //private float gravity = 0.3f;
 
     [SerializeField]
     private float velMod = 2f;

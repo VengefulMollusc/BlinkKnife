@@ -215,7 +215,8 @@ public class PlayerKnifeController : MonoBehaviour {
      * Checks the current warp countdown and whether we need to warp now
      */
 	void CheckIfWarp (){
-		if (!lockKnife && knife != null && ((Input.GetButton (primaryKnifeBtn) && knifeController.HasCollided()) || bounceWarp)) {
+        //if (!lockKnife && knife != null && ((Input.GetButton (primaryKnifeBtn) && knifeController.HasCollided()) || bounceWarp)) { // Require mouse click to warp
+        if (!lockKnife && knife != null && (knifeController.HasCollided() || bounceWarp)) {
             // we are trying to warp
             if (((bounceWarp && warpCountDown >= bounceWarpWaitTime) || (!bounceWarp && warpCountDown >= warpWaitTime)) && currentWarps >= 1) {
                 // warp if wait time is reached

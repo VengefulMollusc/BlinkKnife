@@ -9,7 +9,7 @@ public class GlobalGravityControl : MonoBehaviour {
     // current gravity direction and strength
     // TODO: figure out whether this needs to be an up or down vector
     private static Vector3 currentUpDirection;
-    private static float currentGravityStrength = 20f;
+    private static float currentGravityStrength = 35f;
 
     private static Vector3 tempUp;
 

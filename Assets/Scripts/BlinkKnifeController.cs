@@ -29,7 +29,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	private Vector3 throwVelocity;
 
 	private bool collided;
-	private Vector3 switchGravVector;
+	private Vector3 collisionNormal;
 
 	private GameObject objectCollided = null;
 
@@ -47,7 +47,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		spinVector = new Vector3(_spinSpeed, 0.0f, 0.0f);
 
 		collided = false;
-		switchGravVector = Vector3.zero;
+		collisionNormal = Vector3.zero;
 
 		// add random throw angle
         // replace this with constant once animated
@@ -103,7 +103,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		rb.isKinematic = true;
 
 		collided = true;
-		switchGravVector = _normal;
+		collisionNormal = _normal;
 
 		// stick knife out of surface at collision point
 		rb.velocity = Vector3.zero;
@@ -119,7 +119,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
             gravPanel = objectCollided.GetComponent<GravityPanel>();
             Vector3 gravVector = gravPanel.GetGravityVector();
             if (gravVector != Vector3.zero)
-                switchGravVector = gravVector;
+                collisionNormal = gravVector;
         }
 
 		// activate knife marker ui
@@ -131,12 +131,12 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	}
 
 	public Vector3 GetWarpPosition (){
-		return transform.position + (switchGravVector * 0.5f);
+		return transform.position + (collisionNormal * 0.5f);
 	}
 
     public Vector3 GetGravVector()
     {
-        return switchGravVector;
+        return collisionNormal;
     }
 
 	public Vector3 GetVelocity (bool _throwVelocity){

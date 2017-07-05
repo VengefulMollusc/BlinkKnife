@@ -16,17 +16,16 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000012422785134}
-  - 20: {fileID: 20000012107036286}
-  - 124: {fileID: 124000010982410260}
-  - 92: {fileID: 92000010289572282}
-  - 81: {fileID: 81000012655479796}
-  - 114: {fileID: 114000010122754028}
-  - 114: {fileID: 114000011233600946}
-  - 114: {fileID: 114000012224977474}
-  - 114: {fileID: 114000012347977666}
+  - component: {fileID: 4000012422785134}
+  - component: {fileID: 20000012107036286}
+  - component: {fileID: 124000010982410260}
+  - component: {fileID: 92000010289572282}
+  - component: {fileID: 81000012655479796}
+  - component: {fileID: 114000010122754028}
+  - component: {fileID: 114000012224977474}
+  - component: {fileID: 114000012347977666}
   m_Layer: 0
   m_Name: TransitionCamera
   m_TagString: MainCamera
@@ -43,10 +42,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.00010602549, z: -0.05761823}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &20000012107036286
 Camera:
   m_ObjectHideFlags: 1
@@ -77,6 +76,8 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
+  m_AllowMSAA: 1
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -106,41 +107,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2459234c08db7dc47bebfa3a6405dbdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useDuration: 0
-  transDuration: 1.5
+  useDuration: 1
+  transDuration: 0.2
   transSpeed: 200
   gravUseDuration: 1
-  gravTransDuration: 1.5
-  gravTransSpeed: 200
+  gravTransDuration: 0.5
+  gravTransSpeed: 100
   chromaticAberrationMaxValue: 30
   fovMaxValue: 120
   fovSpeedModMax: 50
---- !u!114 &114000011233600946
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010902589228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 646b5bc27a658f447b1d929fd5ffbd70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: 2
-  showGeneratedNormals: 0
-  offsetScale: 0.2
-  blurRadius: 18
-  edgeThresholdMin: 0.05
-  edgeThreshold: 0.2
-  edgeSharpness: 4
-  dlaaSharp: 0
-  ssaaShader: {fileID: 4800000, guid: b3728d1488b02490cbd196c7941bf1f8, type: 3}
-  dlaaShader: {fileID: 4800000, guid: 017ca72b9e8a749058d13ebd527e98fa, type: 3}
-  nfaaShader: {fileID: 4800000, guid: ce0cb2621f6d84e21a87414e471a3cce, type: 3}
-  shaderFXAAPreset2: {fileID: 4800000, guid: 6f1418cffd12146f2a83be795f6fa5a7, type: 3}
-  shaderFXAAPreset3: {fileID: 4800000, guid: c182fa94a5a0a4c02870641efcd38cd5, type: 3}
-  shaderFXAAII: {fileID: 4800000, guid: cd5b323dcc592457790ff18b528f5e67, type: 3}
-  shaderFXAAIII: {fileID: 4800000, guid: c547503fff0e8482ea5793727057041c, type: 3}
 --- !u!114 &114000012224977474
 MonoBehaviour:
   m_ObjectHideFlags: 1
