@@ -62,13 +62,16 @@ public class PlayerController : MonoBehaviour {
 			velocity.Normalize ();
 		velocity = velocity * speed;
 
-		// apply sprint speed
-		if (zMov > sprintThreshold && Input.GetButton(sprintButton)){
+        // apply sprint speed
+        bool sprinting = false;
+        if (zMov > sprintThreshold && Input.GetButton(sprintButton))
+        {
 			velocity = velocity * sprintModifier;
+            sprinting = true;
 		}
 
 		// apply movement
-		motor.Move (velocity);
+		motor.Move (velocity, sprinting);
 
 		// calculate rotation as 3d vector: for turning on y axis
 		float yRot = Input.GetAxisRaw (xLookAxis);

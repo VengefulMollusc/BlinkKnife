@@ -18,11 +18,16 @@ public class PlayerMotor : MonoBehaviour {
     //private float gravity = 0.3f;
 
     [SerializeField]
+    private float sprintDeceleration = 0.9f;
+
+    [SerializeField]
     private float velMod = 2f;
 
     [SerializeField]
     private float airVelMod = 0.02f;
 
+    // Shift gravity if the difference between current gravity and surface normal is
+    // above the threshold defined by warpGravShiftAngle
     [SerializeField]
     private float warpGravShiftAngle = 1f;
 
@@ -31,8 +36,13 @@ public class PlayerMotor : MonoBehaviour {
     private float maxAirLowerBound = 20f;
 
     [SerializeField]
-    [Range(0f, 45f)]
-    private float gravityShiftAngleMax = 15f;
+    [Range(0.0f, 50.0f)]
+    private float warpVelocityModifier = 20f;
+
+
+    //[SerializeField]
+    //[Range(0f, 45f)]
+    //private float gravityShiftAngleMax = 15f;
 
     private bool frozen = false;
     private Vector3 frozenPos = Vector3.zero;
@@ -46,6 +56,7 @@ public class PlayerMotor : MonoBehaviour {
 
     private Vector3 velocity = Vector3.zero;
 	private Vector3 rotation = Vector3.zero;
+    private bool sprinting = false;
 	private float cameraRotationX = 0f;
 	private float currentCamRotX = 0f;
 
@@ -94,14 +105,16 @@ public class PlayerMotor : MonoBehaviour {
     }
 
 	// gets movement vector from PlayerController
-	public void Move (Vector3 _velocity){
+	public void Move (Vector3 _velocity, bool _sprinting){
         if (frozen)
         {
             velocity = Vector3.zero;
+            sprinting = false;
             return;
         }
 
 		velocity = _velocity;
+        sprinting = _sprinting;
 	}
 
 	// gets rotation vector 
@@ -175,6 +188,11 @@ public class PlayerMotor : MonoBehaviour {
 				// Vector3 newVel = new Vector3(velocity.x * velMod, 0.0f, velocity.z * velMod);
                 Vector3 newVel = velocity * velMod;
 
+                // if sprinting and new speed less than old speed, keep old speed
+                //if (sprinting && (rb.velocity.magnitude > newVel.magnitude)) {
+                //    newVel = newVel.normalized * rb.velocity.magnitude * sprintDeceleration;
+                //}
+
 				if (jumpTimer <= 0) {
 					// rotate to face ground normals
 					float rayDistance = 0.5f;
@@ -218,6 +236,11 @@ public class PlayerMotor : MonoBehaviour {
 
 		} else {
             // airborne
+            //Vector3 inputVel = velocity * airVelMod;
+
+            //rb.AddForce(inputVel, ForceMode.Acceleration);
+
+            // old code
             if (maxAirMagnitude == 0.0f)
             {
                 maxAirMagnitude = new Vector2(localXVelocity, localZVelocity).magnitude;
@@ -225,14 +248,15 @@ public class PlayerMotor : MonoBehaviour {
 
             if (maxAirMagnitude < maxAirLowerBound) maxAirMagnitude = maxAirLowerBound;
 
-            if (velocity != Vector3.zero) {
+            if (velocity != Vector3.zero)
+            {
                 // midair position adjust
                 // needs to not allow extra velocity in same direction as jump
 
                 // add new XZ velocity to old XZ velocity
                 // no Y movement at this point (makes magnitude calculations easier)
-                Vector3 newVel = (velocity * airVelMod) 
-                    + (localXVelocity * transform.right) 
+                Vector3 newVel = (velocity * airVelMod)
+                    + (localXVelocity * transform.right)
                     + (localZVelocity * transform.forward);
 
                 // magnitude of relative XZ movement
@@ -241,7 +265,8 @@ public class PlayerMotor : MonoBehaviour {
                 if (newVelMagnitude < maxAirMagnitude && maxAirMagnitude > maxAirLowerBound)
                 {
                     maxAirMagnitude = newVelMagnitude;
-                } else if (newVelMagnitude > maxAirMagnitude)
+                }
+                else if (newVelMagnitude > maxAirMagnitude)
                 {
                     float factor = maxAirMagnitude / newVelMagnitude;
                     newVel = newVel * factor;
@@ -430,7 +455,8 @@ public class PlayerMotor : MonoBehaviour {
 
         if (_velocity != Vector3.zero)
         {
-            rb.velocity = _velocity;
+            // adding magnitude here allows cumulative velocity gain
+            rb.velocity = (_velocity * (warpVelocityModifier + rb.velocity.magnitude));
 
             // fixes horizontal momentum lock when warping
             onGround = false;

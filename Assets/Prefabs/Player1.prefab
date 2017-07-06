@@ -51,23 +51,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1000012150397892
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4000012871752380}
-  - component: {fileID: 33000013460054656}
-  - component: {fileID: 114000010044221450}
-  m_Layer: 0
-  m_Name: buoyancyObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 2800000, guid: b059d98f74e159b44b9718940f8fba10, type: 3}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1000013324081810
 GameObject:
   m_ObjectHideFlags: 1
@@ -137,7 +120,6 @@ Transform:
   m_Children:
   - {fileID: 4000013602082636}
   - {fileID: 4000012689265850}
-  - {fileID: 4000012871752380}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -179,19 +161,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000013602082636}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4000012871752380
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012150397892}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_Children: []
-  m_Father: {fileID: 4000010376404180}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4000013602082636
 Transform:
@@ -358,13 +327,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013453240542}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!33 &33000013460054656
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012150397892}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &33000013521500604
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -418,26 +380,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114000010044221450
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012150397892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 253cf03714265b84fa2b5ef6c4f6fdef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  applyToParent: 1
-  engageBuoyancy: 1
-  activationRange: 75
-  inheritForce: 0
-  keepAtSurface: 0
-  buoyancyOffset: 0
-  buoyancyStrength: 1
-  forceAmount: 1
-  forceHeightFactor: 0
 --- !u!114 &114000010097986432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -526,10 +468,9 @@ MonoBehaviour:
   transitionCameraPrefab: {fileID: 1000010902589228, guid: 2c7b8a853a2dfcc4ab7a2ef5dacf0eea,
     type: 2}
   velMod: 2
-  airVelMod: 0.1
+  airVelMod: 0.2
   warpGravShiftAngle: 1
-  maxAirLowerBound: 10
-  gravityShiftAngleMax: 15
+  maxAirLowerBound: 12
 --- !u!114 &114000012321050414
 MonoBehaviour:
   m_ObjectHideFlags: 1

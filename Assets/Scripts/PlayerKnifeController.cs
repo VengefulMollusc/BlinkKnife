@@ -40,10 +40,6 @@ public class PlayerKnifeController : MonoBehaviour {
 	[SerializeField]
 	private float spinSpeed = 10f;
 
-	[SerializeField]
-	[Range(0.0f, 50.0f)]
-	private float warpVelocityModifier = 20f;
-
     [Header("Prefabs")]
 	[SerializeField]
 	private GameObject blinkKnifePrefab;
@@ -325,7 +321,7 @@ public class PlayerKnifeController : MonoBehaviour {
 
         // move player to knife position and inherit velocity
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
-		Vector3 _velocity = (knifeController.GetVelocity(bounceWarp).normalized * warpVelocityModifier);
+		Vector3 _velocity = knifeController.GetVelocity(bounceWarp).normalized;
 		//playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetObjectCollided(), knifeController.GetSurfaceNormal());
         playerMotor.WarpToKnife(shiftGravity, _velocity, knifeController);
 
