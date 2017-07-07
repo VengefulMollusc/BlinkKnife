@@ -5,12 +5,12 @@ public class PlayerController : MonoBehaviour {
 
     [Header("General Settings")]
 	[SerializeField]
-	private float speed = 5.0f;
+	public static float speed = 5.0f;
     [SerializeField]
     [Range(0f, 1f)]
     private float backMoveMax = 0.9f;
 	[SerializeField]
-	private float sprintModifier = 2.0f;
+	public static float sprintModifier = 2.0f;
 	[SerializeField]
 	private float sprintThreshold = 0.5f;
 	[SerializeField]
