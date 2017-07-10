@@ -234,16 +234,19 @@ public class PlayerMotor : MonoBehaviour {
 
                 newVel = MomentumSlide(newVel, PlayerController.speed);
 
+                rb.velocity = newVel;
+
             } else {
 				// no input vector
                 // needs to dampen movement along local xz axes
 				//newVel = transform.up * localYVelocity;
 
                 newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
-                newVel += transform.up * localYVelocity;
+                //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
+
+                rb.velocity = newVel;
             }
 
-            rb.velocity = newVel;
 
         } else {
             // airborne
@@ -375,7 +378,7 @@ public class PlayerMotor : MonoBehaviour {
 
 	// perform jump when triggered by PlayerController
 	public void Jump(float _jumpStrength){
-		if (!onGround || frozen)
+		if (!onGround || frozen) 
 			return;
         
 		// keeps slope momentum on jump
