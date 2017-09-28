@@ -3,12 +3,19 @@ using System.Collections;
 
 public class GravitySphereController : MonoBehaviour {
 
-    private int baseChildCount;
+    //private int baseChildCount;
 
     [SerializeField]
     private bool linkGrav = false;
+
+    [SerializeField]
+    private bool linkGravUntilGravWarp = false;
+
+    [SerializeField] private bool invertGravDirection = false;
+
     [SerializeField]
     private GameObject player;
+
     private Transform target;
 
     private Vector3 currentUp;
@@ -21,12 +28,42 @@ public class GravitySphereController : MonoBehaviour {
      * (uses player normal instead of direction to center of mesh)
      * 
      * clock/time puzzle, walk around to increase/decrease time
+     * 
+     * need option to allow inverse gravity - for inside sphere
+     * 
      */
     void Start() {
-        baseChildCount = transform.childCount;
+        //baseChildCount = transform.childCount;
 
         player = GameObject.FindGameObjectWithTag("Player");
         target = player.transform;
+    }
+
+    void OnEnable()
+    {
+        this.AddObserver(OnGravWarp, PlayerMotor.GravityWarpNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnGravWarp, PlayerMotor.GravityWarpNotification);
+    }
+
+    void OnGravWarp(object sender, object args)
+    {
+        GameObject warpObject = (GameObject) args;
+
+        if (warpObject == null)
+        {
+            Debug.LogError("Object passed in GravityWarpNotification not GameObject");
+            return;
+        }
+
+        if (!linkGravUntilGravWarp)
+            return;
+        
+        // link gravity if warped object is this object
+        LinkGravity(warpObject == gameObject);
     }
 	
 	/*
@@ -64,7 +101,14 @@ public class GravitySphereController : MonoBehaviour {
             Vector3 newUp = (target.position - transform.position).normalized;
             if (currentUp != newUp)
             {
-                GlobalGravityControl.ChangeGravity(newUp, true);
+                if (invertGravDirection)
+                {
+                    GlobalGravityControl.ChangeGravity(-newUp, true);
+                }
+                else
+                {
+                    GlobalGravityControl.ChangeGravity(newUp, true);
+                }
             }
         }
 	}

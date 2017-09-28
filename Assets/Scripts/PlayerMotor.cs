@@ -44,6 +44,9 @@ public class PlayerMotor : MonoBehaviour {
     //[Range(0f, 45f)]
     //private float gravityShiftAngleMax = 15f;
 
+    public const string WarpNotification = "PlayerMotor.WarpNotification";
+    public const string GravityWarpNotification = "PlayerMotor.GravityWarpNotification";
+
     private bool frozen = false;
     private Vector3 frozenPos = Vector3.zero;
     private Vector3 frozenVel = Vector3.zero;
@@ -488,6 +491,11 @@ public class PlayerMotor : MonoBehaviour {
         // above the threshold defined by warpGravShiftAngle
         float surfaceDiffAngle = Vector3.Angle(transform.up, newGravAngle);
         bool gravityShift = (_shiftGravity && surfaceDiffAngle > warpGravShiftAngle && newGravAngle != Vector3.zero);
+
+        if (gravityShift)
+        {
+            this.PostNotification(GravityWarpNotification, _knifeController.GetObjectCollided());
+        }
 
         transform.SetParent(null);
 

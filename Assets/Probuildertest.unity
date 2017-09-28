@@ -360,7 +360,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_RootOrder
-      value: 19
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1000013945068360, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_Name
@@ -420,7 +420,7 @@ Transform:
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &163343523
 MonoBehaviour:
@@ -658,7 +658,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_RootOrder
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 1000013945068360, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_Name
@@ -3497,6 +3497,7 @@ Transform:
   - {fileID: 733446506}
   - {fileID: 612669271}
   - {fileID: 2037317813}
+  - {fileID: 1262273702}
   - {fileID: 697592306}
   - {fileID: 1389851763}
   - {fileID: 163343522}
@@ -3758,7 +3759,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &697592307
 MeshCollider:
@@ -19146,6 +19147,119 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300006, guid: 52d939f3599e0a3439e496c0d58b01df, type: 3}
+--- !u!1 &1262273701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1262273702}
+  - component: {fileID: 1262273707}
+  - component: {fileID: 1262273706}
+  - component: {fileID: 1262273705}
+  - component: {fileID: 1262273704}
+  - component: {fileID: 1262273703}
+  m_Layer: 0
+  m_Name: GravitySphere (1)
+  m_TagString: GravityPanel
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1262273702
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1262273701}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -99.8, y: 33.4, z: 47.8}
+  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_Children: []
+  m_Father: {fileID: 581986094}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1262273703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1262273701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b083447ad69f95246bd60921ff815d27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customGravity: 0
+  customGravUpVector: {x: 0, y: 0, z: 0}
+  useSurfaceNormal: 1
+--- !u!114 &1262273704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1262273701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c7e56fc005ba5c448096915c6bc6982, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkGrav: 0
+  linkGravUntilGravWarp: 1
+  invertGravDirection: 0
+  player: {fileID: 0}
+--- !u!23 &1262273705
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1262273701}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 120d854b1cb00884faba1c8e2360e211, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!135 &1262273706
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1262273701}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1262273707
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1262273701}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &1296828935
 Prefab:
   m_ObjectHideFlags: 0
@@ -19246,7 +19360,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_RootOrder
-      value: 20
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 1000013945068360, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_Name
@@ -23035,7 +23149,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1389851764
 MonoBehaviour:
@@ -28376,7 +28490,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_RootOrder
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
@@ -28507,7 +28621,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_RootOrder
-      value: 18
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1000013945068360, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_Name
@@ -28625,7 +28739,7 @@ GameObject:
   - component: {fileID: 2037317817}
   - component: {fileID: 2037317818}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: GravitySphere
   m_TagString: GravityPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28707,6 +28821,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linkGrav: 0
+  linkGravUntilGravWarp: 1
+  invertGravDirection: 0
   player: {fileID: 0}
 --- !u!114 &2037317818
 MonoBehaviour:
