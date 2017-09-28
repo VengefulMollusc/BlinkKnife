@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour {
 	void Update (){
 
 		// calculate movement as 3d vector
-		float xMov = Input.GetAxis (xMovAxis);
+		float xMov = Input.GetAxis (xMovAxis); // USE GetAxisRaw for unsmoothed input
 		float zMov = Input.GetAxis (zMovAxis);
 
         // apply backwards movement limit
