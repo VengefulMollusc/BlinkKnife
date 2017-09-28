@@ -3,18 +3,19 @@ using System.Collections;
 
 public class GravitySphereController : MonoBehaviour {
 
-    //private int baseChildCount;
-
+    // set to true to link gravity permanently or on start if combined with linkGravUntilGravWarp
     [SerializeField]
     private bool linkGrav = false;
 
+    // if true, gravity will remain linked until a gravity warp is performed
+    // false will break link on any warp (or anything that breaks object parenting)
     [SerializeField]
     private bool linkGravUntilGravWarp = false;
 
-    [SerializeField] private bool invertGravDirection = false;
-
+    // if true, gravity will push AWAY from center of sphere while linked.
+    // used mainly for gravity inside spheres
     [SerializeField]
-    private GameObject player;
+    private bool invertGravDirection = false;
 
     private Transform target;
 
@@ -29,14 +30,10 @@ public class GravitySphereController : MonoBehaviour {
      * 
      * clock/time puzzle, walk around to increase/decrease time
      * 
-     * need option to allow inverse gravity - for inside sphere
-     * 
      */
     void Start() {
-        //baseChildCount = transform.childCount;
-
-        player = GameObject.FindGameObjectWithTag("Player");
-        target = player.transform;
+        
+        target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void OnEnable()
@@ -49,6 +46,7 @@ public class GravitySphereController : MonoBehaviour {
         this.RemoveObserver(OnGravWarp, PlayerMotor.GravityWarpNotification);
     }
 
+    // Handles GravWarpNotification from PlayerMotor
     void OnGravWarp(object sender, object args)
     {
         GameObject warpObject = (GameObject) args;
@@ -70,31 +68,6 @@ public class GravitySphereController : MonoBehaviour {
      * Player must be last child
      */
 	void Update () {
-        //if (transform.childCount > baseChildCount && !linkGravPermanently)
-        //{
-        //    if (target == null)
-        //    {
-        //        target = transform.GetChild(transform.childCount - 1);
-        //        if (!target.CompareTag("Player") || target.GetComponent<Renderer>().enabled == false)
-        //        {
-        //            // second 'if' statement check makes sure player warp transition is complete before turning
-        //            target = null;
-        //            return;
-        //        }
-        //    }
-        //}
-
-        //if (target != null)
-        //{
-        //    currentUp = GlobalGravityControl.GetGravityTarget();
-        //    Vector3 newUp = (target.position - transform.position).normalized;
-        //    if (currentUp != newUp)
-        //    {
-        //        GlobalGravityControl.ChangeGravity(newUp, true);
-        //    }
-        //}
-
-
         if (linkGrav || target.IsChildOf(transform))
         {
             currentUp = GlobalGravityControl.GetGravityTarget();
@@ -113,13 +86,17 @@ public class GravitySphereController : MonoBehaviour {
         }
 	}
 
+    // sets whether gravity should be linked
     public void LinkGravity(bool _linkGrav)
     {
         linkGrav = _linkGrav;
     }
 
+    // returns the distance to the player from the center of the sphere
+    // could be used for variable gravity strength?
+    // combine with multiple linked gravity sources with strength based on distance
     public float DistToPlayer()
     {
-        return Vector3.Distance(player.transform.position, transform.position);
+        return Vector3.Distance(target.position, transform.position);
     }
 }
