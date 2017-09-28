@@ -37,6 +37,12 @@ public class PlayerKnifeController : MonoBehaviour {
     [SerializeField]
 	private float throwStrength = 5f;
 
+    [SerializeField]
+    private float throwAngleModifier = 2f;
+
+    [SerializeField]
+    private float throwHeightModifier = -0.2f;
+
 	[SerializeField]
 	private float spinSpeed = 10f;
 
@@ -257,14 +263,18 @@ public class PlayerKnifeController : MonoBehaviour {
 	void ThrowKnife (float _strength){
 
         // unfreeze player if hanging on wall
-		// playerMotor.UnFreeze ();
+        // playerMotor.UnFreeze ();
 
-		if (bounceWarp) {
+        Quaternion throwDirectionQuaternion = Quaternion.AngleAxis(-throwAngleModifier, transform.right);
+        Vector3 throwDirection = throwDirectionQuaternion * transform.forward;
+        Vector3 throwPosition = transform.position + (transform.up * throwHeightModifier);
+
+        if (bounceWarp) {
             // throw bounce knife
-			knife = (GameObject)Instantiate (bounceKnifePrefab, transform.position, transform.rotation);
+			knife = (GameObject)Instantiate (bounceKnifePrefab, throwPosition, transform.rotation);
 		} else {
             // throw regular (blink) knife
-			knife = (GameObject)Instantiate (blinkKnifePrefab, transform.position, transform.rotation);
+			knife = (GameObject)Instantiate (blinkKnifePrefab, throwPosition, transform.rotation * throwDirectionQuaternion);
 		}
 		knifeController = knife.GetComponent<KnifeController> ();
 
@@ -274,13 +284,13 @@ public class PlayerKnifeController : MonoBehaviour {
 		if (knifeController == null){
 			Debug.LogError ("No KnifeController found on knife prefab");
 			return;
-		}
+        }
 
         // set up and throw knife object
-		knifeController.Setup (this, -playerMotor.transform.up, spinSpeed);
+        knifeController.Setup (this, -playerMotor.transform.up, spinSpeed);
 //		knifeController.Throw ((transform.forward * throwStrength) 
 //			+ (playerRb.velocity * 0.5f), this);
-		knifeController.Throw (transform.forward * _strength);
+		knifeController.Throw (throwDirection * _strength);
 
         // hide knife view object
 		knifeRenderer.enabled = false;

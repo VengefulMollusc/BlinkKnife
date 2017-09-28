@@ -399,9 +399,9 @@ MonoBehaviour:
   primaryKnifeBtn: Fire1
   altKnifeBtn: Fire2
   abilityButton: Fire3
-  throwStrength: 200
+  throwStrength: 100
+  throwAngleModifier: 1
   spinSpeed: 30
-  warpVelocityModifier: 20
   blinkKnifePrefab: {fileID: 1000013895624480, guid: ae2dae60f9f33be47b5aa6f5e8a05050,
     type: 2}
   bounceKnifePrefab: {fileID: 1000013895624480, guid: 0698c66a77740bd4f9595ea2f48b90c8,
@@ -439,9 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28680b0289e90c4bbe79ea3669363ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
   backMoveMax: 0.9
-  sprintModifier: 2
   sprintThreshold: 0.5
   lookSensitivity: 3
   jumpStrength: 12
@@ -467,10 +465,12 @@ MonoBehaviour:
   cameraRotLimit: 90
   transitionCameraPrefab: {fileID: 1000010902589228, guid: 2c7b8a853a2dfcc4ab7a2ef5dacf0eea,
     type: 2}
+  sprintDeceleration: 0.99
   velMod: 2
-  airVelMod: 0.2
+  airVelMod: 0.5
   warpGravShiftAngle: 1
-  maxAirLowerBound: 12
+  maxAirLowerBound: 10
+  warpVelocityModifier: 20
 --- !u!114 &114000012321050414
 MonoBehaviour:
   m_ObjectHideFlags: 1
