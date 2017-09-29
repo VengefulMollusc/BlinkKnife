@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/**
+ * May need modifications to allow 'planetary' gravity
+ * ie: multiple spheres contributing gravity based on distance to sphere
+ * track multiple gravity sources? combine all gravity vectors into resulting gravity
+ **/
 public class GlobalGravityControl : MonoBehaviour {
 
     // instance needed to start coroutine in static method
