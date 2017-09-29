@@ -732,16 +732,6 @@ Prefab:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
-      propertyPath: throwAngleModifier
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
-      propertyPath: throwHeightModifier
-      value: -0.2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 27124a539f1f17b48a2e0d6d99a75e46, type: 2}
   m_IsPrefabParent: 0
@@ -19208,7 +19198,6 @@ MonoBehaviour:
   linkGrav: 0
   linkGravUntilGravWarp: 1
   invertGravDirection: 0
-  player: {fileID: 0}
 --- !u!23 &1262273705
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -28821,9 +28810,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linkGrav: 0
-  linkGravUntilGravWarp: 1
+  linkGravUntilGravWarp: 0
   invertGravDirection: 0
-  player: {fileID: 0}
 --- !u!114 &2037317818
 MonoBehaviour:
   m_ObjectHideFlags: 0

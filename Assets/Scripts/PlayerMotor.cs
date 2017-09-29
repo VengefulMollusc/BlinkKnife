@@ -418,64 +418,6 @@ public class PlayerMotor : MonoBehaviour {
 	private void OnCollisionStay(){
 		colliding = true;
 	}
-    
-	//public void WarpToKnife(Vector3 _position, Vector3 _velocity, GameObject _gameObject, Vector3 _surfaceNormal)
- //   {
- //       Vector3 camStartPos = cam.transform.position;
- //       Quaternion camStartRot = cam.transform.rotation;
- //       Vector3 relativeFacing = cam.transform.forward;
-
- //       // Shift gravity if the difference between current gravity and surface normal is
- //       // above the threshold defined by warpGravShiftAngle
- //       float surfaceDiffAngle = Vector3.Angle(transform.up, _surfaceNormal);
- //       bool gravityShift = (surfaceDiffAngle > warpGravShiftAngle && _surfaceNormal != Vector3.zero);
-
- //       transform.SetParent(null);
-
- //       // Unsure if this needs to happen before or after the moveposition
-
- //       // rotate to surface normal
- //       if (gravityShift)
- //       {
- //           RotateToSurface(_surfaceNormal, relativeFacing);
- //       }
-
- //       // move to knife position
- //       rb.MovePosition(_position);
-
- //       Vector3 camEndPos = _position + (transform.rotation * cameraRelativePos); //Needs to get position camera will be in after move
- //       Quaternion camEndRot = camStartRot;
- //       if (gravityShift)
- //       {
- //           camEndRot = transform.rotation;
- //       } 
-        
- //       // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
-
- //       if (_velocity != Vector3.zero)
- //       {
- //           rb.velocity = _velocity;
-
- //           // fixes horizontal momentum lock when warping
- //           onGround = false;
- //       }
-
- //       // fixes horizontal momentum lock when warping
- //       onGround = false;
-
- //       GameObject transCamera = (GameObject)Instantiate(transitionCameraPrefab, camStartPos, cam.transform.rotation);
-        
- //       TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
-	//	transCamController.Setup(cam, this, camStartPos, camEndPos, camStartRot, camEndRot, _gameObject, gravityShift);
- //       float duration = transCamController.GetDuration();
- //       transCamController.StartTransition();
-
- //       if (gravityShift)
- //       {
- //           GlobalGravityControl.TransitionGravity(_surfaceNormal, duration);
- //       }
-
- //   }
 
     public void WarpToKnife(bool _shiftGravity, Vector3 _velocity, KnifeController _knifeController)
     {

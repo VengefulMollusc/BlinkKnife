@@ -400,7 +400,8 @@ MonoBehaviour:
   altKnifeBtn: Fire2
   abilityButton: Fire3
   throwStrength: 100
-  throwAngleModifier: 1
+  throwAngleModifier: 2
+  throwHeightModifier: -0.2
   spinSpeed: 30
   blinkKnifePrefab: {fileID: 1000013895624480, guid: ae2dae60f9f33be47b5aa6f5e8a05050,
     type: 2}
