@@ -110,9 +110,8 @@ MonoBehaviour:
   useDuration: 1
   transDuration: 0.2
   transSpeed: 200
-  gravUseDuration: 1
-  gravTransDuration: 0.5
-  gravTransSpeed: 100
+  gravBaseTransDuration: 0.4
+  gravMaxDistModifier: 0.8
   chromaticAberrationMaxValue: 30
   fovMaxValue: 120
   fovSpeedModMax: 50

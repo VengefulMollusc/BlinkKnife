@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
 
-public class TransitionCameraController : MonoBehaviour {
+public class TransitionCameraController : MonoBehaviour
+{
 
     private Vector3 startPos;
     private Vector3 endPos;
@@ -19,27 +21,22 @@ public class TransitionCameraController : MonoBehaviour {
     private bool useDuration = true;
 
     [SerializeField]
-    private float transDuration = 1f;
+    private float transDuration = 1f; // 0.2f
 
     [SerializeField]
     [Range(0.0f, 500.0f)]
-	private float transSpeed = 200f;
+    private float transSpeed = 200f;
 
     [Header("Gravity Warp")]
-    [SerializeField]
-    private bool gravUseDuration = true;
-
-    [SerializeField]
-    private float gravTransDuration = 1f;
-
-    [SerializeField]
-    [Range(0.0f, 500.0f)]
-    private float gravTransSpeed = 200f;
+    [SerializeField] private float gravBaseTransDuration = 1f; // 0.5f
+    [SerializeField] private float gravMaxDistModifier = 1f;
 
     private float duration;
 
     // Image effects variables
     private VignetteAndChromaticAberration chromAberration;
+
+    [Header("Other Variables")]
     [SerializeField]
     private float chromaticAberrationMaxValue = 30f;
     private float chromDiff;
@@ -59,7 +56,7 @@ public class TransitionCameraController : MonoBehaviour {
         playerMotor = _playerMotor;
     }
 
-	public void Setup(Camera _playerCam, PlayerMotor _playerMotor, Vector3 _startPos, Vector3 _endPos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift)
+    public void Setup(Camera _playerCam, PlayerMotor _playerMotor, Vector3 _startPos, Vector3 _endPos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift)
     {
         playerCam = _playerCam;
         playerMotor = _playerMotor;
@@ -85,16 +82,9 @@ public class TransitionCameraController : MonoBehaviour {
 
         if (gravityShift)
         {
-            if (!gravUseDuration)
-            {
-                // calculate duration based on distance
-                duration = dist / gravTransSpeed;
-            }
-            else
-            {
-                // use the given duration
-                duration = gravTransDuration;
-            }
+            // use the given duration
+            float distModifier = Utilities.MapValues(dist, 0f, 100f, 0f, gravMaxDistModifier, true);
+            duration = gravBaseTransDuration + distModifier;
 
             // modify fovMax by speed
             float speed = dist / duration;
@@ -124,11 +114,11 @@ public class TransitionCameraController : MonoBehaviour {
     // Triggers the transition animation, unsure if this is needed, could put in setup
     public void StartTransition()
     {
-//        if (startPosition == null || endPosition == null)
-//        {
-//            Debug.LogError("Transition camera missing start or end position");
-//            return;
-//        }
+        //        if (startPosition == null || endPosition == null)
+        //        {
+        //            Debug.LogError("Transition camera missing start or end position");
+        //            return;
+        //        }
 
         playerCam.enabled = false;
         playerMotor.Freeze();
@@ -161,33 +151,37 @@ public class TransitionCameraController : MonoBehaviour {
             // Lerp is more accurate/less bugs
             // but slerp gives a cool curve effect to the position movement
             t += Time.deltaTime * (Time.timeScale / duration);
-            gameObject.transform.position = Vector3.Lerp(startPos, endPos, t);
 
-            if (gravityShift) {
+            float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
+
+            gameObject.transform.position = Vector3.Lerp(startPos, endPos, lerpPercent);
+
+            if (gravityShift)
+            {
                 // lerp rotation as well
-                gameObject.transform.rotation = Quaternion.Lerp(startRot, endRot, t);
+                gameObject.transform.rotation = Quaternion.Lerp(startRot, endRot, lerpPercent);
 
-                float tAlt = Mathf.Abs((t * 2) - 1);
+                float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
                 // increase FOV while gravity shift
                 cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
                 // increase chromatic aberration during gravity shift
                 //chromAberration.chromaticAberration = Mathf.Lerp(chromMaxValue, chromMinValue, tChrom);
-                chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue-(chromDiff * tAlt), tAlt);
+                chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
             yield return 0;
         }
-        
+
         playerCam.enabled = true;
 
         // wallhang if crouching
-		//if (playerMotor.WallHang () && toBeParent != null) {
-		//	playerMotor.transform.SetParent(toBeParent.transform);
-		//} else {
-		//	playerMotor.UnFreeze ();
-		//}
+        //if (playerMotor.WallHang () && toBeParent != null) {
+        //	playerMotor.transform.SetParent(toBeParent.transform);
+        //} else {
+        //	playerMotor.UnFreeze ();
+        //}
 
         playerMotor.UnFreeze();
-        
+
         Destroy(gameObject);
     }
 }
