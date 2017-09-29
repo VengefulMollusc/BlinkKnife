@@ -11,7 +11,7 @@ public class MissileController : MonoBehaviour {
 	//private float turningStrength = 0.9f;
     [SerializeField]
     [Range(0f, 1f)]
-    private float turningStrength = 0.1f;
+    private float turningStrength = 0.2f;
     private float maxTurningAngle;
     [SerializeField]
 	private float startLife = 5f;
@@ -54,10 +54,12 @@ public class MissileController : MonoBehaviour {
     private Vector3 targetLastPosition;
 
     // explosion variables
-    private float expRadius = 5f;
-    private float expDamage = 10f;
-    private float expForce = 10f;
-    private float directDamage = 30f;
+    private const float expRadius = 5f;
+    private const float expDamage = 10f;
+    private const float expForce = 10f;
+    private const float directDamage = 30f;
+
+    private bool useUiMarker = true;
 
     // Use this for initialization
     void Start () {
@@ -67,6 +69,8 @@ public class MissileController : MonoBehaviour {
 
         // setup ui marker
         uiMarker = GetComponent<UIMarker>();
+        if (uiMarker == null)
+            useUiMarker = false;
 
         maxTurningAngle = speed * turningStrength;
 
@@ -92,8 +96,12 @@ public class MissileController : MonoBehaviour {
 
     public void Fire()
     {
-        markerOnScreenSize = uiMarker.GetOnScreenImage().rectTransform.sizeDelta;
-        uiMarker.GetOnScreenImage().rectTransform.sizeDelta *= 0.2f;
+        if (useUiMarker)
+        {
+            markerOnScreenSize = uiMarker.GetOnScreenImage().rectTransform.sizeDelta;
+            uiMarker.GetOnScreenImage().rectTransform.sizeDelta *= 0.2f;
+            uiMarker.EnableMarker(true);
+        }
 
         transform.SetParent(null);
 		gameObject.layer = 0;
@@ -106,16 +114,12 @@ public class MissileController : MonoBehaviour {
         }
 
         rocketTrail.Play ();
-        uiMarker.EnableMarker(true);
     }
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-        // check target - switch to knife
-        // this will need to be reworked
-        CheckTarget();
 
-		if (!launched || collided) return;
+    void UpdateUIMarker()
+    {
+        if (!useUiMarker)
+            return;
 
         float distToCamera = Vector3.Distance(transform.position, Camera.main.transform.position);
         // update ui marker
@@ -125,6 +129,15 @@ public class MissileController : MonoBehaviour {
         //    uiTransitionNormalised = 0.8f;
         //uiMarker.FadeGB(uiTransitionNormalised);
         //uiMarker.GetOnScreenImage().rectTransform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z * 2f);
+    }
+
+    // Update is called once per frame
+    void FixedUpdate () {
+        // check target - switch to knife
+        // this will need to be reworked
+        CheckTarget();
+
+		if (!launched || collided) return;
 
         if (target != null) {
             float distToTarget = Vector3.Distance(transform.position, target.position);
@@ -180,6 +193,7 @@ public class MissileController : MonoBehaviour {
          * whereas just working off the target position makes them easily avoided
          * 
          * there needs to be some tweaking here, maybe with the turning speed too
+         * 
          */
         Vector3 aimPosition = PredictTargetPosition();
         //Vector3 aimPosition = target.position;
@@ -196,12 +210,19 @@ public class MissileController : MonoBehaviour {
     /*
      * Predicts the collision point with the target based on time to collision and
      * the current movement direction of the target
+     * 
+     * NOTE: predicting target position will lead to some weird behaviour when 
+     * throwing knife/stealing target - missiles will aim for waaaaay ahead of knife
+     * due to speed of throw. Maybe add speed cap to prediction? will also allow for 
+     * outrunning missiles by exceeding cap
      */
     private Vector3 PredictTargetPosition()
     {
         float distToTarget = Vector3.Distance(transform.position, target.position);
         Vector3 targetMovementVector = (target.position - targetLastPosition)/Time.fixedDeltaTime;
         float timeToTarget = distToTarget / speed;
+
+        // cap targetMovementVector magnitude here
 
         Vector3 prediction = target.position + (targetMovementVector * timeToTarget);
 
