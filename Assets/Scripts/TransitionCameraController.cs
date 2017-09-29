@@ -70,6 +70,7 @@ public class TransitionCameraController : MonoBehaviour
         chromDiff = chromaticAberrationMaxValue - chromAberration.chromaticAberration;
 
         cam = GetComponent<Camera>();
+        cam.fieldOfView = playerCam.fieldOfView;
 
         CalculateDuration();
 

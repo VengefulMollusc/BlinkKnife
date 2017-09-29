@@ -95,8 +95,8 @@ public class GravitySphereController : MonoBehaviour {
     // returns the distance to the player from the center of the sphere
     // could be used for variable gravity strength?
     // combine with multiple linked gravity sources with strength based on distance
-    public float DistToPlayer()
-    {
-        return Vector3.Distance(target.position, transform.position);
-    }
+    //public float DistToPlayer()
+    //{
+    //    return Vector3.Distance(target.position, transform.position);
+    //}
 }

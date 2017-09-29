@@ -108,6 +108,13 @@ public class GlobalGravityControl : MonoBehaviour {
         shiftingCoroutine = null;
     }
 
+    public static void ChangeGravity(Vector3 _newUp, float _newStrength, bool _modifyPlayer)
+    {
+        currentGravityStrength = _newStrength; // possibly need some smoothing here
+
+        ChangeGravity(_newUp, _modifyPlayer);
+    }
+
     public static void ChangeGravity(Vector3 _newUp, bool _modifyPlayer)
     {
         if (shiftingCoroutine != null)
