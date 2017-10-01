@@ -26,6 +26,8 @@ public class PlanetaryGravitySource : MonoBehaviour
 
     /**
      * Stop player flying into oblivion? :/
+     * 
+     * TODO: refactor so strength and range are both relative to planetRadius (by default - still have override options)
      */ 
     public Vector3 GetGravityVector()
     {
