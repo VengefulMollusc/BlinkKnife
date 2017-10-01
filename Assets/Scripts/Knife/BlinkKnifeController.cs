@@ -114,7 +114,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		objectCollided = _other;
 
         // Prepare to shift gravity if warping to GravityPanel
-        if (objectCollided.CompareTag("GravityPanel"))
+        if (objectCollided.GetComponent<GravityPanel>() != null)
         {
             gravPanel = objectCollided.GetComponent<GravityPanel>();
             Vector3 gravVector = gravPanel.GetGravityVector();

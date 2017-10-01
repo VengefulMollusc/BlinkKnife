@@ -8,26 +8,36 @@ using UnityEngine;
 public class PlanetaryGravitySource : MonoBehaviour
 {
 
-    [SerializeField] private float maxGravDist = 100f;
+    [SerializeField] private float gravDistFromSurface = 100f;
     [SerializeField] private float gravStrength = 35f;
+
+    private float planetRadius;
+    private float maxGravDist;
 
     private Transform target;
 
     void OnEnable()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        planetRadius = transform.localScale.x / 2f;
+        maxGravDist = planetRadius + gravDistFromSurface;
     }
 
     /**
-     * Maybe make gravity dropoff non-linear? Would allow a much longer tail to gravity wells
-     * Stop player flying into oblivion :/
+     * Stop player flying into oblivion? :/
      */ 
     public Vector3 GetGravityVector()
     {
+        if (target == null)
+            return Vector3.zero;
+
         Vector3 dirToPlayer = target.position - transform.position;
         float distToPlayer = dirToPlayer.magnitude;
 
-        float currentStrength = Utilities.MapValues(distToPlayer, 0f, maxGravDist, gravStrength, 0f, true);
+        float strengthRatio = Utilities.MapValues(distToPlayer, planetRadius, maxGravDist, 1f, 0f, true);
+
+        float currentStrength = strengthRatio * strengthRatio * gravStrength; // exponential dropoff
 
         return dirToPlayer.normalized * currentStrength;
     }
