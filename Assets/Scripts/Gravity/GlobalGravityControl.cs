@@ -122,6 +122,7 @@ public class GlobalGravityControl : MonoBehaviour {
             return;
         
         // interpolate for large differences in rotation
+        //TODO: have gravShiftSpeed relative to current grav strength? useful for planetary gravity
         Vector3 transitionUp = Vector3.RotateTowards(currentUpDirection, _newUp, gravShiftSpeed * Mathf.Deg2Rad, 0f);
 
         targetUpDirection = transitionUp;

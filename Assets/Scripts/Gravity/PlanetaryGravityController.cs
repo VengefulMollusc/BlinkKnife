@@ -27,6 +27,8 @@ public class PlanetaryGravityController : MonoBehaviour
     }
 
     // Gets the collective gravity of all planets and updates the GlobalGravityControl
+    // TODO: make gravity direction align DIRECTLY to planet with strongest pull
+    // (would eliminate weird angles when on surface near another gravity source)
     private void UpdateGravity()
     {
         Vector3 newGravDir = Vector3.zero;
