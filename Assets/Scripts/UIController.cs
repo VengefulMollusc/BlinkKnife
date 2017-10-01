@@ -19,8 +19,7 @@ public class UIController : MonoBehaviour {
     [SerializeField]
     [Range(0.0f, 1f)]
     private float decaySpeed = 0.5f;
-
-    [SerializeField]
+    
     private GameObject playerCamera;
     private PlayerKnifeController playerKnifeController;
     private GameObject player;
@@ -78,6 +77,8 @@ public class UIController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        playerCamera = GameObject.FindGameObjectWithTag("MainCamera");
+
         if (uiKnifeMarker == null)
             throw new MissingReferenceException("No knife marker object given.");
 

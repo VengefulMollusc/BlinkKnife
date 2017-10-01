@@ -26,7 +26,6 @@ public class GlobalGravityControl : MonoBehaviour {
     private static float duration;
 
     // the player to update with the shift
-    [SerializeField]
     private GameObject player;
     private static PlayerMotor playerMotor;
 
@@ -41,7 +40,9 @@ public class GlobalGravityControl : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        if (player == null) Debug.LogError("No player object found in GlobalGravityControl");
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player == null) Debug.LogError("No player object found");
 
         playerMotor = player.GetComponent<PlayerMotor>();
 

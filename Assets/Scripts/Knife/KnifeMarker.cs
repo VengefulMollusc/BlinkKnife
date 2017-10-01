@@ -23,8 +23,7 @@ public class KnifeMarker : MonoBehaviour {
 	private float onScreenPulseDuration = 0.5f;
     [SerializeField]
     private float offScreenPulseSpeed = 4f;
-
-	[SerializeField]
+    
 	private GameObject playerCamera;
 
     private float lastAngle = 0f;
@@ -37,7 +36,8 @@ public class KnifeMarker : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		maxSizeVector = new Vector2 (maxSize, maxSize);
+        playerCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        maxSizeVector = new Vector2 (maxSize, maxSize);
         
         onScreenImage = onScreenMarker.GetComponent<Image>();
         offScreenImage = offScreenMarker.GetComponent<Image>();

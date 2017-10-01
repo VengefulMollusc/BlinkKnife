@@ -60,8 +60,7 @@ public class PlayerKnifeController : MonoBehaviour {
     [SerializeField]
 	private GameObject knifeInHand;
 	private Renderer knifeRenderer;
-
-	[SerializeField]
+    
 	private GameObject uiControllerObject;
 	private UIController uiController;
     
@@ -130,8 +129,9 @@ public class PlayerKnifeController : MonoBehaviour {
      */
 
 	void Start (){
+	    uiControllerObject = GameObject.FindGameObjectWithTag("UIParent");
         // check for missing prefabs
-		if (blinkKnifePrefab == null){
+        if (blinkKnifePrefab == null){
             throw new MissingReferenceException("No blinkKnifePrefab object given.");
         }
         if (bounceKnifePrefab == null)
