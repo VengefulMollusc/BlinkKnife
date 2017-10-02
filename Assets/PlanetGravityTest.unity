@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxGravDist: 100
+  gravDistFromSurface: 100
   gravStrength: 35
 --- !u!23 &171621096
 MeshRenderer:
@@ -201,7 +201,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: adc116a285c5c0645bc49466eaa7bc23, type: 2}
+  - {fileID: 2100000, guid: 120d854b1cb00884faba1c8e2360e211, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxGravDist: 150
+  gravDistFromSurface: 200
   gravStrength: 50
 --- !u!23 &764701345
 MeshRenderer:
@@ -527,7 +527,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: adc116a285c5c0645bc49466eaa7bc23, type: 2}
+  - {fileID: 2100000, guid: 120d854b1cb00884faba1c8e2360e211, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

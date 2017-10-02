@@ -27,20 +27,33 @@ public class PlanetaryGravityController : MonoBehaviour
     }
 
     // Gets the collective gravity of all planets and updates the GlobalGravityControl
-    // TODO: make gravity direction align DIRECTLY to planet with strongest pull
     // (would eliminate weird angles when on surface near another gravity source)
     private void UpdateGravity()
     {
         Vector3 newGravDir = Vector3.zero;
 
+        Vector3 strongest = Vector3.zero;
+
         foreach (PlanetaryGravitySource source in gravitySources)
         {
-            newGravDir += source.GetGravityVector();
+            Vector3 sourceGravity = source.GetGravityVector();
+
+            if (sourceGravity.magnitude > strongest.magnitude)
+            {
+                strongest = sourceGravity;
+            }
+
+            newGravDir += sourceGravity;
         }
 
-        float newGravStrength = newGravDir.magnitude;
-        newGravDir.Normalize();
+        // Aligns gravity direction to cumulative direction
+        //float newGravStrength = newGravDir.magnitude;
+        //newGravDir.Normalize();
+        //GlobalGravityControl.ChangeGravity(newGravDir, newGravStrength, true);
 
-        GlobalGravityControl.ChangeGravity(newGravDir, newGravStrength, true);
+        // Always aligns gravity direction to strongest source
+        float newGravStrength = Vector3.Dot(newGravDir.normalized, strongest.normalized) * strongest.magnitude; // takes component along strongest source
+        strongest.Normalize();
+        GlobalGravityControl.ChangeGravity(strongest, newGravStrength, true);
     }
 }
