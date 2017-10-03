@@ -30,4 +30,9 @@ public class JumpCollider : MonoBehaviour {
 		}
 	}
 
+    private void OnTriggerEnter(Collider col)
+    {
+        // added to prevent errors with DontGoThroughThings
+    }
+
 }
