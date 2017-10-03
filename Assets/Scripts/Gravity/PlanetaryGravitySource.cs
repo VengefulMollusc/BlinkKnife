@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 /**
@@ -7,12 +8,17 @@ using UnityEngine;
  */
 public class PlanetaryGravitySource : MonoBehaviour
 {
+    //[SerializeField] private bool overrideDefaultGravVals = false;
+    [SerializeField] private float gravDistFromSurfaceOverride = 100f;
+    [SerializeField] private float gravStrengthOverride = 35f;
 
-    [SerializeField] private float gravDistFromSurface = 100f;
-    [SerializeField] private float gravStrength = 35f;
+    //private const float gravDistanceRatio = 3f;
+    //private const float gravStrengthRatio = 1.5f;
 
     private float planetRadius;
     private float maxGravDist;
+    private float gravDistance;
+    private float gravStrength;
 
     private Transform target;
 
@@ -20,14 +26,34 @@ public class PlanetaryGravitySource : MonoBehaviour
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
+        CalculateGravValues();
+    }
+
+    void CalculateGravValues()
+    {
         planetRadius = transform.localScale.x / 2f;
-        maxGravDist = planetRadius + gravDistFromSurface;
+
+        gravDistance = gravDistFromSurfaceOverride;
+        gravStrength = gravStrengthOverride;
+
+        //if (overrideDefaultGravVals)
+        //{
+        //    gravDistance = gravDistFromSurfaceOverride;
+        //    gravStrength = gravStrengthOverride;
+        //}
+        //else
+        //{
+        //    // strength and range are both relative to planetRadius
+        //    gravDistance = planetRadius * gravDistanceRatio;
+        //    gravStrength = planetRadius * gravStrengthRatio;
+        //}
+
+        maxGravDist = planetRadius + gravDistance;
     }
 
     /**
      * Stop player flying into oblivion? :/
      * 
-     * TODO: refactor so strength and range are both relative to planetRadius (by default - still have override options)
      */ 
     public Vector3 GetGravityVector()
     {
