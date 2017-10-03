@@ -17,6 +17,9 @@ public class GlobalGravityControl : MonoBehaviour {
     private static Vector3 currentUpDirection;
     private static float currentGravityStrength = 35f;
 
+    private const float maxGravShiftSpeed = 2f;
+    private const float gravShiftStrengthMax = 35f;
+
     private static Vector3 tempUp;
 
     // gravity target direction and shift speed
@@ -113,6 +116,12 @@ public class GlobalGravityControl : MonoBehaviour {
     {
         currentGravityStrength = _newStrength; // possibly need some smoothing here
 
+        // gravShiftSpeed change relative to strength
+        if (currentGravityStrength >= gravShiftStrengthMax)
+            gravShiftSpeed = maxGravShiftSpeed;
+        else
+            gravShiftSpeed = Utilities.MapValues(currentGravityStrength, 0f, gravShiftStrengthMax, 0f, maxGravShiftSpeed, true);
+
         ChangeGravity(_newUp, _modifyPlayer);
     }
 
@@ -122,7 +131,6 @@ public class GlobalGravityControl : MonoBehaviour {
             return;
         
         // interpolate for large differences in rotation
-        //TODO: have gravShiftSpeed relative to current grav strength? useful for planetary gravity
         Vector3 transitionUp = Vector3.RotateTowards(currentUpDirection, _newUp, gravShiftSpeed * Mathf.Deg2Rad, 0f);
 
         targetUpDirection = transitionUp;
