@@ -464,7 +464,11 @@ public class PlayerMotor : MonoBehaviour {
         if (_velocity != Vector3.zero)
         {
             // adding magnitude here allows cumulative velocity gain
-            rb.velocity = (_velocity * (warpVelocityModifier + rb.velocity.magnitude));
+            // dot product to get component of velocity in direction of travel
+            float projectedVelMagnitude = Vector3.Dot(rb.velocity, _velocity);
+            projectedVelMagnitude = Mathf.Max(projectedVelMagnitude, 0f);
+            // adds component of current velocity along axis of knife movement
+            rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude); 
 
             // fixes horizontal momentum lock when warping
             onGround = false;
