@@ -65,7 +65,7 @@ public class PlanetaryGravitySource : MonoBehaviour
 
         float strengthRatio = Utilities.MapValues(distToPlayer, planetRadius, maxGravDist, 1f, 0f, true);
 
-        float currentStrength = strengthRatio * strengthRatio * gravStrength; // exponential dropoff
+        float currentStrength = strengthRatio * strengthRatio * gravStrength; // exponential dropoff?
 
         return dirToPlayer.normalized * currentStrength;
     }

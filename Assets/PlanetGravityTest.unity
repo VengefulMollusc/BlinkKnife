@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravDistFromSurfaceOverride: 100
-  gravStrengthOverride: 35
+  gravStrengthOverride: 30
 --- !u!23 &171621096
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -512,8 +512,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravDistFromSurfaceOverride: 150
-  gravStrengthOverride: 50
+  gravDistFromSurfaceOverride: 250
+  gravStrengthOverride: 35
 --- !u!23 &764701345
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -637,8 +637,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravDistFromSurfaceOverride: 200
-  gravStrengthOverride: 50
+  gravDistFromSurfaceOverride: 300
+  gravStrengthOverride: 40
 --- !u!23 &797070187
 MeshRenderer:
   m_ObjectHideFlags: 0
