@@ -592,6 +592,11 @@ public class PlayerMotor : MonoBehaviour {
         return frozen;
     }
 
+    public bool IsOnGround()
+    {
+        return onGround;
+    }
+
     // Health and Energy recharging
     //private void RechargeHealth()
     //{

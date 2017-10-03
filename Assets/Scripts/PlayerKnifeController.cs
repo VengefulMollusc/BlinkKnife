@@ -209,8 +209,10 @@ public class PlayerKnifeController : MonoBehaviour {
         // check warp progress
         CheckIfWarp ();
 
-        // recharge warp counters
-		RechargeWarps ();
+
+	    // recharge warp counters
+        if (playerMotor.IsOnGround())
+		    RechargeWarps ();
 	}
 
     /*
