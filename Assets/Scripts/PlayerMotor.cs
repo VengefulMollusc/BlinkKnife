@@ -235,7 +235,7 @@ public class PlayerMotor : MonoBehaviour {
                 }
 
 
-                newVel = MomentumSlide(newVel, PlayerController.speed);
+                newVel = MomentumSlide(newVel, PlayerController.Speed());
 
                 rb.velocity = newVel;
 
@@ -314,7 +314,7 @@ public class PlayerMotor : MonoBehaviour {
 
         // NEED TO MAKE SURE THAT VERTICAL MOMENTUM/SPEED NOT AFFECTED
         float speedThreshold = _baseSpeed * velMod;
-        if (sprinting) speedThreshold *= PlayerController.sprintModifier;
+        if (sprinting) speedThreshold *= PlayerController.SprintModifier();
         if (rb.velocity.magnitude > speedThreshold)
         {
             float speed = rb.velocity.magnitude;
@@ -330,7 +330,7 @@ public class PlayerMotor : MonoBehaviour {
     }
 
     private float DampenSpeed(float _speed, float _baseSpeed) {
-        float sprintSpeed = PlayerController.speed * PlayerController.sprintModifier * velMod;
+        float sprintSpeed = PlayerController.Speed() * PlayerController.SprintModifier() * velMod;
 
         // REDO THIS SO:
         // Decceleration based on difference between speed and base speed
@@ -466,8 +466,10 @@ public class PlayerMotor : MonoBehaviour {
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel
             float projectedVelMagnitude = Vector3.Dot(rb.velocity, _velocity);
-            projectedVelMagnitude = Mathf.Max(projectedVelMagnitude, 0f);
+            projectedVelMagnitude = Mathf.Max(projectedVelMagnitude, 0f) * 0.5f; // 0.5f here controls how much velocity is added
             // adds component of current velocity along axis of knife movement
+
+            // TODO: add vel here? or add component to initial throw velocity of knife?
             rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude); 
 
             // fixes horizontal momentum lock when warping

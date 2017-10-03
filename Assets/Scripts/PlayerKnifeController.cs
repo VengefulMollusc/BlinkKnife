@@ -216,8 +216,7 @@ public class PlayerKnifeController : MonoBehaviour {
 	    CheckIfRecall();
 
 	    // recharge warp counters
-        if (playerMotor.IsOnGround())
-		    RechargeWarps ();
+		RechargeWarps ();
 	}
 
     /*
@@ -268,9 +267,14 @@ public class PlayerKnifeController : MonoBehaviour {
 
     // recharge warps based on time
 	void RechargeWarps (){
-		if (currentWarps < maxWarps){
-			warpRecharge -= Time.fixedDeltaTime;
-			if (warpRecharge <= 0){
+		if (currentWarps < maxWarps)
+		{
+		    if (playerMotor.IsOnGround())
+                warpRecharge -= Time.fixedDeltaTime;
+		    else
+		        warpRecharge -= (Time.fixedDeltaTime * 0.2f); // recharge at 1/5th rate when airborne
+
+            if (warpRecharge <= 0){
 				//warpCounters [currentWarps].enabled = true;
 				currentWarps++;
 

@@ -3,14 +3,14 @@
 [RequireComponent(typeof(PlayerMotor))]
 public class PlayerController : MonoBehaviour {
 
+    
+	private static float speed = 5.0f;
+    private static float sprintModifier = 1.6f;
+
     [Header("General Settings")]
-	[SerializeField]
-	public static float speed = 5.0f;
     [SerializeField]
     [Range(0f, 1f)]
     private float backMoveMax = 0.9f;
-	[SerializeField]
-	public static float sprintModifier = 2.0f;
 	[SerializeField]
 	private float sprintThreshold = 0.5f;
 	[SerializeField]
@@ -127,6 +127,16 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("Health/Energy increased: " + mod);
         }
 
+    }
+
+    public static float Speed()
+    {
+        return speed;
+    }
+
+    public static float SprintModifier()
+    {
+        return sprintModifier;
     }
 
 }

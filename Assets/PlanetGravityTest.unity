@@ -513,7 +513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravDistFromSurfaceOverride: 250
-  gravStrengthOverride: 35
+  gravStrengthOverride: 37
 --- !u!23 &764701345
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -638,7 +638,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravDistFromSurfaceOverride: 300
-  gravStrengthOverride: 40
+  gravStrengthOverride: 35
 --- !u!23 &797070187
 MeshRenderer:
   m_ObjectHideFlags: 0
