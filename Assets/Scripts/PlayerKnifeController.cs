@@ -183,7 +183,7 @@ public class PlayerKnifeController : MonoBehaviour {
             {
                 ThrowWarp();
             }
-            else if (knife != null)
+            else if (knife != null && !bounceWarp)
             {
                 // return thrown blink knife
                 ReturnKnife();
