@@ -21,7 +21,7 @@ public class PlanetaryGravityController : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         UpdateGravity();
     }
