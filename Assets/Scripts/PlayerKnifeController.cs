@@ -9,6 +9,9 @@ public class PlayerKnifeController : MonoBehaviour {
 	[SerializeField]
 	private bool alwaysGravShift = false;
 
+    [SerializeField] private float timeToAutoRecall = 2f;
+    private float autoRecallTimer;
+
 	[SerializeField]
 	private int maxWarps = 3;
 	private int currentWarps;
@@ -209,11 +212,30 @@ public class PlayerKnifeController : MonoBehaviour {
         // check warp progress
         CheckIfWarp ();
 
+        // check if recall
+	    CheckIfRecall();
 
 	    // recharge warp counters
         if (playerMotor.IsOnGround())
 		    RechargeWarps ();
 	}
+
+    /*
+     * Checks if the auto recall timer has run out, if so, returns the thrown knife
+     */
+    void CheckIfRecall()
+    {
+        if (autoRecallTimer <= 0 || knife == null || knifeController.HasCollided())
+            return;
+
+        autoRecallTimer -= Time.deltaTime;
+
+        if (autoRecallTimer <= 0)
+        {
+            ReturnKnife();
+            knifeRenderer.enabled = true;
+        }
+    }
 
     /*
      * Checks the current warp countdown and whether we need to warp now
@@ -297,6 +319,8 @@ public class PlayerKnifeController : MonoBehaviour {
         // hide knife view object
 		knifeRenderer.enabled = false;
 
+	    autoRecallTimer = timeToAutoRecall;
+
 	}
 
     /*
@@ -315,7 +339,7 @@ public class PlayerKnifeController : MonoBehaviour {
      */
     public void ReturnKnife()
     {
-        Destroy(knife);
+        DestroyImmediate(knife);
         knife = null;
         knifeController = null;
 

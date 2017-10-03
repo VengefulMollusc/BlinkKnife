@@ -392,6 +392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysGravShift: 0
+  timeToAutoRecall: 2
   maxWarps: 3
   warpRechargeTime: 1
   warpWaitTime: 0.1
@@ -408,7 +409,6 @@ MonoBehaviour:
   bounceKnifePrefab: {fileID: 1000013895624480, guid: 0698c66a77740bd4f9595ea2f48b90c8,
     type: 2}
   knifeInHand: {fileID: 1000014104647230}
-  uiControllerObject: {fileID: 0}
   warpCost: -30
 --- !u!114 &114000010722407420
 MonoBehaviour:
@@ -467,7 +467,7 @@ MonoBehaviour:
   transitionCameraPrefab: {fileID: 1000010902589228, guid: 2c7b8a853a2dfcc4ab7a2ef5dacf0eea,
     type: 2}
   sprintDeceleration: 0.99
-  velMod: 2
+  velMod: 1.5
   airVelMod: 0.5
   warpGravShiftAngle: 1
   maxAirLowerBound: 10
