@@ -35,7 +35,8 @@ public class PlanetaryGravitySource : MonoBehaviour
         Vector3 gravDirection = transform.position - target.position;
         float distToPlayer = gravDirection.magnitude - planetRadius;
 
-        float strengthRatio = Utilities.MapValues(distToPlayer, gravMinDistance, gravMaxDistance, 1f, 0f, true);
+        // value for to2 here acts as absolute min grav value - stops flying into space
+        float strengthRatio = Utilities.MapValues(distToPlayer, gravMinDistance, gravMaxDistance, 1f, 0.1f, true); 
 
         float currentStrength = strengthRatio * strengthRatio * gravStrength; // exponential dropoff?
 
