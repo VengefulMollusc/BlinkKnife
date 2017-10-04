@@ -74,9 +74,9 @@ public class PlayerKnifeController : MonoBehaviour {
 	private GameObject knife;
 	private KnifeController knifeController;
 
-    [SerializeField]
-    [Range(-100f, 0f)]
-    private float warpCost = -30f;
+    //[SerializeField]
+    //[Range(-100f, 0f)]
+    //private float warpCost = -30f;
 
     /*
      * Need to restructure to allow for knife 'mods'

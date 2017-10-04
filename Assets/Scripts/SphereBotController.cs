@@ -235,8 +235,8 @@ public class SphereBotController : MonoBehaviour {
 
         inTransition = true;
 
-        float leftStartAngle = leftPanel.transform.localEulerAngles.z;
-        float rightStartAngle = rightPanel.transform.localEulerAngles.z;
+        //float leftStartAngle = leftPanel.transform.localEulerAngles.z;
+        //float rightStartAngle = rightPanel.transform.localEulerAngles.z;
 
         float t = 0.0f;
         while (t < 1.0f)

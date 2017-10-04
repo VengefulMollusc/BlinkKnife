@@ -48,7 +48,7 @@ public class TransitionCameraController : MonoBehaviour
     private float fovSpeedModMax = 50f;
     private float fovDiff;
 
-    private int baseLayerMask;
+    //private int baseLayerMask;
 
     public void Setup(Camera _playerCam, PlayerMotor _playerMotor)
     {
@@ -74,7 +74,7 @@ public class TransitionCameraController : MonoBehaviour
 
         CalculateDuration();
 
-        baseLayerMask = cam.cullingMask;
+        //baseLayerMask = cam.cullingMask;
     }
 
     private void CalculateDuration()

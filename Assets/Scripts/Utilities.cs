@@ -214,7 +214,7 @@ public class Utilities : MonoBehaviour {
         // could use either of these, depending on if you need to aim down to hit something
         // NOTE: Positive angle will always work if there is a solution
         var anglePos = Mathf.Atan(((_shotSpeed * _shotSpeed) + sqrt) / (grav * dist));
-        var angleNeg = Mathf.Atan(((_shotSpeed * _shotSpeed) - sqrt) / (grav * dist));
+        // var angleNeg = Mathf.Atan(((_shotSpeed * _shotSpeed) - sqrt) / (grav * dist));
 
         return anglePos * Mathf.Rad2Deg;
     }

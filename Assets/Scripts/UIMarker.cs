@@ -78,8 +78,8 @@ public class UIMarker : MonoBehaviour {
         }
         else if (useOffScreenMarker) {
 
-            Vector3 targetRelative = transform.position - Camera.main.transform.position;
-            Quaternion toTarget = Quaternion.FromToRotation(Camera.main.transform.forward, targetRelative);
+            //Vector3 targetRelative = transform.position - Camera.main.transform.position;
+            //Quaternion toTarget = Quaternion.FromToRotation(Camera.main.transform.forward, targetRelative);
 
             // THIS WORKS
             // OMG.

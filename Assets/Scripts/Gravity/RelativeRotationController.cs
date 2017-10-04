@@ -94,7 +94,7 @@ public class RelativeRotationController : MonoBehaviour {
                 Vector3 currentGravDir = GlobalGravityControl.GetGravityTarget();
                 Vector3 newGravDir = -player.transform.up;
 
-                float angle = Vector3.Angle(currentGravDir, newGravDir);
+                //float angle = Vector3.Angle(currentGravDir, newGravDir);
 
                 // angle threshold here instead??
                 // appears to be generally worse...

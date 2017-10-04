@@ -27,7 +27,6 @@ public class PlanetaryGravityController : MonoBehaviour
     }
 
     // Gets the collective gravity of all planets and updates the GlobalGravityControl
-    // (would eliminate weird angles when on surface near another gravity source)
     private void UpdateGravity()
     {
         Vector3 newGravDir = Vector3.zero;
@@ -46,7 +45,7 @@ public class PlanetaryGravityController : MonoBehaviour
             newGravDir += sourceGravity;
         }
 
-        // Aligns gravity direction to cumulative direction
+        // Aligns gravity direction to cumulative direction - overall center of mass
         //float newGravStrength = newGravDir.magnitude;
         //newGravDir.Normalize();
         //GlobalGravityControl.ChangeGravity(newGravDir, newGravStrength, true);

@@ -21,12 +21,8 @@ public class PlanetaryGravitySource : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
         planetRadius = transform.localScale.x / 2f;
-    }
+    } 
 
-    /**
-     * Stop player flying into oblivion? :/
-     * 
-     */ 
     public Vector3 GetGravityVector()
     {
         if (target == null)
@@ -36,7 +32,7 @@ public class PlanetaryGravitySource : MonoBehaviour
         float distToPlayer = gravDirection.magnitude - planetRadius;
 
         // value for to2 here acts as absolute min grav value - stops flying into space
-        float strengthRatio = Utilities.MapValues(distToPlayer, gravMinDistance, gravMaxDistance, 1f, 0.1f, true); 
+        float strengthRatio = Utilities.MapValues(distToPlayer, gravMinDistance, gravMaxDistance, 1f, 0.25f, true);
 
         float currentStrength = strengthRatio * strengthRatio * gravStrength; // exponential dropoff?
 

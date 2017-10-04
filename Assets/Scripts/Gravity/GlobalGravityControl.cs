@@ -21,7 +21,6 @@ public class GlobalGravityControl : MonoBehaviour {
     // gravity target direction and shift speed
     // used when shifting
     private static Vector3 targetGravDirection;
-    private static float gravShiftSpeed = 2;
     private static float duration;
 
     // the player to update with the shift

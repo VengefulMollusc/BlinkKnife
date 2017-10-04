@@ -71,8 +71,8 @@ public class KnifeMarker : MonoBehaviour {
                 // target is offscreen
                 Vector3 center = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
                 
-                Vector3 targetRelative = target.position - playerCamera.transform.position;
-                Quaternion toTarget = Quaternion.FromToRotation(playerCamera.transform.forward, targetRelative);
+                //Vector3 targetRelative = target.position - playerCamera.transform.position;
+                //Quaternion toTarget = Quaternion.FromToRotation(playerCamera.transform.forward, targetRelative);
 
                 // THIS WORKS
                 // OMG.

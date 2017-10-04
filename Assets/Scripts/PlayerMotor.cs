@@ -17,8 +17,8 @@ public class PlayerMotor : MonoBehaviour {
     //[SerializeField]
     //private float gravity = 0.3f;
 
-    [SerializeField]
-    private float sprintDeceleration = 0.9f;
+    //[SerializeField]
+    //private float sprintDeceleration = 0.9f;
 
     [SerializeField]
     private float velMod = 2f;
@@ -48,11 +48,11 @@ public class PlayerMotor : MonoBehaviour {
     public const string GravityWarpNotification = "PlayerMotor.GravityWarpNotification";
 
     private bool frozen;
-    private Vector3 frozenPos = Vector3.zero;
+    //private Vector3 frozenPos = Vector3.zero;
     private Vector3 frozenVel = Vector3.zero;
 
 	private bool onGround;
-	private bool colliding;
+	//private bool colliding;
 
     private bool crouching;
     private float crouchVelFactor = 1f;
@@ -169,7 +169,7 @@ public class PlayerMotor : MonoBehaviour {
 
 			PerformMovement ();
 			onGround = false;
-			colliding = false;
+			//colliding = false;
 			jumpTimer--;
 		}
 
@@ -453,9 +453,9 @@ public class PlayerMotor : MonoBehaviour {
         maxAirMagnitude = 0.0f;
     }
 
-	private void OnCollisionStay(){
-		colliding = true;
-	}
+	//private void OnCollisionStay(){
+	//	colliding = true;
+	//}
 
     public void WarpToKnife(bool _shiftGravity, Vector3 _velocity, KnifeController _knifeController)
     {
