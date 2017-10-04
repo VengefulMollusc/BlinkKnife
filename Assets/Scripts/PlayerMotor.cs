@@ -56,6 +56,7 @@ public class PlayerMotor : MonoBehaviour {
 
     private bool crouching;
     private float crouchVelFactor = 1f;
+    private bool canHover;
 
     private Vector3 velocity = Vector3.zero;
 	private Vector3 rotation = Vector3.zero;
@@ -117,6 +118,7 @@ public class PlayerMotor : MonoBehaviour {
         cameraRelativePos = cam.transform.position - transform.position;
         //health = healthMax;
         //energy = energyMax;
+        canHover = true;
     }
 
 	// gets movement vector from PlayerController
@@ -333,17 +335,24 @@ public class PlayerMotor : MonoBehaviour {
                 rb.velocity = newVel;
             }
 
-            if (crouching)
+            if (crouching && canHover)
             {
-                rb.velocity *= crouchVelFactor;
-                crouchVelFactor *= 1.01f;
-                if (crouchVelFactor >= 1f)
-                {
-                    SetCrouching(false);
-                }
+                canHover = false;
+                StartCoroutine(Hover());
             }
         }
 	}
+
+    IEnumerator Hover()
+    {
+        crouchVelFactor = 0.5f;
+        while (crouchVelFactor < 1f && !onGround)
+        {
+            rb.velocity *= crouchVelFactor;
+            crouchVelFactor *= 1.01f;
+            yield return 0;
+        }
+    } 
 
     private Vector3 MomentumSlide(Vector3 _newVel, float _baseSpeed) {
         // PERHAPS
@@ -435,15 +444,12 @@ public class PlayerMotor : MonoBehaviour {
     // either begin or end crouching
     public void SetCrouching(bool _crouching)
     {
-        if (_crouching)
-        {
-            crouching = true;
-            crouchVelFactor = 0.5f;
-        } else
-        {
-            crouching = false;
-            crouchVelFactor = 1f;
-        }
+        crouching = _crouching;
+
+        //if (crouching)
+        //    crouchVelFactor = 0.5f;
+        //else
+        //    crouchVelFactor = 1f;
     }
 
 	public void SetOnGround (bool _onGround){
@@ -451,7 +457,10 @@ public class PlayerMotor : MonoBehaviour {
 			return;
 		onGround = _onGround;
         maxAirMagnitude = 0.0f;
-    }
+
+	    if (onGround)
+	        canHover = true;
+	}
 
 	//private void OnCollisionStay(){
 	//	colliding = true;
@@ -528,6 +537,8 @@ public class PlayerMotor : MonoBehaviour {
         {
             GlobalGravityControl.TransitionGravity(newGravDirection, duration);
         }
+
+        canHover = true;
 
     }
 
