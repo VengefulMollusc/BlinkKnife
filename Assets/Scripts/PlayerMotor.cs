@@ -219,11 +219,7 @@ public class PlayerMotor : MonoBehaviour {
     // perform movement based on velocity variable
     private void PerformMovement(){
         
-        // don't apply gravity when against surface
-        // avoid sliding on sloped surfaces
-	    //if (onGround)
-	    //    KeepGrounded();
-        //else
+        // Apply the current gravity
         rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
         float localXVelocity = Vector3.Dot(rb.velocity, transform.right);
