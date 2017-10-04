@@ -78,6 +78,7 @@ GameObject:
   - component: {fileID: 4000010376404180}
   - component: {fileID: 33000012162391002}
   - component: {fileID: 136000010282788008}
+  - component: {fileID: 135271766142837366}
   - component: {fileID: 23000013708462204}
   - component: {fileID: 54000013150267170}
   - component: {fileID: 114000012139731540}
@@ -409,7 +410,6 @@ MonoBehaviour:
   bounceKnifePrefab: {fileID: 1000013895624480, guid: 0698c66a77740bd4f9595ea2f48b90c8,
     type: 2}
   knifeInHand: {fileID: 1000014104647230}
-  warpCost: -30
 --- !u!114 &114000010722407420
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -466,14 +466,11 @@ MonoBehaviour:
   cameraRotLimit: 90
   transitionCameraPrefab: {fileID: 1000010902589228, guid: 2c7b8a853a2dfcc4ab7a2ef5dacf0eea,
     type: 2}
-  sprintDeceleration: 0.99
   velMod: 1.5
   airVelMod: 0.5
   warpGravShiftAngle: 1
   maxAirLowerBound: 10
   warpVelocityModifier: 20
-  maxViewShiftSpeed: 2
-  viewShiftStrengthMax: 35
 --- !u!114 &114000012321050414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -561,8 +558,8 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.49
   m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136000010282788008
-CapsuleCollider:
+--- !u!135 &135271766142837366
+SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -570,7 +567,19 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 299befa7dbc6ae2418201e112fd4ebfd, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Center: {x: 0, y: -0.5, z: 0}
+--- !u!136 &136000010282788008
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013453240542}
+  m_Material: {fileID: 13400000, guid: 2ac274c0e6a5d7c4aa4bbbd170030c30, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.9
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.05, z: 0}

@@ -203,20 +203,27 @@ public class PlayerMotor : MonoBehaviour {
         UpdateGravityDirection(transitionUp);
     }
 
-//	private void KeepGrounded(){
-//		RaycastHit hit;
-//		if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, 2f)){
-////			Debug.Log ("Grounding");
-//			//rb.MovePosition (transform.position + new Vector3(0.0f, -hit.distance, 0.0f));
-//            rb.MovePosition(transform.position - (transform.up * hit.distance));
-//            rb.velocity = transform.rotation * new Vector3 (rb.velocity.x, 0.0f, rb.velocity.z);
-//		}
-//	}
+    //private void KeepGrounded()
+    //{
+        //RaycastHit hit;
+        //if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, 2f))
+        //{
+        //    //			Debug.Log ("Grounding");
+        //    //rb.MovePosition (transform.position + new Vector3(0.0f, -hit.distance, 0.0f));
+        //    rb.MovePosition(transform.position - (transform.up * hit.distance));
+        //    //rb.velocity = Vector3.zero;
+        //    //rb.velocity = transform.rotation * new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
+        //}
+    //}
 
-	// perform movement based on velocity variable
-	private void PerformMovement(){
+    // perform movement based on velocity variable
+    private void PerformMovement(){
         
-        //rb.velocity += Vector3.down * gravity;
+        // don't apply gravity when against surface
+        // avoid sliding on sloped surfaces
+	    //if (onGround)
+	    //    KeepGrounded();
+        //else
         rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
         float localXVelocity = Vector3.Dot(rb.velocity, transform.right);
