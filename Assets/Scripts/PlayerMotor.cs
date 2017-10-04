@@ -223,117 +223,80 @@ public class PlayerMotor : MonoBehaviour {
         float localYVelocity = Vector3.Dot(rb.velocity, transform.up);
         float localZVelocity = Vector3.Dot(rb.velocity, transform.forward);
 
-        if (onGround) {
+        if (onGround)
+        {
 
-            Vector3 newVel = rb.velocity;
-
-            if (velocity != Vector3.zero) {
-
-//				rb.MovePosition (rb.position + (velocity * 0.1f));
-//				rb.AddForce (velocity * groundVelMod, ForceMode.VelocityChange);
-
-				// Vector3 newVel = new Vector3(velocity.x * velMod, 0.0f, velocity.z * velMod);
-                newVel = velocity * velMod;
-
-                // if sprinting and new speed less than old speed, keep old speed
-                //if (sprinting && (rb.velocity.magnitude > newVel.magnitude)) {
-                //    newVel = newVel.normalized * rb.velocity.magnitude * sprintDeceleration;
-                //}
-
-				if (jumpTimer <= 0) {
-					// rotate to face ground normals
-					float rayDistance = 0.5f;
-					RaycastHit hitInfo;
-
-					Ray ray = new Ray (transform.position - transform.up, -transform.up);
-					if (Physics.Raycast (ray, out hitInfo, rayDistance)) {
-						if (hitInfo.normal != transform.up) {
-
-                            // Decide here whether to rotate player as well
-                            float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
-                            if (surfaceAngleDiff < 45f)
-                            {
-                                // needs to be replaced by a proper value
-                                // may also cause weird behaviour when transitioning on curved surfaces
-
-                                // possibly need to modify velocity if surface normal above threshold?
-                                // stop sticking to walls when too steep
-                                Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
-                                newVel = rot * newVel;
-                            }
-						}
-					}
-				} else {
-                    // TODO:
-					newVel = newVel + (transform.up * localYVelocity);
-				}
-
-                if (crouching)
-                {
-                    crouchVelFactor = 0.5f;
-                    newVel *= crouchVelFactor;
-                }
-
-
-                newVel = MomentumSlide(newVel, PlayerController.Speed());
-
-                rb.velocity = newVel;
-
-            } else {
-				// no input vector
-                // needs to dampen movement along local xz axes
-				//newVel = transform.up * localYVelocity;
-
-                newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
-                //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
-
-                rb.velocity = newVel;
-            }
+            GroundMovement(localYVelocity);
 
 
         } else {
             // airborne
-            //Vector3 inputVel = velocity * airVelMod;
+            AirMovement(localXVelocity, localYVelocity, localZVelocity);
 
-            //rb.AddForce(inputVel, ForceMode.Acceleration);
+            
+        }
+	}
 
-            // old code
-            if (maxAirMagnitude == 0.0f)
+    void GroundMovement(float localYVelocity)
+    {
+        Vector3 newVel = rb.velocity;
+
+        if (velocity != Vector3.zero)
+        {
+
+            //				rb.MovePosition (rb.position + (velocity * 0.1f));
+            //				rb.AddForce (velocity * groundVelMod, ForceMode.VelocityChange);
+
+            // Vector3 newVel = new Vector3(velocity.x * velMod, 0.0f, velocity.z * velMod);
+            newVel = velocity * velMod;
+
+            // if sprinting and new speed less than old speed, keep old speed
+            //if (sprinting && (rb.velocity.magnitude > newVel.magnitude)) {
+            //    newVel = newVel.normalized * rb.velocity.magnitude * sprintDeceleration;
+            //}
+
+            if (jumpTimer <= 0)
             {
-                maxAirMagnitude = new Vector2(localXVelocity, localZVelocity).magnitude;
+                // rotate to face ground normals
+                float rayDistance = 0.5f;
+                RaycastHit hitInfo;
+
+                Ray ray = new Ray(transform.position - transform.up, -transform.up);
+                if (Physics.Raycast(ray, out hitInfo, rayDistance))
+                {
+                    if (hitInfo.normal != transform.up)
+                    {
+
+                        // Decide here whether to rotate player as well
+                        float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
+                        if (surfaceAngleDiff < 45f)
+                        {
+                            // needs to be replaced by a proper value
+                            // may also cause weird behaviour when transitioning on curved surfaces
+
+                            // possibly need to modify velocity if surface normal above threshold?
+                            // stop sticking to walls when too steep
+                            Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
+                            newVel = rot * newVel;
+                        }
+                    }
+                }
             }
-
-            if (maxAirMagnitude < maxAirLowerBound) maxAirMagnitude = maxAirLowerBound;
-
-            if (velocity != Vector3.zero)
+            else
             {
-                // midair position adjust
-                // needs to not allow extra velocity in same direction as jump
-
-                // add new XZ velocity to old XZ velocity
-                // no Y movement at this point (makes magnitude calculations easier)
-                Vector3 newVel = (velocity * airVelMod)
-                    + (localXVelocity * transform.right)
-                    + (localZVelocity * transform.forward);
-
-                // magnitude of relative XZ movement
-                float newVelMagnitude = newVel.magnitude;
-
-                if (newVelMagnitude < maxAirMagnitude && maxAirMagnitude > maxAirLowerBound)
-                {
-                    maxAirMagnitude = newVelMagnitude;
-                }
-                else if (newVelMagnitude > maxAirMagnitude)
-                {
-                    float factor = maxAirMagnitude / newVelMagnitude;
-                    newVel = newVel * factor;
-                }
-
-                // restore Y velocity
+                // TODO:
                 newVel = newVel + (transform.up * localYVelocity);
-
-                rb.velocity = newVel;
             }
+
+            if (crouching)
+            {
+                crouchVelFactor = 0.5f;
+                newVel *= crouchVelFactor;
+            }
+
+            newVel = MomentumSlide(newVel, PlayerController.Speed());
+
+            rb.velocity = newVel;
 
             if (crouching && canHover)
             {
@@ -341,7 +304,63 @@ public class PlayerMotor : MonoBehaviour {
                 StartCoroutine(Hover());
             }
         }
-	}
+        else
+        {
+            // no input vector
+            // needs to dampen movement along local xz axes
+            //newVel = transform.up * localYVelocity;
+
+            newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
+            //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
+
+            rb.velocity = newVel;
+        }
+    }
+
+    void AirMovement(float localXVelocity, float localYVelocity, float localZVelocity)
+    {
+        //Vector3 inputVel = velocity * airVelMod;
+
+        //rb.AddForce(inputVel, ForceMode.Acceleration);
+
+        // old code
+        if (maxAirMagnitude == 0.0f)
+        {
+            maxAirMagnitude = new Vector2(localXVelocity, localZVelocity).magnitude;
+        }
+
+        if (maxAirMagnitude < maxAirLowerBound) maxAirMagnitude = maxAirLowerBound;
+
+        if (velocity != Vector3.zero)
+        {
+            // midair position adjust
+            // needs to not allow extra velocity in same direction as jump
+
+            // add new XZ velocity to old XZ velocity
+            // no Y movement at this point (makes magnitude calculations easier)
+            Vector3 newVel = (velocity * airVelMod)
+                             + (localXVelocity * transform.right)
+                             + (localZVelocity * transform.forward);
+
+            // magnitude of relative XZ movement
+            float newVelMagnitude = newVel.magnitude;
+
+            if (newVelMagnitude < maxAirMagnitude && maxAirMagnitude > maxAirLowerBound)
+            {
+                maxAirMagnitude = newVelMagnitude;
+            }
+            else if (newVelMagnitude > maxAirMagnitude)
+            {
+                float factor = maxAirMagnitude / newVelMagnitude;
+                newVel = newVel * factor;
+            }
+
+            // restore Y velocity
+            newVel = newVel + (transform.up * localYVelocity);
+
+            rb.velocity = newVel;
+        }
+    }
 
     IEnumerator Hover()
     {
