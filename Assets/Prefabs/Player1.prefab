@@ -472,6 +472,8 @@ MonoBehaviour:
   warpGravShiftAngle: 1
   maxAirLowerBound: 10
   warpVelocityModifier: 20
+  maxViewShiftSpeed: 2
+  viewShiftStrengthMax: 35
 --- !u!114 &114000012321050414
 MonoBehaviour:
   m_ObjectHideFlags: 1

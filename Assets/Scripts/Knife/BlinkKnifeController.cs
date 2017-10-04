@@ -119,7 +119,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
             gravPanel = objectCollided.GetComponent<GravityPanel>();
             Vector3 gravVector = gravPanel.GetGravityVector();
             if (gravVector != Vector3.zero)
-                collisionNormal = gravVector;
+                collisionNormal = -gravVector;
         }
 
 		// activate knife marker ui
@@ -136,7 +136,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
     public Vector3 GetGravVector()
     {
-        return collisionNormal;
+        return -collisionNormal;
     }
 
 	public Vector3 GetVelocity (bool _throwVelocity){

@@ -20,7 +20,7 @@ public class FixedPlanetGravSource : MonoBehaviour {
 
     public Vector3 GetGravityVector()
     {
-        return (target.position - transform.position).normalized;
+        return (transform.position - target.position).normalized;
     }
 
     public float GetGravityStrength()

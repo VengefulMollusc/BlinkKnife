@@ -47,29 +47,38 @@ public class PlayerMotor : MonoBehaviour {
     public const string WarpNotification = "PlayerMotor.WarpNotification";
     public const string GravityWarpNotification = "PlayerMotor.GravityWarpNotification";
 
-    private bool frozen = false;
+    private bool frozen;
     private Vector3 frozenPos = Vector3.zero;
     private Vector3 frozenVel = Vector3.zero;
 
-	private bool onGround = false;
-	private bool colliding = false;
+	private bool onGround;
+	private bool colliding;
 
-    private bool crouching = false;
+    private bool crouching;
     private float crouchVelFactor = 1f;
 
     private Vector3 velocity = Vector3.zero;
 	private Vector3 rotation = Vector3.zero;
-    private bool sprinting = false;
-	private float cameraRotationX = 0f;
-	private float currentCamRotX = 0f;
+    private bool sprinting;
+	private float cameraRotationX;
+	private float currentCamRotX;
 
-	private int jumpTimer = 0;
+	private int jumpTimer;
 
-    private float maxAirMagnitude = 0.0f;
+    private float maxAirMagnitude;
 
     private Rigidbody rb;
 
     private Vector3 cameraRelativePos;
+
+    private Vector3 currentGravVector;
+    private float currentGravStrength;
+    
+    private float viewShiftSpeed;
+    private const float maxViewShiftSpeed = 3f;
+    private const float viewShiftStrengthMax = 35f;
+
+
 
     //[SerializeField]
     //private float healthMax = 100f;
@@ -93,6 +102,9 @@ public class PlayerMotor : MonoBehaviour {
 
     void Awake(){
         healthEnergy = GetComponent<HealthController>();
+
+        currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
+        currentGravStrength = GlobalGravityControl.GetGravityStrength();
     }
 
     void Start (){
@@ -150,7 +162,11 @@ public class PlayerMotor : MonoBehaviour {
     // Run every physics iteration
     void FixedUpdate(){
         // if frozen, dont perform any movement
-		if (!frozen) {
+		if (!frozen)
+		{
+
+		    GravityUpdate();
+
 			PerformMovement ();
 			onGround = false;
 			colliding = false;
@@ -161,6 +177,28 @@ public class PlayerMotor : MonoBehaviour {
 		PerformRotation();
 
         //Debug.Log(rb.velocity.magnitude);
+    }
+
+    void GravityUpdate()
+    {
+        // update gravity vector and strength from GlobalGravityControl
+        currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
+        currentGravStrength = GlobalGravityControl.GetGravityStrength();
+
+        // transition player orientation if not aligned to gravity
+        if (currentGravVector == -transform.up)
+            return;
+
+        // gravShiftSpeed change relative to strength
+        if (currentGravStrength >= viewShiftStrengthMax)
+            viewShiftSpeed = maxViewShiftSpeed;
+        else
+            viewShiftSpeed = Utilities.MapValues(currentGravStrength, 0f, viewShiftStrengthMax, 0f, maxViewShiftSpeed, true);
+
+
+        Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, viewShiftSpeed * Mathf.Deg2Rad, 0f);
+
+        UpdateGravityDirection(transitionUp);
     }
 
 //	private void KeepGrounded(){
@@ -177,7 +215,7 @@ public class PlayerMotor : MonoBehaviour {
 	private void PerformMovement(){
         
         //rb.velocity += Vector3.down * gravity;
-        rb.AddForce(-transform.up * GlobalGravityControl.GetGravityStrength(), ForceMode.Acceleration);
+        rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
         float localXVelocity = Vector3.Dot(rb.velocity, transform.right);
         float localYVelocity = Vector3.Dot(rb.velocity, transform.up);
@@ -427,12 +465,12 @@ public class PlayerMotor : MonoBehaviour {
         Vector3 relativeFacing = cam.transform.forward;
 
         Vector3 newPos = _knifeController.GetWarpPosition();
-        Vector3 newGravAngle = _knifeController.GetGravVector();
+        Vector3 newGravDirection = _knifeController.GetGravVector();
 
         // Shift gravity if the difference between current gravity and surface normal is
         // above the threshold defined by warpGravShiftAngle
-        float surfaceDiffAngle = Vector3.Angle(transform.up, newGravAngle);
-        bool gravityShift = (_shiftGravity && surfaceDiffAngle > warpGravShiftAngle && newGravAngle != Vector3.zero);
+        float surfaceDiffAngle = Vector3.Angle(-transform.up, newGravDirection);
+        bool gravityShift = (_shiftGravity && surfaceDiffAngle > warpGravShiftAngle && newGravDirection != Vector3.zero);
 
         if (gravityShift)
         {
@@ -446,7 +484,7 @@ public class PlayerMotor : MonoBehaviour {
         // rotate to surface normal
         if (gravityShift)
         {
-            RotateToSurface(newGravAngle, relativeFacing);
+            RotateToSurface(newGravDirection, relativeFacing);
         }
 
         // move to knife position
@@ -488,12 +526,12 @@ public class PlayerMotor : MonoBehaviour {
 
         if (gravityShift)
         {
-            GlobalGravityControl.TransitionGravity(newGravAngle, duration);
+            GlobalGravityControl.TransitionGravity(newGravDirection, duration);
         }
 
     }
 
-    // This looks like it's working,
+    // TODO: needs to update rotation but make sure vel doesn't rotate too
     public void UpdateGravityDirection(Vector3 _newUp)
     {
         // might be nessecary
@@ -514,16 +552,18 @@ public class PlayerMotor : MonoBehaviour {
      * Also rotates player momentum to new direction
      *  - allows fun things as well as removing enormous jump by falling
      */
-    private void RotateToSurface(Vector3 _surfaceNormal, Vector3 _relativeFacing)
+    private void RotateToSurface(Vector3 _gravDirection, Vector3 _relativeFacing)
     {
+        Vector3 _newUpDir = -_gravDirection;
+
         // store local velocity before rotation
         Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
 
         // aim the player at the new look vector
-        Vector3 newAimVector = Vector3.ProjectOnPlane(_relativeFacing, _surfaceNormal);
+        Vector3 newAimVector = Vector3.ProjectOnPlane(_relativeFacing, _newUpDir);
 
         // LookAt can take the surface normal
-        transform.LookAt(transform.position + newAimVector.normalized, _surfaceNormal);
+        transform.LookAt(transform.position + newAimVector.normalized, _newUpDir);
 
         // reset camera pitch to perpendicular to surface
         currentCamRotX = 0f;

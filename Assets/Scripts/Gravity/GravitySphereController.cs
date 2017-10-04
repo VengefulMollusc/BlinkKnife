@@ -19,7 +19,7 @@ public class GravitySphereController : MonoBehaviour {
 
     private Transform target;
 
-    private Vector3 currentUp;
+    private Vector3 currentGrav;
 
     /*
      * When parented to sphere, lets player modify gravity by walking along surface
@@ -70,17 +70,17 @@ public class GravitySphereController : MonoBehaviour {
 	void Update () {
         if (linkGrav || target.IsChildOf(transform))
         {
-            currentUp = GlobalGravityControl.GetGravityTarget();
-            Vector3 newUp = (target.position - transform.position).normalized;
-            if (currentUp != newUp)
+            currentGrav = GlobalGravityControl.GetGravityTarget();
+            Vector3 newGrav = (transform.position - target.position).normalized;
+            if (currentGrav != newGrav)
             {
                 if (invertGravDirection)
                 {
-                    GlobalGravityControl.ChangeGravity(-newUp, true);
+                    GlobalGravityControl.ChangeGravity(-newGrav);
                 }
                 else
                 {
-                    GlobalGravityControl.ChangeGravity(newUp, true);
+                    GlobalGravityControl.ChangeGravity(newGrav);
                 }
             }
         }

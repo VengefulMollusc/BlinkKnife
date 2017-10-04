@@ -39,6 +39,6 @@ public class FixedPlanetGravController : MonoBehaviour {
         if (closestSource == null)
             return;
 
-        GlobalGravityControl.ChangeGravity(closestSource.GetGravityVector(), closestSource.GetGravityStrength(), true);
+        GlobalGravityControl.ChangeGravity(closestSource.GetGravityVector(), closestSource.GetGravityStrength());
     }
 }

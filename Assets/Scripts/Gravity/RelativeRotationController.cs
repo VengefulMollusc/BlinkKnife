@@ -31,7 +31,6 @@ public class RelativeRotationController : MonoBehaviour {
     private float duration;
 
     private GameObject player;
-    private Vector3 playerUpDir;
 
     private Coroutine transitionCoroutine;
 
@@ -51,14 +50,14 @@ public class RelativeRotationController : MonoBehaviour {
 
     }
 
-    public void StartRotation(Vector3 _newUp, float _duration)
+    public void StartRotation(Vector3 _newGravDir, float _duration)
     //public void StartRotation(Quaternion _endRot, float _duration)
     {
         // cancel if not following gravity changes
         if (!followGravityDirection) return;
 
         startRot = transform.rotation;
-        endRot = CalculateEndRotation(_newUp);
+        endRot = CalculateEndRotation(_newGravDir);
         duration = _duration; // could multiply here to allow for lengthened shift effect
 
         if (modifyRotation)
@@ -71,12 +70,12 @@ public class RelativeRotationController : MonoBehaviour {
         transitionCoroutine = StartCoroutine(RotateTransition());
     }
 
-    public void SetRotation(Vector3 _newUp)
+    public void SetRotation(Vector3 _newGravDir)
     {
         // cancel if not following gravity changes
         if (!followGravityDirection) return;
 
-        endRot = CalculateEndRotation(_newUp);
+        endRot = CalculateEndRotation(_newGravDir);
 
         if (modifyRotation)
             ApplyModifiers();
@@ -92,14 +91,14 @@ public class RelativeRotationController : MonoBehaviour {
             transform.Rotate(ambientRotAxis, ambientRotSpeed * Time.deltaTime);
             if (player.transform.IsChildOf(transform))
             {
-                Vector3 currentUp = GlobalGravityControl.GetGravityTarget();
-                Vector3 newUp = player.transform.up;
+                Vector3 currentGravDir = GlobalGravityControl.GetGravityTarget();
+                Vector3 newGravDir = -player.transform.up;
 
-                float angle = Vector3.Angle(currentUp, newUp);
+                float angle = Vector3.Angle(currentGravDir, newGravDir);
 
                 // angle threshold here instead??
                 // appears to be generally worse...
-                if (currentUp != newUp)
+                if (currentGravDir != newGravDir)
                 {
                     /*
                      * If ambient rotation is low (<~10) this causes 'stutters'
@@ -115,11 +114,12 @@ public class RelativeRotationController : MonoBehaviour {
                     /*
                      * Could refactor to apply the ambient rotation to the global control?
                      */
-                    GlobalGravityControl.ChangeGravity(newUp, false);
+                    GlobalGravityControl.ChangeGravity(newGravDir);
                 }
             }
         }
 
+        // TODO: Not sure why this is here....
 		if (followPlayerPosition)
 			transform.position = Camera.main.transform.position;
     }
@@ -191,8 +191,9 @@ public class RelativeRotationController : MonoBehaviour {
     //    return newRot;
     //}
 
-    private Quaternion CalculateEndRotation(Vector3 _up)
+    private Quaternion CalculateEndRotation(Vector3 _newGravDir)
     {
+        Vector3 _up = -_newGravDir;
         float angleToUp = Vector3.Angle(_up, Vector3.up);
         //float angleToForward = Vector3.Angle(_up, Vector3.forward);
         float angleToRight = Vector3.Angle(_up, Vector3.right);

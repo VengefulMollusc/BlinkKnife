@@ -39,13 +39,10 @@ public class UtiliseGravity : MonoBehaviour {
 
 	void FixedUpdate () {
         // apply gravity
-        Vector3 currentGravity;
+        Vector3 currentGravity = GlobalGravityControl.GetCurrentGravityVector();
         if (reverseGravityEffect)
         {
-            currentGravity = GlobalGravityControl.GetCurrentGravityUpVector();
-        } else
-        {
-            currentGravity = GlobalGravityControl.GetCurrentGravityDownVector();
+            currentGravity = -currentGravity;
         }
         
         float gravityStrength = GlobalGravityControl.GetGravityStrength();

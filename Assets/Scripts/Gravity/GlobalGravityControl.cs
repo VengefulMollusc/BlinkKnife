@@ -12,19 +12,15 @@ public class GlobalGravityControl : MonoBehaviour {
     // instance needed to start coroutine in static method
     public static GlobalGravityControl instance;
 
-    // current gravity direction and strength
-    // TODO: figure out whether this needs to be an up or down vector
-    private static Vector3 currentUpDirection;
+    // current gravity DOWN direction and strength
+    private static Vector3 currentGravDirection;
     private static float currentGravityStrength = 35f;
 
-    private const float maxGravShiftSpeed = 2f;
-    private const float gravShiftStrengthMax = 35f;
-
-    private static Vector3 tempUp;
+    private static Vector3 tempGravDir;
 
     // gravity target direction and shift speed
     // used when shifting
-    private static Vector3 targetUpDirection;
+    private static Vector3 targetGravDirection;
     private static float gravShiftSpeed = 2;
     private static float duration;
 
@@ -49,8 +45,8 @@ public class GlobalGravityControl : MonoBehaviour {
 
         playerMotor = player.GetComponent<PlayerMotor>();
 
-        currentUpDirection = Vector3.up;
-        targetUpDirection = currentUpDirection;
+        currentGravDirection = -player.transform.up;
+        targetGravDirection = currentGravDirection;
 
         instance = this;    
 	}
@@ -60,32 +56,27 @@ public class GlobalGravityControl : MonoBehaviour {
         return currentGravityStrength;
     }
 
-    public static Vector3 GetCurrentGravityUpVector()
+    public static Vector3 GetCurrentGravityVector()
     {
-        return currentUpDirection;
-    }
-
-    public static Vector3 GetCurrentGravityDownVector()
-    {
-        return -currentUpDirection;
+        return currentGravDirection;
     }
 
     public static Vector3 GetGravityTarget()
     {
-        return targetUpDirection;
+        return targetGravDirection;
     }
 
-    public static void TransitionGravity(Vector3 _newUp, float _duration)
+    public static void TransitionGravity(Vector3 _newGravDirection, float _duration)
     {
         duration = _duration;
-        targetUpDirection = _newUp.normalized;
-        tempUp = currentUpDirection;
+        targetGravDirection = _newGravDirection.normalized;
+        tempGravDir = currentGravDirection;
 
         // trigger scene objects to rotate
         foreach (RelativeRotationController r in rotationObjects)
         {
             if (r.IsFollowGravity())
-                r.StartRotation(targetUpDirection, duration);
+                r.StartRotation(targetGravDirection, duration);
         }
 
         if (shiftingCoroutine != null)
@@ -102,57 +93,56 @@ public class GlobalGravityControl : MonoBehaviour {
         while (t < 1f)
         {
             t += Time.deltaTime * (Time.timeScale / duration);
-            currentUpDirection = Vector3.Slerp(tempUp, targetUpDirection, t);
+            currentGravDirection = Vector3.Slerp(tempGravDir, targetGravDirection, t);
 
             // update gravity-dependant objects here
-            //playerMotor.UpdateGravityDirection(currentUpDirection);
+            //playerMotor.UpdateGravityDirection(currentGravDirection);
 
             yield return 0;
         }
         shiftingCoroutine = null;
     }
 
-    public static void ChangeGravity(Vector3 _newUp, float _newStrength, bool _modifyPlayer)
+
+    /*
+     * ChangeGravity methods
+     */
+    public static void ChangeGravity(Vector3 _newGravDir, float _newStrength)
     {
         currentGravityStrength = _newStrength; // possibly need some smoothing here
 
-        // gravShiftSpeed change relative to strength
-        if (currentGravityStrength >= gravShiftStrengthMax)
-            gravShiftSpeed = maxGravShiftSpeed;
-        else
-            gravShiftSpeed = Utilities.MapValues(currentGravityStrength, 0f, gravShiftStrengthMax, 0f, maxGravShiftSpeed, true);
-
-        ChangeGravity(_newUp, _modifyPlayer);
+        ChangeGravity(_newGravDir);
     }
 
-    public static void ChangeGravity(Vector3 _newUp, bool _modifyPlayer)
+    public static void ChangeGravity(Vector3 _newGravDir)
     {
         if (shiftingCoroutine != null)
             return;
         
         // interpolate for large differences in rotation
-        Vector3 transitionUp = Vector3.RotateTowards(currentUpDirection, _newUp, gravShiftSpeed * Mathf.Deg2Rad, 0f);
+        //Vector3 transitionUp = Vector3.RotateTowards(currentGravDirection, _newGravDir, gravShiftSpeed * Mathf.Deg2Rad, 0f);
 
-        targetUpDirection = transitionUp;
-        currentUpDirection = targetUpDirection;
+        //targetUpDirection = transitionUp;
+        //currentGravDirection = targetUpDirection;
+        currentGravDirection = _newGravDir;
 
-        if (_modifyPlayer)
-        {
-            // set player gravity direction
-            playerMotor.UpdateGravityDirection(currentUpDirection);
-        }
+        //if (_modifyPlayer)
+        //{
+        //    // set player gravity direction
+        //    playerMotor.UpdateGravityDirection(currentGravDirection);
+        //}
 
         // Set scene object rotation
         foreach (RelativeRotationController r in rotationObjects)
         {
             if (r.IsFollowGravity())
-                r.SetRotation(targetUpDirection);
+                r.SetRotation(targetGravDirection);
         }
     }
 
-    //private static float CalculateDuration(Vector3 _currUp, Vector3 _newUp, float _speedMod)
+    //private static float CalculateDuration(Vector3 _currUp, Vector3 _newGravDir, float _speedMod)
     //{
-    //    float angle = Vector3.Angle(_currUp, _newUp);
+    //    float angle = Vector3.Angle(_currUp, _newGravDir);
     //    float dur = angle / _speedMod;
 
     //    return dur;

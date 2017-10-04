@@ -253,7 +253,7 @@ public class MissileController : MonoBehaviour {
 
         // damage and apply explosion force to objects
         // add gravity down vector to boost upward force on explosion
-        Utilities.CreateExplosion(transform.position + GlobalGravityControl.GetCurrentGravityDownVector(), 
+        Utilities.CreateExplosion(transform.position + GlobalGravityControl.GetCurrentGravityVector(), 
             expRadius, expDamage, expForce);
 
         // destroy ui marker

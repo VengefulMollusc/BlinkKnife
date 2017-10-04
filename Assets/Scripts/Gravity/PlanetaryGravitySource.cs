@@ -60,13 +60,13 @@ public class PlanetaryGravitySource : MonoBehaviour
         if (target == null)
             return Vector3.zero;
 
-        Vector3 dirToPlayer = target.position - transform.position;
-        float distToPlayer = dirToPlayer.magnitude;
+        Vector3 gravDirection = transform.position - target.position;
+        float distToPlayer = gravDirection.magnitude;
 
         float strengthRatio = Utilities.MapValues(distToPlayer, planetRadius, maxGravDist, 1f, 0f, true);
 
         float currentStrength = strengthRatio * strengthRatio * gravStrength; // exponential dropoff?
 
-        return dirToPlayer.normalized * currentStrength;
+        return gravDirection.normalized * currentStrength;
     }
 }

@@ -6,7 +6,7 @@ public class GravityPanel : MonoBehaviour {
     [SerializeField]
     private bool customGravity = false;
     [SerializeField]
-    private Vector3 customGravUpVector;
+    private Vector3 customGravVector;
 
     [SerializeField]
     private bool useSurfaceNormal = false;
@@ -17,7 +17,7 @@ public class GravityPanel : MonoBehaviour {
 	public Vector3 GetGravityVector()
     {
         if (useSurfaceNormal) return Vector3.zero;
-        if (customGravity) return customGravUpVector;
-        return transform.up;
+        if (customGravity) return customGravVector;
+        return -transform.up;
     }
 }
