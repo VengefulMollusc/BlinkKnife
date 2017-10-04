@@ -330,32 +330,7 @@ public class PlayerMotor : MonoBehaviour {
 
         if (velocity != Vector3.zero)
         {
-            // midair position adjust
-            // needs to not allow extra velocity in same direction as jump
-
-            // add new XZ velocity to old XZ velocity
-            // no Y movement at this point (makes magnitude calculations easier)
-            Vector3 newVel = (velocity * airVelMod)
-                             + (localXVelocity * transform.right)
-                             + (localZVelocity * transform.forward);
-
-            // magnitude of relative XZ movement
-            float newVelMagnitude = newVel.magnitude;
-
-            if (newVelMagnitude < maxAirMagnitude && maxAirMagnitude > maxAirLowerBound)
-            {
-                maxAirMagnitude = newVelMagnitude;
-            }
-            else if (newVelMagnitude > maxAirMagnitude)
-            {
-                float factor = maxAirMagnitude / newVelMagnitude;
-                newVel = newVel * factor;
-            }
-
-            // restore Y velocity
-            newVel = newVel + (transform.up * localYVelocity);
-
-            rb.velocity = newVel;
+            //HandleMidairInput(localXVelocity, localYVelocity, localZVelocity);
         }
 
         if (crouching && canHover)
@@ -363,6 +338,36 @@ public class PlayerMotor : MonoBehaviour {
             canHover = false;
             StartCoroutine(Hover());
         }
+    }
+
+    private void HandleMidairInput(float localXVelocity, float localYVelocity, float localZVelocity)
+    {
+        // midair position adjust
+        // needs to not allow extra velocity in same direction as jump
+
+        // add new XZ velocity to old XZ velocity
+        // no Y movement at this point (makes magnitude calculations easier)
+        Vector3 newVel = (velocity * airVelMod)
+                         + (localXVelocity * transform.right)
+                         + (localZVelocity * transform.forward);
+
+        // magnitude of relative XZ movement
+        float newVelMagnitude = newVel.magnitude;
+
+        if (newVelMagnitude < maxAirMagnitude && maxAirMagnitude > maxAirLowerBound)
+        {
+            maxAirMagnitude = newVelMagnitude;
+        }
+        else if (newVelMagnitude > maxAirMagnitude)
+        {
+            float factor = maxAirMagnitude / newVelMagnitude;
+            newVel = newVel * factor;
+        }
+
+        // restore Y velocity
+        newVel = newVel + (transform.up * localYVelocity);
+
+        rb.velocity = newVel;
     }
 
     IEnumerator Hover()
