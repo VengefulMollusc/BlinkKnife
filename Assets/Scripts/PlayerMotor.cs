@@ -457,9 +457,18 @@ public class PlayerMotor : MonoBehaviour {
 	public void Jump(float _jumpStrength){
 		if (!onGround || frozen) 
 			return;
+
+        // keeps slope momentum on jump
+        //rb.velocity = new Vector3(rb.velocity.x, _jumpStrength, rb.velocity.z);
         
-		// keeps slope momentum on jump
-		//rb.velocity = new Vector3(rb.velocity.x, _jumpStrength, rb.velocity.z);
+	    if (Vector3.Dot(rb.velocity, transform.up) < 0)
+	    {
+            // moving down slope while jumping
+            // cancel downward momentum when jump
+	        Vector3 yComponent = Vector3.Project(rb.velocity, transform.up);
+	        rb.velocity -= yComponent;
+	    }
+
         rb.velocity = rb.velocity + (transform.up * _jumpStrength);
         jumpTimer = 30;
         SetCrouching(false);
