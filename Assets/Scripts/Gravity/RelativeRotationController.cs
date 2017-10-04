@@ -114,7 +114,7 @@ public class RelativeRotationController : MonoBehaviour {
                     /*
                      * Could refactor to apply the ambient rotation to the global control?
                      */
-                    GlobalGravityControl.ChangeGravity(newGravDir);
+                    GlobalGravityControl.ChangeGravity(newGravDir, true);
                 }
             }
         }

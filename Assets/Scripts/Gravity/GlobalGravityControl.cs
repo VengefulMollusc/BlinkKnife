@@ -107,14 +107,14 @@ public class GlobalGravityControl : MonoBehaviour {
     /*
      * ChangeGravity methods
      */
-    public static void ChangeGravity(Vector3 _newGravDir, float _newStrength)
+    public static void ChangeGravity(Vector3 _newGravDir, float _newStrength, bool _dontAllowSmoothing)
     {
         currentGravityStrength = _newStrength; // possibly need some smoothing here
 
-        ChangeGravity(_newGravDir);
+        ChangeGravity(_newGravDir, _dontAllowSmoothing);
     }
 
-    public static void ChangeGravity(Vector3 _newGravDir)
+    public static void ChangeGravity(Vector3 _newGravDir, bool _dontAllowSmoothing)
     {
         if (shiftingCoroutine != null)
             return;
@@ -126,11 +126,11 @@ public class GlobalGravityControl : MonoBehaviour {
         //currentGravDirection = targetUpDirection;
         currentGravDirection = _newGravDir;
 
-        //if (_modifyPlayer)
-        //{
-        //    // set player gravity direction
-        //    playerMotor.UpdateGravityDirection(currentGravDirection);
-        //}
+        if (_dontAllowSmoothing)
+        {
+            // set player gravity direction instantly
+            playerMotor.UpdateGravityDirection(-currentGravDirection);
+        }
 
         // Set scene object rotation
         foreach (RelativeRotationController r in rotationObjects)

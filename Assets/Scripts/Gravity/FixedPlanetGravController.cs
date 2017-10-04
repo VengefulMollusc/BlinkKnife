@@ -28,7 +28,7 @@ public class FixedPlanetGravController : MonoBehaviour {
 
         foreach (FixedPlanetGravSource source in gravitySources)
         {
-            float distToTarget = source.GetDistToTarget();
+            float distToTarget = source.GetDistToSurface();
             if (distToTarget < closestDist)
             {
                 closestDist = distToTarget;
@@ -39,6 +39,6 @@ public class FixedPlanetGravController : MonoBehaviour {
         if (closestSource == null)
             return;
 
-        GlobalGravityControl.ChangeGravity(closestSource.GetGravityVector(), closestSource.GetGravityStrength());
+        GlobalGravityControl.ChangeGravity(closestSource.GetGravityVector(), closestSource.GetGravityStrength(), false);
     }
 }

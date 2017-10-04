@@ -8,17 +8,11 @@ using UnityEngine;
  */
 public class PlanetaryGravitySource : MonoBehaviour
 {
-    //[SerializeField] private bool overrideDefaultGravVals = false;
-    [SerializeField] private float gravDistFromSurfaceOverride = 100f;
-    [SerializeField] private float gravStrengthOverride = 35f;
-
-    //private const float gravDistanceRatio = 3f;
-    //private const float gravStrengthRatio = 1.5f;
+    [SerializeField] private float gravMinDistance = 20f;
+    [SerializeField] private float gravMaxDistance = 100f;
+    [SerializeField] private float gravStrength = 35f;
 
     private float planetRadius;
-    private float maxGravDist;
-    private float gravDistance;
-    private float gravStrength;
 
     private Transform target;
 
@@ -26,29 +20,7 @@ public class PlanetaryGravitySource : MonoBehaviour
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        CalculateGravValues();
-    }
-
-    void CalculateGravValues()
-    {
         planetRadius = transform.localScale.x / 2f;
-
-        gravDistance = gravDistFromSurfaceOverride;
-        gravStrength = gravStrengthOverride;
-
-        //if (overrideDefaultGravVals)
-        //{
-        //    gravDistance = gravDistFromSurfaceOverride;
-        //    gravStrength = gravStrengthOverride;
-        //}
-        //else
-        //{
-        //    // strength and range are both relative to planetRadius
-        //    gravDistance = planetRadius * gravDistanceRatio;
-        //    gravStrength = planetRadius * gravStrengthRatio;
-        //}
-
-        maxGravDist = planetRadius + gravDistance;
     }
 
     /**
@@ -61,9 +33,9 @@ public class PlanetaryGravitySource : MonoBehaviour
             return Vector3.zero;
 
         Vector3 gravDirection = transform.position - target.position;
-        float distToPlayer = gravDirection.magnitude;
+        float distToPlayer = gravDirection.magnitude - planetRadius;
 
-        float strengthRatio = Utilities.MapValues(distToPlayer, planetRadius, maxGravDist, 1f, 0f, true);
+        float strengthRatio = Utilities.MapValues(distToPlayer, gravMinDistance, gravMaxDistance, 1f, 0f, true);
 
         float currentStrength = strengthRatio * strengthRatio * gravStrength; // exponential dropoff?
 

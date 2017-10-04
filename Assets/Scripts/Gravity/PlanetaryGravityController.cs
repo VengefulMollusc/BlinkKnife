@@ -54,6 +54,6 @@ public class PlanetaryGravityController : MonoBehaviour
         // Always aligns gravity direction to strongest source
         float newGravStrength = Vector3.Dot(newGravDir.normalized, strongest.normalized) * strongest.magnitude; // takes component along strongest source
         strongest.Normalize();
-        GlobalGravityControl.ChangeGravity(strongest, newGravStrength);
+        GlobalGravityControl.ChangeGravity(strongest, newGravStrength, false);
     }
 }

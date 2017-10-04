@@ -187,8 +187,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravDistFromSurfaceOverride: 100
-  gravStrengthOverride: 30
+  gravMinDistance: 20
+  gravMaxDistance: 100
+  gravStrength: 35
 --- !u!23 &171621096
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -526,8 +527,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravDistFromSurfaceOverride: 250
-  gravStrengthOverride: 37
+  gravMinDistance: 20
+  gravMaxDistance: 100
+  gravStrength: 35
 --- !u!23 &764701345
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -664,8 +666,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravDistFromSurfaceOverride: 300
-  gravStrengthOverride: 35
+  gravMinDistance: 20
+  gravMaxDistance: 100
+  gravStrength: 35
 --- !u!23 &797070187
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -826,7 +829,7 @@ Prefab:
     - target: {fileID: 114317734805566482, guid: f9b835f1cba560e4095a42f68ffdb6d7,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f9b835f1cba560e4095a42f68ffdb6d7, type: 2}
@@ -842,7 +845,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1730665802}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5ee726d8d814974b910075d59176938, type: 3}
   m_Name: 
@@ -905,8 +908,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravDistFromSurfaceOverride: 100
-  gravStrengthOverride: 30
+  gravMinDistance: 20
+  gravMaxDistance: 100
+  gravStrength: 35
 --- !u!23 &1792964468
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1029,8 +1033,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd89737b4edd264ea2c9f3055a310ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravDistFromSurfaceOverride: 100
-  gravStrengthOverride: 30
+  gravMinDistance: 20
+  gravMaxDistance: 100
+  gravStrength: 35
 --- !u!23 &1971466099
 MeshRenderer:
   m_ObjectHideFlags: 0

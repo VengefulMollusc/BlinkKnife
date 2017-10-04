@@ -19182,7 +19182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customGravity: 0
-  customGravUpVector: {x: 0, y: 0, z: 0}
+  customGravVector: {x: 0, y: 0, z: 0}
   useSurfaceNormal: 1
 --- !u!114 &1262273704
 MonoBehaviour:
@@ -28620,6 +28620,11 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 114000011047979872, guid: 0027516dd5720454196a0ce28774fa96,
+        type: 2}
+      propertyPath: useSurfaceNormal
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
   m_IsPrefabParent: 0
@@ -28824,7 +28829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customGravity: 0
-  customGravUpVector: {x: 0, y: 0, z: 0}
+  customGravVector: {x: 0, y: 0, z: 0}
   useSurfaceNormal: 1
 --- !u!1001 &2084962161
 Prefab:

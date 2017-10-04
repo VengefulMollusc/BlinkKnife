@@ -76,11 +76,11 @@ public class GravitySphereController : MonoBehaviour {
             {
                 if (invertGravDirection)
                 {
-                    GlobalGravityControl.ChangeGravity(-newGrav);
+                    GlobalGravityControl.ChangeGravity(-newGrav, true);
                 }
                 else
                 {
-                    GlobalGravityControl.ChangeGravity(newGrav);
+                    GlobalGravityControl.ChangeGravity(newGrav, true);
                 }
             }
         }
