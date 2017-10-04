@@ -297,12 +297,6 @@ public class PlayerMotor : MonoBehaviour {
             newVel = MomentumSlide(newVel, PlayerController.Speed());
 
             rb.velocity = newVel;
-
-            if (crouching && canHover)
-            {
-                canHover = false;
-                StartCoroutine(Hover());
-            }
         }
         else
         {
@@ -359,6 +353,12 @@ public class PlayerMotor : MonoBehaviour {
             newVel = newVel + (transform.up * localYVelocity);
 
             rb.velocity = newVel;
+        }
+
+        if (crouching && canHover)
+        {
+            canHover = false;
+            StartCoroutine(Hover());
         }
     }
 
@@ -540,6 +540,10 @@ public class PlayerMotor : MonoBehaviour {
 
             // fixes horizontal momentum lock when warping
             onGround = false;
+        } else if (_knifeController.HasCollided())
+        {
+            // cancel momentum
+            rb.velocity = Vector3.zero;
         }
 
         // fixes horizontal momentum lock when warping
