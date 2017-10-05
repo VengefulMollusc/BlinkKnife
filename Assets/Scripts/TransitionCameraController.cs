@@ -19,15 +19,6 @@ public class TransitionCameraController : MonoBehaviour
     [Header("Default Warp")]
     [SerializeField] private float baseTransDuration = 1f; // 0.5f
     [SerializeField] private float maxDistModifier = 1f;
-    //[SerializeField]
-    //private bool useDuration = true;
-
-    //[SerializeField]
-    //private float transDuration = 1f; // 0.2f
-
-    //[SerializeField]
-    //[Range(0.0f, 500.0f)]
-    //private float transSpeed = 200f;
 
     [Header("Gravity Warp")]
     [SerializeField] private float gravBaseTransDuration = 1f; // 0.5f
@@ -49,8 +40,6 @@ public class TransitionCameraController : MonoBehaviour
     [SerializeField]
     private float fovSpeedModMax = 50f;
     private float fovDiff;
-
-    //private int baseLayerMask;
 
     public void Setup(Camera _playerCam, PlayerMotor _playerMotor)
     {
@@ -109,12 +98,6 @@ public class TransitionCameraController : MonoBehaviour
     // Triggers the transition animation, unsure if this is needed, could put in setup
     public void StartTransition()
     {
-        //        if (startPosition == null || endPosition == null)
-        //        {
-        //            Debug.LogError("Transition camera missing start or end position");
-        //            return;
-        //        }
-
         playerCam.enabled = false;
         playerMotor.Freeze();
 
@@ -126,25 +109,6 @@ public class TransitionCameraController : MonoBehaviour
         float t = 0.0f;
         while (t < 1.0f)
         {
-            // TODO: 
-            // Physics.CheckSphere(transform.position, 0.1f);
-            // if ^ then inside mesh and should render black
-            //if (Physics.CheckSphere(transform.position, 0.1f))
-            //{
-            //    // disable this camera and enable 'black' camera
-            //    // with: Clear flags - Solid Color
-            //    // background - Black
-            //    // culling mask - nothing
-            //    cam.cullingMask = (1 << LayerMask.NameToLayer("Particles"));
-            //    // or use image effects/distortion to 'warp' image while inside?
-            //} else
-            //{
-            //    cam.cullingMask = baseLayerMask;
-            //}
-
-            // TODO: Need to decide lerp or slerp
-            // Lerp is more accurate/less bugs
-            // but slerp gives a cool curve effect to the position movement
             t += Time.deltaTime * (Time.timeScale / duration);
 
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
@@ -173,13 +137,6 @@ public class TransitionCameraController : MonoBehaviour
         }
 
         playerCam.enabled = true;
-
-        // wallhang if crouching
-        //if (playerMotor.WallHang () && toBeParent != null) {
-        //	playerMotor.transform.SetParent(toBeParent.transform);
-        //} else {
-        //	playerMotor.UnFreeze ();
-        //}
 
         playerMotor.UnFreeze();
 
