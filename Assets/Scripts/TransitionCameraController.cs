@@ -150,19 +150,25 @@ public class TransitionCameraController : MonoBehaviour
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
 
             gameObject.transform.position = Vector3.Lerp(startPos, endPos, lerpPercent);
+            
+            // tAlt transitions from 0-1-0 over warp
+            float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
+
+            if (gravityShift || duration > 0.4f)
+            {
+                // increase FOV while long/gravity shift
+                cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
+            }
 
             if (gravityShift)
             {
                 // lerp rotation as well
                 gameObject.transform.rotation = Quaternion.Lerp(startRot, endRot, lerpPercent);
-
-                float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
-                // increase FOV while gravity shift
-                cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
                 // increase chromatic aberration during gravity shift
                 //chromAberration.chromaticAberration = Mathf.Lerp(chromMaxValue, chromMinValue, tChrom);
                 chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
+
             yield return 0;
         }
 
