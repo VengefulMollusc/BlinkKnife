@@ -107,9 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2459234c08db7dc47bebfa3a6405dbdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useDuration: 1
-  transDuration: 0.2
-  transSpeed: 200
+  baseTransDuration: 0.2
+  maxDistModifier: 0.4
   gravBaseTransDuration: 0.4
   gravMaxDistModifier: 0.8
   chromaticAberrationMaxValue: 30

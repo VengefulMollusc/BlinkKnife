@@ -295,6 +295,8 @@ public class PlayerMotor : MonoBehaviour {
             }
             else
             {
+                // TODO: figure out why the following TODO is here...
+
                 // TODO:
                 newVel = newVel + (transform.up * localYVelocity);
             }

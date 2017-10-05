@@ -17,15 +17,17 @@ public class TransitionCameraController : MonoBehaviour
     private PlayerMotor playerMotor;
 
     [Header("Default Warp")]
-    [SerializeField]
-    private bool useDuration = true;
+    [SerializeField] private float baseTransDuration = 1f; // 0.5f
+    [SerializeField] private float maxDistModifier = 1f;
+    //[SerializeField]
+    //private bool useDuration = true;
 
-    [SerializeField]
-    private float transDuration = 1f; // 0.2f
+    //[SerializeField]
+    //private float transDuration = 1f; // 0.2f
 
-    [SerializeField]
-    [Range(0.0f, 500.0f)]
-    private float transSpeed = 200f;
+    //[SerializeField]
+    //[Range(0.0f, 500.0f)]
+    //private float transSpeed = 200f;
 
     [Header("Gravity Warp")]
     [SerializeField] private float gravBaseTransDuration = 1f; // 0.5f
@@ -82,29 +84,21 @@ public class TransitionCameraController : MonoBehaviour
         float dist = Vector3.Distance(startPos, endPos);
 
         if (gravityShift)
-        {
-            // use the given duration
-            float distModifier = Utilities.MapValues(dist, 0f, 100f, 0f, gravMaxDistModifier, true);
-            duration = gravBaseTransDuration + distModifier;
-
-            // modify fovMax by speed
-            float speed = dist / duration;
-            fovMaxValue = Utilities.MapValues(speed, 0f, fovSpeedModMax, cam.fieldOfView, fovMaxValue, true);
-            fovDiff = fovMaxValue - cam.fieldOfView;
-        }
+            CalculateDuration(dist, gravBaseTransDuration, gravMaxDistModifier);
         else
-        {
-            if (!useDuration)
-            {
-                // calculate duration based on distance
-                duration = dist / transSpeed;
-            }
-            else
-            {
-                // use the given duration
-                duration = transDuration;
-            }
-        }
+            CalculateDuration(dist, baseTransDuration, maxDistModifier);
+    }
+
+    private void CalculateDuration(float _dist, float _baseDuration, float _modifier)
+    {
+        // use the given duration
+        float distModifier = Utilities.MapValues(_dist, 0f, 100f, 0f, _modifier, true);
+        duration = _baseDuration + distModifier;
+
+        // modify fovMax by speed
+        float speed = _dist / duration;
+        fovMaxValue = Utilities.MapValues(speed, 0f, fovSpeedModMax, cam.fieldOfView, fovMaxValue, true);
+        fovDiff = fovMaxValue - cam.fieldOfView;
     }
 
     public float GetDuration()
