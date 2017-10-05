@@ -280,6 +280,16 @@ public class PlayerMotor : MonoBehaviour {
                             Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
                             newVel = rot * newVel;
                         }
+                        else
+                        {
+                            Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
+
+                            if (Vector3.Dot(newVel, flatNormal) < 0)
+                            {
+                                // don't allow movement up slope
+                                newVel -= Vector3.Project(newVel, flatNormal);
+                            }
+                        }
                     }
                 }
             }
@@ -305,7 +315,10 @@ public class PlayerMotor : MonoBehaviour {
             // needs to dampen movement along local xz axes
             // newVel = transform.up * localYVelocity;
 
-            newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
+            newVel = (Vector3.ProjectOnPlane(newVel, transform.up) * 0.9f) + transform.up * localYVelocity;
+
+            //newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
+
             //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
 
             rb.velocity = newVel;
