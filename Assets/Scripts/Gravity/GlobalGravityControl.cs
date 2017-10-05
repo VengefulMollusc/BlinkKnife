@@ -128,7 +128,7 @@ public class GlobalGravityControl : MonoBehaviour {
         if (_dontAllowSmoothing)
         {
             // set player gravity direction instantly
-            playerMotor.UpdateGravityDirection(-currentGravDirection);
+            playerMotor.UpdateGravityDirection(currentGravDirection);
         }
 
         // Set scene object rotation

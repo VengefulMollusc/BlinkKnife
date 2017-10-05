@@ -74,28 +74,8 @@ public class PlayerMotor : MonoBehaviour {
     private float currentGravStrength;
     
     private float viewShiftSpeed;
-    private const float maxViewShiftSpeed = 3f;
+    private const float maxViewShiftSpeed = 4f;
     private const float viewShiftStrengthMax = 35f;
-
-
-
-    //[SerializeField]
-    //private float healthMax = 100f;
-    //private float health;
-    //[SerializeField]
-    //private float healthRechargeDelay = 5f;
-    //private float healthRechargeCounter = 0f;
-    //[SerializeField]
-    //private float healthRechargeRate = 10f;
-
-    //[SerializeField]
-    //private float energyMax = 100f;
-    //private float energy;
-    //[SerializeField]
-    //private float energyRechargeDelay = 1f;
-    //private float energyRechargeCounter = 0f;
-    //[SerializeField]
-    //private float energyRechargeRate = 30f;
 
     private HealthController healthEnergy;
 
@@ -198,7 +178,7 @@ public class PlayerMotor : MonoBehaviour {
 
         Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, viewShiftSpeed * Mathf.Deg2Rad, 0f);
 
-        UpdateGravityDirection(transitionUp);
+        UpdateGravityDirection(-transitionUp);
     }
 
     //private void KeepGrounded()
@@ -226,15 +206,11 @@ public class PlayerMotor : MonoBehaviour {
 
         if (onGround)
         {
-
+            // grounded
             GroundMovement(localYVelocity);
-
-
         } else {
             // airborne
             AirMovement(localXVelocity, localYVelocity, localZVelocity);
-
-            
         }
 	}
 
@@ -503,7 +479,7 @@ public class PlayerMotor : MonoBehaviour {
         // rotate to surface normal
         if (gravityShift)
         {
-            RotateToSurface(newGravDirection, relativeFacing);
+            RotateToDirection(newGravDirection, relativeFacing);
         }
 
         // move to knife position
@@ -556,12 +532,14 @@ public class PlayerMotor : MonoBehaviour {
 
     }
 
-    // TODO: needs to update rotation but make sure vel doesn't rotate too
-    public void UpdateGravityDirection(Vector3 _newUp)
+    // TODO: try out altering camera angles to maintain global look direction
+    // TODO: - similar to RotateToDirection
+    public void UpdateGravityDirection(Vector3 _newGrav)
     {
+        Vector3 _newUp = -_newGrav;
         // might be nessecary
         transform.LookAt(transform.position + transform.forward, _newUp); //?
-        // probably need similar code to RotateToSurface to align in correct direction
+        // probably need similar code to RotateToDirection to align in correct direction
 
         // possible fix - take from site to eliminate setting transform.up issue
         transform.rotation = Quaternion.LookRotation(_newUp, -transform.forward);
@@ -577,7 +555,7 @@ public class PlayerMotor : MonoBehaviour {
      * Also rotates player momentum to new direction
      *  - allows fun things as well as removing enormous jump by falling
      */
-    private void RotateToSurface(Vector3 _gravDirection, Vector3 _relativeFacing)
+    private void RotateToDirection(Vector3 _gravDirection, Vector3 _relativeFacing)
     {
         Vector3 _newUpDir = -_gravDirection;
 
@@ -590,7 +568,7 @@ public class PlayerMotor : MonoBehaviour {
         // LookAt can take the surface normal
         transform.LookAt(transform.position + newAimVector.normalized, _newUpDir);
 
-        // reset camera pitch to perpendicular to surface
+        // reset camera pitch to parallel with surface
         currentCamRotX = 0f;
 
         // rotate velocity to new direction
