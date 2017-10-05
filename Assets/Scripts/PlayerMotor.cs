@@ -33,7 +33,7 @@ public class PlayerMotor : MonoBehaviour {
 
     [SerializeField]
     [Range(0f, 20f)]
-    private float maxAirLowerBound = 20f;
+    private float airVelThreshold = 20f;
 
     [SerializeField]
     [Range(0.0f, 50.0f)]
@@ -326,11 +326,11 @@ public class PlayerMotor : MonoBehaviour {
             maxAirMagnitude = new Vector2(localXVelocity, localZVelocity).magnitude;
         }
 
-        if (maxAirMagnitude < maxAirLowerBound) maxAirMagnitude = maxAirLowerBound;
+        if (maxAirMagnitude < airVelThreshold) maxAirMagnitude = airVelThreshold;
 
         if (velocity != Vector3.zero)
         {
-            //HandleMidairInput(localXVelocity, localYVelocity, localZVelocity);
+            HandleMidairInput(localXVelocity, localYVelocity, localZVelocity);
         }
 
         if (crouching && canHover)
@@ -340,34 +340,32 @@ public class PlayerMotor : MonoBehaviour {
         }
     }
 
+    /*
+     * Split this off as it's a complicated scenario
+     * Needs to allow limited velocity adjustment while midair, 
+     * without increasing speed over a certain threshold
+     * 
+     * needs to allow limited slowing and turning
+     * 
+     * needs to feel like you have SOME control while
+     * still being dedicated to momentum of jump
+     */
     private void HandleMidairInput(float localXVelocity, float localYVelocity, float localZVelocity)
     {
-        // midair position adjust
-        // needs to not allow extra velocity in same direction as jump
+        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, transform.up);
 
-        // add new XZ velocity to old XZ velocity
-        // no Y movement at this point (makes magnitude calculations easier)
-        Vector3 newVel = (velocity * airVelMod)
-                         + (localXVelocity * transform.right)
-                         + (localZVelocity * transform.forward);
+        Vector3 velocityTemp = velocity * airVelMod;
 
-        // magnitude of relative XZ movement
-        float newVelMagnitude = newVel.magnitude;
+        Debug.Log(flatVel.magnitude);
 
-        if (newVelMagnitude < maxAirMagnitude && maxAirMagnitude > maxAirLowerBound)
+        // if input velocity in direction of flight and velocity above threshold
+        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > airVelThreshold)
         {
-            maxAirMagnitude = newVelMagnitude;
-        }
-        else if (newVelMagnitude > maxAirMagnitude)
-        {
-            float factor = maxAirMagnitude / newVelMagnitude;
-            newVel = newVel * factor;
+            // cancel positive movement in direction of flight
+            velocityTemp -= Vector3.Project(velocityTemp, flatVel);
         }
 
-        // restore Y velocity
-        newVel = newVel + (transform.up * localYVelocity);
-
-        rb.velocity = newVel;
+        rb.AddForce(velocityTemp, ForceMode.Impulse);
     }
 
     IEnumerator Hover()
@@ -457,10 +455,9 @@ public class PlayerMotor : MonoBehaviour {
 	public void Jump(float _jumpStrength){
 		if (!onGround || frozen) 
 			return;
-
-        // keeps slope momentum on jump
-        //rb.velocity = new Vector3(rb.velocity.x, _jumpStrength, rb.velocity.z);
         
+        // if already moving up, keeps current vertical momentum
+        // allows higher jumps when moving up slopes
 	    if (Vector3.Dot(rb.velocity, transform.up) < 0)
 	    {
             // moving down slope while jumping
@@ -472,9 +469,6 @@ public class PlayerMotor : MonoBehaviour {
         rb.velocity = rb.velocity + (transform.up * _jumpStrength);
         jumpTimer = 30;
         SetCrouching(false);
-		// eliminates slope momentum
-//		rb.velocity = velocity + (Vector3.up * _jumpStrength);
-//		onGround = false;
 	}
 
     // either begin or end crouching

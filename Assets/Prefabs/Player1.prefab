@@ -230,7 +230,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.2
   far clip plane: 10000
   field of view: 90
   orthographic: 0
@@ -402,8 +402,8 @@ MonoBehaviour:
   altKnifeBtn: Fire2
   abilityButton: Fire3
   throwStrength: 100
-  throwAngleModifier: 2
-  throwHeightModifier: -0.1
+  throwAngleModifier: 0
+  throwHeightModifier: 0
   spinSpeed: 30
   blinkKnifePrefab: {fileID: 1000013895624480, guid: ae2dae60f9f33be47b5aa6f5e8a05050,
     type: 2}
@@ -467,9 +467,9 @@ MonoBehaviour:
   transitionCameraPrefab: {fileID: 1000010902589228, guid: 2c7b8a853a2dfcc4ab7a2ef5dacf0eea,
     type: 2}
   velMod: 1.5
-  airVelMod: 0.5
+  airVelMod: 1.2
   warpGravShiftAngle: 1
-  maxAirLowerBound: 10
+  airVelThreshold: 10
   warpVelocityModifier: 20
 --- !u!114 &114000012321050414
 MonoBehaviour:
