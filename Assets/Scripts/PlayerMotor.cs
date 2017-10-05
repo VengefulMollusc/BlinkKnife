@@ -356,8 +356,6 @@ public class PlayerMotor : MonoBehaviour {
 
         Vector3 velocityTemp = velocity * airVelMod;
 
-        Debug.Log(flatVel.magnitude);
-
         // if input velocity in direction of flight and velocity above threshold
         if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > airVelThreshold)
         {

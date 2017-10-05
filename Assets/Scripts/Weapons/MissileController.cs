@@ -81,12 +81,12 @@ public class MissileController : MonoBehaviour {
         spinVector = new Vector3(Random.Range(-randomXYRot, randomXYRot), Random.Range(-randomXYRot, randomXYRot), zSpin);
 	}
 
-    public void Setup(Transform _parent, Transform _target, Collider _collider)
+    public void Setup(Transform _parent, Transform _target, Collider[] _collider)
     {
         transform.SetParent(_parent);
         target = _target;
         targetBackup = target;
-        Physics.IgnoreCollision(GetComponent<Collider>(), _collider);
+        Utilities.IgnoreCollisions(GetComponent<Collider>(), _collider, true);
 
         float distToTarget = Vector3.Distance(transform.position, target.position);
         accuracyIncreaseThreshold = distToTarget * 0.8f; // this could be a set value? stop massive spread at distance

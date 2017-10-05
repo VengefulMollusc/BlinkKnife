@@ -5,7 +5,7 @@ public class SphereBotController : MonoBehaviour {
 
     [SerializeField]
     private GameObject mainSphere;
-    private Collider sphereCollider;
+    private Collider[] sphereColliders;
 
     [SerializeField]
     private float aimLockAngle = 45f;
@@ -75,7 +75,7 @@ public class SphereBotController : MonoBehaviour {
             Debug.LogError("missile pos parent objects missing incorrect length in SphereBot");
         }
 
-        sphereCollider = mainSphere.GetComponent<Collider>();
+        sphereColliders = mainSphere.GetComponents<Collider>();
         lineRen = GetComponent<LineRenderer>();
 
         // left and right must have same length
@@ -163,9 +163,9 @@ public class SphereBotController : MonoBehaviour {
             GameObject leftMissile = GameObject.Instantiate(missilePrefab, leftPos.position, leftPos.rotation) as GameObject;
 			GameObject rightMissile = GameObject.Instantiate(missilePrefab, rightPos.position, rightPos.rotation) as GameObject;
 			missiles[i] = leftMissile.GetComponent<MissileController>();
-			missiles[i].Setup(leftPanel.transform, target, sphereCollider);
+			missiles[i].Setup(leftPanel.transform, target, sphereColliders);
 			missiles[i + missileCount] = rightMissile.GetComponent<MissileController>();
-			missiles[i + missileCount].Setup(rightPanel.transform, target, sphereCollider);
+			missiles[i + missileCount].Setup(rightPanel.transform, target, sphereColliders);
         }
 
 		loaded = true;

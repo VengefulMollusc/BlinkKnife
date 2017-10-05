@@ -68,7 +68,7 @@ public class PlayerKnifeController : MonoBehaviour {
 	private UIController uiController;
     
 	private GameObject player;
-	private Collider playerCollider;
+	private Collider[] playerColliders;
     private PlayerMotor playerMotor;
 
 	private GameObject knife;
@@ -153,7 +153,7 @@ public class PlayerKnifeController : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
             throw new MissingReferenceException("No player object found.");
-        playerCollider = player.GetComponent<Collider> ();
+        playerColliders = player.GetComponents<Collider> ();
         playerMotor = player.GetComponent<PlayerMotor>();
 
 		uiController = uiControllerObject.GetComponent<UIController> ();
@@ -195,7 +195,7 @@ public class PlayerKnifeController : MonoBehaviour {
         } else if (Input.GetButtonDown(abilityButton))
 		{
             // weapon button
-			if (weapon.ClickMouse (knife, transform, playerCollider)) {
+			if (weapon.ClickMouse (knife, transform, playerColliders)) {
                 // if weapon activates, lock knife
 				lockKnife = true;
 			}
@@ -307,9 +307,9 @@ public class PlayerKnifeController : MonoBehaviour {
 		knifeController = knife.GetComponent<KnifeController> ();
 
         // ignore collisions between knife and this player
-		Physics.IgnoreCollision (knife.GetComponent<Collider>(), playerCollider);
+        Utilities.IgnoreCollisions(knife.GetComponent<Collider>(), playerColliders, true);
 
-		if (knifeController == null){
+        if (knifeController == null){
 			Debug.LogError ("No KnifeController found on knife prefab");
 			return;
         }

@@ -3,6 +3,25 @@ using System.Collections;
 
 public class Utilities : MonoBehaviour {
 
+    /*
+     * Ignores or allows collisions between multiple colliders at once
+     */
+    public static void IgnoreCollisions(Collider[] _this, Collider[] _other, bool _ignore)
+    {
+        foreach (Collider col1 in _this)
+        {
+            IgnoreCollisions(col1, _other, _ignore);
+        }
+    }
+
+    public static void IgnoreCollisions(Collider _this, Collider[] _other, bool _ignore)
+    {
+        foreach (Collider col in _other)
+        {
+            Physics.IgnoreCollision(_this, col, _ignore);
+        }
+    }
+
 	/*
      * Returns true if the second transform is in front of the first
      * (ie t1 is looking within 90 degrees of t2)

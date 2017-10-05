@@ -13,19 +13,19 @@ public class CubeController : MonoBehaviour {
     private float scaleDuration = 1f;
 
     private Rigidbody rb;
-    private Collider playerCollider;
+    private Collider[] playerColliders;
     private bool activated;
     
 	//void Start () {
  //       rb = GetComponent<Rigidbody>();
 	//}
 
-    public void Setup(Transform _camera, Collider _playerCol, GameObject _target)
+    public void Setup(Transform _camera, Collider[] _playerCol, GameObject _target)
     {
         rb = GetComponent<Rigidbody>();
         rb.velocity = _camera.forward * speed;
-        playerCollider = _playerCol;
-        Physics.IgnoreCollision(GetComponent<Collider>(), playerCollider);
+        playerColliders = _playerCol;
+        Utilities.IgnoreCollisions(GetComponent<Collider>(), playerColliders, true);
 
         if (_target != null)
         {
@@ -51,7 +51,7 @@ public class CubeController : MonoBehaviour {
         {
             transform.SetParent(_target.transform.parent);
         }
-        Physics.IgnoreCollision(GetComponent<Collider>(), playerCollider, false);
+        Utilities.IgnoreCollisions(GetComponent<Collider>(), playerColliders, false);
         activated = true;
         rb.isKinematic = true;
         transform.up = Vector3.up;
