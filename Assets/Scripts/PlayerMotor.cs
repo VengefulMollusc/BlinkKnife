@@ -305,7 +305,7 @@ public class PlayerMotor : MonoBehaviour {
                 newVel *= crouchVelFactor;
             }
 
-            newVel = MomentumSlide(newVel, PlayerController.Speed());
+            newVel = MomentumSlide(newVel);
 
             rb.velocity = newVel;
         }
@@ -325,6 +325,31 @@ public class PlayerMotor : MonoBehaviour {
         }
     }
 
+    /*
+     * while moving above base speed, apply small slowdown until at base speed
+     */
+    private Vector3 MomentumSlide(Vector3 _newVel)
+    {
+
+        float speedThreshold = PlayerController.Speed() * velMod;
+        if (sprinting) speedThreshold *= PlayerController.SprintModifier();
+        if (rb.velocity.magnitude > speedThreshold)
+        {
+            Vector3 forwardComponent = Vector3.Project(_newVel, rb.velocity);
+            if (Vector3.Dot(_newVel, rb.velocity) < 0)
+            {
+                forwardComponent *= 0.2f;
+            }
+            _newVel = rb.velocity + (_newVel - forwardComponent);
+        }
+
+        return _newVel;
+    }
+
+
+    /*
+     * Handle movement changes while midair
+     */
     void AirMovement(float localXVelocity, float localYVelocity, float localZVelocity)
     {
 
@@ -376,50 +401,6 @@ public class PlayerMotor : MonoBehaviour {
             yield return 0;
         }
     } 
-
-    private Vector3 MomentumSlide(Vector3 _newVel, float _baseSpeed) {
-        // PERHAPS
-        // slide when above certain speed (running speed? - walking speed could be interesting)?
-        // - don't replace momentum, add new velocity but make sure magnitude decreases.
-
-        // NEED TO MAKE SURE THAT VERTICAL MOMENTUM/SPEED NOT AFFECTED
-        float speedThreshold = _baseSpeed * velMod;
-        if (sprinting) speedThreshold *= PlayerController.SprintModifier();
-        if (rb.velocity.magnitude > speedThreshold)
-        {
-            float speed = rb.velocity.magnitude;
-            _newVel += rb.velocity;
-            if (_newVel.magnitude > speed)
-            {
-                float newMagnitude = DampenSpeed(speed, speedThreshold);
-                _newVel = _newVel.normalized * newMagnitude;
-            }
-        }
-
-        return _newVel;
-    }
-
-    private float DampenSpeed(float _speed, float _baseSpeed) {
-        float sprintSpeed = PlayerController.Speed() * PlayerController.SprintModifier() * velMod;
-
-        // REDO THIS SO:
-        // Decceleration based on difference between speed and base speed
-        // Perhaps increase decceleration as base speed -> 0
-
-        // Rapid (linear?) braking if base speed 0
-        // else ease down to value with decceleration decreases as speed -> base speed
-        if (_speed > sprintSpeed && _baseSpeed > 0.1f) {
-            float newSpeed = (_baseSpeed > 0.1f) ? _speed * 0.99f : _speed * 0.9f;
-            if (newSpeed < _baseSpeed) newSpeed = _baseSpeed;
-
-            //Debug.Log(_baseSpeed + " " + newSpeed);
-
-            return newSpeed;
-        }
-        // else speed less than sprint and no input
-        return Mathf.Clamp(_speed -= 2f, 0f, sprintSpeed);
-        
-    }
 
     /*
      * Try locking skybox and scene lighting to XZ orientation of the player
