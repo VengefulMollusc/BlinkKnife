@@ -66,8 +66,6 @@ public class PlayerMotor : MonoBehaviour {
 
 	private int jumpTimer;
 
-    private float maxAirMagnitude;
-
     private Rigidbody rb;
 
     private Vector3 cameraRelativePos;
@@ -305,7 +303,7 @@ public class PlayerMotor : MonoBehaviour {
         {
             // no input vector
             // needs to dampen movement along local xz axes
-            //newVel = transform.up * localYVelocity;
+            // newVel = transform.up * localYVelocity;
 
             newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
             //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
@@ -316,17 +314,6 @@ public class PlayerMotor : MonoBehaviour {
 
     void AirMovement(float localXVelocity, float localYVelocity, float localZVelocity)
     {
-        //Vector3 inputVel = velocity * airVelMod;
-
-        //rb.AddForce(inputVel, ForceMode.Acceleration);
-
-        // old code
-        if (maxAirMagnitude == 0.0f)
-        {
-            maxAirMagnitude = new Vector2(localXVelocity, localZVelocity).magnitude;
-        }
-
-        if (maxAirMagnitude < airVelThreshold) maxAirMagnitude = airVelThreshold;
 
         if (velocity != Vector3.zero)
         {
@@ -484,7 +471,6 @@ public class PlayerMotor : MonoBehaviour {
 		if (jumpTimer > 0)
 			return;
 		onGround = _onGround;
-        maxAirMagnitude = 0.0f;
 
 	    if (onGround)
 	        canHover = true;
