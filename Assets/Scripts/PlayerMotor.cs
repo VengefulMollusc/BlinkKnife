@@ -423,7 +423,9 @@ public class PlayerMotor : MonoBehaviour {
 	        rb.velocity -= yComponent;
 	    }
 
-        rb.velocity = rb.velocity + (transform.up * _jumpStrength);
+        //rb.velocity = rb.velocity + (transform.up * _jumpStrength);
+        rb.AddForce(transform.up * _jumpStrength, ForceMode.VelocityChange);
+        
         jumpTimer = 30;
         SetCrouching(false);
 	}
