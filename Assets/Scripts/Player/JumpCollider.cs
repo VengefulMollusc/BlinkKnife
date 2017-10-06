@@ -6,6 +6,8 @@ public class JumpCollider : MonoBehaviour
     private GameObject player;
     private PlayerMotor playerMotor;
 
+    private static bool colliding;
+
     //private PhysicMaterial playerMaterial;
     //private float staticFriction;
     //private float dynamicFriction;
@@ -14,6 +16,8 @@ public class JumpCollider : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerMotor = player.GetComponent<PlayerMotor>();
+
+        colliding = false;
 
         Utilities.IgnoreCollisions(GetComponent<Collider>(), player.GetComponents<Collider>(), true);
 
@@ -27,9 +31,15 @@ public class JumpCollider : MonoBehaviour
         
     //}
 
+    public static bool IsColliding()
+    {
+        return colliding;
+    }
+
     void OnTriggerStay(Collider col)
     {
-        playerMotor.SetOnGround(true);
+        colliding = true;
+        //playerMotor.SetOnGround(true);
 
         // TODO: replace parenting code with relative movement while colliding
         // This will need to be changed to accomodate not all things being tagged scenery
@@ -42,6 +52,7 @@ public class JumpCollider : MonoBehaviour
 
     void OnTriggerExit(Collider col)
     {
+        colliding = false;
         //if (col.CompareTag("Scenery"))
         //{
         //    playerMotor.transform.SetParent(null);

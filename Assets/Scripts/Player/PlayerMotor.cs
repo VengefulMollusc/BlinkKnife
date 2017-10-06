@@ -54,7 +54,7 @@ public class PlayerMotor : MonoBehaviour
     //private Vector3 frozenPos = Vector3.zero;
     private Vector3 frozenVel = Vector3.zero;
 
-    private bool onGround;
+    //private bool onGround;
     private bool sliding;
     private bool colliding;
 
@@ -145,24 +145,21 @@ public class PlayerMotor : MonoBehaviour
         cameraRotationX = _cameraRotationX;
     }
 
-    //void Update(){
-    //    //RechargeEnergy();
-    //    //RechargeHealth();
-    //}
-
     // Run every physics iteration
     void FixedUpdate()
     {
         // if frozen, dont perform any movement
         if (!frozen)
         {
-
             GravityUpdate();
 
             PerformMovement();
-            onGround = false;
-            //colliding = false;
+            //onGround = false;
+
             jumpTimer--;
+
+            if (IsOnGround())
+                canHover = true;
         }
 
         // Freezing needs to stop rotation too
@@ -235,7 +232,7 @@ public class PlayerMotor : MonoBehaviour
 
     private bool UseGroundMovement()
     {
-        return (onGround && GetSlopeAngle() < 40f) || !sliding ;
+        return (IsOnGround() && GetSlopeAngle() < 40f) || !sliding ;
     }
 
     // returns the angle of the slope directly below the player
@@ -459,7 +456,7 @@ public class PlayerMotor : MonoBehaviour
     IEnumerator Hover()
     {
         crouchVelFactor = 0.5f;
-        while (crouchVelFactor < 1f && !onGround)
+        while (crouchVelFactor < 1f && !IsOnGround())
         {
             rb.velocity *= crouchVelFactor;
             crouchVelFactor *= 1.01f;
@@ -500,7 +497,7 @@ public class PlayerMotor : MonoBehaviour
     // perform jump when triggered by PlayerController
     public void Jump(float _jumpStrength)
     {
-        if (!onGround || frozen || sliding)
+        if (!IsOnGround() || frozen)
             return;
 
         // if already moving up, keeps current vertical momentum
@@ -530,15 +527,15 @@ public class PlayerMotor : MonoBehaviour
         //    crouchVelFactor = 1f;
     }
 
-    public void SetOnGround(bool _onGround)
-    {
-        if (jumpTimer > 0)
-            return;
-        onGround = _onGround;
+    //public void SetOnGround(bool _onGround)
+    //{
+    //    if (jumpTimer > 0)
+    //        return;
+    //    onGround = _onGround;
 
-        if (onGround)
-            canHover = true;
-    }
+    //    if (onGround)
+    //        canHover = true;
+    //}
 
     public void SetCollisionState(bool _sliding, bool _colliding)
     {
@@ -604,7 +601,7 @@ public class PlayerMotor : MonoBehaviour
             rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
 
             // fixes horizontal momentum lock when warping
-            onGround = false;
+            //onGround = false;
         }
         else if (_knifeController.HasCollided())
         {
@@ -613,7 +610,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         // fixes horizontal momentum lock when warping
-        onGround = false;
+        //onGround = false;
 
         GameObject transCamera = (GameObject)Instantiate(transitionCameraPrefab, camStartPos, cam.transform.rotation);
 
@@ -742,37 +739,8 @@ public class PlayerMotor : MonoBehaviour
 
     public bool IsOnGround()
     {
-        return onGround;
+        return JumpCollider.IsColliding();
     }
-
-    // Health and Energy recharging
-    //private void RechargeHealth()
-    //{
-    //    if (healthRechargeCounter > 0f)
-    //    {
-    //        healthRechargeCounter -= Time.deltaTime;
-    //        return;
-    //    }
-
-    //    if (health >= healthMax)
-    //        return;
-
-    //    health += Time.deltaTime * healthRechargeRate;
-    //}
-
-    //private void RechargeEnergy()
-    //{
-    //    if (energyRechargeCounter > 0f)
-    //    {
-    //        energyRechargeCounter -= Time.deltaTime;
-    //        return;
-    //    }
-
-    //    if (energy >= energyMax)
-    //        return;
-
-    //    energy += Time.deltaTime * energyRechargeRate;
-    //}
 
     /*
      * Changes the player's current health
