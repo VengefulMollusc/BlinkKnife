@@ -3,10 +3,11 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMotor : MonoBehaviour {
+public class PlayerMotor : MonoBehaviour
+{
 
-	[SerializeField]
-	private Camera cam;
+    [SerializeField]
+    private Camera cam;
 
     [SerializeField]
     private float cameraRotLimit = 85f;
@@ -53,8 +54,8 @@ public class PlayerMotor : MonoBehaviour {
     //private Vector3 frozenPos = Vector3.zero;
     private Vector3 frozenVel = Vector3.zero;
 
-	private bool onGround;
-	private bool sliding;
+    private bool onGround;
+    private bool sliding;
     private bool colliding;
 
     private bool crouching;
@@ -62,12 +63,12 @@ public class PlayerMotor : MonoBehaviour {
     private bool canHover;
 
     private Vector3 velocity = Vector3.zero;
-	private Vector3 rotation = Vector3.zero;
+    private Vector3 rotation = Vector3.zero;
     private bool sprinting;
-	private float cameraRotationX;
-	private float currentCamRotX;
+    private float cameraRotationX;
+    private float currentCamRotX;
 
-	private int jumpTimer;
+    private int jumpTimer;
 
     private Rigidbody rb;
 
@@ -75,22 +76,26 @@ public class PlayerMotor : MonoBehaviour {
 
     private Vector3 currentGravVector;
     private float currentGravStrength;
-    
+
     private float viewShiftSpeed;
     private const float maxViewShiftSpeed = 4f;
     private const float viewShiftStrengthMax = 35f;
 
     private HealthController healthEnergy;
 
-    void Awake(){
+    private Vector3 slopeNormal;
+
+    void Awake()
+    {
         healthEnergy = GetComponent<HealthController>();
 
         currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
         currentGravStrength = GlobalGravityControl.GetGravityStrength();
     }
 
-    void Start (){
-		rb = GetComponent<Rigidbody> ();
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
         if (transitionCameraPrefab == null)
         {
             throw new MissingReferenceException("No transitionCameraPrefab in PlayerMotor");
@@ -102,8 +107,9 @@ public class PlayerMotor : MonoBehaviour {
         canHover = true;
     }
 
-	// gets movement vector from PlayerController
-	public void Move (Vector3 _velocity, bool _sprinting){
+    // gets movement vector from PlayerController
+    public void Move(Vector3 _velocity, bool _sprinting)
+    {
         if (frozen)
         {
             velocity = Vector3.zero;
@@ -111,12 +117,13 @@ public class PlayerMotor : MonoBehaviour {
             return;
         }
 
-		velocity = _velocity;
+        velocity = _velocity;
         sprinting = _sprinting;
-	}
+    }
 
-	// gets rotation vector 
-	public void Rotate (Vector3 _rotation){
+    // gets rotation vector 
+    public void Rotate(Vector3 _rotation)
+    {
         if (frozen)
         {
             rotation = Vector3.zero;
@@ -124,10 +131,11 @@ public class PlayerMotor : MonoBehaviour {
         }
 
         rotation = _rotation;
-	}
+    }
 
-	// gets camera rotation vector 
-	public void RotateCamera (float _cameraRotationX){
+    // gets camera rotation vector 
+    public void RotateCamera(float _cameraRotationX)
+    {
         if (frozen)
         {
             cameraRotationX = 0f;
@@ -135,29 +143,30 @@ public class PlayerMotor : MonoBehaviour {
         }
 
         cameraRotationX = _cameraRotationX;
-	}
-
-    void Update(){
-        //RechargeEnergy();
-        //RechargeHealth();
     }
 
+    //void Update(){
+    //    //RechargeEnergy();
+    //    //RechargeHealth();
+    //}
+
     // Run every physics iteration
-    void FixedUpdate(){
+    void FixedUpdate()
+    {
         // if frozen, dont perform any movement
-		if (!frozen)
-		{
+        if (!frozen)
+        {
 
-		    GravityUpdate();
+            GravityUpdate();
 
-			PerformMovement ();
-			onGround = false;
-			//colliding = false;
-			jumpTimer--;
-		}
+            PerformMovement();
+            onGround = false;
+            //colliding = false;
+            jumpTimer--;
+        }
 
         // Freezing needs to stop rotation too
-		PerformRotation();
+        PerformRotation();
 
         //Debug.Log(rb.velocity.magnitude);
     }
@@ -186,20 +195,21 @@ public class PlayerMotor : MonoBehaviour {
 
     //private void KeepGrounded()
     //{
-        //RaycastHit hit;
-        //if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, 2f))
-        //{
-        //    //			Debug.Log ("Grounding");
-        //    //rb.MovePosition (transform.position + new Vector3(0.0f, -hit.distance, 0.0f));
-        //    rb.MovePosition(transform.position - (transform.up * hit.distance));
-        //    //rb.velocity = Vector3.zero;
-        //    //rb.velocity = transform.rotation * new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
-        //}
+    //RaycastHit hit;
+    //if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, 2f))
+    //{
+    //    //			Debug.Log ("Grounding");
+    //    //rb.MovePosition (transform.position + new Vector3(0.0f, -hit.distance, 0.0f));
+    //    rb.MovePosition(transform.position - (transform.up * hit.distance));
+    //    //rb.velocity = Vector3.zero;
+    //    //rb.velocity = transform.rotation * new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
+    //}
     //}
 
     // perform movement based on velocity variable
-    private void PerformMovement(){
-        
+    private void PerformMovement()
+    {
+
         // Apply the current gravity
         rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
@@ -209,20 +219,23 @@ public class PlayerMotor : MonoBehaviour {
         float localXVelocity = Vector3.Dot(rb.velocity, transform.right);
         float localYVelocity = Vector3.Dot(rb.velocity, transform.up);
         float localZVelocity = Vector3.Dot(rb.velocity, transform.forward);
-        
-        if (UseGroundMovement())
+
+        if (UseGroundMovement() && jumpTimer <= 0)
         {
             // grounded
-            GroundMovement(localYVelocity);
-        } else if (!colliding) {
+            //GroundMovement(localYVelocity);
+            NewGroundMovement();
+        }
+        else if (!colliding)
+        {
             // airborne
             AirMovement(localXVelocity, localYVelocity, localZVelocity);
         }
-	}
+    }
 
     private bool UseGroundMovement()
     {
-        return !sliding || (onGround && GetSlopeAngle() < 40f);
+        return (onGround && GetSlopeAngle() < 40f) || !sliding ;
     }
 
     // returns the angle of the slope directly below the player
@@ -236,12 +249,44 @@ public class PlayerMotor : MonoBehaviour {
         {
             if (hitInfo.normal != transform.up)
             {
+                slopeNormal = hitInfo.normal;
                 return Vector3.Angle(hitInfo.normal, transform.up);
             }
+            slopeNormal = transform.up;
             return 0f;
         }
 
-        return float.MaxValue;        
+        return float.MaxValue;
+    }
+
+    void NewGroundMovement()
+    {
+        Vector3 newVel = rb.velocity;
+
+        if (velocity != Vector3.zero)
+        {
+            newVel = velocity * velMod;
+
+            if (sprinting)
+                newVel *= PlayerController.SprintModifier();
+
+            // rotate input vector to align with surface normal
+            Quaternion rot = Quaternion.FromToRotation(transform.up, slopeNormal);
+            newVel = rot * newVel;
+
+            if (crouching)
+            {
+                newVel *= 0.5f;
+            }
+
+            // MomentumSlide here
+
+            rb.velocity = newVel;
+        }
+        else
+        {
+            rb.velocity -= (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
+        }
     }
 
     void GroundMovement(float localYVelocity)
@@ -250,20 +295,10 @@ public class PlayerMotor : MonoBehaviour {
 
         if (velocity != Vector3.zero)
         {
-
-            //				rb.MovePosition (rb.position + (velocity * 0.1f));
-            //				rb.AddForce (velocity * groundVelMod, ForceMode.VelocityChange);
-
-            // Vector3 newVel = new Vector3(velocity.x * velMod, 0.0f, velocity.z * velMod);
             newVel = velocity * velMod;
 
             if (sprinting)
                 newVel *= PlayerController.SprintModifier();
-
-            // if sprinting and new speed less than old speed, keep old speed
-            //if (sprinting && (rb.velocity.magnitude > newVel.magnitude)) {
-            //    newVel = newVel.normalized * rb.velocity.magnitude * sprintDeceleration;
-            //}
 
             if (jumpTimer <= 0)
             {
@@ -334,7 +369,7 @@ public class PlayerMotor : MonoBehaviour {
                 newVel *= crouchVelFactor;
             }
 
-            newVel = MomentumSlide(newVel);
+            //newVel = MomentumSlide(newVel);
 
             rb.velocity = newVel;
         }
@@ -367,7 +402,7 @@ public class PlayerMotor : MonoBehaviour {
             Vector3 forwardComponent = Vector3.Project(_newVel, rb.velocity);
             if (Vector3.Dot(_newVel, rb.velocity) < 0)
             {
-                forwardComponent *= 0.2f;
+                forwardComponent *= 0.1f;
             }
             _newVel = rb.velocity + (_newVel - forwardComponent);
             //_newVel -= forwardComponent;
@@ -430,7 +465,7 @@ public class PlayerMotor : MonoBehaviour {
             crouchVelFactor *= 1.01f;
             yield return 0;
         }
-    } 
+    }
 
     /*
      * Try locking skybox and scene lighting to XZ orientation of the player
@@ -447,39 +482,42 @@ public class PlayerMotor : MonoBehaviour {
      *  paths that can only be accessed when gravity is in a particular direction?
      */
 
-	//perform rotation based on rotation variable
-	private void PerformRotation(){
-		rb.MoveRotation (transform.rotation  * Quaternion.Euler (rotation));
-		if (cam != null){
-			// rotation calculation - clamps to limit values
-			currentCamRotX -= cameraRotationX;
-			currentCamRotX = Mathf.Clamp (currentCamRotX, -cameraRotLimit, cameraRotLimit);
+    //perform rotation based on rotation variable
+    private void PerformRotation()
+    {
+        rb.MoveRotation(transform.rotation * Quaternion.Euler(rotation));
+        if (cam != null)
+        {
+            // rotation calculation - clamps to limit values
+            currentCamRotX -= cameraRotationX;
+            currentCamRotX = Mathf.Clamp(currentCamRotX, -cameraRotLimit, cameraRotLimit);
 
-			// apply rotation to transform of camera
-			cam.transform.localEulerAngles = new Vector3 (currentCamRotX, 0f, 0f);
-		}
-	}
+            // apply rotation to transform of camera
+            cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
+        }
+    }
 
-	// perform jump when triggered by PlayerController
-	public void Jump(float _jumpStrength){
-		if (!onGround || frozen || sliding) 
-			return;
-        
+    // perform jump when triggered by PlayerController
+    public void Jump(float _jumpStrength)
+    {
+        if (!onGround || frozen || sliding)
+            return;
+
         // if already moving up, keeps current vertical momentum
         // allows higher jumps when moving up slopes
-	    if (Vector3.Dot(rb.velocity, transform.up) < 0)
-	    {
+        if (Vector3.Dot(rb.velocity, transform.up) < 0)
+        {
             // moving down slope while jumping
             // cancel downward momentum when jump
-	        Vector3 yComponent = Vector3.Project(rb.velocity, transform.up);
-	        rb.velocity -= yComponent;
-	    }
-        
+            Vector3 yComponent = Vector3.Project(rb.velocity, transform.up);
+            rb.velocity -= yComponent;
+        }
+
         rb.AddForce(transform.up * _jumpStrength, ForceMode.VelocityChange);
-        
+
         jumpTimer = 30;
         SetCrouching(false);
-	}
+    }
 
     // either begin or end crouching
     public void SetCrouching(bool _crouching)
@@ -492,14 +530,15 @@ public class PlayerMotor : MonoBehaviour {
         //    crouchVelFactor = 1f;
     }
 
-	public void SetOnGround (bool _onGround){
-		if (jumpTimer > 0)
-			return;
-		onGround = _onGround;
+    public void SetOnGround(bool _onGround)
+    {
+        if (jumpTimer > 0)
+            return;
+        onGround = _onGround;
 
-	    if (onGround)
-	        canHover = true;
-	}
+        if (onGround)
+            canHover = true;
+    }
 
     public void SetCollisionState(bool _sliding, bool _colliding)
     {
@@ -507,9 +546,9 @@ public class PlayerMotor : MonoBehaviour {
         colliding = _colliding;
     }
 
-	//private void OnCollisionStay(){
-	//	colliding = true;
-	//}
+    //private void OnCollisionStay(){
+    //	colliding = true;
+    //}
 
     public void WarpToKnife(bool _shiftGravity, Vector3 _velocity, KnifeController _knifeController)
     {
@@ -562,11 +601,12 @@ public class PlayerMotor : MonoBehaviour {
             // adds component of current velocity along axis of knife movement
 
             // TODO: add vel here? or add component to initial throw velocity of knife?
-            rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude); 
+            rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
 
             // fixes horizontal momentum lock when warping
             onGround = false;
-        } else if (_knifeController.HasCollided())
+        }
+        else if (_knifeController.HasCollided())
         {
             // cancel momentum
             rb.velocity = Vector3.zero;
@@ -634,36 +674,36 @@ public class PlayerMotor : MonoBehaviour {
         rb.velocity = transform.TransformDirection(localVelocity);
     }
 
-  //  public bool WallHang()
-  //  {
-  //      if (onGround)
-  //          return false;
-  //      //if (velocity.magnitude <= 0.1f) // if not moving or crouching?
-  //      if (crouching) // crouching?
-  //      {
-  //          StartCoroutine(WallHangCoroutine());
-  //          return true;
-  //      }
-  //      return false;
-  //  }
+    //  public bool WallHang()
+    //  {
+    //      if (onGround)
+    //          return false;
+    //      //if (velocity.magnitude <= 0.1f) // if not moving or crouching?
+    //      if (crouching) // crouching?
+    //      {
+    //          StartCoroutine(WallHangCoroutine());
+    //          return true;
+    //      }
+    //      return false;
+    //  }
 
-  //  // hangs on wall while crouching through warp
-  //  IEnumerator WallHangCoroutine()
-  //  {
-		//crouchVelFactor = 0.5f;
-  //      // do not inherit player velocity if wall hanging
-  //      frozenVel = Vector3.zero;
-  //      yield return new WaitWhile(() => velocity.magnitude == 0f);
-  //      transform.SetParent(null);
-  //      UnFreeze();
-  //  }
+    //  // hangs on wall while crouching through warp
+    //  IEnumerator WallHangCoroutine()
+    //  {
+    //crouchVelFactor = 0.5f;
+    //      // do not inherit player velocity if wall hanging
+    //      frozenVel = Vector3.zero;
+    //      yield return new WaitWhile(() => velocity.magnitude == 0f);
+    //      transform.SetParent(null);
+    //      UnFreeze();
+    //  }
 
     public void Freeze()
     {
-		if (frozen)
-			return;
+        if (frozen)
+            return;
         frozen = true;
-//        frozenPos = rb.position;
+        //        frozenPos = rb.position;
         frozenVel = rb.velocity;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
@@ -672,11 +712,11 @@ public class PlayerMotor : MonoBehaviour {
 
     public void UnFreeze()
     {
-		if (!frozen)
-			return;
+        if (!frozen)
+            return;
         frozen = false;
         rb.isKinematic = false;
-//        rb.position = frozenPos;
+        //        rb.position = frozenPos;
         rb.velocity = frozenVel;
         UnHide();
     }
