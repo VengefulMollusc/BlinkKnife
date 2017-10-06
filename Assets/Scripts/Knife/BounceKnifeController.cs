@@ -7,6 +7,8 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
 
 	private Rigidbody rb;
 
+    public const string BounceKnifeCollisionNotification = "BounceKnife.BounceKnifeCollisionNotification";
+
     [SerializeField]
     private float throwStrengthMod = 1f;
 
@@ -78,30 +80,30 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
 //		throwVelocity = _velocity;
 	}
 
-//	void OnCollisionEnter (Collision col){
-//		ContactPoint _collide = col.contacts [0];
-//		Collide (_collide.point, _collide.normal, _collide.otherCollider.gameObject);
-//	}
+    void OnCollisionEnter(Collision col)
+    {
+        this.PostNotification(BounceKnifeCollisionNotification);
+    }
 
-//	// called when a thrown knife collides with an object
-//	void Collide (Vector3 _point, Vector3 _normal, GameObject _other){
-//		// disable rigidbody
-//		rb.detectCollisions = false;
-//		rb.useGravity = false;
-//		rb.isKinematic = true;
-//
-//		collided = true;
-//		hitSurfaceNormal = _normal;
-//
-//		// stick knife out of surface at collision point
-//		rb.velocity = Vector3.zero;
-//		visuals.transform.forward = transform.forward;
-//
-//		// parent knife to other gameobject (to handle moving objects)
-//		transform.SetParent (_other.transform);
-//	}
+    //	// called when a thrown knife collides with an object
+    //	void Collide (Vector3 _point, Vector3 _normal, GameObject _other){
+    //		// disable rigidbody
+    //		rb.detectCollisions = false;
+    //		rb.useGravity = false;
+    //		rb.isKinematic = true;
+    //
+    //		collided = true;
+    //		hitSurfaceNormal = _normal;
+    //
+    //		// stick knife out of surface at collision point
+    //		rb.velocity = Vector3.zero;
+    //		visuals.transform.forward = transform.forward;
+    //
+    //		// parent knife to other gameobject (to handle moving objects)
+    //		transform.SetParent (_other.transform);
+    //	}
 
-	public Vector3 GetPosition (){
+    public Vector3 GetPosition (){
 		return transform.position;
 	}
 

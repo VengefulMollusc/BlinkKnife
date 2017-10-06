@@ -163,7 +163,9 @@ public class PlayerKnifeController : MonoBehaviour {
 
 		currentWarps = maxWarps;
 
-	}
+        this.AddObserver(OnBounceCollision, BounceKnifeController.BounceKnifeCollisionNotification);
+
+    }
 
 	void Update (){
         // Don't allow input if player is frozen
@@ -264,6 +266,11 @@ public class PlayerKnifeController : MonoBehaviour {
         // activate warp ui
         //warpUIFill.rectTransform.localScale = new Vector3 (warpCountDown/warpWaitTime, warpCountDown/warpWaitTime, 1f);
 	}
+
+    void OnBounceCollision(object sender, object args)
+    {
+        warpCountDown = 0f;
+    }
 
     // recharge warps based on time
 	void RechargeWarps (){
