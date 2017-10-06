@@ -78,12 +78,13 @@ GameObject:
   - component: {fileID: 4000010376404180}
   - component: {fileID: 33000012162391002}
   - component: {fileID: 136000010282788008}
-  - component: {fileID: 135271766142837366}
+  - component: {fileID: 135080724423949604}
   - component: {fileID: 23000013708462204}
   - component: {fileID: 54000013150267170}
   - component: {fileID: 114000012139731540}
   - component: {fileID: 114000011397720914}
   - component: {fileID: 114000010722407420}
+  - component: {fileID: 114553431493828040}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Player
@@ -538,7 +539,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cfdd8c0afe791549b00cba7a676d268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMotor: {fileID: 114000012139731540}
+--- !u!114 &114553431493828040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013453240542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86eb041e28aa31d45ac601925ede714c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slideThreshold: 42
 --- !u!124 &124000010216313272
 Behaviour:
   m_ObjectHideFlags: 1
@@ -558,7 +570,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.2
   m_Center: {x: 0, y: -0.3, z: 0}
---- !u!135 &135271766142837366
+--- !u!135 &135080724423949604
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -568,8 +580,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.45
-  m_Center: {x: 0, y: -0.55, z: 0}
+  m_Radius: 0.48
+  m_Center: {x: 0, y: -0.52, z: 0}
 --- !u!136 &136000010282788008
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -580,6 +592,6 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 1.98
+  m_Height: 1.96
   m_Direction: 1
-  m_Center: {x: 0, y: 0.01, z: 0}
+  m_Center: {x: 0, y: 0.02, z: 0}

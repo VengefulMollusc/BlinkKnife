@@ -20,7 +20,7 @@ public class PlayerMotor : MonoBehaviour {
     //[SerializeField]
     //private float sprintDeceleration = 0.9f;
 
-    [SerializeField] private float slideAngleThreshold = 42f;
+    [SerializeField] private float slideAngleThreshold = 45f;
 
     [SerializeField]
     private float velMod = 2f;
@@ -54,7 +54,7 @@ public class PlayerMotor : MonoBehaviour {
     private Vector3 frozenVel = Vector3.zero;
 
 	private bool onGround;
-	//private bool colliding;
+	private bool sliding;
 
     private bool crouching;
     private float crouchVelFactor = 1f;
@@ -413,7 +413,7 @@ public class PlayerMotor : MonoBehaviour {
 
 	// perform jump when triggered by PlayerController
 	public void Jump(float _jumpStrength){
-		if (!onGround || frozen) 
+		if (!onGround || frozen || sliding) 
 			return;
         
         // if already moving up, keeps current vertical momentum
@@ -451,6 +451,11 @@ public class PlayerMotor : MonoBehaviour {
 	    if (onGround)
 	        canHover = true;
 	}
+
+    public void SetSliding(bool _sliding)
+    {
+        sliding = _sliding;
+    }
 
 	//private void OnCollisionStay(){
 	//	colliding = true;

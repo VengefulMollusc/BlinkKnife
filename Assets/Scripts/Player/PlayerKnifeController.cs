@@ -153,7 +153,7 @@ public class PlayerKnifeController : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
             throw new MissingReferenceException("No player object found.");
-        playerColliders = player.GetComponents<Collider> ();
+        playerColliders = player.GetComponentsInChildren<Collider> ();
         playerMotor = player.GetComponent<PlayerMotor>();
 
 		uiController = uiControllerObject.GetComponent<UIController> ();
