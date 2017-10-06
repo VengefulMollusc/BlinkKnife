@@ -8,30 +8,35 @@ public class PlayerCollisionController : MonoBehaviour
     [SerializeField] private float slideThreshold = 45f;
 
     private PlayerMotor playerMotor;
+    SphereCollider sphereCol;
     private PhysicMaterial colMaterial;
     private float staticFriction;
     private float dynamicFriction;
 
     private bool frictionless;
+    private bool colliding;
 
     // Use this for initialization
     void OnEnable ()
     {
         playerMotor = GetComponent<PlayerMotor>();
-        colMaterial = GetComponent<SphereCollider>().material;
+        sphereCol = GetComponent<SphereCollider>();
+        colMaterial = sphereCol.material;
         staticFriction = colMaterial.staticFriction;
         dynamicFriction = colMaterial.dynamicFriction;
 
         Physics.IgnoreCollision(GetComponent<SphereCollider>(), GetComponentInChildren<CapsuleCollider>());
 
-        frictionless = false;
+        frictionless = true;
+        colliding = false;
     }
 
     void FixedUpdate()
     {
-        UpdateFrictionlessState(frictionless);
+        UpdateCollisionState(frictionless, colliding);
 
-        frictionless = false;
+        frictionless = true;
+        colliding = false;
     }
 
     void OnCollisionStay(Collision col)
@@ -40,18 +45,19 @@ public class PlayerCollisionController : MonoBehaviour
 
         foreach (ContactPoint point in colContacts)
         {
+            if (!colliding && point.thisCollider == sphereCol)
+                colliding = true;
+
             float angle = Vector3.Angle(point.normal, transform.up);
             if (angle < slideThreshold)
             {
-                //frictionless = false;
+                frictionless = false;
                 return;
             }
         }
-
-        frictionless = true;
     }
 
-    void UpdateFrictionlessState(bool _frictionless)
+    void UpdateCollisionState(bool _frictionless, bool _colliding)
     {
         if (_frictionless)
         {
@@ -66,8 +72,8 @@ public class PlayerCollisionController : MonoBehaviour
             colMaterial.frictionCombine = PhysicMaterialCombine.Average;
         }
 
-        playerMotor.SetSliding(_frictionless);
+        playerMotor.SetCollisionState(_frictionless, _colliding);
 
-        Debug.Log(_frictionless);
+        //Debug.Log(_frictionless);
     }
 }

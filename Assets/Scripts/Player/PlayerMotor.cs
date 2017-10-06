@@ -55,6 +55,7 @@ public class PlayerMotor : MonoBehaviour {
 
 	private bool onGround;
 	private bool sliding;
+    private bool colliding;
 
     private bool crouching;
     private float crouchVelFactor = 1f;
@@ -202,24 +203,30 @@ public class PlayerMotor : MonoBehaviour {
         // Apply the current gravity
         rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
-        if (sliding)
-            return;
+        //if (sliding)
+        //    return;
 
         float localXVelocity = Vector3.Dot(rb.velocity, transform.right);
         float localYVelocity = Vector3.Dot(rb.velocity, transform.up);
         float localZVelocity = Vector3.Dot(rb.velocity, transform.forward);
-
-        if (onGround)
+        
+        if (UseGroundMovement())
         {
             // grounded
             GroundMovement(localYVelocity);
-        } else {
+        } else if (!colliding) {
             // airborne
             AirMovement(localXVelocity, localYVelocity, localZVelocity);
         }
 	}
 
-    void CheckSlopeAngle()
+    private bool UseGroundMovement()
+    {
+        return !sliding || (onGround && GetSlopeAngle() < 40f);
+    }
+
+    // returns the angle of the slope directly below the player
+    private float GetSlopeAngle()
     {
         float rayDistance = 0.5f;
         RaycastHit hitInfo;
@@ -229,10 +236,12 @@ public class PlayerMotor : MonoBehaviour {
         {
             if (hitInfo.normal != transform.up)
             {
-
+                return Vector3.Angle(hitInfo.normal, transform.up);
             }
+            return 0f;
         }
-        
+
+        return float.MaxValue;        
     }
 
     void GroundMovement(float localYVelocity)
@@ -308,13 +317,15 @@ public class PlayerMotor : MonoBehaviour {
                         //}
                     }
                 }
+
+                //newVel = MomentumSlide(newVel);
             }
             else
             {
                 // TODO: figure out why the following TODO is here...
 
                 // TODO:
-                newVel = newVel + (transform.up * localYVelocity);
+                newVel += (transform.up * localYVelocity);
             }
 
             if (crouching)
@@ -359,6 +370,7 @@ public class PlayerMotor : MonoBehaviour {
                 forwardComponent *= 0.2f;
             }
             _newVel = rb.velocity + (_newVel - forwardComponent);
+            //_newVel -= forwardComponent;
         }
 
         return _newVel;
@@ -489,9 +501,10 @@ public class PlayerMotor : MonoBehaviour {
 	        canHover = true;
 	}
 
-    public void SetSliding(bool _sliding)
+    public void SetCollisionState(bool _sliding, bool _colliding)
     {
         sliding = _sliding;
+        colliding = _colliding;
     }
 
 	//private void OnCollisionStay(){
