@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 
-public class JumpCollider : MonoBehaviour {
+public class JumpCollider : MonoBehaviour
+{
 
-	[SerializeField]
-	private PlayerMotor playerMotor;
+    private GameObject player;
+    private PlayerMotor playerMotor;
 
-	void Start (){
-		if (playerMotor == null){
-			Debug.LogError ("No PlayerMotor given for JumpCollider.");
-		}
-	}
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerMotor = player.GetComponent<PlayerMotor>();
 
-	void OnTriggerStay (Collider col){
-		if (!col.CompareTag("Player")){
-			playerMotor.SetOnGround (true);
-		}
+        Utilities.IgnoreCollisions(GetComponent<Collider>(), player.GetComponents<Collider>(), true);
+    }
+
+    void OnTriggerStay(Collider col)
+    {
+        playerMotor.SetOnGround(true);
 
         // This will need to be changed to accomodate not all things being tagged scenery
         // possibly use layers?
@@ -24,11 +26,13 @@ public class JumpCollider : MonoBehaviour {
         }
     }
 
-	void OnTriggerExit (Collider col){
-		if (col.CompareTag("Scenery")){
-			playerMotor.transform.SetParent (null);
-		}
-	}
+    void OnTriggerExit(Collider col)
+    {
+        if (col.CompareTag("Scenery"))
+        {
+            playerMotor.transform.SetParent(null);
+        }
+    }
 
     private void OnTriggerEnter(Collider col)
     {

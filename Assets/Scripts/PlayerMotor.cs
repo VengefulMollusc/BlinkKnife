@@ -20,6 +20,8 @@ public class PlayerMotor : MonoBehaviour {
     //[SerializeField]
     //private float sprintDeceleration = 0.9f;
 
+    [SerializeField] private float slideAngleThreshold = 42f;
+
     [SerializeField]
     private float velMod = 2f;
 
@@ -246,7 +248,7 @@ public class PlayerMotor : MonoBehaviour {
 
                         // Decide here whether to rotate player as well
                         float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
-                        if (surfaceAngleDiff < 45f)
+                        if (surfaceAngleDiff < slideAngleThreshold)
                         {
                             // needs to be replaced by a proper value
                             // may also cause weird behaviour when transitioning on curved surfaces
@@ -265,6 +267,7 @@ public class PlayerMotor : MonoBehaviour {
                                 // don't allow movement up slope
                                 newVel -= Vector3.Project(newVel, flatNormal);
                             }
+                            //newVel = rb.velocity;
                         }
                     }
                 }
