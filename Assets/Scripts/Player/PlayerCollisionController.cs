@@ -22,16 +22,16 @@ public class PlayerCollisionController : MonoBehaviour
         staticFriction = colMaterial.staticFriction;
         dynamicFriction = colMaterial.dynamicFriction;
 
-        Physics.IgnoreCollision(GetComponent<SphereCollider>(), GetComponent<CapsuleCollider>());
+        Physics.IgnoreCollision(GetComponent<SphereCollider>(), GetComponentInChildren<CapsuleCollider>());
 
         frictionless = false;
     }
 
     void FixedUpdate()
     {
-        FrictionlessState(frictionless);
+        UpdateFrictionlessState(frictionless);
 
-        frictionless = true;
+        frictionless = false;
     }
 
     void OnCollisionStay(Collision col)
@@ -43,13 +43,15 @@ public class PlayerCollisionController : MonoBehaviour
             float angle = Vector3.Angle(point.normal, transform.up);
             if (angle < slideThreshold)
             {
-                frictionless = false;
+                //frictionless = false;
                 return;
             }
         }
+
+        frictionless = true;
     }
 
-    void FrictionlessState(bool _frictionless)
+    void UpdateFrictionlessState(bool _frictionless)
     {
         if (_frictionless)
         {
@@ -65,5 +67,7 @@ public class PlayerCollisionController : MonoBehaviour
         }
 
         playerMotor.SetSliding(_frictionless);
+
+        Debug.Log(_frictionless);
     }
 }

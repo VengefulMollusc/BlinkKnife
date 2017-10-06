@@ -202,6 +202,9 @@ public class PlayerMotor : MonoBehaviour {
         // Apply the current gravity
         rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
+        if (sliding)
+            return;
+
         float localXVelocity = Vector3.Dot(rb.velocity, transform.right);
         float localYVelocity = Vector3.Dot(rb.velocity, transform.up);
         float localZVelocity = Vector3.Dot(rb.velocity, transform.forward);
@@ -216,6 +219,22 @@ public class PlayerMotor : MonoBehaviour {
         }
 	}
 
+    void CheckSlopeAngle()
+    {
+        float rayDistance = 0.5f;
+        RaycastHit hitInfo;
+
+        Ray ray = new Ray(transform.position - transform.up, -transform.up);
+        if (Physics.Raycast(ray, out hitInfo, rayDistance))
+        {
+            if (hitInfo.normal != transform.up)
+            {
+
+            }
+        }
+        
+    }
+
     void GroundMovement(float localYVelocity)
     {
         Vector3 newVel = rb.velocity;
@@ -228,6 +247,9 @@ public class PlayerMotor : MonoBehaviour {
 
             // Vector3 newVel = new Vector3(velocity.x * velMod, 0.0f, velocity.z * velMod);
             newVel = velocity * velMod;
+
+            if (sprinting)
+                newVel *= PlayerController.SprintModifier();
 
             // if sprinting and new speed less than old speed, keep old speed
             //if (sprinting && (rb.velocity.magnitude > newVel.magnitude)) {
@@ -245,30 +267,45 @@ public class PlayerMotor : MonoBehaviour {
                 {
                     if (hitInfo.normal != transform.up)
                     {
+                        // rotate input vector to align with surface normal
+                        Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
+                        newVel = rot * newVel;
 
-                        // Decide here whether to rotate player as well
-                        float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
-                        if (surfaceAngleDiff < slideAngleThreshold)
-                        {
-                            // needs to be replaced by a proper value
-                            // may also cause weird behaviour when transitioning on curved surfaces
+                        //if (sliding)
+                        //{
+                        //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
 
-                            // possibly need to modify velocity if surface normal above threshold?
-                            // stop sticking to walls when too steep
-                            Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
-                            newVel = rot * newVel;
-                        }
-                        else
-                        {
-                            Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
+                        //    if (Vector3.Dot(newVel, flatNormal) < 0)
+                        //    {
+                        //        // don't allow movement up slope
+                        //        newVel -= Vector3.Project(newVel, flatNormal);
+                        //    }
+                        //}
 
-                            if (Vector3.Dot(newVel, flatNormal) < 0)
-                            {
-                                // don't allow movement up slope
-                                newVel -= Vector3.Project(newVel, flatNormal);
-                            }
-                            //newVel = rb.velocity;
-                        }
+
+                        //// Decide here whether to rotate player as well
+                        //float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
+                        //if (surfaceAngleDiff < slideAngleThreshold)
+                        //{
+                        //    // needs to be replaced by a proper value
+                        //    // may also cause weird behaviour when transitioning on curved surfaces
+
+                        //    // possibly need to modify velocity if surface normal above threshold?
+                        //    // stop sticking to walls when too steep
+                        //    Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
+                        //    newVel = rot * newVel;
+                        //}
+                        //else
+                        //{
+                        //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
+
+                        //    if (Vector3.Dot(newVel, flatNormal) < 0)
+                        //    {
+                        //        // don't allow movement up slope
+                        //        newVel -= Vector3.Project(newVel, flatNormal);
+                        //    }
+                        //    //newVel = rb.velocity;
+                        //}
                     }
                 }
             }
