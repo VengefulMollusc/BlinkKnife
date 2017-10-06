@@ -422,8 +422,7 @@ public class PlayerMotor : MonoBehaviour {
 	        Vector3 yComponent = Vector3.Project(rb.velocity, transform.up);
 	        rb.velocity -= yComponent;
 	    }
-
-        //rb.velocity = rb.velocity + (transform.up * _jumpStrength);
+        
         rb.AddForce(transform.up * _jumpStrength, ForceMode.VelocityChange);
         
         jumpTimer = 30;

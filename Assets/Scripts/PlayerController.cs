@@ -5,14 +5,13 @@ public class PlayerController : MonoBehaviour {
 
     
 	private static float speed = 5.0f;
-    private static float sprintModifier = 1.6f;
+    private static float sprintModifier = 1.75f;
+    private static float sprintThreshold = 0.45f;
 
     [Header("General Settings")]
     [SerializeField]
     [Range(0f, 1f)]
     private float backMoveMax = 0.9f;
-	[SerializeField]
-	private float sprintThreshold = 0.5f;
 	[SerializeField]
 	private float lookSensitivity = 3.0f;
 	[SerializeField]
