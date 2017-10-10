@@ -31,11 +31,6 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
     private GravityPanel gravPanel;
 
-
-    void Start (){
-		rb = GetComponent<Rigidbody> ();
-	}
-
 	public void Setup (PlayerKnifeController _controller, float _spinSpeed){
 		playerKnifeController = _controller;
         gravDir = GlobalGravityControl.GetCurrentGravityVector();
@@ -51,7 +46,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	}
 
 	void Update (){
-		if (collided)
+		if (collided || rb == null)
 			return;
 
 		visuals.transform.Rotate (spinVector);
