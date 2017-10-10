@@ -205,13 +205,7 @@ public class PlayerMotor : MonoBehaviour
 
         // Apply the current gravity
         rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
-
-        //if (sliding)
-        //    return;
-
-        float localXVelocity = Vector3.Dot(rb.velocity, transform.right);
-        float localYVelocity = Vector3.Dot(rb.velocity, transform.up);
-        float localZVelocity = Vector3.Dot(rb.velocity, transform.forward);
+        
 
         if (UseGroundMovement() && jumpTimer <= 0)
         {
@@ -222,13 +216,13 @@ public class PlayerMotor : MonoBehaviour
         else if (!colliding)
         {
             // airborne
-            AirMovement(localXVelocity, localYVelocity, localZVelocity);
+            AirMovement();
         }
     }
 
     private bool UseGroundMovement()
     {
-        return (IsOnGround() && GetSlopeAngle() < PlayerCollisionController.slideThreshold) || !sliding ;
+        return (IsOnGround() && GetSlopeAngle() < PlayerCollisionController.slideThreshold) || !sliding;
     }
 
     // returns the angle of the slope directly below the player
@@ -394,18 +388,9 @@ public class PlayerMotor : MonoBehaviour
 
         float speedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
 
-        if (rb.velocity.magnitude > speedThreshold)
+        if (rb.velocity.magnitude > speedThreshold && Vector3.Dot(_newVel, rb.velocity) > 0)
         {
-            if (Vector3.Dot(_newVel, rb.velocity) > 0)
-            {
-                // input in direction of movement
-                //_newVel = _newVel.normalized * rb.velocity.magnitude;
-                //float forwardComponent = Vector3.Project(_newVel, rb.velocity).magnitude;
-                //float newMagnitude = Utilities.MapValues(forwardComponent, 0f, speedThreshold, speedThreshold,
-                //    rb.velocity.magnitude, true);
-
-                _newVel = _newVel.normalized * rb.velocity.magnitude;
-            }
+            _newVel = _newVel.normalized * rb.velocity.magnitude;
         }
 
         return _newVel;
@@ -415,12 +400,17 @@ public class PlayerMotor : MonoBehaviour
     /*
      * Handle movement changes while midair
      */
-    void AirMovement(float localXVelocity, float localYVelocity, float localZVelocity)
+    void AirMovement()
     {
 
         if (velocity != Vector3.zero)
         {
-            HandleMidairInput(localXVelocity, localYVelocity, localZVelocity);
+            HandleMidairInput();
+        }
+        else
+        {
+            // handle situation in which movement is below walk speed
+            // cancel momentum to allow precise small jumps
         }
 
         if (crouching && canHover)
@@ -440,20 +430,24 @@ public class PlayerMotor : MonoBehaviour
      * needs to feel like you have SOME control while
      * still being dedicated to momentum of jump
      */
-    private void HandleMidairInput(float localXVelocity, float localYVelocity, float localZVelocity)
+    private void HandleMidairInput()
     {
-        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, transform.up);
+        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
 
         Vector3 velocityTemp = velocity * airVelMod;
 
+        float threshold = PlayerController.Speed();
+        if (sprinting)
+            threshold *= PlayerController.SprintModifier();
+
         // if input velocity in direction of flight and velocity above threshold
-        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > airVelThreshold)
+        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
         {
             // cancel positive movement in direction of flight
             velocityTemp -= Vector3.Project(velocityTemp, flatVel);
         }
 
-        rb.AddForce(velocityTemp, ForceMode.Impulse);
+        rb.AddForce(velocityTemp, ForceMode.VelocityChange); // Impulse
     }
 
     IEnumerator Hover()
