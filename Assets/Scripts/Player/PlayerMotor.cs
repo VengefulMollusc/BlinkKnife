@@ -100,8 +100,6 @@ public class PlayerMotor : MonoBehaviour
         }
 
         cameraRelativePos = cam.transform.position - transform.position;
-        //health = healthMax;
-        //energy = energyMax;
         canHover = true;
     }
 
@@ -275,6 +273,7 @@ public class PlayerMotor : MonoBehaviour
             }
 
             // MomentumSlide here
+            newVel = MomentumSlide(newVel);
 
             rb.velocity = newVel;
         }
@@ -284,105 +283,105 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-    void GroundMovement(float localYVelocity)
-    {
-        Vector3 newVel = rb.velocity;
+    //void GroundMovement(float localYVelocity)
+    //{
+    //    Vector3 newVel = rb.velocity;
 
-        if (velocity != Vector3.zero)
-        {
-            newVel = velocity * velMod;
+    //    if (velocity != Vector3.zero)
+    //    {
+    //        newVel = velocity * velMod;
 
-            if (sprinting)
-                newVel *= PlayerController.SprintModifier();
+    //        if (sprinting)
+    //            newVel *= PlayerController.SprintModifier();
 
-            if (jumpTimer <= 0)
-            {
-                // rotate to face ground normals
-                float rayDistance = 0.5f;
-                RaycastHit hitInfo;
+    //        if (jumpTimer <= 0)
+    //        {
+    //            // rotate to face ground normals
+    //            float rayDistance = 0.5f;
+    //            RaycastHit hitInfo;
 
-                Ray ray = new Ray(transform.position - transform.up, -transform.up);
-                if (Physics.Raycast(ray, out hitInfo, rayDistance))
-                {
-                    if (hitInfo.normal != transform.up)
-                    {
-                        // rotate input vector to align with surface normal
-                        Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
-                        newVel = rot * newVel;
+    //            Ray ray = new Ray(transform.position - transform.up, -transform.up);
+    //            if (Physics.Raycast(ray, out hitInfo, rayDistance))
+    //            {
+    //                if (hitInfo.normal != transform.up)
+    //                {
+    //                    // rotate input vector to align with surface normal
+    //                    Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
+    //                    newVel = rot * newVel;
 
-                        //if (sliding)
-                        //{
-                        //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
+    //                    //if (sliding)
+    //                    //{
+    //                    //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
 
-                        //    if (Vector3.Dot(newVel, flatNormal) < 0)
-                        //    {
-                        //        // don't allow movement up slope
-                        //        newVel -= Vector3.Project(newVel, flatNormal);
-                        //    }
-                        //}
+    //                    //    if (Vector3.Dot(newVel, flatNormal) < 0)
+    //                    //    {
+    //                    //        // don't allow movement up slope
+    //                    //        newVel -= Vector3.Project(newVel, flatNormal);
+    //                    //    }
+    //                    //}
 
 
-                        //// Decide here whether to rotate player as well
-                        //float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
-                        //if (surfaceAngleDiff < slideAngleThreshold)
-                        //{
-                        //    // needs to be replaced by a proper value
-                        //    // may also cause weird behaviour when transitioning on curved surfaces
+    //                    //// Decide here whether to rotate player as well
+    //                    //float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
+    //                    //if (surfaceAngleDiff < slideAngleThreshold)
+    //                    //{
+    //                    //    // needs to be replaced by a proper value
+    //                    //    // may also cause weird behaviour when transitioning on curved surfaces
 
-                        //    // possibly need to modify velocity if surface normal above threshold?
-                        //    // stop sticking to walls when too steep
-                        //    Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
-                        //    newVel = rot * newVel;
-                        //}
-                        //else
-                        //{
-                        //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
+    //                    //    // possibly need to modify velocity if surface normal above threshold?
+    //                    //    // stop sticking to walls when too steep
+    //                    //    Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
+    //                    //    newVel = rot * newVel;
+    //                    //}
+    //                    //else
+    //                    //{
+    //                    //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
 
-                        //    if (Vector3.Dot(newVel, flatNormal) < 0)
-                        //    {
-                        //        // don't allow movement up slope
-                        //        newVel -= Vector3.Project(newVel, flatNormal);
-                        //    }
-                        //    //newVel = rb.velocity;
-                        //}
-                    }
-                }
+    //                    //    if (Vector3.Dot(newVel, flatNormal) < 0)
+    //                    //    {
+    //                    //        // don't allow movement up slope
+    //                    //        newVel -= Vector3.Project(newVel, flatNormal);
+    //                    //    }
+    //                    //    //newVel = rb.velocity;
+    //                    //}
+    //                }
+    //            }
 
-                //newVel = MomentumSlide(newVel);
-            }
-            else
-            {
-                // TODO: figure out why the following TODO is here...
+    //            //newVel = MomentumSlide(newVel);
+    //        }
+    //        else
+    //        {
+    //            // TODO: figure out why the following TODO is here...
 
-                // TODO:
-                newVel += (transform.up * localYVelocity);
-            }
+    //            // TODO:
+    //            newVel += (transform.up * localYVelocity);
+    //        }
 
-            if (crouching)
-            {
-                crouchVelFactor = 0.5f;
-                newVel *= crouchVelFactor;
-            }
+    //        if (crouching)
+    //        {
+    //            crouchVelFactor = 0.5f;
+    //            newVel *= crouchVelFactor;
+    //        }
 
-            //newVel = MomentumSlide(newVel);
+    //        //newVel = MomentumSlide(newVel);
 
-            rb.velocity = newVel;
-        }
-        else
-        {
-            // no input vector
-            // needs to dampen movement along local xz axes
-            // newVel = transform.up * localYVelocity;
+    //        rb.velocity = newVel;
+    //    }
+    //    else
+    //    {
+    //        // no input vector
+    //        // needs to dampen movement along local xz axes
+    //        // newVel = transform.up * localYVelocity;
 
-            newVel = (Vector3.ProjectOnPlane(newVel, transform.up) * 0.9f) + transform.up * localYVelocity;
+    //        newVel = (Vector3.ProjectOnPlane(newVel, transform.up) * 0.9f) + transform.up * localYVelocity;
 
-            //newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
+    //        //newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
 
-            //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
+    //        //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
 
-            rb.velocity = newVel;
-        }
-    }
+    //        rb.velocity = newVel;
+    //    }
+    //}
 
     /*
      * while moving above base speed, apply small slowdown until at base speed
@@ -390,17 +389,21 @@ public class PlayerMotor : MonoBehaviour
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
 
-        float speedThreshold = PlayerController.Speed() * velMod;
-        if (sprinting) speedThreshold *= PlayerController.SprintModifier();
+        float speedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
+
         if (rb.velocity.magnitude > speedThreshold)
         {
-            Vector3 forwardComponent = Vector3.Project(_newVel, rb.velocity);
-            if (Vector3.Dot(_newVel, rb.velocity) < 0)
+
+            if (Vector3.Dot(_newVel, rb.velocity) > 0)
             {
-                forwardComponent *= 0.1f;
+                // input in direction of movement
+                //_newVel = _newVel.normalized * rb.velocity.magnitude;
+                //float forwardComponent = Vector3.Project(_newVel, rb.velocity).magnitude;
+                //float newMagnitude = Utilities.MapValues(forwardComponent, 0f, speedThreshold, speedThreshold,
+                //    rb.velocity.magnitude, true);
+
+                _newVel = _newVel.normalized * rb.velocity.magnitude;
             }
-            _newVel = rb.velocity + (_newVel - forwardComponent);
-            //_newVel -= forwardComponent;
         }
 
         return _newVel;
