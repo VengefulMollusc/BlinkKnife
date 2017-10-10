@@ -67,6 +67,7 @@ public class PlayerMotor : MonoBehaviour
     private float currentCamRotX;
 
     private int jumpTimer;
+    private bool momentumFlight;
 
     private Rigidbody rb;
 
@@ -211,7 +212,8 @@ public class PlayerMotor : MonoBehaviour
         {
             // grounded
             //GroundMovement(localYVelocity);
-            NewGroundMovement();
+            momentumFlight = false;
+            GroundMovement();
         }
         else if (!colliding)
         {
@@ -246,7 +248,7 @@ public class PlayerMotor : MonoBehaviour
         return float.MaxValue;
     }
 
-    void NewGroundMovement()
+    void GroundMovement()
     {
         Vector3 newVel = rb.velocity;
 
@@ -280,106 +282,6 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-    //void GroundMovement(float localYVelocity)
-    //{
-    //    Vector3 newVel = rb.velocity;
-
-    //    if (velocity != Vector3.zero)
-    //    {
-    //        newVel = velocity * velMod;
-
-    //        if (sprinting)
-    //            newVel *= PlayerController.SprintModifier();
-
-    //        if (jumpTimer <= 0)
-    //        {
-    //            // rotate to face ground normals
-    //            float rayDistance = 0.5f;
-    //            RaycastHit hitInfo;
-
-    //            Ray ray = new Ray(transform.position - transform.up, -transform.up);
-    //            if (Physics.Raycast(ray, out hitInfo, rayDistance))
-    //            {
-    //                if (hitInfo.normal != transform.up)
-    //                {
-    //                    // rotate input vector to align with surface normal
-    //                    Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
-    //                    newVel = rot * newVel;
-
-    //                    //if (sliding)
-    //                    //{
-    //                    //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
-
-    //                    //    if (Vector3.Dot(newVel, flatNormal) < 0)
-    //                    //    {
-    //                    //        // don't allow movement up slope
-    //                    //        newVel -= Vector3.Project(newVel, flatNormal);
-    //                    //    }
-    //                    //}
-
-
-    //                    //// Decide here whether to rotate player as well
-    //                    //float surfaceAngleDiff = Vector3.Angle(hitInfo.normal, transform.up);
-    //                    //if (surfaceAngleDiff < slideAngleThreshold)
-    //                    //{
-    //                    //    // needs to be replaced by a proper value
-    //                    //    // may also cause weird behaviour when transitioning on curved surfaces
-
-    //                    //    // possibly need to modify velocity if surface normal above threshold?
-    //                    //    // stop sticking to walls when too steep
-    //                    //    Quaternion rot = Quaternion.FromToRotation(transform.up, hitInfo.normal);
-    //                    //    newVel = rot * newVel;
-    //                    //}
-    //                    //else
-    //                    //{
-    //                    //    Vector3 flatNormal = Vector3.ProjectOnPlane(hitInfo.normal, transform.up);
-
-    //                    //    if (Vector3.Dot(newVel, flatNormal) < 0)
-    //                    //    {
-    //                    //        // don't allow movement up slope
-    //                    //        newVel -= Vector3.Project(newVel, flatNormal);
-    //                    //    }
-    //                    //    //newVel = rb.velocity;
-    //                    //}
-    //                }
-    //            }
-
-    //            //newVel = MomentumSlide(newVel);
-    //        }
-    //        else
-    //        {
-    //            // TODO: figure out why the following TODO is here...
-
-    //            // TODO:
-    //            newVel += (transform.up * localYVelocity);
-    //        }
-
-    //        if (crouching)
-    //        {
-    //            crouchVelFactor = 0.5f;
-    //            newVel *= crouchVelFactor;
-    //        }
-
-    //        //newVel = MomentumSlide(newVel);
-
-    //        rb.velocity = newVel;
-    //    }
-    //    else
-    //    {
-    //        // no input vector
-    //        // needs to dampen movement along local xz axes
-    //        // newVel = transform.up * localYVelocity;
-
-    //        newVel = (Vector3.ProjectOnPlane(newVel, transform.up) * 0.9f) + transform.up * localYVelocity;
-
-    //        //newVel = MomentumSlide(Vector3.ProjectOnPlane(newVel, transform.up), 0f);
-
-    //        //newVel += transform.up * localYVelocity; // makes stationary jumps much higher
-
-    //        rb.velocity = newVel;
-    //    }
-    //}
-
     /*
      * while moving above base speed, apply small slowdown until at base speed
      */
@@ -398,19 +300,33 @@ public class PlayerMotor : MonoBehaviour
 
 
     /*
-     * Handle movement changes while midair
+     * Handle movement physics while midair
      */
     void AirMovement()
     {
 
+        float threshold = PlayerController.Speed() * airVelMod * PlayerController.SprintModifier();
+        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
+
+        if (flatVel.magnitude > threshold)
+        {
+            momentumFlight = true;
+        }
+
         if (velocity != Vector3.zero)
         {
-            HandleMidairInput();
+            HandleMidairInput(flatVel);
         }
         else
         {
             // handle situation in which movement is below walk speed
             // cancel momentum to allow precise small jumps
+
+            if (!momentumFlight)
+            {
+                // dampen movement
+                rb.velocity -= (flatVel * 0.1f);
+            }
         }
 
         if (crouching && canHover)
@@ -421,33 +337,42 @@ public class PlayerMotor : MonoBehaviour
     }
 
     /*
-     * Split this off as it's a complicated scenario
-     * Needs to allow limited velocity adjustment while midair, 
-     * without increasing speed over a certain threshold
+     * Handles midair movement with an input vector
      * 
-     * needs to allow limited slowing and turning
+     * If current speed is above the threshold defined by the run/sprint speed 
+     * then removes component of input vector in direction of movement
+     * (disallows increase of speed)
      * 
-     * needs to feel like you have SOME control while
-     * still being dedicated to momentum of jump
+     * Applies modified input vector to RigidBody depending on whether 
+     * we are above the momentumFlight threshold
      */
-    private void HandleMidairInput()
-    {
-        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
+    private void HandleMidairInput(Vector3 _flatVel)
+    { 
 
         Vector3 velocityTemp = velocity * airVelMod;
 
-        float threshold = PlayerController.Speed();
+        float threshold = PlayerController.Speed() * airVelMod;
         if (sprinting)
             threshold *= PlayerController.SprintModifier();
 
         // if input velocity in direction of flight and velocity above threshold
-        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
+        if (Vector3.Dot(velocityTemp, _flatVel) > 0 && _flatVel.magnitude > threshold)
         {
             // cancel positive movement in direction of flight
-            velocityTemp -= Vector3.Project(velocityTemp, flatVel);
+            velocityTemp -= Vector3.Project(velocityTemp, _flatVel);
         }
 
-        rb.AddForce(velocityTemp, ForceMode.VelocityChange); // Impulse
+        if (momentumFlight)
+        {
+            // use impulse force to allow slower changes to direction/speed when at high midair speed
+            rb.AddForce(velocityTemp, ForceMode.Impulse);
+        }
+        else
+        {
+            // use direct velocity changes to allow more responsive jump control at slower speeds
+            rb.velocity += velocityTemp;
+            //rb.AddForce(velocityTemp, ForceMode.VelocityChange);
+        }
     }
 
     IEnumerator Hover()
