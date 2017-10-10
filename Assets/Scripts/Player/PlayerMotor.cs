@@ -232,7 +232,7 @@ public class PlayerMotor : MonoBehaviour
 
     private bool UseGroundMovement()
     {
-        return (IsOnGround() && GetSlopeAngle() < 40f) || !sliding ;
+        return (IsOnGround() && GetSlopeAngle() < PlayerCollisionController.slideThreshold) || !sliding ;
     }
 
     // returns the angle of the slope directly below the player

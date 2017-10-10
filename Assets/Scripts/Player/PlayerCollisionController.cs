@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCollisionController : MonoBehaviour
 {
 
-    [SerializeField] private float slideThreshold = 40f;
+    public static float slideThreshold = 46f;
 
     private PlayerMotor playerMotor;
     SphereCollider sphereCol;
