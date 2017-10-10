@@ -280,6 +280,9 @@ public class PlayerMotor : MonoBehaviour
         else
         {
             rb.velocity -= (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
+            // may not be nessecary, friction already does a bit of this
+
+            //rb.velocity = Vector3.zero;
         }
     }
 
@@ -393,7 +396,6 @@ public class PlayerMotor : MonoBehaviour
 
         if (rb.velocity.magnitude > speedThreshold)
         {
-
             if (Vector3.Dot(_newVel, rb.velocity) > 0)
             {
                 // input in direction of movement
