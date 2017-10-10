@@ -46,9 +46,6 @@ public class PlayerKnifeController : MonoBehaviour {
     [SerializeField]
     private float throwHeightModifier = -0.2f;
 
-	[SerializeField]
-	private float spinSpeed = 10f;
-
     [Header("Prefabs")]
 	[SerializeField]
 	private GameObject blinkKnifePrefab;
@@ -322,7 +319,7 @@ public class PlayerKnifeController : MonoBehaviour {
         }
 
         // set up and throw knife object
-        knifeController.Setup (this, spinSpeed);
+        knifeController.Setup (this);
 //		knifeController.Throw ((transform.forward * throwStrength) 
 //			+ (playerRb.velocity * 0.5f), this);
 		knifeController.Throw (throwDirection * _strength);
