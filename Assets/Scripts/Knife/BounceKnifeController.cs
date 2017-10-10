@@ -19,22 +19,22 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
 	private Vector3 spinVector;
 //	private Vector3 throwVelocity;
 
-	void Start (){
-		rb = GetComponent<Rigidbody> ();
-	}
+	//void Start (){
+	//	rb = GetComponent<Rigidbody> ();
+	//}
 
-	public void Setup (PlayerKnifeController _controller, float _spinSpeed){
+	public void Setup (PlayerKnifeController _controller){
 //		playerKnifeController = _controller;
 		rb = GetComponent<Rigidbody> ();
-		spinVector = new Vector3(_spinSpeed, 0.0f, 0.0f);
 
         // add random throw angle
         // could raycast throw angle to match surface hit?
         // WITH BOTH KNIVES?
-        visuals.transform.Rotate (0f, 0f, ((Random.value * 2f) - 1f) * 90f);
+        //visuals.transform.Rotate (0f, 0f, ((Random.value * 2f) - 1f) * 90f);
+	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //?
 
         //SetThrowRotation();
-	}
+    }
 
     /*
      * Unsure how useful this is, if knife too fast then you probably cant even see it
@@ -63,13 +63,17 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
     //    }
     //}
 
-	void Update (){
-		visuals.transform.Rotate (spinVector);
-//		if (rb.velocity.magnitude != 0f)
-//			transform.forward = rb.velocity;
-	}
+    void Update()
+    {
+        if (rb == null)
+            return;
 
-	public void Throw (Vector3 _velocity){
+        //visuals.transform.Rotate(spinVector);
+        if (rb.velocity.magnitude != 0f)
+            transform.forward = rb.velocity;
+    }
+
+    public void Throw (Vector3 _velocity){
 
         // set the player owner of the knife
         //		playerKnifeController = _playerKnifeController;

@@ -21,7 +21,6 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
     [SerializeField]
 	private GameObject visuals;
-	private Vector3 spinVector;
 	private Vector3 throwVelocity;
 
 	private bool collided;
@@ -31,25 +30,25 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
     private GravityPanel gravPanel;
 
-	public void Setup (PlayerKnifeController _controller, float _spinSpeed){
+	public void Setup (PlayerKnifeController _controller){
 		playerKnifeController = _controller;
         gravDir = GlobalGravityControl.GetCurrentGravityVector();
 		rb = GetComponent<Rigidbody> ();
-		spinVector = new Vector3(_spinSpeed, 0.0f, 0.0f);
 
 		collided = false;
 		collisionNormal = Vector3.zero;
 
-		// add random throw angle
+        // add random throw angle
         // replace this with constant once animated
-		visuals.transform.Rotate (0f, 0f, ((Random.value*2f)-1f) * 90f);
-	}
+        //visuals.transform.Rotate (0f, 0f, ((Random.value*2f)-1f) * 90f);
+
+	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //?
+    }
 
 	void Update (){
 		if (collided || rb == null)
 			return;
-
-		visuals.transform.Rotate (spinVector);
+        
         // align transform.forward to travel direction
 		if (rb.velocity.magnitude != 0f)
 			transform.forward = rb.velocity;

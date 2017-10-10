@@ -8,7 +8,7 @@ namespace AssemblyCSharp
         /*
          * Passes the knifecontroller and parameter spin speed to the knife
          */
-		void Setup (PlayerKnifeController _controller, float _spinSpeed);
+		void Setup (PlayerKnifeController _controller);
 
         /*
          * Throws the knife at the given velocity
