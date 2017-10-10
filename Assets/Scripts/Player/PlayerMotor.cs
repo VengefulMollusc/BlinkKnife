@@ -21,8 +21,6 @@ public class PlayerMotor : MonoBehaviour
     //[SerializeField]
     //private float sprintDeceleration = 0.9f;
 
-    [SerializeField] private float slideAngleThreshold = 45f;
-
     [SerializeField]
     private float velMod = 2f;
 

@@ -40,9 +40,9 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		rb = GetComponent<Rigidbody> ();
 	}
 
-	public void Setup (PlayerKnifeController _controller, Vector3 _gravityDir, float _spinSpeed){
+	public void Setup (PlayerKnifeController _controller, float _spinSpeed){
 		playerKnifeController = _controller;
-        gravDir = _gravityDir;
+        gravDir = GlobalGravityControl.GetCurrentGravityVector();
 		rb = GetComponent<Rigidbody> ();
 		spinVector = new Vector3(_spinSpeed, 0.0f, 0.0f);
 
@@ -55,9 +55,9 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	}
 
 	void Update (){
-		if (collided){
+		if (collided)
 			return;
-		}
+
 		visuals.transform.Rotate (spinVector);
         // align transform.forward to travel direction
 		if (rb.velocity.magnitude != 0f)

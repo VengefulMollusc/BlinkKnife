@@ -322,7 +322,7 @@ public class PlayerKnifeController : MonoBehaviour {
         }
 
         // set up and throw knife object
-        knifeController.Setup (this, -playerMotor.transform.up, spinSpeed);
+        knifeController.Setup (this, spinSpeed);
 //		knifeController.Throw ((transform.forward * throwStrength) 
 //			+ (playerRb.velocity * 0.5f), this);
 		knifeController.Throw (throwDirection * _strength);

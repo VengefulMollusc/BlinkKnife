@@ -39,7 +39,6 @@ GameObject:
   - component: {fileID: 54000011579744162}
   - component: {fileID: 114000011447373766}
   - component: {fileID: 135000011078396434}
-  - component: {fileID: 114887275820111220}
   m_Layer: 0
   m_Name: BlinkKnife 2
   m_TagString: Knife
@@ -389,22 +388,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throwStrengthMod: 1
   visuals: {fileID: 1000014191671374}
---- !u!114 &114887275820111220
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013895624480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e14db44c3d920d14983ed92aed3ba8c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sendTriggerMessage: 0
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  skinWidth: 0.1
 --- !u!135 &135000011078396434
 SphereCollider:
   m_ObjectHideFlags: 1

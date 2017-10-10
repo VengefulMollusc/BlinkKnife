@@ -23,7 +23,7 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
 		rb = GetComponent<Rigidbody> ();
 	}
 
-	public void Setup (PlayerKnifeController _controller, Vector3 _gravityDir, float _spinSpeed){
+	public void Setup (PlayerKnifeController _controller, float _spinSpeed){
 //		playerKnifeController = _controller;
 		rb = GetComponent<Rigidbody> ();
 		spinVector = new Vector3(_spinSpeed, 0.0f, 0.0f);

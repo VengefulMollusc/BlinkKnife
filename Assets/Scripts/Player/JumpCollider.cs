@@ -4,7 +4,6 @@ public class JumpCollider : MonoBehaviour
 {
 
     private GameObject player;
-    private PlayerMotor playerMotor;
 
     private static bool colliding;
 
@@ -15,7 +14,6 @@ public class JumpCollider : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        playerMotor = player.GetComponent<PlayerMotor>();
 
         colliding = false;
 
@@ -59,9 +57,9 @@ public class JumpCollider : MonoBehaviour
         //}
     }
 
-    private void OnTriggerEnter(Collider col)
-    {
-        // added to prevent errors with DontGoThroughThings
-    }
+    //private void OnTriggerEnter(Collider col)
+    //{
+    //    // added to prevent errors with DontGoThroughThings
+    //}
 
 }
