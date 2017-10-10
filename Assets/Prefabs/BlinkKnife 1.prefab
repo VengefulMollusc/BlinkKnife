@@ -467,8 +467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throwStrengthMod: 1
   useGravity: 1
-  gravityAcceleration: 0
-  gravityStartAmt: 20
+  gravityForce: 20
   visuals: {fileID: 1000014191671374}
 --- !u!123 &123000012676461304
 LensFlare:

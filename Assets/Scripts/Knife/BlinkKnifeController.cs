@@ -17,11 +17,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
     private bool useGravity = true;
 
     [SerializeField]
-    [Range(0f, 10f)]
-    private float gravityAcceleration = 4f;
-
-    [SerializeField]
-    private float gravityStartAmt = 0f;
+    private float gravityForce = 0f;
 
     [SerializeField]
 	private GameObject visuals;
@@ -68,9 +64,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
     {
         if (useGravity) { 
             // manual gravity control
-            if (gravityAcceleration > 0f)
-                gravityStartAmt += gravityAcceleration;
-            rb.AddForce(gravDir * gravityStartAmt, ForceMode.Acceleration);
+            rb.AddForce(gravDir * gravityForce, ForceMode.Acceleration);
         }
 
         // dampen horizontal velocity too?
