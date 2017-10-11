@@ -248,6 +248,21 @@ public class PlayerMotor : MonoBehaviour
         return float.MaxValue;
     }
 
+
+    /*
+     * You might have heard at some point someone describe controls as fluid, 
+     * which basically means that the movement is smooth and consistent (even 
+     * when colliding.) I noticed that if the avatar moved alongside a wall 
+     * at an angle the velocity slowed down considerably. Ray casting might 
+     * seem to provide a logical solution, but after some experimentation I 
+     * found the simplest and most effective solution to this problem by 
+     * observing the resulting velocity after collision: When the avatar 
+     * collided, it moved slightly in the direction I wanted. So by normalizing 
+     * that movement and multiplying it by our desired speed (magnitude), 
+     * we get smooth movement while colliding every time.
+     * 
+     * NOTE: this may need to be applied to air movement as well re physics against walls
+     */
     void GroundMovement()
     {
         Vector3 newVel = rb.velocity;
