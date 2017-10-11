@@ -347,6 +347,7 @@ public class PlayerMotor : MonoBehaviour
         if (crouching && canHover)
         {
             canHover = false;
+            momentumFlight = false;
             StartCoroutine(Hover());
         }
     }
