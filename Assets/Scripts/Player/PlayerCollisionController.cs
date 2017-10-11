@@ -16,6 +16,8 @@ public class PlayerCollisionController : MonoBehaviour
     private bool frictionless;
     private bool colliding;
 
+    private float speedThreshold;
+
     // Use this for initialization
     void OnEnable ()
     {
@@ -29,14 +31,18 @@ public class PlayerCollisionController : MonoBehaviour
 
         frictionless = true;
         colliding = false;
+
+        speedThreshold = PlayerController.Speed() * PlayerMotor.VelMod() * PlayerController.SprintModifier();
     }
 
     void FixedUpdate()
     {
-        UpdateCollisionState(frictionless, colliding);
+        // also disable friction while moving above speed threshold
+        bool frictionOverride = (GetComponent<Rigidbody>().velocity.magnitude > speedThreshold);
+        UpdateCollisionState(frictionless, colliding, frictionOverride);
 
-        frictionless = true;
-        colliding = false;
+        //frictionless = true;
+        //colliding = false;
     }
 
     void OnCollisionStay(Collision col)
@@ -55,11 +61,19 @@ public class PlayerCollisionController : MonoBehaviour
                 return;
             }
         }
+
+        frictionless = true;
     }
 
-    void UpdateCollisionState(bool _frictionless, bool _colliding)
+    void OnCollisionExit()
     {
-        if (_frictionless)
+        frictionless = true;
+        colliding = false;
+    }
+
+    void UpdateCollisionState(bool _frictionless, bool _colliding, bool _frictionOverride)
+    {
+        if (_frictionless || _frictionOverride)
         {
             colMaterial.staticFriction = 0f;
             colMaterial.dynamicFriction = 0f;

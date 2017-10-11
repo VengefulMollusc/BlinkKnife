@@ -10,7 +10,7 @@ public class PlayerMotor : MonoBehaviour
     private Camera cam;
 
     [SerializeField]
-    private float cameraRotLimit = 85f;
+    private float cameraRotLimit = 90f;
 
     [SerializeField]
     private GameObject transitionCameraPrefab;
@@ -20,21 +20,18 @@ public class PlayerMotor : MonoBehaviour
 
     //[SerializeField]
     //private float sprintDeceleration = 0.9f;
-
-    [SerializeField]
-    private float velMod = 2f;
-
-    [SerializeField]
-    private float airVelMod = 0.02f;
+    
+    private static float velMod = 1.5f;
+    private static float airVelMod = 1.2f;
 
     // Shift gravity if the difference between current gravity and surface normal is
     // above the threshold defined by warpGravShiftAngle
     [SerializeField]
     private float warpGravShiftAngle = 1f;
 
-    [SerializeField]
-    [Range(0f, 20f)]
-    private float airVelThreshold = 20f;
+    //[SerializeField]
+    //[Range(0f, 20f)]
+    //private float airVelThreshold = 10f;
 
     [SerializeField]
     [Range(0.0f, 50.0f)]
@@ -677,6 +674,11 @@ public class PlayerMotor : MonoBehaviour
     public bool IsOnGround()
     {
         return JumpCollider.IsColliding();
+    }
+
+    public static float VelMod()
+    {
+        return velMod;
     }
 
     /*
