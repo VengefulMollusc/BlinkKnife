@@ -371,7 +371,6 @@ public class PlayerMotor : MonoBehaviour
         {
             // use direct velocity changes to allow more responsive jump control at slower speeds
             rb.velocity += (velocityTemp * 0.5f);
-            //rb.AddForce(velocityTemp, ForceMode.VelocityChange);
         }
     }
 
