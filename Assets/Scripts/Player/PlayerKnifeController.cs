@@ -365,9 +365,9 @@ public class PlayerKnifeController : MonoBehaviour {
 
         // move player to knife position and inherit velocity
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
-		Vector3 _velocity = knifeController.GetVelocity(bounceWarp).normalized;
+		Vector3 _velocity = knifeController.GetVelocity().normalized;
 		//playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetObjectCollided(), knifeController.GetSurfaceNormal());
-        playerMotor.WarpToKnife(shiftGravity, _velocity, knifeController);
+        playerMotor.WarpToKnife(shiftGravity, _velocity, knifeController, bounceWarp);
 
         if (bounceWarp)
 		{
