@@ -307,7 +307,7 @@ public class PlayerMotor : MonoBehaviour
     {
         if (sprinting && rb.velocity.magnitude > speedThreshold && Vector3.Dot(_newVel, rb.velocity) > 0)
         {
-            _newVel = _newVel.normalized * rb.velocity.magnitude;
+            _newVel = (rb.velocity + _newVel).normalized * rb.velocity.magnitude;
         }
         else
         {
