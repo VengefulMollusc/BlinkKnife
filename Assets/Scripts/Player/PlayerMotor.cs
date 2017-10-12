@@ -295,7 +295,7 @@ public class PlayerMotor : MonoBehaviour
     }
 
     /*
-     * while moving above base speed, apply small slowdown until at base speed
+     * while moving above sprint speed, retain gained speed
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
@@ -528,11 +528,14 @@ public class PlayerMotor : MonoBehaviour
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel
             float projectedVelMagnitude = Vector3.Dot(rb.velocity, _velocity);
-            projectedVelMagnitude = Mathf.Max(projectedVelMagnitude, 0f) * 0.5f; // 0.5f here controls how much velocity is added
+            float relativeSpeed = projectedVelMagnitude - warpVelocityModifier;
+
+            // This line makes sure we only add player momentum if moving faster than base inherited momentum
+            relativeSpeed = Mathf.Max(relativeSpeed, 0f); // 0.5f here controls how much velocity is added
             // adds component of current velocity along axis of knife movement
 
-            // TODO: add vel here? or add component to initial throw velocity of knife?
-            rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
+            //rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
+            rb.velocity = (_velocity * (warpVelocityModifier + relativeSpeed));
 
             // fixes horizontal momentum lock when warping
             //onGround = false;

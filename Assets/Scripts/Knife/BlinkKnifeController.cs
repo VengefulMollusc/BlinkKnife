@@ -128,10 +128,10 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
     }
 
 	public Vector3 GetVelocity (bool _throwVelocity){
-		if (_throwVelocity)
-			return throwVelocity;
-		return rb.velocity;
-        //return Vector3.zero;
+        //if (_throwVelocity)
+        //	return throwVelocity;
+        //return rb.velocity;
+        return Vector3.zero;
     }
 
 	public bool HasCollided(){
