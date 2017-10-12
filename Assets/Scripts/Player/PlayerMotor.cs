@@ -20,7 +20,7 @@ public class PlayerMotor : MonoBehaviour
 
     //[SerializeField]
     //private float sprintDeceleration = 0.9f;
-    
+
     private static float velMod = 1.5f;
     private static float airVelMod = 1.2f;
 
@@ -207,7 +207,7 @@ public class PlayerMotor : MonoBehaviour
 
         // Apply the current gravity
         rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
-        
+
 
         if (UseGroundMovement() && jumpTimer <= 0)
         {
@@ -367,7 +367,7 @@ public class PlayerMotor : MonoBehaviour
      * we are above the momentumFlight threshold
      */
     private void HandleMidairInput(Vector3 _flatVel)
-    { 
+    {
 
         Vector3 velocityTemp = velocity * airVelMod;
 
@@ -495,7 +495,7 @@ public class PlayerMotor : MonoBehaviour
     //	colliding = true;
     //}
 
-    public void WarpToKnife(bool _shiftGravity, Vector3 _velocity, KnifeController _knifeController)
+    public void WarpToKnife(bool _shiftGravity, Vector3 _velocity, KnifeController _knifeController, bool _bounceWarp)
     {
         if (frozen) return;
         Vector3 camStartPos = cam.transform.position;
@@ -537,7 +537,7 @@ public class PlayerMotor : MonoBehaviour
 
         // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
 
-        if (_velocity != Vector3.zero)
+        if (_velocity != Vector3.zero && _bounceWarp)
         {
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel
@@ -547,15 +547,16 @@ public class PlayerMotor : MonoBehaviour
             // adds component of current velocity along axis of knife movement
 
             //rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
+
+            // inherit player velocity
             rb.velocity = (_velocity * (warpVelocityModifier + relativeSpeed));
 
             // fixes horizontal momentum lock when warping
             //onGround = false;
         }
-        else if (_knifeController.HasCollided())
+        else
         {
-            // cancel momentum
-            rb.velocity = Vector3.zero;
+            rb.velocity = _velocity;
         }
 
         // fixes horizontal momentum lock when warping

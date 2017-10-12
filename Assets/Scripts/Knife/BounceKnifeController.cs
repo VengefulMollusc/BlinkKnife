@@ -120,7 +120,7 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
         return Vector3.zero;
     }
 
-    public Vector3 GetVelocity (bool _throwVelocity){
+    public Vector3 GetVelocity (){
 		return rb.velocity;
 	}
 

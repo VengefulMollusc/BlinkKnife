@@ -30,7 +30,7 @@ namespace AssemblyCSharp
          * 
          * bool determines whether to return the velocity at point of throw
          */
-		Vector3 GetVelocity(bool throwVelocity);
+		Vector3 GetVelocity();
 
         /*
          * Returns the object the knife collided with (if existing)
