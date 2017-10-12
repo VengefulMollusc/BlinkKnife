@@ -296,6 +296,8 @@ public class PlayerMotor : MonoBehaviour
 
     /*
      * while moving above sprint speed, retain gained speed
+     * 
+     * TODO: Add something here to use high-speed movement physics. IE: like slow vs fast air movement
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
