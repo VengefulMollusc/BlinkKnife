@@ -79,6 +79,8 @@ public class PlayerMotor : MonoBehaviour
 
     private HealthController healthEnergy;
 
+    private float speedThreshold;
+
     private Vector3 slopeNormal;
 
     void Awake()
@@ -99,6 +101,8 @@ public class PlayerMotor : MonoBehaviour
 
         cameraRelativePos = cam.transform.position - transform.position;
         canHover = true;
+
+        speedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
     }
 
     // gets movement vector from PlayerController
@@ -301,12 +305,13 @@ public class PlayerMotor : MonoBehaviour
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
-
-        float speedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
-
-        if (rb.velocity.magnitude > speedThreshold && Vector3.Dot(_newVel, rb.velocity) > 0)
+        if (sprinting && rb.velocity.magnitude > speedThreshold && Vector3.Dot(_newVel, rb.velocity) > 0)
         {
             _newVel = _newVel.normalized * rb.velocity.magnitude;
+        }
+        else
+        {
+            // decelerate
         }
 
         return _newVel;
