@@ -344,7 +344,7 @@ public class PlayerMotor : MonoBehaviour
         if (crouching && canHover)
         {
             canHover = false;
-            momentumFlight = false;
+            momentumFlight = false; // comment this out when reworking hover - should depend on air speed
             StartCoroutine(Hover());
         }
     }
@@ -387,6 +387,13 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
+    /*
+     * Currently cancels almost all air movement and holds height for a few seconds.
+     * 
+     * Due to momentum/sliding changes, hovering while at high speed feels jarring.
+     * Perhaps only dampen vertical movement? or downward movement?
+     * Or decelerate horizontal movement over a short period.
+     */
     IEnumerator Hover()
     {
         crouchVelFactor = 0.5f;
@@ -528,10 +535,8 @@ public class PlayerMotor : MonoBehaviour
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel
             float projectedVelMagnitude = Vector3.Dot(rb.velocity, _velocity);
-            float relativeSpeed = projectedVelMagnitude - warpVelocityModifier;
-
             // This line makes sure we only add player momentum if moving faster than base inherited momentum
-            relativeSpeed = Mathf.Max(relativeSpeed, 0f); // 0.5f here controls how much velocity is added
+            float relativeSpeed = Mathf.Max(projectedVelMagnitude - warpVelocityModifier, 0f);
             // adds component of current velocity along axis of knife movement
 
             //rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
