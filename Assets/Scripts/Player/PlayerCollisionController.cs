@@ -40,9 +40,6 @@ public class PlayerCollisionController : MonoBehaviour
         // also disable friction while moving above speed threshold
         bool frictionOverride = (GetComponent<Rigidbody>().velocity.magnitude > speedThreshold);
         UpdateCollisionState(frictionless, colliding, frictionOverride);
-
-        //frictionless = true;
-        //colliding = false;
     }
 
     void OnCollisionStay(Collision col)
@@ -87,7 +84,5 @@ public class PlayerCollisionController : MonoBehaviour
         }
 
         playerMotor.SetCollisionState(_frictionless, _colliding);
-
-        //Debug.Log(_frictionless);
     }
 }
