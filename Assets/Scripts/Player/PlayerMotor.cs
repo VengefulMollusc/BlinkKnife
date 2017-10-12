@@ -550,6 +550,7 @@ public class PlayerMotor : MonoBehaviour
 
             // inherit player velocity
             rb.velocity = (_velocity * (warpVelocityModifier + relativeSpeed));
+            momentumFlight = true;
 
             // fixes horizontal momentum lock when warping
             //onGround = false;
