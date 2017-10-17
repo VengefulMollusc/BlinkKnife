@@ -1,3 +1,7 @@
+http://devmag.org.za/2012/07/12/50-tips-for-working-with-unity-best-practices/
+http://answers.unity3d.com/questions/1370941/more-advanced-player-movement.html
+
+
 ISSUES
 parenting player(or knife or anything really) to objects gets really screwy with parent scale.
 possible alternative is to just store the object to be 'parented' and manually copy/update from its
