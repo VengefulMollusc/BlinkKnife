@@ -212,7 +212,6 @@ public class PlayerMotor : MonoBehaviour
         if (UseGroundMovement() && jumpTimer <= 0)
         {
             // grounded
-            //GroundMovement(localYVelocity);
             momentumFlight = false;
             GroundMovement();
         }
@@ -290,18 +289,19 @@ public class PlayerMotor : MonoBehaviour
                 newVel *= 0.5f;
             }
 
-            // MomentumSlide here
-            newVel = MomentumSlide(newVel);
-
-            rb.velocity = newVel;
         }
         else
         {
-            rb.velocity -= (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
+            newVel = rb.velocity - (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
             // may not be nessecary, friction already does a bit of this
 
             //rb.velocity = Vector3.zero;
         }
+        
+        // MomentumSlide here
+        newVel = MomentumSlide(newVel);
+
+        rb.velocity = newVel;
     }
 
     /*
@@ -311,13 +311,27 @@ public class PlayerMotor : MonoBehaviour
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
-        if (sprinting && rb.velocity.magnitude > speedThreshold && Vector3.Dot(_newVel, rb.velocity) > 0)
+        bool aboveSpeedThreshold = rb.velocity.magnitude > speedThreshold;
+        bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0.5f;
+        bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
+
+        if (aboveSpeedThreshold)
+        {
+            return _newVel;
+        }
+
+        if (sprinting && inputInMovementDir && facingMovementDir)
         {
             _newVel = (rb.velocity + _newVel).normalized * rb.velocity.magnitude;
         }
         else
         {
             // decelerate
+            //Debug.Log(2 * Time.fixedDeltaTime);
+            float newMagnitude = rb.velocity.magnitude - (Time.fixedDeltaTime * 20f); 
+            _newVel = (rb.velocity + _newVel).normalized * newMagnitude;
+
+            //_newVel = rb.velocity - (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
         }
 
         return _newVel;

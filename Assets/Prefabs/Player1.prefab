@@ -214,7 +214,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!20 &20000013540887572
 Camera:
   m_ObjectHideFlags: 1
@@ -250,7 +249,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!23 &23000011231384170
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -260,6 +258,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -275,6 +274,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -292,6 +292,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -307,6 +308,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -403,9 +405,8 @@ MonoBehaviour:
   altKnifeBtn: Fire2
   abilityButton: Fire3
   throwStrength: 80
-  throwAngleModifier: 2
-  throwHeightModifier: -0.1
-  spinSpeed: 30
+  throwAngleModifier: 0
+  throwHeightModifier: 0
   blinkKnifePrefab: {fileID: 1000013895624480, guid: ae2dae60f9f33be47b5aa6f5e8a05050,
     type: 2}
   bounceKnifePrefab: {fileID: 1000013895624480, guid: 0698c66a77740bd4f9595ea2f48b90c8,
@@ -466,10 +467,7 @@ MonoBehaviour:
   cameraRotLimit: 90
   transitionCameraPrefab: {fileID: 1000010902589228, guid: 2c7b8a853a2dfcc4ab7a2ef5dacf0eea,
     type: 2}
-  velMod: 1.5
-  airVelMod: 1.2
   warpGravShiftAngle: 1
-  airVelThreshold: 10
   warpVelocityModifier: 20
 --- !u!114 &114000012321050414
 MonoBehaviour:
