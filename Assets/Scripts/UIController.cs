@@ -94,14 +94,16 @@ public class UIController : MonoBehaviour {
         healthUI.color = healthBaseColor;
         healthTransitionUI.color = healthDecayColor;
 
-        currentHealth = playerMotor.GetHealthNormalised();
+        //currentHealth = playerMotor.GetHealthNormalised();
+        currentHealth = 1f;
         healthTransition = currentHealth;
 
         // energy variables
         energyUI.color = energyBaseColor;
         energyTransitionUI.color = energyDecayColor;
 
-        currentEnergy = playerMotor.GetEnergyNormalised();
+        //currentEnergy = playerMotor.GetEnergyNormalised();
+        currentEnergy = 1f;
         energyTransition = currentEnergy;
 
         // Warp variables
@@ -155,7 +157,8 @@ public class UIController : MonoBehaviour {
      */
     private void UpdateHealth()
     {
-        float newHealth = playerMotor.GetHealthNormalised();
+        //float newHealth = playerMotor.GetHealthNormalised();
+        float newHealth = 1f;
 
         if (newHealth == currentHealth)
             return;
@@ -185,7 +188,8 @@ public class UIController : MonoBehaviour {
      */
     private void UpdateEnergy()
     {
-        float newEnergy = playerMotor.GetEnergyNormalised();
+        //float newEnergy = playerMotor.GetEnergyNormalised();
+        float newEnergy = 1f;
 
         if (newEnergy == currentEnergy)
             return;

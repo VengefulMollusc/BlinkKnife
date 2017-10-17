@@ -734,23 +734,23 @@ public class PlayerMotor : MonoBehaviour
      * Changes the player's current health
      * Positive numbers increase, negative decrease
      */
-    public void ModifyHealth(float _changeAmt)
-    {
-        healthEnergy.ModifyHealth(_changeAmt);
-    }
+    //public void ModifyHealth(float _changeAmt)
+    //{
+    //    healthEnergy.ModifyHealth(_changeAmt);
+    //}
 
-    public void ModifyEnergy(float _changeAmt)
-    {
-        healthEnergy.ModifyEnergy(_changeAmt);
-    }
+    //public void ModifyEnergy(float _changeAmt)
+    //{
+    //    healthEnergy.ModifyEnergy(_changeAmt);
+    //}
 
-    public float GetHealthNormalised()
-    {
-        return healthEnergy.GetHealthNormalised();
-    }
+    //public float GetHealthNormalised()
+    //{
+    //    return healthEnergy.GetHealthNormalised();
+    //}
 
-    public float GetEnergyNormalised()
-    {
-        return healthEnergy.GetEnergyNormalised();
-    }
+    //public float GetEnergyNormalised()
+    //{
+    //    return healthEnergy.GetEnergyNormalised();
+    //}
 }

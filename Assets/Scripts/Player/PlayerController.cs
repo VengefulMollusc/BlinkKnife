@@ -113,20 +113,20 @@ public class PlayerController : MonoBehaviour {
 
 
         // Test controls for health/energy
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            float mod = Random.Range(-2f, -30f);
-            motor.ModifyHealth(mod);
-            motor.ModifyEnergy(mod);
-            Debug.Log("Health/Energy decreased: " + mod);
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            float mod = Random.Range(2f, 30f);
-            motor.ModifyHealth(mod);
-            motor.ModifyEnergy(mod);
-            Debug.Log("Health/Energy increased: " + mod);
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    float mod = Random.Range(-2f, -30f);
+        //    motor.ModifyHealth(mod);
+        //    motor.ModifyEnergy(mod);
+        //    Debug.Log("Health/Energy decreased: " + mod);
+        //}
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    float mod = Random.Range(2f, 30f);
+        //    motor.ModifyHealth(mod);
+        //    motor.ModifyEnergy(mod);
+        //    Debug.Log("Health/Energy increased: " + mod);
+        //}
 
     }
 
