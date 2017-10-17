@@ -448,7 +448,7 @@ public class PlayerMotor : MonoBehaviour
      *  paths that can only be accessed when gravity is in a particular direction?
      */
 
-    // TODO: There is a bug somewhere relating to rotation - sometimes camera horizontal movement is prevented while airborne
+    // TODO: There is a bug somewhere relating to rotation - sometimes camera horizontal movement is prevented while airborne - so far only occured with irregular grav direction
     //perform rotation based on rotation variable
     private void PerformRotation()
     {
