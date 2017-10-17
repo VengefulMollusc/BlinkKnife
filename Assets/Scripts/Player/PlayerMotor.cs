@@ -216,7 +216,13 @@ public class PlayerMotor : MonoBehaviour
             momentumFlight = false;
             GroundMovement();
         }
-        else if (!colliding)
+        else if (colliding)
+        {
+            // Sliding
+            Vector3 velocityTemp = velocity * airVelMod;
+            rb.AddForce(velocityTemp, ForceMode.Impulse);
+        }
+        else
         {
             // airborne
             AirMovement();
@@ -427,6 +433,7 @@ public class PlayerMotor : MonoBehaviour
      *  paths that can only be accessed when gravity is in a particular direction?
      */
 
+    // TODO: There is a bug somewhere relating to rotation - sometimes camera horizontal movement is prevented while airborne
     //perform rotation based on rotation variable
     private void PerformRotation()
     {
@@ -495,6 +502,13 @@ public class PlayerMotor : MonoBehaviour
     //	colliding = true;
     //}
 
+
+    /*
+     * Warps the player to the current knife position, inheriting velocity and moving gravity vectors if required
+     * 
+     * TODO: either here or somewhere in knife code - need to project player hitbox to see if can fit.
+     * And cause warp to 'fizzle' if no good place for player to warp to is found (eg knife is between two close walls)
+     */
     public void WarpToKnife(bool _shiftGravity, Vector3 _velocity, KnifeController _knifeController, bool _bounceWarp)
     {
         if (frozen) return;
