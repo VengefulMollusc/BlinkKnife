@@ -312,24 +312,29 @@ public class PlayerMotor : MonoBehaviour
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
         bool aboveSpeedThreshold = rb.velocity.magnitude > speedThreshold;
-        bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0.5f;
+        bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0f;
         bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
 
-        if (aboveSpeedThreshold)
+        if (!aboveSpeedThreshold)
         {
             return _newVel;
         }
 
         if (sprinting && inputInMovementDir && facingMovementDir)
         {
+            // maintain velocity
             _newVel = (rb.velocity + _newVel).normalized * rb.velocity.magnitude;
         }
         else
         {
             // decelerate
+            if (inputInMovementDir)
+                _newVel -= Vector3.Project(_newVel, rb.velocity);
+
             //Debug.Log(2 * Time.fixedDeltaTime);
-            float newMagnitude = rb.velocity.magnitude - (Time.fixedDeltaTime * 20f); 
-            _newVel = (rb.velocity + _newVel).normalized * newMagnitude;
+            float brakeFactor = 1f - (Time.fixedDeltaTime * 2f);
+            Vector3 brakeVelocity = rb.velocity * brakeFactor; 
+            _newVel = brakeVelocity + (_newVel * 0.2f);
 
             //_newVel = rb.velocity - (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
         }
