@@ -524,9 +524,12 @@ public class PlayerMotor : MonoBehaviour
         {
             RotateToDirection(newGravDirection, relativeFacing);
         }
-
+        
         // move to knife position
-        rb.MovePosition(newPos);
+        // NOTE: this needs to be double-checked, moving rb by itself doesnt update position properly for grav warp
+        //rb.MovePosition(newPos);
+        //rb.position = newPos;
+        transform.position = newPos;
 
         Vector3 camEndPos = newPos + (transform.rotation * cameraRelativePos); //Needs to get position camera will be in after move
         Quaternion camEndRot = camStartRot;
@@ -537,7 +540,7 @@ public class PlayerMotor : MonoBehaviour
 
         // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
 
-        if (_velocity != Vector3.zero && _bounceWarp)
+        if (_bounceWarp && _velocity != Vector3.zero)
         {
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel

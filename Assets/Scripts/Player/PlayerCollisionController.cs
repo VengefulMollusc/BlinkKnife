@@ -85,6 +85,6 @@ public class PlayerCollisionController : MonoBehaviour
 
         playerMotor.SetCollisionState(_frictionless, _colliding);
 
-        Debug.Log(_frictionless);
+        //Debug.Log(_frictionless);
     }
 }
