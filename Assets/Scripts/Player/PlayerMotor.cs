@@ -306,8 +306,6 @@ public class PlayerMotor : MonoBehaviour
 
     /*
      * while moving above sprint speed, retain gained speed
-     * 
-     * TODO: Add something here to use high-speed movement physics. IE: like slow vs fast air movement
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
@@ -330,13 +328,11 @@ public class PlayerMotor : MonoBehaviour
             // decelerate
             if (inputInMovementDir)
                 _newVel -= Vector3.Project(_newVel, rb.velocity);
+            
+            Vector3 brakeVelocity = rb.velocity * 0.96f; 
 
-            //Debug.Log(2 * Time.fixedDeltaTime);
-            float brakeFactor = 1f - (Time.fixedDeltaTime * 2f);
-            Vector3 brakeVelocity = rb.velocity * brakeFactor; 
             _newVel = brakeVelocity + (_newVel * 0.2f);
 
-            //_newVel = rb.velocity - (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
         }
 
         return _newVel;
@@ -369,7 +365,7 @@ public class PlayerMotor : MonoBehaviour
             if (!momentumFlight)
             {
                 // dampen movement
-                rb.velocity -= (flatVel * 0.1f);
+                rb.velocity -= (flatVel * 0.1f); 
             }
         }
 
@@ -433,7 +429,7 @@ public class PlayerMotor : MonoBehaviour
         {
             rb.velocity *= crouchVelFactor;
             crouchVelFactor *= 1.01f;
-            yield return 0;
+            yield return new WaitForFixedUpdate();
         }
     }
 
