@@ -9,10 +9,9 @@ public class DebugLogger : MonoBehaviour
     private KeyCode continuousLogCode = KeyCode.L;
 
     private bool loggingPlayer;
-
+    private string lastDebugString;
     private GameObject player;
     private Rigidbody playerRb;
-    private PlayerMotor playerMotor;
 
 	// Use this for initialization
 	void Start ()
@@ -21,7 +20,6 @@ public class DebugLogger : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
             Debug.LogError("no player object found");
-	    playerMotor = player.GetComponent<PlayerMotor>();
 	    playerRb = player.GetComponent<Rigidbody>();
 
         // print logger control instructions
@@ -64,7 +62,19 @@ public class DebugLogger : MonoBehaviour
 
         playerDebugString += "Pos " + player.transform.position + " ";
         playerDebugString += "Vel " + playerRb.velocity + " ";
+        playerDebugString += "Spd " + playerRb.velocity.magnitude.ToString("F2") + " ";
+
+        float localXZSpeed = Vector3.ProjectOnPlane(playerRb.velocity, GlobalGravityControl.GetCurrentGravityVector()).magnitude;
+        float localYSpeed = Vector3.Project(playerRb.velocity, GlobalGravityControl.GetCurrentGravityVector()).magnitude;
+
+        playerDebugString += "lclXZ " + localXZSpeed.ToString("F2") + " ";
+        playerDebugString += "lclY " + localYSpeed.ToString("F2") + " ";
+
+        // dont print new line if identical to last line
+        if (playerDebugString == lastDebugString)
+            return;
 
         Debug.Log(playerDebugString);
+        lastDebugString = playerDebugString;
     }
 }
