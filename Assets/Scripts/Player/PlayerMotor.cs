@@ -452,7 +452,9 @@ public class PlayerMotor : MonoBehaviour
     //perform rotation based on rotation variable
     private void PerformRotation()
     {
-        rb.MoveRotation(transform.rotation * Quaternion.Euler(rotation));
+        //rb.MoveRotation(transform.rotation * Quaternion.Euler(rotation)); // switched off this as update to 2017 seems to have bugged it
+        transform.rotation *= Quaternion.Euler(rotation);
+
         if (cam != null)
         {
             // rotation calculation - clamps to limit values
