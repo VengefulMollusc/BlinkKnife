@@ -428,7 +428,15 @@ public class PlayerMotor : MonoBehaviour
         crouchVelFactor = 0.5f;
         while (crouchVelFactor < 1f && !IsOnGround())
         {
-            rb.velocity *= crouchVelFactor;
+            float factor = (1 - crouchVelFactor) * 0.5f;
+
+            Vector3 yComponent = Vector3.Project(rb.velocity, currentGravVector);
+            Vector3 xzComponent = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
+            Vector3 dampVector = (yComponent * factor) + (xzComponent * factor * 0.2f);
+
+            //rb.velocity *= crouchVelFactor;
+            rb.velocity -= dampVector;
+
             crouchVelFactor *= 1.01f;
             yield return new WaitForFixedUpdate();
         }
