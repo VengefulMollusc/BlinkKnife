@@ -320,8 +320,9 @@ public class PlayerMotor : MonoBehaviour
 
         if (sprinting && inputInMovementDir && facingMovementDir)
         {
-            // maintain velocity
-            _newVel = (rb.velocity + _newVel).normalized * rb.velocity.magnitude;
+            // maintain velocity for a while
+            float newMagnitude = rb.velocity.magnitude * 0.998f;
+            _newVel = (rb.velocity + _newVel).normalized * newMagnitude;
         }
         else
         {
