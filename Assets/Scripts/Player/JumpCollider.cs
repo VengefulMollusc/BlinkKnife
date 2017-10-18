@@ -36,6 +36,9 @@ public class JumpCollider : MonoBehaviour
 
     void OnTriggerStay(Collider col)
     {
+        if (col.isTrigger)
+            return;
+
         colliding = true;
         //playerMotor.SetOnGround(true);
 
@@ -50,6 +53,9 @@ public class JumpCollider : MonoBehaviour
 
     void OnTriggerExit(Collider col)
     {
+        if (col.isTrigger)
+            return;
+
         colliding = false;
         //if (col.CompareTag("Scenery"))
         //{
