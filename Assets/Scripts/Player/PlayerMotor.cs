@@ -584,6 +584,7 @@ public class PlayerMotor : MonoBehaviour
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel
             float projectedVelMagnitude = Vector3.Dot(rb.velocity, _velocity);
+
             // This line makes sure we only add player momentum if moving faster than base inherited momentum
             float relativeSpeed = Mathf.Max(projectedVelMagnitude - warpVelocityModifier, 0f);
             // adds component of current velocity along axis of knife movement
