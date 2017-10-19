@@ -4,10 +4,25 @@ using UnityEngine;
 
 public class BoostRing : MonoBehaviour
 {
+    [SerializeField]
     private float boostStrength = 2f;
+    [SerializeField]
     private float minMagnitude = 12f;
 
+    float spinSpeed;
+
     public const string BoostNotification = "BoostRing.BoostNotification";
+
+    private void OnEnable()
+    {
+        spinSpeed = boostStrength * boostStrength * 0.05f;
+    }
+
+    private void Update()
+    {
+        //transform.Rotate(transform.up * boostStrength * Time.deltaTime); // FOR SOME STUPID REASON THIS DOESNT ROTATE AROUND THE RIGHT AXIS
+        transform.RotateAroundLocal(transform.up, spinSpeed * Time.deltaTime);
+    }
 
     void OnTriggerEnter(Collider col) // could be OnTriggerStay/Enter
     {

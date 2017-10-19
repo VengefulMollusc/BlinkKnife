@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 65000010427996664}
   - component: {fileID: 54000011579744162}
   - component: {fileID: 114000014131341312}
+  - component: {fileID: 114595370176087914}
   m_Layer: 0
   m_Name: BlinkKnife 1
   m_TagString: TargetOverride
@@ -474,9 +475,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwStrengthMod: 1
-  useGravity: 1
-  gravityForce: 10
   visuals: {fileID: 1000014191671374}
+--- !u!114 &114595370176087914
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013895624480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a76f74cb631444ebcfe587ed5906ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravityModifier: 0.4
 --- !u!123 &123000012676461304
 LensFlare:
   m_ObjectHideFlags: 1
