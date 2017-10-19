@@ -53,8 +53,6 @@ public class PlayerMotor : MonoBehaviour
     private bool sliding;
     private bool colliding;
 
-    private bool useGravity;
-
     private bool crouching;
     private float crouchVelFactor = 1f;
     private bool canHover;
@@ -85,24 +83,17 @@ public class PlayerMotor : MonoBehaviour
 
     private Vector3 slopeNormal;
 
-    private IEnumerator onBoostEnumerator;
-
     void OnEnable()
     {
-        this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
+        healthEnergy = GetComponent<HealthController>();
+
+        UpdateGravityValues();
+        this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
     }
 
     void OnDisable()
     {
-        this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
-    }
-
-    void Awake()
-    {
-        healthEnergy = GetComponent<HealthController>();
-
-        currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
-        currentGravStrength = GlobalGravityControl.GetGravityStrength();
+        this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
     }
 
     void Start()
@@ -115,7 +106,6 @@ public class PlayerMotor : MonoBehaviour
 
         cameraRelativePos = cam.transform.position - transform.position;
         canHover = true;
-        useGravity = true;
 
         speedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
     }
@@ -164,7 +154,7 @@ public class PlayerMotor : MonoBehaviour
         // if frozen, dont perform any movement
         if (!frozen)
         {
-            GravityUpdate();
+            CheckPlayerGravityAlignment();
 
             PerformMovement();
             //onGround = false;
@@ -181,12 +171,20 @@ public class PlayerMotor : MonoBehaviour
         //Debug.Log(rb.velocity.magnitude);
     }
 
-    void GravityUpdate()
+    void OnGravityChange(object sender, object args)
+    {
+        UpdateGravityValues();
+    }
+
+    void UpdateGravityValues()
     {
         // update gravity vector and strength from GlobalGravityControl
         currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
         currentGravStrength = GlobalGravityControl.GetGravityStrength();
+    }
 
+    void CheckPlayerGravityAlignment()
+    {
         // transition player orientation if not aligned to gravity
         if (currentGravVector == -transform.up)
             return;
@@ -221,8 +219,8 @@ public class PlayerMotor : MonoBehaviour
     {
 
         // Apply the current gravity
-        if (useGravity)
-            rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
+        //if (useGravity)
+        //    rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
 
         if (UseGroundMovement() && jumpTimer <= 0)
@@ -542,36 +540,6 @@ public class PlayerMotor : MonoBehaviour
     //private void OnCollisionStay(){
     //	colliding = true;
     //}
-
-    // Handles BoostNotifications from BoostRing
-    void OnBoostNotification(object sender, object args)
-    {
-        GameObject obj = args as GameObject;
-        if (obj != gameObject)
-            return;
-
-        TempDisableGravity(0.5f);
-    }
-
-    private void TempDisableGravity(float _time)
-    {
-        if (onBoostEnumerator != null)
-            StopCoroutine(onBoostEnumerator);
-
-        onBoostEnumerator = TempDisableGravityCoroutine(_time);
-        StartCoroutine(onBoostEnumerator);
-    }
-
-    private IEnumerator TempDisableGravityCoroutine(float _time)
-    {
-        useGravity = false;
-        while (_time > 0f)
-        {
-            _time -= Time.deltaTime;
-            yield return 0;
-        }
-        useGravity = true;
-    }
 
     /*
      * Warps the player to the current knife position, inheriting velocity and moving gravity vectors if required

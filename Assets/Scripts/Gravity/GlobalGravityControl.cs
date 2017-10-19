@@ -31,6 +31,8 @@ public class GlobalGravityControl : MonoBehaviour {
 
     private static RelativeRotationController[] rotationObjects;
 
+    public const string GravityChangeNotification = "GlobalGravityControl.GravityChangeNotification";
+
     void Awake()
     {
         rotationObjects = (RelativeRotationController[])FindObjectsOfType(typeof(RelativeRotationController));
@@ -97,6 +99,8 @@ public class GlobalGravityControl : MonoBehaviour {
             // update gravity-dependant objects here
             //playerMotor.UpdateGravityDirection(currentGravDirection);
 
+            this.PostNotification(GravityChangeNotification);
+
             yield return 0;
         }
         shiftingCoroutine = null;
@@ -137,6 +141,14 @@ public class GlobalGravityControl : MonoBehaviour {
             if (r.IsFollowGravity())
                 r.SetRotation(targetGravDirection);
         }
+
+        instance.StartCoroutine("SendGravityChangeNotification");
+    }
+
+    private IEnumerator SendGravityChangeNotification()
+    {
+        this.PostNotification(GravityChangeNotification);
+        yield return null;
     }
 
     //private static float CalculateDuration(Vector3 _currUp, Vector3 _newGravDir, float _speedMod)

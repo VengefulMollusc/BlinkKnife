@@ -8,16 +8,15 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	private Rigidbody rb;
 
 	private PlayerKnifeController playerKnifeController;
-    private Vector3 gravDir;
 
     [SerializeField]
     private float throwStrengthMod = 1f;
 
-    [SerializeField]
-    private bool useGravity = true;
+    //[SerializeField]
+    //private bool useGravity = true;
 
-    [SerializeField]
-    private float gravityForce = 0f;
+    //[SerializeField]
+    //private float gravityForce = 0f;
 
     [SerializeField]
 	private GameObject visuals;
@@ -32,7 +31,6 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
 	public void Setup (PlayerKnifeController _controller){
 		playerKnifeController = _controller;
-        gravDir = GlobalGravityControl.GetCurrentGravityVector();
 		rb = GetComponent<Rigidbody> ();
 
 		collided = false;
@@ -54,16 +52,16 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 			transform.forward = rb.velocity;
 	}
 
-    private void FixedUpdate()
-    {
-        if (useGravity) { 
-            // manual gravity control
-            rb.AddForce(gravDir * gravityForce, ForceMode.Acceleration);
-        }
+    //private void FixedUpdate()
+    //{
+    //    if (useGravity) { 
+    //        // manual gravity control
+    //        rb.AddForce(gravDir * gravityForce, ForceMode.Acceleration);
+    //    }
 
-        // dampen horizontal velocity too?
-        //rb.velocity = new Vector3(rb.velocity.x * horDragFactor, rb.velocity.y, rb.velocity.z * horDragFactor);
-    }
+    //    // dampen horizontal velocity too?
+    //    //rb.velocity = new Vector3(rb.velocity.x * horDragFactor, rb.velocity.y, rb.velocity.z * horDragFactor);
+    //}
 
 
 
