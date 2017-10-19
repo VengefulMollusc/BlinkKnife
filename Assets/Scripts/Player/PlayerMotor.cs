@@ -77,15 +77,16 @@ public class PlayerMotor : MonoBehaviour
     private const float maxViewShiftSpeed = 4f;
     private const float viewShiftStrengthMax = 35f;
 
-    private HealthController healthEnergy;
+    //private HealthController healthEnergy;
 
-    private float speedThreshold;
+    private float groundSpeedThreshold;
+    private float airSpeedThreshold;
 
     private Vector3 slopeNormal;
 
     void OnEnable()
     {
-        healthEnergy = GetComponent<HealthController>();
+        //healthEnergy = GetComponent<HealthController>();
 
         UpdateGravityValues();
         this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
@@ -107,7 +108,8 @@ public class PlayerMotor : MonoBehaviour
         cameraRelativePos = cam.transform.position - transform.position;
         canHover = true;
 
-        speedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
+        groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
+        airSpeedThreshold = PlayerController.Speed() * airVelMod * PlayerController.SprintModifier();
     }
 
     // gets movement vector from PlayerController
@@ -323,7 +325,7 @@ public class PlayerMotor : MonoBehaviour
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
-        bool aboveSpeedThreshold = rb.velocity.magnitude > speedThreshold;
+        bool aboveSpeedThreshold = rb.velocity.magnitude > groundSpeedThreshold;
         bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0f;
         bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
 
@@ -359,11 +361,9 @@ public class PlayerMotor : MonoBehaviour
      */
     void AirMovement()
     {
-
-        float threshold = PlayerController.Speed() * airVelMod * PlayerController.SprintModifier();
         Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
 
-        if (flatVel.magnitude > threshold)
+        if (flatVel.magnitude > airSpeedThreshold)
         {
             momentumFlight = true;
         }
@@ -606,7 +606,8 @@ public class PlayerMotor : MonoBehaviour
 
             // inherit player velocity
             rb.velocity = (_velocity * (warpVelocityModifier + relativeSpeed));
-            momentumFlight = true;
+            if (rb.velocity.magnitude > airSpeedThreshold)
+                momentumFlight = true;
 
             // fixes horizontal momentum lock when warping
             //onGround = false;

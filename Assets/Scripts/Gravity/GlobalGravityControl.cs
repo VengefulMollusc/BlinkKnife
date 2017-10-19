@@ -33,13 +33,10 @@ public class GlobalGravityControl : MonoBehaviour {
 
     public const string GravityChangeNotification = "GlobalGravityControl.GravityChangeNotification";
 
-    void Awake()
+    void OnEnable()
     {
         rotationObjects = (RelativeRotationController[])FindObjectsOfType(typeof(RelativeRotationController));
-    }
 
-    // Use this for initialization
-    void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
 
         if (player == null) Debug.LogError("No player object found");
@@ -49,8 +46,14 @@ public class GlobalGravityControl : MonoBehaviour {
         currentGravDirection = -player.transform.up;
         targetGravDirection = currentGravDirection;
 
-        instance = this;    
-	}
+        instance = this;
+    }
+
+    // Use this for initialization
+ //   void Start () {
+        
+    
+	//}
 
     public static float GetGravityStrength()
     {
