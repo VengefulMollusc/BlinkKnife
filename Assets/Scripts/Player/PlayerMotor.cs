@@ -53,6 +53,8 @@ public class PlayerMotor : MonoBehaviour
     private bool sliding;
     private bool colliding;
 
+    private bool useGravity;
+
     private bool crouching;
     private float crouchVelFactor = 1f;
     private bool canHover;
@@ -83,6 +85,18 @@ public class PlayerMotor : MonoBehaviour
 
     private Vector3 slopeNormal;
 
+    private IEnumerator onBoostEnumerator;
+
+    void OnEnable()
+    {
+        this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
+    }
+
     void Awake()
     {
         healthEnergy = GetComponent<HealthController>();
@@ -101,6 +115,7 @@ public class PlayerMotor : MonoBehaviour
 
         cameraRelativePos = cam.transform.position - transform.position;
         canHover = true;
+        useGravity = true;
 
         speedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
     }
@@ -206,7 +221,8 @@ public class PlayerMotor : MonoBehaviour
     {
 
         // Apply the current gravity
-        rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
+        if (useGravity)
+            rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
 
         if (UseGroundMovement() && jumpTimer <= 0)
@@ -374,7 +390,7 @@ public class PlayerMotor : MonoBehaviour
         {
             canHover = false;
             momentumFlight = false; // comment this out when reworking hover - should depend on air speed
-            StartCoroutine(Hover());
+            StartCoroutine(HoverCoroutine());
         }
     }
 
@@ -423,7 +439,7 @@ public class PlayerMotor : MonoBehaviour
      * Perhaps only dampen vertical movement? or downward movement?
      * Or decelerate horizontal movement over a short period.
      */
-    IEnumerator Hover()
+    IEnumerator HoverCoroutine()
     {
         crouchVelFactor = 0.5f;
         while (crouchVelFactor < 1f && !IsOnGround())
@@ -527,6 +543,35 @@ public class PlayerMotor : MonoBehaviour
     //	colliding = true;
     //}
 
+    // Handles BoostNotifications from BoostRing
+    void OnBoostNotification(object sender, object args)
+    {
+        GameObject obj = args as GameObject;
+        if (obj != gameObject)
+            return;
+
+        TempDisableGravity(0.5f);
+    }
+
+    private void TempDisableGravity(float _time)
+    {
+        if (onBoostEnumerator != null)
+            StopCoroutine(onBoostEnumerator);
+
+        onBoostEnumerator = TempDisableGravityCoroutine(_time);
+        StartCoroutine(onBoostEnumerator);
+    }
+
+    private IEnumerator TempDisableGravityCoroutine(float _time)
+    {
+        useGravity = false;
+        while (_time > 0f)
+        {
+            _time -= Time.deltaTime;
+            yield return 0;
+        }
+        useGravity = true;
+    }
 
     /*
      * Warps the player to the current knife position, inheriting velocity and moving gravity vectors if required

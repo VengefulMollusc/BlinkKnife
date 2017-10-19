@@ -6,7 +6,9 @@ public class BoostRing : MonoBehaviour
 {
     private float boostStrength = 1f;
 
-    void OnTriggerStay(Collider col)
+    public const string BoostNotification = "BoostRing.BoostNotification";
+
+    void OnTriggerEnter(Collider col) // could be OnTriggerStay/Enter
     {
         Rigidbody rb = col.GetComponent<Rigidbody>();
 
@@ -23,5 +25,7 @@ public class BoostRing : MonoBehaviour
         {
             rb.velocity = -transform.up * (boostStrength + magnitude);
         }
+
+        this.PostNotification(BoostNotification, col.gameObject);
     }
 }
