@@ -5,6 +5,7 @@ using UnityEngine;
 public class BoostRing : MonoBehaviour
 {
     private float boostStrength = 2f;
+    private float minMagnitude = 12f;
 
     public const string BoostNotification = "BoostRing.BoostNotification";
 
@@ -15,7 +16,7 @@ public class BoostRing : MonoBehaviour
         if (rb == null || col.isTrigger)
             return;
 
-        float magnitude = rb.velocity.magnitude;
+        float magnitude = Mathf.Max(rb.velocity.magnitude, minMagnitude);
 
         if (Vector3.Dot(transform.up, rb.velocity) > 0f)
         {
