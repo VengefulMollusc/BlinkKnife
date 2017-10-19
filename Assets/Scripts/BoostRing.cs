@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoostRing : MonoBehaviour
 {
-    private float boostStrength = 1f;
+    private float boostStrength = 2f;
 
     public const string BoostNotification = "BoostRing.BoostNotification";
 
@@ -20,10 +20,12 @@ public class BoostRing : MonoBehaviour
         if (Vector3.Dot(transform.up, rb.velocity) > 0f)
         {
             rb.velocity = transform.up * (boostStrength + magnitude);
+            //rb.velocity = transform.up * boostStrength;
         }
         else
         {
             rb.velocity = -transform.up * (boostStrength + magnitude);
+            //rb.velocity = -transform.up * boostStrength;
         }
 
         this.PostNotification(BoostNotification, col.gameObject);

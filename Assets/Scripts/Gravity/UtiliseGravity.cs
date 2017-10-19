@@ -83,10 +83,10 @@ public class UtiliseGravity : MonoBehaviour {
         if (obj != gameObject)
             return;
 
-        TempDisableGravity(0.5f);
+        TempDisableGravity(0.2f);
     }
 
-    private void TempDisableGravity(float _time)
+    public void TempDisableGravity(float _time)
     {
         if (tempGravityDisableEnumerator != null)
             StopCoroutine(tempGravityDisableEnumerator);

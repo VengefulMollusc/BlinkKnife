@@ -73,6 +73,9 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		// throw the knife in the given direction with a certain force
 		rb.AddForce (_velocity * throwStrengthMod, ForceMode.VelocityChange);
 		throwVelocity = _velocity;
+
+        // disable gravity for a moment to allow more accurate throws at close range
+        GetComponent<UtiliseGravity>().TempDisableGravity(0.2f);
 	}
 
 	void OnCollisionEnter (Collision col){
