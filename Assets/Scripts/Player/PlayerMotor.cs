@@ -231,7 +231,7 @@ public class PlayerMotor : MonoBehaviour
             momentumFlight = false;
             GroundMovement();
         }
-        else if (colliding)
+        else if (colliding && jumpTimer <= 0)
         {
             // Sliding
             Vector3 velocityTemp = velocity * airVelMod;
