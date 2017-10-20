@@ -568,6 +568,14 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 439292800}
+    - target: {fileID: 4781250514520414, guid: 4072c14d97934e640b6c179f9e4a0fd7, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781250514520414, guid: 4072c14d97934e640b6c179f9e4a0fd7, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4072c14d97934e640b6c179f9e4a0fd7, type: 2}
   m_IsPrefabParent: 0
