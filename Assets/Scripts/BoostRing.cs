@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Controls boost ring behaviour.
+ * Needs to be attached to gameobject with boost ring trigger collider -
+ * assumes is child of boost ring root object
+ */
 public class BoostRing : MonoBehaviour
 {
     [SerializeField]
@@ -12,15 +17,16 @@ public class BoostRing : MonoBehaviour
     private Vector3 previousTarget;
     private Vector3 nextTarget;
 
-    //float spinSpeed;
+    private Transform boostRingRoot;
 
     public const string BoostNotification = "BoostRing.BoostNotification";
 
     private void OnEnable()
     {
-        //spinSpeed = boostStrength * boostStrength * 0.05f;
-        previousTarget = transform.position + (-transform.up * 10f);
-        nextTarget = transform.position + (transform.up * 10f);
+        boostRingRoot = transform.parent;
+
+        previousTarget = boostRingRoot.position + (-boostRingRoot.up * 10f);
+        nextTarget = boostRingRoot.position + (boostRingRoot.up * 10f);
     }
 
     /*
@@ -34,12 +40,6 @@ public class BoostRing : MonoBehaviour
     {
         nextTarget = previous;
     }
-
-    //private void Update()
-    //{
-    //    //transform.Rotate(transform.up * boostStrength * Time.deltaTime); // FOR SOME STUPID REASON THIS DOESNT ROTATE AROUND THE RIGHT AXIS
-    //    transform.RotateAroundLocal(transform.up, spinSpeed * Time.deltaTime);
-    //}
 
     private Vector3 GetBoostVector(Vector3 toBoost, Vector3 target)
     {
@@ -55,16 +55,16 @@ public class BoostRing : MonoBehaviour
 
         //col.transform.position = transform.position + (transform.up * 0.5f); // Added 0.5 up here as position zero currently sits at one edge
 
-        float magnitude = Mathf.Max(rb.velocity.magnitude, minMagnitude);
+        float magnitude = Mathf.Max(rb.velocity.magnitude + boostStrength, minMagnitude);
 
         if (Vector3.Dot(transform.up, rb.velocity) > 0f)
         {
-            rb.velocity = GetBoostVector(col.transform.position, nextTarget) * (boostStrength + magnitude);
+            rb.velocity = GetBoostVector(col.transform.position, nextTarget) * magnitude;
             //rb.velocity = transform.up * boostStrength;
         }
         else
         {
-            rb.velocity = GetBoostVector(col.transform.position, previousTarget) * (boostStrength + magnitude);
+            rb.velocity = GetBoostVector(col.transform.position, previousTarget) * magnitude;
             //rb.velocity = -transform.up * boostStrength;
         }
 
