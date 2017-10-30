@@ -25,8 +25,8 @@ public class BoostRing : MonoBehaviour
     {
         boostRingRoot = transform.parent;
 
-        previousTarget = boostRingRoot.position + (-boostRingRoot.up * 10f);
-        nextTarget = boostRingRoot.position + (boostRingRoot.up * 10f);
+        //previousTarget = boostRingRoot.position + (-boostRingRoot.up * 10f);
+        //nextTarget = boostRingRoot.position + (boostRingRoot.up * 10f);
     }
 
     /*
@@ -59,13 +59,17 @@ public class BoostRing : MonoBehaviour
 
         if (Vector3.Dot(transform.up, rb.velocity) > 0f)
         {
-            rb.velocity = GetBoostVector(col.transform.position, nextTarget) * magnitude;
-            //rb.velocity = transform.up * boostStrength;
+            if (nextTarget != Vector3.zero)
+                rb.velocity = GetBoostVector(col.transform.position, nextTarget) * magnitude;
+            else
+                rb.velocity = transform.up * magnitude;
         }
         else
         {
-            rb.velocity = GetBoostVector(col.transform.position, previousTarget) * magnitude;
-            //rb.velocity = -transform.up * boostStrength;
+            if (previousTarget != Vector3.zero)
+                rb.velocity = GetBoostVector(col.transform.position, previousTarget) * magnitude;
+            else
+                rb.velocity = -transform.up * boostStrength;
         }
 
         this.PostNotification(BoostNotification, col.gameObject);
