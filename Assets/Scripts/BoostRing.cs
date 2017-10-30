@@ -14,31 +14,36 @@ public class BoostRing : MonoBehaviour
     [SerializeField]
     private float minMagnitude = 12f;
 
+    [SerializeField] private Transform nextRing;
+    [SerializeField] private Transform previousRing;
+
     private Vector3 previousTarget;
     private Vector3 nextTarget;
 
-    private Transform boostRingRoot;
+    //private Transform boostRingRoot;
 
     public const string BoostNotification = "BoostRing.BoostNotification";
 
     private void OnEnable()
     {
-        boostRingRoot = transform.parent;
+        //boostRingRoot = transform.parent;
 
         //previousTarget = boostRingRoot.position + (-boostRingRoot.up * 10f);
         //nextTarget = boostRingRoot.position + (boostRingRoot.up * 10f);
+
+        CheckRingChain();
     }
 
     /*
      * Used to set previous or next rings when a chain of rings is needed
      */
-    public void SetNextRing(Vector3 next)
+    private void CheckRingChain()
     {
-        nextTarget = next;
-    }
-    public void SetPreviousRing(Vector3 previous)
-    {
-        nextTarget = previous;
+        if (nextRing != null)
+            nextTarget = nextRing.position;
+
+        if (previousRing != null)
+            previousTarget = previousRing.position;
     }
 
     private Vector3 GetBoostVector(Vector3 toBoost, Vector3 target)
@@ -69,7 +74,7 @@ public class BoostRing : MonoBehaviour
             if (previousTarget != Vector3.zero)
                 rb.velocity = GetBoostVector(col.transform.position, previousTarget) * magnitude;
             else
-                rb.velocity = -transform.up * boostStrength;
+                rb.velocity = -transform.up * magnitude;
         }
 
         this.PostNotification(BoostNotification, col.gameObject);
