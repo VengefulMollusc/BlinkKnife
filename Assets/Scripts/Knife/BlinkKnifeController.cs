@@ -53,7 +53,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //?
     }
 
-	void Update (){
+	void FixedUpdate (){
 		if (collided || rb == null)
 			return;
         
