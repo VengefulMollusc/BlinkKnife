@@ -27,14 +27,24 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
 	private GameObject objectCollided = null;
 
+    private Vector3 lastPos;
+    private BoxCollider col;
+    private float initColZPos;
+    private float initColZSize;
+
     private GravityPanel gravPanel;
 
 	public void Setup (PlayerKnifeController _controller){
 		playerKnifeController = _controller;
 		rb = GetComponent<Rigidbody> ();
+	    col = GetComponent<BoxCollider>();
+	    initColZPos = col.center.z;
+	    initColZSize = col.size.z;
 
 		collided = false;
 		collisionNormal = Vector3.zero;
+
+	    lastPos = transform.position;
 
         // add random throw angle
         // replace this with constant once animated
@@ -48,8 +58,10 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 			return;
         
         // align transform.forward to travel direction
-		if (rb.velocity.magnitude != 0f)
+		if (rb.velocity != Vector3.zero)
 			transform.forward = rb.velocity;
+
+	    SizeColliderToSpeed();
 	}
 
     //private void FixedUpdate()
@@ -63,7 +75,21 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
     //    //rb.velocity = new Vector3(rb.velocity.x * horDragFactor, rb.velocity.y, rb.velocity.z * horDragFactor);
     //}
 
+    private void SizeColliderToSpeed()
+    {
+        if (lastPos != transform.position)
+        {
+            float travelDist = Vector3.Distance(transform.position, lastPos);
+            SetColliderSize(travelDist);
+        }
+        lastPos = transform.position;
+    }
 
+    private void SetColliderSize(float sizeIncrease)
+    {
+        col.center = new Vector3(col.center.x, col.center.y, initColZPos - (sizeIncrease * 0.5f));
+        col.size = new Vector3(col.size.x, col.size.y, initColZSize + sizeIncrease);
+    }
 
     public void Throw (Vector3 _velocity){
 
@@ -78,7 +104,11 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
         GetComponent<UtiliseGravity>().TempDisableGravity(0.2f);
 	}
 
-	void OnCollisionEnter (Collision col){
+	void OnCollisionEnter (Collision col)
+	{
+	    if (rb == null)
+	        return;
+
 		ContactPoint _collide = col.contacts [0];
 		Collide (_collide.point, _collide.normal, _collide.otherCollider.gameObject);
 	}
@@ -113,6 +143,9 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
 		// activate knife marker ui
 		playerKnifeController.SetKnifeMarkerTarget (transform, gravPanel != null);
+
+        // reset collider size
+        SetColliderSize(0f);
 	}
 
 	public Vector3 GetPosition (){
