@@ -67,17 +67,6 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	        SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
 	}
 
-    //private void FixedUpdate()
-    //{
-    //    if (useGravity) { 
-    //        // manual gravity control
-    //        rb.AddForce(gravDir * gravityForce, ForceMode.Acceleration);
-    //    }
-
-    //    // dampen horizontal velocity too?
-    //    //rb.velocity = new Vector3(rb.velocity.x * horDragFactor, rb.velocity.y, rb.velocity.z * horDragFactor);
-    //}
-
     private void SizeColliderToSpeed()
     {
         if (lastPos != transform.position)
@@ -94,11 +83,8 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
         col.size = new Vector3(col.size.x, col.size.y, initColZSize + sizeIncrease);
     }
 
-    public void Throw (Vector3 _velocity){
-
-		// set the player owner of the knife
-		// playerKnifeController = _playerKnifeController;
-
+    public void Throw (Vector3 _velocity)
+    {
 		// throw the knife in the given direction with a certain force
 		rb.AddForce (_velocity * throwStrengthMod, ForceMode.VelocityChange);
 		throwVelocity = _velocity;
@@ -107,12 +93,12 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
         GetComponent<UtiliseGravity>().TempDisableGravity(0.2f);
 	}
 
-	void OnCollisionEnter (Collision col)
+	void OnCollisionEnter (Collision _col)
 	{
 	    if (rb == null)
 	        return;
 
-		ContactPoint _collide = col.contacts [0];
+		ContactPoint _collide = _col.contacts [0];
 		Collide (_collide.point, _collide.normal, _collide.otherCollider.gameObject);
 	}
 
@@ -129,7 +115,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
 		// stick knife out of surface at collision point
 		rb.velocity = Vector3.zero;
-		visuals.transform.forward = transform.forward;
+		//visuals.transform.forward = transform.forward; // obsolete as knife no longer spinning
 
 		// parent knife to other gameobject (to handle moving objects)
 		transform.SetParent (_other.transform);
