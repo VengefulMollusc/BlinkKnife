@@ -99,13 +99,13 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	        return;
 
 		ContactPoint _collide = _col.contacts [0];
-		Collide (_collide.point, _collide.normal, _collide.otherCollider.gameObject);
+		Collide (_collide.normal, _collide.otherCollider.gameObject);
 	}
 
 	/*
      * Freezes knife when colliding with an object
      */
-	void Collide (Vector3 _point, Vector3 _normal, GameObject _other){
+	void Collide (Vector3 _normal, GameObject _other){
 		// disable rigidbody
 		rb.detectCollisions = false;
 		rb.isKinematic = true;
