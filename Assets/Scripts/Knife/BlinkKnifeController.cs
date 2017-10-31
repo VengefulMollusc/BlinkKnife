@@ -61,7 +61,10 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		if (rb.velocity != Vector3.zero)
 			transform.forward = rb.velocity;
 
-	    SizeColliderToSpeed();
+
+        // this statement should stop size from recalculating every step
+	    if (col.size.z == initColZSize)
+	        SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
 	}
 
     //private void FixedUpdate()
