@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33000013521500604}
   - component: {fileID: 135000012368301606}
   - component: {fileID: 114000013987700400}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: JumpCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 114000010097986432}
   - component: {fileID: 114000012321050414}
   - component: {fileID: 114000013602115616}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - component: {fileID: 4000012837905218}
   - component: {fileID: 20000012371496722}
   - component: {fileID: 114000012908169172}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PlayerViewCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 114000010722407420}
   - component: {fileID: 114553431493828040}
   - component: {fileID: 114550902150594042}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Player1
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 33000010597794858}
   - component: {fileID: 23000011231384170}
   - component: {fileID: 95000012544262584}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: knife2basic
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -17,21 +17,22 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
 	[SerializeField]
 	private GameObject visuals;
 	private Vector3 spinVector;
-//	private Vector3 throwVelocity;
+    //	private Vector3 throwVelocity;
 
-	//void Start (){
-	//	rb = GetComponent<Rigidbody> ();
-	//}
+    void OnEnable()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
-	public void Setup (PlayerKnifeController _controller){
-//		playerKnifeController = _controller;
-		rb = GetComponent<Rigidbody> ();
+    public void Setup (PlayerKnifeController _controller){
+        //playerKnifeController = _controller;
+		//rb = GetComponent<Rigidbody> ();
 
         // add random throw angle
         // could raycast throw angle to match surface hit?
         // WITH BOTH KNIVES?
         //visuals.transform.Rotate (0f, 0f, ((Random.value * 2f) - 1f) * 90f);
-	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //?
+	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
 
         //SetThrowRotation();
     }
@@ -74,38 +75,14 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
     }
 
     public void Throw (Vector3 _velocity){
-
-        // set the player owner of the knife
-        //		playerKnifeController = _playerKnifeController;
-
         // throw the knife in the given direction with a certain force
-        //_direction.Normalize();
 		rb.AddForce (_velocity * throwStrengthMod, ForceMode.VelocityChange);
-//		throwVelocity = _velocity;
 	}
 
     void OnCollisionEnter(Collision col)
     {
         this.PostNotification(BounceKnifeCollisionNotification);
     }
-
-    //	// called when a thrown knife collides with an object
-    //	void Collide (Vector3 _point, Vector3 _normal, GameObject _other){
-    //		// disable rigidbody
-    //		rb.detectCollisions = false;
-    //		rb.useGravity = false;
-    //		rb.isKinematic = true;
-    //
-    //		collided = true;
-    //		hitSurfaceNormal = _normal;
-    //
-    //		// stick knife out of surface at collision point
-    //		rb.velocity = Vector3.zero;
-    //		visuals.transform.forward = transform.forward;
-    //
-    //		// parent knife to other gameobject (to handle moving objects)
-    //		transform.SetParent (_other.transform);
-    //	}
 
     public Vector3 GetPosition (){
 		return transform.position;

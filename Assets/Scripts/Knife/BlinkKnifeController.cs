@@ -50,7 +50,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
         // replace this with constant once animated
         //visuals.transform.Rotate (0f, 0f, ((Random.value*2f)-1f) * 90f);
 
-	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //?
+	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
     }
 
 	void FixedUpdate (){
@@ -63,8 +63,8 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 
 
         // this statement should stop size from recalculating every step
-	    if (col.size.z == initColZSize)
-	        SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
+	    //if (col.size.z == initColZSize)
+	    //    SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
 	}
 
     private void SizeColliderToSpeed()
