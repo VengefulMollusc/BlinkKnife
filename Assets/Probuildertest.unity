@@ -26221,6 +26221,25 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 967767019}
+    - target: {fileID: 23604053892562194, guid: 4072c14d97934e640b6c179f9e4a0fd7,
+        type: 2}
+      propertyPath: m_CastShadows
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 23604053892562194, guid: 4072c14d97934e640b6c179f9e4a0fd7,
+        type: 2}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1117653200665182, guid: 4072c14d97934e640b6c179f9e4a0fd7, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 23604053892562194, guid: 4072c14d97934e640b6c179f9e4a0fd7,
+        type: 2}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4072c14d97934e640b6c179f9e4a0fd7, type: 2}
   m_IsPrefabParent: 0
