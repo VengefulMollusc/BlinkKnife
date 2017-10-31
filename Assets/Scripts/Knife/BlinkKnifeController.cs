@@ -67,21 +67,21 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 	    //    SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
 	}
 
-    private void SizeColliderToSpeed()
-    {
-        if (lastPos != transform.position)
-        {
-            float travelDist = Vector3.Distance(transform.position, lastPos);
-            SetColliderSize(travelDist);
-        }
-        lastPos = transform.position;
-    }
+    //private void SizeColliderToSpeed()
+    //{
+    //    if (lastPos != transform.position)
+    //    {
+    //        float travelDist = Vector3.Distance(transform.position, lastPos);
+    //        SetColliderSize(travelDist);
+    //    }
+    //    lastPos = transform.position;
+    //}
 
-    private void SetColliderSize(float sizeIncrease)
-    {
-        col.center = new Vector3(col.center.x, col.center.y, initColZPos - (sizeIncrease * 0.5f));
-        col.size = new Vector3(col.size.x, col.size.y, initColZSize + sizeIncrease);
-    }
+    //private void SetColliderSize(float sizeIncrease)
+    //{
+    //    col.center = new Vector3(col.center.x, col.center.y, initColZPos - (sizeIncrease * 0.5f));
+    //    col.size = new Vector3(col.size.x, col.size.y, initColZSize + sizeIncrease);
+    //}
 
     public void Throw (Vector3 _velocity)
     {
@@ -134,7 +134,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		playerKnifeController.SetKnifeMarkerTarget (transform, gravPanel != null);
 
         // reset collider size
-        SetColliderSize(0f);
+        //SetColliderSize(0f);
 	}
 
 	public Vector3 GetPosition (){
