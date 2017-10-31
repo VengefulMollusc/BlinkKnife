@@ -68,6 +68,8 @@ public class PlayerMotor : MonoBehaviour
 
     private Rigidbody rb;
 
+    private UtiliseGravity grav;
+
     private Vector3 cameraRelativePos;
 
     private Vector3 currentGravVector;
@@ -90,16 +92,19 @@ public class PlayerMotor : MonoBehaviour
 
         UpdateGravityValues();
         this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+        this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+        this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        grav = GetComponent<UtiliseGravity>();
         if (transitionCameraPrefab == null)
         {
             throw new MissingReferenceException("No transitionCameraPrefab in PlayerMotor");
@@ -183,6 +188,16 @@ public class PlayerMotor : MonoBehaviour
         // update gravity vector and strength from GlobalGravityControl
         currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
         currentGravStrength = GlobalGravityControl.GetGravityStrength();
+    }
+
+    void OnBoostNotification(object sender, object args)
+    {
+        GameObject boosted = (GameObject) args;
+        if (boosted != gameObject)
+            return;
+
+        // boosted object is the player
+        jumpTimer = 30;
     }
 
     void CheckPlayerGravityAlignment()

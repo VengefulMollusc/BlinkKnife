@@ -76,6 +76,11 @@ public class UtiliseGravity : MonoBehaviour {
         rb.AddForce(currentGravityVector * currentGravityStrength, ForceMode.Acceleration);
     }
 
+    public bool UseGravity()
+    {
+        return useGravity;
+    }
+
     // Handles BoostNotifications from BoostRing
     void OnBoostNotification(object sender, object args)
     {
