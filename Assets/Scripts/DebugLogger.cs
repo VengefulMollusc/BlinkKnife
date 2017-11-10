@@ -23,8 +23,7 @@ public class DebugLogger : MonoBehaviour
 	    playerRb = player.GetComponent<Rigidbody>();
 
         // print logger control instructions
-        Debug.Log("P : Log player stats at current frame");
-	    Debug.Log("P+L : Turn on continuous player logging");
+	    Debug.Log("P : Log player stats at current frame - P+L : Turn on continuous player logging");
     } 
 	
 	// Update is called once per frame
