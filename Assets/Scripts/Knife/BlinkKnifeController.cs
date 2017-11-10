@@ -90,7 +90,7 @@ public class BlinkKnifeController : MonoBehaviour, KnifeController {
 		throwVelocity = _velocity;
 
         // disable gravity for a moment to allow more accurate throws at close range
-        GetComponent<UtiliseGravity>().TempDisableGravity(0.2f);
+        GetComponent<UtiliseGravity>().TempDisableGravity(0.1f);
 	}
 
 	void OnCollisionEnter (Collision _col)

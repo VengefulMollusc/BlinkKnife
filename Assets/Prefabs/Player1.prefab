@@ -397,7 +397,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysGravShift: 0
-  timeToAutoRecall: 2
   maxWarps: 3
   warpRechargeTime: 1
   warpWaitTime: 0.1
@@ -406,8 +405,8 @@ MonoBehaviour:
   altKnifeBtn: Fire2
   abilityButton: Fire3
   throwStrength: 80
-  throwAngleModifier: 0
-  throwHeightModifier: 0
+  throwAngleModifier: 1
+  throwHeightModifier: -0.1
   blinkKnifePrefab: {fileID: 1000013895624480, guid: ae2dae60f9f33be47b5aa6f5e8a05050,
     type: 2}
   bounceKnifePrefab: {fileID: 1000013895624480, guid: 0698c66a77740bd4f9595ea2f48b90c8,
