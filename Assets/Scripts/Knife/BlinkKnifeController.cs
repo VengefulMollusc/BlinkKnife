@@ -44,10 +44,14 @@ public class BlinkKnifeController : KnifeController {
 
 	void OnCollisionEnter (Collision _col)
 	{
-	    if (rb == null)
+	    if (HasStuck() || rb == null)
 	        return;
 
-		ContactPoint _collide = _col.contacts [0];
-		StickToSurface (_collide.normal, _collide.otherCollider.gameObject);
+        ContactPoint collide = _col.contacts [0];
+	    GameObject other = collide.otherCollider.gameObject;
+
+        // If collided surface is not a HardSurface, stick knife into it
+        if (other.GetComponent<HardSurface>() == null)
+            StickToSurface (collide.normal, other);
 	}
 }

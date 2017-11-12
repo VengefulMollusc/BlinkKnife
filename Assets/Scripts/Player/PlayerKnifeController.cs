@@ -386,14 +386,6 @@ public class PlayerKnifeController : MonoBehaviour {
 	}
 
     /*
-     * Passthrough method to pass knife location to ui element
-     * TODO: replace with event
-     */
-	public void SetKnifeMarkerTarget (Transform target, bool gravShift){
-		uiController.SetKnifeMarkerTarget (target, gravShift);
-	}
-
-    /*
      * Hide and show the knife view model
      * TODO: merge methods
      */

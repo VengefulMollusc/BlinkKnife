@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using AssemblyCSharp;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
@@ -76,7 +77,7 @@ public class UIController : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void OnEnable () {
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
         if (uiKnifeMarker == null)
@@ -114,6 +115,13 @@ public class UIController : MonoBehaviour {
         currentWarps = playerKnifeController.GetWarpsNormalised();
         currentWarpRecharge = playerKnifeController.GetWarpRechargeNormalised();
         currentWarpCountdown = playerKnifeController.GetWarpCountdownNormalised();
+
+        this.AddObserver(HandleKnifeMarkerNotification, KnifeController.ShowKnifeMarkerNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(HandleKnifeMarkerNotification, KnifeController.ShowKnifeMarkerNotification);
     }
 	
 	// Update is called once per frame
@@ -216,6 +224,12 @@ public class UIController : MonoBehaviour {
         currentWarps = playerKnifeController.GetWarpsNormalised();
         currentWarpRecharge = 1-playerKnifeController.GetWarpRechargeNormalised();
         currentWarpCountdown = playerKnifeController.GetWarpCountdownNormalised();
+    }
+
+    void HandleKnifeMarkerNotification(object sender, object args)
+    {
+        Info<Transform, bool> info = (Info<Transform, bool>) args;
+        knifeMarker.SetTarget(info.arg0, info.arg1);
     }
 
     public void SetKnifeMarkerTarget(Transform _target, bool _altColour)

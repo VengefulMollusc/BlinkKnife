@@ -15,6 +15,8 @@ namespace AssemblyCSharp
 
         private GravityPanel gravPanel;
 
+        public const string ShowKnifeMarkerNotification = "KnifeController.ShowKnifeMarkerNotification";
+
         /*
          * Passes the knifecontroller and parameter spin speed to the knife
          */
@@ -76,7 +78,8 @@ namespace AssemblyCSharp
             }
 
             // activate knife marker ui
-            playerKnifeController.SetKnifeMarkerTarget(transform, gravPanel != null);
+            Info<Transform, bool> info = new Info<Transform, bool>(transform, gravPanel != null);
+            this.PostNotification(ShowKnifeMarkerNotification, info);
         }
 
         public virtual Vector3 GetPosition()

@@ -28,8 +28,18 @@ public class BounceKnifeController : KnifeController {
         rb.AddForce(_velocity * throwStrengthMod, ForceMode.VelocityChange);
     }
 
-    void OnCollisionEnter(Collision col)
+    void OnCollisionEnter(Collision _col)
     {
+        if (HasStuck() || rb == null)
+            return;
+
+        ContactPoint collide = _col.contacts[0];
+        GameObject other = collide.otherCollider.gameObject;
+
+        // If collided surface is not a HardSurface, stick knife into it
+        if (other.GetComponent<SoftSurface>() != null)
+            StickToSurface(collide.normal, other);
+
         this.PostNotification(BounceKnifeCollisionNotification);
     }
 
