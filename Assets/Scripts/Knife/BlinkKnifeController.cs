@@ -19,19 +19,19 @@ public class BlinkKnifeController : KnifeController {
 
  //   }
 
-	void FixedUpdate (){
-		if (HasStuck() || rb == null)
-			return;
+	//void FixedUpdate (){
+	//	if (HasStuck() || rb == null)
+	//		return;
         
-        // align transform.forward to travel direction
-		if (rb.velocity != Vector3.zero)
-			transform.forward = rb.velocity;
+ //       // align transform.forward to travel direction
+	//	if (rb.velocity != Vector3.zero)
+	//		transform.forward = rb.velocity;
 
 
-        // this statement should stop size from recalculating every step
-	    //if (col.size.z == initColZSize)
-	    //    SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
-	}
+ //       // this statement should stop size from recalculating every step
+	//    //if (col.size.z == initColZSize)
+	//    //    SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
+	//}
 
     public override void Throw (Vector3 _velocity)
     {

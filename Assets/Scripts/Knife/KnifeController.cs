@@ -29,6 +29,15 @@ namespace AssemblyCSharp
             transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
         }
 
+        void FixedUpdate()
+        {
+            if (HasStuck() || rb == null)
+                return;
+
+            if (rb.velocity != Vector3.zero)
+                transform.forward = rb.velocity;
+        }
+
         /*
          * Throws the knife at the given velocity
          */

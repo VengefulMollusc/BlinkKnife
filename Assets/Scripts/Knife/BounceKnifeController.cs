@@ -13,14 +13,14 @@ public class BounceKnifeController : KnifeController {
 	//[SerializeField]
 	//private GameObject visuals;
 
-    void Update()
-    {
-        if (rb == null)
-            return;
-        
-        if (rb.velocity.magnitude != 0f)
-            transform.forward = rb.velocity;
-    }
+    //void FixedUpdate()
+    //{
+    //    if (HasStuck() || rb == null)
+    //        return;
+
+    //    if (rb.velocity != Vector3.zero)
+    //        transform.forward = rb.velocity;
+    //}
 
     public override void Throw(Vector3 _velocity)
     {
