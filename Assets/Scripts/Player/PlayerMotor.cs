@@ -579,7 +579,7 @@ public class PlayerMotor : MonoBehaviour
 
         if (gravityShift)
         {
-            this.PostNotification(GravityWarpNotification, _knifeController.GetObjectCollided());
+            this.PostNotification(GravityWarpNotification, _knifeController.GetStuckObject());
         }
 
         transform.SetParent(null);

@@ -223,7 +223,7 @@ public class PlayerKnifeController : MonoBehaviour {
      */
     void CheckIfRecall()
     {
-        if (autoRecallTimer <= 0 || knife == null || knifeController.HasCollided())
+        if (autoRecallTimer <= 0 || knife == null || knifeController.HasStuck())
             return;
 
         autoRecallTimer -= Time.deltaTime;
@@ -239,8 +239,8 @@ public class PlayerKnifeController : MonoBehaviour {
      * Checks the current warp countdown and whether we need to warp now
      */
 	void CheckIfWarp (){
-        if (!lockKnife && knife != null && ((Input.GetButton(primaryKnifeBtn) && knifeController.HasCollided()) || bounceWarp)) { // Require mouse click to warp
-          //if (!lockKnife && knife != null && (knifeController.HasCollided() || bounceWarp)) { // warps instantly without mouse click
+        if (!lockKnife && knife != null && ((Input.GetButton(primaryKnifeBtn) && knifeController.HasStuck()) || bounceWarp)) { // Require mouse click to warp
+          //if (!lockKnife && knife != null && (knifeController.HasStuck() || bounceWarp)) { // warps instantly without mouse click
           // we are trying to warp
             if (((bounceWarp && warpCountDown >= bounceWarpWaitTime) || (!bounceWarp && warpCountDown >= warpWaitTime)) && currentWarps >= 1) {
                 // warp if wait time is reached
@@ -366,7 +366,7 @@ public class PlayerKnifeController : MonoBehaviour {
         // move player to knife position and inherit velocity
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
 		Vector3 _velocity = knifeController.GetVelocity().normalized;
-		//playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetObjectCollided(), knifeController.GetSurfaceNormal());
+		//playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetStuckObject(), knifeController.GetSurfaceNormal());
         playerMotor.WarpToKnife(shiftGravity, _velocity, knifeController, bounceWarp);
 
         if (bounceWarp)

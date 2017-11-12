@@ -3,7 +3,7 @@ using System.Collections;
 using AssemblyCSharp;
 
 [RequireComponent(typeof(Rigidbody))]
-public class BounceKnifeController : MonoBehaviour, KnifeController {
+public class BounceKnifeController : KnifeController {
 
 	private Rigidbody rb;
 
@@ -24,18 +24,17 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
         rb = GetComponent<Rigidbody>();
     }
 
-    public void Setup (PlayerKnifeController _controller){
-        //playerKnifeController = _controller;
-		//rb = GetComponent<Rigidbody> ();
+    //public override void Setup (PlayerKnifeController _controller)
+    //{
+    //    base.Setup(_controller);
 
-        // add random throw angle
-        // could raycast throw angle to match surface hit?
-        // WITH BOTH KNIVES?
-        //visuals.transform.Rotate (0f, 0f, ((Random.value * 2f) - 1f) * 90f);
-	    transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
+    //    // add random throw angle
+    //    // could raycast throw angle to match surface hit?
+    //    // WITH BOTH KNIVES?
+    //    //visuals.transform.Rotate (0f, 0f, ((Random.value * 2f) - 1f) * 90f);
 
-        //SetThrowRotation();
-    }
+    //    //SetThrowRotation();
+    //}
 
     /*
      * Unsure how useful this is, if knife too fast then you probably cant even see it
@@ -74,7 +73,7 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
             transform.forward = rb.velocity;
     }
 
-    public void Throw (Vector3 _velocity){
+    public override void Throw (Vector3 _velocity){
         // throw the knife in the given direction with a certain force
 		rb.AddForce (_velocity * throwStrengthMod, ForceMode.VelocityChange);
 	}
@@ -82,35 +81,5 @@ public class BounceKnifeController : MonoBehaviour, KnifeController {
     void OnCollisionEnter(Collision col)
     {
         this.PostNotification(BounceKnifeCollisionNotification);
-    }
-
-    public Vector3 GetPosition (){
-		return transform.position;
-	}
-
-	public Vector3 GetWarpPosition (){
-		return transform.position;
-	}
-
-    public Vector3 GetGravVector()
-    {
-        return Vector3.zero;
-    }
-
-    public Vector3 GetVelocity (){
-		return rb.velocity;
-	}
-
-	public bool HasCollided (){
-		return false;
-	}
-
-	public GameObject GetObjectCollided(){
-		return null;
-	}
-
-    public bool ShiftGravity()
-    {
-        return false;
     }
 }
