@@ -6,6 +6,7 @@ namespace AssemblyCSharp
     public class KnifeController : MonoBehaviour
     {
         private PlayerKnifeController playerKnifeController;
+        [HideInInspector]
         public Rigidbody rb;
 
         private bool stuckInSurface;

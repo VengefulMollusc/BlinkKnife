@@ -8,8 +8,8 @@ public class BlinkKnifeController : KnifeController {
     [SerializeField]
     private float throwStrengthMod = 1f;
 
-    [SerializeField]
-	private GameObject visuals;
+ //   [SerializeField]
+	//private GameObject visuals;
 
 	//public override void Setup (PlayerKnifeController _controller){
  //       base.Setup(_controller);

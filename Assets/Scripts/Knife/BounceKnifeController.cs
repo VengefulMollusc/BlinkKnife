@@ -5,23 +5,32 @@ using AssemblyCSharp;
 [RequireComponent(typeof(Rigidbody))]
 public class BounceKnifeController : KnifeController {
 
-	private Rigidbody rb;
-
     public const string BounceKnifeCollisionNotification = "BounceKnife.BounceKnifeCollisionNotification";
 
     [SerializeField]
     private float throwStrengthMod = 1f;
 
-//	private PlayerKnifeController playerKnifeController;
+	//[SerializeField]
+	//private GameObject visuals;
 
-	[SerializeField]
-	private GameObject visuals;
-	private Vector3 spinVector;
-    //	private Vector3 throwVelocity;
-
-    void OnEnable()
+    void Update()
     {
-        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            return;
+        
+        if (rb.velocity.magnitude != 0f)
+            transform.forward = rb.velocity;
+    }
+
+    public override void Throw(Vector3 _velocity)
+    {
+        // throw the knife in the given direction with a certain force
+        rb.AddForce(_velocity * throwStrengthMod, ForceMode.VelocityChange);
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        this.PostNotification(BounceKnifeCollisionNotification);
     }
 
     //public override void Setup (PlayerKnifeController _controller)
@@ -62,24 +71,4 @@ public class BounceKnifeController : KnifeController {
     //        visuals.transform.Rotate(0f, 0f, 90f);
     //    }
     //}
-
-    void Update()
-    {
-        if (rb == null)
-            return;
-
-        //visuals.transform.Rotate(spinVector);
-        if (rb.velocity.magnitude != 0f)
-            transform.forward = rb.velocity;
-    }
-
-    public override void Throw (Vector3 _velocity){
-        // throw the knife in the given direction with a certain force
-		rb.AddForce (_velocity * throwStrengthMod, ForceMode.VelocityChange);
-	}
-
-    void OnCollisionEnter(Collision col)
-    {
-        this.PostNotification(BounceKnifeCollisionNotification);
-    }
 }
