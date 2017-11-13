@@ -16,6 +16,7 @@ namespace AssemblyCSharp
         private GravityPanel gravPanel;
 
         public const string ShowKnifeMarkerNotification = "KnifeController.ShowKnifeMarkerNotification";
+        public const string KnifeBounceNotification = "KnifeController.KnifeBounceNotification";
 
         /*
          * Passes the knifecontroller and parameter spin speed to the knife

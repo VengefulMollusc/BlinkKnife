@@ -5,8 +5,6 @@ using AssemblyCSharp;
 [RequireComponent(typeof(Rigidbody))]
 public class BounceKnifeController : KnifeController {
 
-    public const string BounceKnifeCollisionNotification = "BounceKnife.BounceKnifeCollisionNotification";
-
     [SerializeField]
     private float throwStrengthMod = 1f;
 
@@ -40,7 +38,7 @@ public class BounceKnifeController : KnifeController {
         if (other.GetComponent<SoftSurface>() != null)
             StickToSurface(collide.normal, other);
 
-        this.PostNotification(BounceKnifeCollisionNotification);
+        this.PostNotification(KnifeBounceNotification);
     }
 
     //public override void Setup (PlayerKnifeController _controller)

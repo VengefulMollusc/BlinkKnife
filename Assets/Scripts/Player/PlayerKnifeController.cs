@@ -128,7 +128,7 @@ public class PlayerKnifeController : MonoBehaviour {
      * warp uses percentage of bar?
      */
 
-	void Start (){
+	void OnEnable (){
 	    uiControllerObject = GameObject.FindGameObjectWithTag("UIParent");
         // check for missing prefabs
         if (blinkKnifePrefab == null){
@@ -160,8 +160,13 @@ public class PlayerKnifeController : MonoBehaviour {
 
 		currentWarps = maxWarps;
 
-        this.AddObserver(OnBounceCollision, BounceKnifeController.BounceKnifeCollisionNotification);
+        this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
 
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
     }
 
 	void Update (){
@@ -264,9 +269,10 @@ public class PlayerKnifeController : MonoBehaviour {
         //warpUIFill.rectTransform.localScale = new Vector3 (warpCountDown/warpWaitTime, warpCountDown/warpWaitTime, 1f);
 	}
 
-    void OnBounceCollision(object sender, object args)
+    void OnKnifeBounce(object sender, object args)
     {
         warpCountDown = 0f;
+        autoRecallTimer = timeToAutoRecall;
     }
 
     // recharge warps based on time
