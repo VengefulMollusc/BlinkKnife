@@ -249,8 +249,7 @@ public class PlayerMotor : MonoBehaviour
         else if (colliding && jumpTimer <= 0)
         {
             // Sliding
-            Vector3 velocityTemp = velocity * airVelMod;
-            rb.AddForce(velocityTemp, ForceMode.Impulse);
+            SlideMovement();
         }
         else
         {
@@ -352,15 +351,16 @@ public class PlayerMotor : MonoBehaviour
         if (sprinting && inputInMovementDir && facingMovementDir)
         {
             // maintain velocity for a while
-            float newMagnitude = rb.velocity.magnitude * 0.998f;
+            float newMagnitude = rb.velocity.magnitude * 0.998f; // possibly change this to whole constant * time.fixeddeltatime
             _newVel = (rb.velocity + _newVel).normalized * newMagnitude;
         }
         else
         {
             // decelerate
             if (inputInMovementDir)
-                _newVel -= Vector3.Project(_newVel, rb.velocity);
-            
+                //_newVel -= Vector3.Project(_newVel, rb.velocity);
+                _newVel = Vector3.ClampMagnitude(_newVel, rb.velocity.magnitude);
+
             Vector3 brakeVelocity = rb.velocity * 0.96f; 
 
             _newVel = brakeVelocity + (_newVel * 0.2f);
@@ -368,6 +368,15 @@ public class PlayerMotor : MonoBehaviour
         }
 
         return _newVel;
+    }
+
+    /*
+     * Handle movement physics while sliding
+     */
+    void SlideMovement()
+    {
+        Vector3 velocityTemp = velocity * airVelMod;
+        rb.AddForce(velocityTemp, ForceMode.Impulse);
     }
 
 
