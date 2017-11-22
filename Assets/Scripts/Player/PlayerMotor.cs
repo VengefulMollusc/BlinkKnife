@@ -192,7 +192,7 @@ public class PlayerMotor : MonoBehaviour
 
     void OnBoostNotification(object sender, object args)
     {
-        GameObject boosted = (GameObject) args;
+        GameObject boosted = (GameObject)args;
         if (boosted != gameObject)
             return;
 
@@ -330,7 +330,7 @@ public class PlayerMotor : MonoBehaviour
 
             //rb.velocity = Vector3.zero;
         }
-        
+
         // MomentumSlide here
         newVel = MomentumSlide(newVel);
 
@@ -363,7 +363,7 @@ public class PlayerMotor : MonoBehaviour
             if (inputInMovementDir)
                 _newVel -= Vector3.Project(_newVel, rb.velocity);
 
-            Vector3 brakeVelocity = rb.velocity * 0.96f; 
+            Vector3 brakeVelocity = rb.velocity * 0.96f;
 
             _newVel = brakeVelocity + (_newVel * 0.2f);
 
@@ -378,6 +378,23 @@ public class PlayerMotor : MonoBehaviour
     void SlideMovement()
     {
         Vector3 velocityTemp = velocity * airVelMod;
+        //rb.AddForce(velocityTemp, ForceMode.Impulse);
+
+        // THE FOLLOWING CODE LIFTED FROM AIR MOVEMENT - TESTING
+        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
+
+        float threshold = PlayerController.Speed() * airVelMod;
+        if (sprinting)
+            threshold *= PlayerController.SprintModifier();
+
+        // if input velocity in direction of movement and velocity above threshold
+        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
+        {
+            // cancel positive movement in direction of flight
+            velocityTemp -= Vector3.Project(velocityTemp, flatVel);
+        }
+
+        // use impulse force to allow slower changes to direction/speed when at high midair speed
         rb.AddForce(velocityTemp, ForceMode.Impulse);
     }
 
@@ -406,7 +423,7 @@ public class PlayerMotor : MonoBehaviour
             if (!momentumFlight)
             {
                 // dampen movement
-                rb.velocity -= (flatVel * 0.1f); 
+                rb.velocity -= (flatVel * 0.1f);
             }
         }
 
@@ -496,7 +513,7 @@ public class PlayerMotor : MonoBehaviour
      *  Other pieces of scenery that rotate when gravity shifts
      *  paths that can only be accessed when gravity is in a particular direction?
      */
-     
+
     //perform rotation based on rotation variable
     private void PerformRotation()
     {
@@ -602,7 +619,7 @@ public class PlayerMotor : MonoBehaviour
         {
             RotateToDirection(newGravDirection, relativeFacing);
         }
-        
+
         // move to knife position
         // NOTE: this needs to be double-checked, moving rb by itself doesnt update position properly for grav warp
         //rb.MovePosition(newPos);
