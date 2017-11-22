@@ -242,17 +242,20 @@ public class PlayerMotor : MonoBehaviour
 
         if (UseGroundMovement() && jumpTimer <= 0)
         {
+            Debug.Log("Grounded");
             // grounded
             momentumFlight = false;
             GroundMovement();
         }
         else if (colliding && jumpTimer <= 0)
         {
+            Debug.Log("Sliding");
             // Sliding
             SlideMovement();
         }
         else
         {
+            Debug.Log("Airborne");
             // airborne
             AirMovement();
         }
@@ -358,8 +361,7 @@ public class PlayerMotor : MonoBehaviour
         {
             // decelerate
             if (inputInMovementDir)
-                //_newVel -= Vector3.Project(_newVel, rb.velocity);
-                _newVel = Vector3.ClampMagnitude(_newVel, rb.velocity.magnitude);
+                _newVel -= Vector3.Project(_newVel, rb.velocity);
 
             Vector3 brakeVelocity = rb.velocity * 0.96f; 
 
