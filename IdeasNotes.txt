@@ -3,9 +3,24 @@ http://answers.unity3d.com/questions/1370941/more-advanced-player-movement.html
 
 
 ISSUES
+needs to be a limit on how quickly you can turn and keep momentum. 
+currently you can turn almost on a dime and keep full speed if you're careful.
+maybe angle-per-second limit?
+
+need to check midair hover behaviour with various speeds.
+
+midair movement/turning doesn't feel right. I know knife provides a fix to most air movement
+issues but it seems too hard to land accurately, even at low speed.
+
+low-mid-distance regular warp feedback needs to be ramped up. FOV? more distortion?
+
+still need to work on knife warp prediction: cast player-sized collider ahead to 
+see if can warp. otherwise 'fizzle' warp and return knife
+
 parenting player(or knife or anything really) to objects gets really screwy with parent scale.
 possible alternative is to just store the object to be 'parented' and manually copy/update from its
 position/rotation?
+
 
 Puzzles:
 	use gravity rotation and direction to move objects
