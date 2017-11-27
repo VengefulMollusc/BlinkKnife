@@ -81,6 +81,8 @@ public class PlayerMotor : MonoBehaviour
 
     //private HealthController healthEnergy;
 
+    private Coroutine hoverCoroutine;
+
     private float groundSpeedThreshold;
     private float airSpeedThreshold;
 
@@ -198,6 +200,9 @@ public class PlayerMotor : MonoBehaviour
 
         // boosted object is the player
         jumpTimer = 30;
+
+        if (hoverCoroutine != null)
+            StopCoroutine(hoverCoroutine);
     }
 
     void CheckPlayerGravityAlignment()
@@ -242,20 +247,17 @@ public class PlayerMotor : MonoBehaviour
 
         if (UseGroundMovement() && jumpTimer <= 0)
         {
-            Debug.Log("Grounded");
             // grounded
             momentumFlight = false;
             GroundMovement();
         }
         else if (colliding && jumpTimer <= 0)
         {
-            Debug.Log("Sliding");
             // Sliding
             SlideMovement();
         }
         else
         {
-            Debug.Log("Airborne");
             // airborne
             AirMovement();
         }
@@ -431,7 +433,7 @@ public class PlayerMotor : MonoBehaviour
         {
             canHover = false;
             momentumFlight = false; // comment this out when reworking hover - should depend on air speed
-            StartCoroutine(HoverCoroutine());
+            hoverCoroutine = StartCoroutine(HoverCoroutine());
         }
     }
 
