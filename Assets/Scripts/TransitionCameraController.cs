@@ -118,6 +118,9 @@ public class TransitionCameraController : MonoBehaviour
             // tAlt transitions from 0-1-0 over warp
             float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
 
+            // use chromatic aberration durign warp
+            chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
+
             if (gravityShift || duration > 0.4f)
             {
                 // increase FOV while long/gravity shift
@@ -129,8 +132,7 @@ public class TransitionCameraController : MonoBehaviour
                 // lerp rotation as well
                 gameObject.transform.rotation = Quaternion.Lerp(startRot, endRot, lerpPercent);
                 // increase chromatic aberration during gravity shift
-                //chromAberration.chromaticAberration = Mathf.Lerp(chromMaxValue, chromMinValue, tChrom);
-                chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
+                //chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
 
             yield return 0;
