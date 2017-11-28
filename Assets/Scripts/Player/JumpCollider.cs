@@ -7,6 +7,9 @@ public class JumpCollider : MonoBehaviour
 
     private static bool colliding;
 
+    public const string RelativeMovementNotification = "JumpCollider.RelativeMovementNotification";
+    private GameObject relativeMovementObject;
+
     //private PhysicMaterial playerMaterial;
     //private float staticFriction;
     //private float dynamicFriction;
@@ -16,6 +19,8 @@ public class JumpCollider : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
 
         colliding = false;
+
+        relativeMovementObject = null;
 
         Utilities.IgnoreCollisions(GetComponent<Collider>(), player.GetComponents<Collider>(), true);
 
@@ -42,6 +47,14 @@ public class JumpCollider : MonoBehaviour
         colliding = true;
         //playerMotor.SetOnGround(true);
 
+        GameObject colObject = col.gameObject;
+
+        if (colObject != relativeMovementObject)
+        {
+            relativeMovementObject = colObject;
+            this.PostNotification(RelativeMovementNotification, relativeMovementObject);
+        }
+
         // TODO: replace parenting code with relative movement while colliding
         // This will need to be changed to accomodate not all things being tagged scenery
         // possibly use layers?
@@ -57,6 +70,9 @@ public class JumpCollider : MonoBehaviour
             return;
 
         colliding = false;
+
+        relativeMovementObject = null;
+        this.PostNotification(RelativeMovementNotification, null);
         //if (col.CompareTag("Scenery"))
         //{
         //    playerMotor.transform.SetParent(null);
