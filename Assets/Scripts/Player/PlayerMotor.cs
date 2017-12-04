@@ -82,6 +82,9 @@ public class PlayerMotor : MonoBehaviour
     //private HealthController healthEnergy;
 
     private Transform relativeMotionTransform;
+    private Vector3 relativeMotionPosition;
+    private Quaternion relativeMotionRotation;
+    private Vector3 relativeMovementVector;
 
     private Coroutine hoverCoroutine;
 
@@ -196,6 +199,9 @@ public class PlayerMotor : MonoBehaviour
         currentGravStrength = GlobalGravityControl.GetGravityStrength();
     }
 
+    /*
+     * Handler for BoostNotification from BoostRing objects
+     */
     void OnBoostNotification(object sender, object args)
     {
         GameObject boosted = (GameObject)args;
@@ -209,9 +215,20 @@ public class PlayerMotor : MonoBehaviour
             StopCoroutine(hoverCoroutine);
     }
 
+    /*
+     * Handler for RelativeMotionNotification sent from JumpCollider
+     *  - Allows player to move with moving platforms etc without parenting
+     */
     void OnRelativeMotionNotification(object sender, object args)
     {
         relativeMotionTransform = (Transform) args;
+
+        // Set initial relative motion position and rotation
+        if (relativeMotionTransform != null)
+        {
+            relativeMotionPosition = relativeMotionTransform.position;
+            relativeMotionRotation = relativeMotionTransform.rotation;
+        }
     }
 
     void CheckPlayerGravityAlignment()
@@ -258,6 +275,7 @@ public class PlayerMotor : MonoBehaviour
         {
             // grounded
             momentumFlight = false;
+            RelativeMovement();
             GroundMovement();
         }
         else if (colliding && jumpTimer <= 0)
@@ -298,9 +316,50 @@ public class PlayerMotor : MonoBehaviour
         return float.MaxValue;
     }
 
+    /*
+     * Handles repositioning of the player to match movement of object the player is standing on
+     */
+    void RelativeMovement()
+    {
+        if (relativeMotionTransform == null)
+            return;
+
+        Vector3 newRelativeMotionPosition = relativeMotionTransform.position;
+        Quaternion newRelativeMotionRotation = relativeMotionTransform.rotation;
+
+        if (newRelativeMotionPosition == relativeMotionPosition && newRelativeMotionRotation == relativeMotionRotation)
+            return;
+
+        // get initial foot position relative to moving object
+        Vector3 relativeFootPos = GetFootPosition() - relativeMotionPosition;
+
+        // if rotation of object has changed
+        if (newRelativeMotionRotation != relativeMotionRotation)
+        {
+            // calculate Quaternion rotation difference between rotations
+            Quaternion rotDiff = Quaternion.Inverse(relativeMotionRotation) * newRelativeMotionRotation;
+
+            // apply rotation difference to relative foot position
+            relativeFootPos = rotDiff * relativeFootPos;
+        }
+
+        // calculate new position
+        Vector3 newPos = newRelativeMotionPosition + relativeFootPos - currentGravVector;
+
+        // store relative movement between old/new positions for adding to jump vector off moving platforms
+        relativeMovementVector = newPos - transform.position;
+
+        // move player to new position
+        rb.position = newPos;
+
+        // update relative motion variables
+        relativeMotionPosition = newRelativeMotionPosition;
+        relativeMotionRotation = newRelativeMotionRotation;
+    }
+
 
     /*
-     * You might have heard at some point someone describe controls as fluid, 
+     * TODO: You might have heard at some point someone describe controls as fluid, 
      * which basically means that the movement is smooth and consistent (even 
      * when colliding.) I noticed that if the avatar moved alongside a wall 
      * at an angle the velocity slowed down considerably. Ray casting might 
@@ -756,6 +815,14 @@ public class PlayerMotor : MonoBehaviour
     //      transform.SetParent(null);
     //      UnFreeze();
     //  }
+
+    /*
+     * Returns the current position of the feet of the player, relative to the current gravity direction
+     */
+    Vector3 GetFootPosition()
+    {
+        return transform.position + GlobalGravityControl.GetCurrentGravityVector();
+    }
 
     public void Freeze()
     {
