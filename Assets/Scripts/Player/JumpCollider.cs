@@ -52,7 +52,7 @@ public class JumpCollider : MonoBehaviour
         if (colObject != relativeMovementObject)
         {
             relativeMovementObject = colObject;
-            this.PostNotification(RelativeMovementNotification, relativeMovementObject);
+            this.PostNotification(RelativeMovementNotification, relativeMovementObject.transform);
         }
 
         // TODO: replace parenting code with relative movement while colliding

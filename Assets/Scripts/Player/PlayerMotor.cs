@@ -81,6 +81,8 @@ public class PlayerMotor : MonoBehaviour
 
     //private HealthController healthEnergy;
 
+    private Transform relativeMotionTransform;
+
     private Coroutine hoverCoroutine;
 
     private float groundSpeedThreshold;
@@ -95,12 +97,14 @@ public class PlayerMotor : MonoBehaviour
         UpdateGravityValues();
         this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
+        this.AddObserver(OnRelativeMotionNotification, JumpCollider.RelativeMovementNotification);
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
+        this.AddObserver(OnRelativeMotionNotification, JumpCollider.RelativeMovementNotification);
     }
 
     void Start()
@@ -203,6 +207,11 @@ public class PlayerMotor : MonoBehaviour
 
         if (hoverCoroutine != null)
             StopCoroutine(hoverCoroutine);
+    }
+
+    void OnRelativeMotionNotification(object sender, object args)
+    {
+        relativeMotionTransform = (Transform) args;
     }
 
     void CheckPlayerGravityAlignment()
