@@ -11,12 +11,16 @@ public class MovingPlatform : MonoBehaviour
 
     private float t = -90f;
 
+    private Rigidbody rb;
+
     void OnEnable()
     {
         if (startPos == endPos)
             Debug.LogError("Start and end positions are the same");
 
         transform.position = startPos;
+
+        rb = GetComponent<Rigidbody>();
     }
 
 	// Update is called once per frame
@@ -27,6 +31,6 @@ public class MovingPlatform : MonoBehaviour
 
         //Debug.Log(lerpPercent);
 
-        transform.position = Vector3.Lerp(startPos, endPos, lerpPercent);
+        rb.MovePosition(Vector3.Lerp(startPos, endPos, lerpPercent));
     }
 }

@@ -166,8 +166,8 @@ public class PlayerMotor : MonoBehaviour
 
     void Update()
     {
-        if (!frozen && UseGroundMovement() && jumpTimer <= 0)
-            RelativeMovement();
+        //if (!frozen && UseGroundMovement() && jumpTimer <= 0)
+        RelativeMovement();
     }
 
     // Run every physics iteration
@@ -281,7 +281,6 @@ public class PlayerMotor : MonoBehaviour
         {
             // grounded
             momentumFlight = false;
-            //RelativeMovement();
             GroundMovement();
         }
         else if (colliding && jumpTimer <= 0)
@@ -327,14 +326,20 @@ public class PlayerMotor : MonoBehaviour
      */
     void RelativeMovement()
     {
+        // TODO: Try using FixedJoint to lock movement
+
         if (relativeMotionTransform == null)
+        {
             return;
+        }
 
         Vector3 newRelativeMotionPosition = relativeMotionTransform.position;
         Quaternion newRelativeMotionRotation = relativeMotionTransform.rotation;
 
-        if (newRelativeMotionPosition == relativeMotionPosition && newRelativeMotionRotation == relativeMotionRotation)
-            return;
+        //if (newRelativeMotionPosition == relativeMotionPosition && newRelativeMotionRotation == relativeMotionRotation)
+        //{
+        //    return;
+        //}
 
         // get initial foot position relative to moving object
         Vector3 relativeFootPos = GetFootPosition() - relativeMotionPosition;
@@ -356,7 +361,10 @@ public class PlayerMotor : MonoBehaviour
         relativeMovementVector = newPos - transform.position;
 
         // move player to new position
-        rb.position = newPos;
+        // TODO: MAYBE add relative velocity?
+        //rb.position = newPos;
+        rb.MovePosition(newPos);
+        //rb.velocity += relativeMovementVector;
 
         // update relative motion variables
         relativeMotionPosition = newRelativeMotionPosition;
