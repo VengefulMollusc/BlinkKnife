@@ -170,6 +170,58 @@ public class PlayerMotor : MonoBehaviour
         RelativeMovement();
     }
 
+    /*
+     * Handles repositioning of the player to match movement of object the player is standing on
+     */
+    void RelativeMovement()
+    {
+        // TODO: Try using FixedJoint to lock movement
+
+        if (relativeMotionTransform == null)
+        {
+            return;
+        }
+
+        Vector3 newRelativeMotionPosition = relativeMotionTransform.position;
+        Quaternion newRelativeMotionRotation = relativeMotionTransform.rotation;
+
+        if (newRelativeMotionPosition == relativeMotionPosition && newRelativeMotionRotation == relativeMotionRotation)
+        {
+            return;
+        }
+
+        // get initial foot position relative to moving object
+        Vector3 relativeFootPos = GetFootPosition() - relativeMotionPosition;
+
+        // if rotation of object has changed
+        if (newRelativeMotionRotation != relativeMotionRotation)
+        {
+            // calculate Quaternion rotation difference between rotations
+            Quaternion rotDiff = Quaternion.Inverse(relativeMotionRotation) * newRelativeMotionRotation;
+
+            // apply rotation difference to relative foot position
+            relativeFootPos = rotDiff * relativeFootPos;
+        }
+
+        // calculate new position
+        Vector3 newPos = newRelativeMotionPosition + relativeFootPos - currentGravVector;
+
+        //Vector3 newPos = transform.position + (newRelativeMotionPosition - relativeMotionPosition);
+
+        // store relative movement between old/new positions for adding to jump vector off moving platforms
+        relativeMovementVector = newPos - transform.position;
+
+        // move player to new position
+        // TODO: MAYBE add relative velocity?
+        //rb.position = newPos;
+        rb.MovePosition(newPos);
+        //rb.velocity += relativeMovementVector;
+
+        // update relative motion variables
+        relativeMotionPosition = newRelativeMotionPosition;
+        relativeMotionRotation = newRelativeMotionRotation;
+    }
+
     // Run every physics iteration
     void FixedUpdate()
     {
@@ -319,56 +371,6 @@ public class PlayerMotor : MonoBehaviour
         }
 
         return float.MaxValue;
-    }
-
-    /*
-     * Handles repositioning of the player to match movement of object the player is standing on
-     */
-    void RelativeMovement()
-    {
-        // TODO: Try using FixedJoint to lock movement
-
-        if (relativeMotionTransform == null)
-        {
-            return;
-        }
-
-        Vector3 newRelativeMotionPosition = relativeMotionTransform.position;
-        Quaternion newRelativeMotionRotation = relativeMotionTransform.rotation;
-
-        //if (newRelativeMotionPosition == relativeMotionPosition && newRelativeMotionRotation == relativeMotionRotation)
-        //{
-        //    return;
-        //}
-
-        // get initial foot position relative to moving object
-        Vector3 relativeFootPos = GetFootPosition() - relativeMotionPosition;
-
-        // if rotation of object has changed
-        if (newRelativeMotionRotation != relativeMotionRotation)
-        {
-            // calculate Quaternion rotation difference between rotations
-            Quaternion rotDiff = Quaternion.Inverse(relativeMotionRotation) * newRelativeMotionRotation;
-
-            // apply rotation difference to relative foot position
-            relativeFootPos = rotDiff * relativeFootPos;
-        }
-
-        // calculate new position
-        Vector3 newPos = newRelativeMotionPosition + relativeFootPos - currentGravVector;
-
-        // store relative movement between old/new positions for adding to jump vector off moving platforms
-        relativeMovementVector = newPos - transform.position;
-
-        // move player to new position
-        // TODO: MAYBE add relative velocity?
-        //rb.position = newPos;
-        rb.MovePosition(newPos);
-        //rb.velocity += relativeMovementVector;
-
-        // update relative motion variables
-        relativeMotionPosition = newRelativeMotionPosition;
-        relativeMotionRotation = newRelativeMotionRotation;
     }
 
 

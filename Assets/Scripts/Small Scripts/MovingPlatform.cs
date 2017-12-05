@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 50f;
+    [SerializeField] private float moveSpeed = 20f;
 
     [SerializeField] private Vector3 startPos = Vector3.zero;
     [SerializeField] private Vector3 endPos = Vector3.zero;
 
-    private float t = -90f;
+    private Vector3 targetPos = Vector3.zero;
 
     private Rigidbody rb;
 
@@ -19,18 +19,21 @@ public class MovingPlatform : MonoBehaviour
             Debug.LogError("Start and end positions are the same");
 
         transform.position = startPos;
+        targetPos = endPos;
 
         rb = GetComponent<Rigidbody>();
     }
 
 	// Update is called once per frame
 	void Update () {
-	    t += Time.deltaTime * moveSpeed;
+	    rb.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * moveSpeed);
 
-	    float lerpPercent = (Mathf.Sin(Mathf.Deg2Rad * t) + 1) / 2f;
-
-        //Debug.Log(lerpPercent);
-
-        rb.MovePosition(Vector3.Lerp(startPos, endPos, lerpPercent));
-    }
+	    if (transform.position == targetPos)
+	    {
+	        if (targetPos == startPos)
+	            targetPos = endPos;
+	        else
+	            targetPos = startPos;
+	    }
+	}
 }
