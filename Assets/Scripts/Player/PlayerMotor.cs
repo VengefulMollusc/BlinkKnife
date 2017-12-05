@@ -164,6 +164,12 @@ public class PlayerMotor : MonoBehaviour
         cameraRotationX = _cameraRotationX;
     }
 
+    void Update()
+    {
+        if (!frozen && UseGroundMovement() && jumpTimer <= 0)
+            RelativeMovement();
+    }
+
     // Run every physics iteration
     void FixedUpdate()
     {
@@ -275,7 +281,7 @@ public class PlayerMotor : MonoBehaviour
         {
             // grounded
             momentumFlight = false;
-            RelativeMovement();
+            //RelativeMovement();
             GroundMovement();
         }
         else if (colliding && jumpTimer <= 0)
