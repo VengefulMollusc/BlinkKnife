@@ -10,6 +10,8 @@ public class JumpCollider : MonoBehaviour
     public const string RelativeMovementNotification = "JumpCollider.RelativeMovementNotification";
     private GameObject relativeMovementObject;
 
+    [SerializeField] private LayerMask relativeMotionLayers;
+
     //private PhysicMaterial playerMaterial;
     //private float staticFriction;
     //private float dynamicFriction;
@@ -47,6 +49,7 @@ public class JumpCollider : MonoBehaviour
         colliding = true;
         //playerMotor.SetOnGround(true);
 
+
         GameObject colObject = col.gameObject;
 
         if (colObject != relativeMovementObject)
@@ -55,12 +58,19 @@ public class JumpCollider : MonoBehaviour
             this.PostNotification(RelativeMovementNotification, relativeMovementObject.transform);
         }
 
+
         // TODO: replace parenting code with relative movement while colliding
         // This will need to be changed to accomodate not all things being tagged scenery
         // possibly use layers?
         //if (col.CompareTag("Scenery") || col.CompareTag("GravityPanel"))
         //{
         //    playerMotor.transform.SetParent(col.transform);
+        //}
+
+        // layers method
+        //if (relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
+        //{
+        //    player.transform.SetParent(col.transform);
         //}
     }
 
@@ -71,11 +81,18 @@ public class JumpCollider : MonoBehaviour
 
         colliding = false;
 
-        relativeMovementObject = null;
-        this.PostNotification(RelativeMovementNotification, null);
-        //if (col.CompareTag("Scenery"))
+        GameObject colObject = col.gameObject;
+
+        if (colObject == relativeMovementObject)
+        {
+            relativeMovementObject = null;
+            this.PostNotification(RelativeMovementNotification, null);
+        }
+            
+
+        //if (relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
         //{
-        //    playerMotor.transform.SetParent(null);
+        //    player.transform.SetParent(null);
         //}
     }
 
