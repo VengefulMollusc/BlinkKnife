@@ -52,7 +52,7 @@ public class JumpCollider : MonoBehaviour
 
         GameObject colObject = col.gameObject;
 
-        if (colObject != relativeMovementObject)
+        if (colObject != relativeMovementObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
         {
             relativeMovementObject = colObject;
             this.PostNotification(RelativeMovementNotification, relativeMovementObject.transform);
