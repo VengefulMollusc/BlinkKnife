@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RelativeRotationController : MonoBehaviour {
+public class RotateToGravity : MonoBehaviour
+{
 
     [SerializeField]
     private bool followGravityDirection = true;
     [SerializeField]
-	private bool followPlayerPosition = false;
+    private bool followPlayerPosition = false;
 
     [Header("Ambient Rotation")]
     [SerializeField]
@@ -51,7 +52,7 @@ public class RelativeRotationController : MonoBehaviour {
     }
 
     public void StartRotation(Vector3 _newGravDir, float _duration)
-    //public void StartRotation(Quaternion _endRot, float _duration)
+        //public void StartRotation(Quaternion _endRot, float _duration)
     {
         // cancel if not following gravity changes
         if (!followGravityDirection) return;
@@ -120,8 +121,8 @@ public class RelativeRotationController : MonoBehaviour {
         }
 
         // TODO: Not sure why this is here....
-		if (followPlayerPosition)
-			transform.position = Camera.main.transform.position;
+        if (followPlayerPosition)
+            transform.position = Camera.main.transform.position;
     }
 
     // Modifies rotations in each axes by multiplying by field value
@@ -184,7 +185,7 @@ public class RelativeRotationController : MonoBehaviour {
     //        // use world up
     //        projectedForward = Vector3.ProjectOnPlane(Vector3.up, _up);
     //    }
-        
+
     //    // end rotation based on player up vector and new forward direction
     //    Quaternion newRot = Quaternion.LookRotation(projectedForward, _up);
 

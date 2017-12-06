@@ -81,11 +81,6 @@ public class PlayerMotor : MonoBehaviour
 
     //private HealthController healthEnergy;
 
-    private Transform relativeMotionTransform;
-    private Vector3 relativeMotionPosition;
-    private Quaternion relativeMotionRotation;
-    private Vector3 relativeMovementVector;
-
     private Coroutine hoverCoroutine;
 
     private float groundSpeedThreshold;
@@ -100,14 +95,12 @@ public class PlayerMotor : MonoBehaviour
         UpdateGravityValues();
         this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
-        this.AddObserver(OnRelativeMotionNotification, JumpCollider.RelativeMovementNotification);
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
-        this.AddObserver(OnRelativeMotionNotification, JumpCollider.RelativeMovementNotification);
     }
 
     void Start()
@@ -164,64 +157,6 @@ public class PlayerMotor : MonoBehaviour
         cameraRotationX = _cameraRotationX;
     }
 
-    void Update()
-    {
-        //if (!frozen && UseGroundMovement() && jumpTimer <= 0)
-        RelativeMovement();
-    }
-
-    /*
-     * Handles repositioning of the player to match movement of object the player is standing on
-     */
-    void RelativeMovement()
-    {
-        // TODO: Try using FixedJoint to lock movement
-
-        if (relativeMotionTransform == null)
-        {
-            return;
-        }
-
-        Vector3 newRelativeMotionPosition = relativeMotionTransform.position;
-        Quaternion newRelativeMotionRotation = relativeMotionTransform.rotation;
-
-        if (newRelativeMotionPosition == relativeMotionPosition && newRelativeMotionRotation == relativeMotionRotation)
-        {
-            return;
-        }
-
-        // get initial foot position relative to moving object
-        Vector3 relativeFootPos = GetFootPosition() - relativeMotionPosition;
-
-        // if rotation of object has changed
-        if (newRelativeMotionRotation != relativeMotionRotation)
-        {
-            // calculate Quaternion rotation difference between rotations
-            Quaternion rotDiff = Quaternion.Inverse(relativeMotionRotation) * newRelativeMotionRotation;
-
-            // apply rotation difference to relative foot position
-            relativeFootPos = rotDiff * relativeFootPos;
-        }
-
-        // calculate new position
-        Vector3 newPos = newRelativeMotionPosition + relativeFootPos - currentGravVector;
-
-        //Vector3 newPos = transform.position + (newRelativeMotionPosition - relativeMotionPosition);
-
-        // store relative movement between old/new positions for adding to jump vector off moving platforms
-        relativeMovementVector = newPos - transform.position;
-
-        // move player to new position
-        // TODO: MAYBE add relative velocity?
-        //rb.position = newPos;
-        rb.MovePosition(newPos);
-        //rb.velocity += relativeMovementVector;
-
-        // update relative motion variables
-        relativeMotionPosition = newRelativeMotionPosition;
-        relativeMotionRotation = newRelativeMotionRotation;
-    }
-
     // Run every physics iteration
     void FixedUpdate()
     {
@@ -271,22 +206,6 @@ public class PlayerMotor : MonoBehaviour
 
         if (hoverCoroutine != null)
             StopCoroutine(hoverCoroutine);
-    }
-
-    /*
-     * Handler for RelativeMotionNotification sent from JumpCollider
-     *  - Allows player to move with moving platforms etc without parenting
-     */
-    void OnRelativeMotionNotification(object sender, object args)
-    {
-        relativeMotionTransform = (Transform) args;
-
-        // Set initial relative motion position and rotation
-        if (relativeMotionTransform != null)
-        {
-            relativeMotionPosition = relativeMotionTransform.position;
-            relativeMotionRotation = relativeMotionTransform.rotation;
-        }
     }
 
     void CheckPlayerGravityAlignment()

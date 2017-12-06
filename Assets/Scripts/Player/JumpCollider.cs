@@ -7,7 +7,7 @@ public class JumpCollider : MonoBehaviour
 
     private static bool colliding;
 
-    public const string RelativeMovementNotification = "JumpCollider.RelativeMovementNotification";
+    public const string MovementObjectNotification = "JumpCollider.MovementObjectNotification";
     private GameObject relativeMovementObject;
 
     [SerializeField] private LayerMask relativeMotionLayers;
@@ -55,7 +55,7 @@ public class JumpCollider : MonoBehaviour
         if (colObject != relativeMovementObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
         {
             relativeMovementObject = colObject;
-            this.PostNotification(RelativeMovementNotification, relativeMovementObject.transform);
+            this.PostNotification(MovementObjectNotification, relativeMovementObject);
         }
 
 
@@ -86,7 +86,7 @@ public class JumpCollider : MonoBehaviour
         if (colObject == relativeMovementObject)
         {
             relativeMovementObject = null;
-            this.PostNotification(RelativeMovementNotification, null);
+            this.PostNotification(MovementObjectNotification, null);
         }
             
 
