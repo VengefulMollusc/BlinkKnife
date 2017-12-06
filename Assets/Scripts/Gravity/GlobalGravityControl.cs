@@ -29,13 +29,13 @@ public class GlobalGravityControl : MonoBehaviour {
 
     private static Coroutine shiftingCoroutine;
 
-    private static RelativeRotationController[] rotationObjects;
+    private static RotateToGravity[] rotationObjects;
 
     public const string GravityChangeNotification = "GlobalGravityControl.GravityChangeNotification";
 
     void OnEnable()
     {
-        rotationObjects = (RelativeRotationController[])FindObjectsOfType(typeof(RelativeRotationController));
+        rotationObjects = (RotateToGravity[])FindObjectsOfType(typeof(RotateToGravity));
 
         player = GameObject.FindGameObjectWithTag("Player");
 
@@ -77,7 +77,7 @@ public class GlobalGravityControl : MonoBehaviour {
         tempGravDir = currentGravDirection;
 
         // trigger scene objects to rotate
-        foreach (RelativeRotationController r in rotationObjects)
+        foreach (RotateToGravity r in rotationObjects)
         {
             if (r.IsFollowGravity())
                 r.StartRotation(targetGravDirection, duration);
@@ -139,7 +139,7 @@ public class GlobalGravityControl : MonoBehaviour {
         }
 
         // Set scene object rotation
-        foreach (RelativeRotationController r in rotationObjects)
+        foreach (RotateToGravity r in rotationObjects)
         {
             if (r.IsFollowGravity())
                 r.SetRotation(targetGravDirection);

@@ -27,10 +27,11 @@ public class MovingPlatform : MonoBehaviour
 	// Update is called once per frame
 	void Update () {
         Vector3 newPos = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * moveSpeed);
-	    Vector3 movementVector = newPos - rb.position;
+	    Info<GameObject, Vector3> info = new Info<GameObject, Vector3>(gameObject, newPos - rb.position);
 	    rb.position = newPos;
 
         // Send notification with movementVector here
+        this.PostNotification(RelativeMovementController.RelativeMovementNotification, info);
 
         if (transform.position == targetPos)
 	    {

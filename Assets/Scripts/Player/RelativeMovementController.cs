@@ -8,6 +8,8 @@ public class RelativeMovementController : MonoBehaviour
 
     private GameObject relativeMotionObject;
 
+    private Rigidbody rb;
+
     /*
      * TODO: this needs to be refactored to NOT use JumpCollider notifications. 
      * Object should be selected by this script, and by direct collisions.
@@ -15,12 +17,16 @@ public class RelativeMovementController : MonoBehaviour
      */
     void OnEnable()
     {
+        rb = GetComponent<Rigidbody>();
+
         this.AddObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
+        this.AddObserver(OnRelativeMovementNotification, RelativeMovementNotification);
     }
 
     void OnDisable()
     {
-        this.AddObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
+        this.RemoveObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
+        this.RemoveObserver(OnRelativeMovementNotification, RelativeMovementNotification);
     }
 
     /*
@@ -30,6 +36,19 @@ public class RelativeMovementController : MonoBehaviour
     void OnMovementObjectNotification(object sender, object args)
     {
         relativeMotionObject = (GameObject)args;
+    }
+
+    void OnRelativeMovementNotification(object sender, object args)
+    {
+        if (relativeMotionObject == null)
+            return;
+
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>) args;
+
+        if (info.arg0 != relativeMotionObject)
+            return;
+
+        rb.MovePosition(rb.position + info.arg1);
     }
 
     //void Update()
