@@ -157,6 +157,12 @@ public class PlayerMotor : MonoBehaviour
         cameraRotationX = _cameraRotationX;
     }
 
+    //void Update()
+    //{
+    //    // Move rotation code to here
+    //    PerformRotation();
+    //}
+
     // Run every physics iteration
     void FixedUpdate()
     {
@@ -523,17 +529,15 @@ public class PlayerMotor : MonoBehaviour
     private void PerformRotation()
     {
         //rb.MoveRotation(transform.rotation * Quaternion.Euler(rotation)); // switched off this as update to 2017 seems to have bugged it
-        transform.rotation *= Quaternion.Euler(rotation);
+        //transform.rotation *= Quaternion.Euler(rotation);
+        rb.rotation *= Quaternion.Euler(rotation);
 
-        if (cam != null)
-        {
-            // rotation calculation - clamps to limit values
-            currentCamRotX -= cameraRotationX;
-            currentCamRotX = Mathf.Clamp(currentCamRotX, -cameraRotLimit, cameraRotLimit);
+        // rotation calculation - clamps to limit values
+        currentCamRotX -= cameraRotationX;
+        currentCamRotX = Mathf.Clamp(currentCamRotX, -cameraRotLimit, cameraRotLimit);
 
-            // apply rotation to transform of camera
-            cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
-        }
+        // apply rotation to transform of camera
+        cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
     }
 
     // perform jump when triggered by PlayerController
