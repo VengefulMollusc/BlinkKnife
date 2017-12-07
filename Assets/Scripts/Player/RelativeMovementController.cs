@@ -12,6 +12,8 @@ public class RelativeMovementController : MonoBehaviour
 
     private Rigidbody rb;
 
+    private bool landing = false;
+
     [SerializeField] private LayerMask relativeMotionLayers;
 
     /*
@@ -70,6 +72,30 @@ public class RelativeMovementController : MonoBehaviour
 
         // store movement vector for use during jumps/leaving contact with moving object
         lastMovementVector = info.arg1;
+
+        if (landing)
+        {
+            Vector3 movingVelocity = lastMovementVector / Time.deltaTime;
+
+            // modify velocity slightly towards matching platform movement
+            float direction = Vector3.Dot(rb.velocity.normalized, movingVelocity.normalized);
+            if (direction > 0)
+            {
+                // dampen velocity in direction of platform movement
+                Vector3 component = Vector3.Project(rb.velocity, movingVelocity);
+                float brakeMagnitude = Mathf.Min(component.magnitude / movingVelocity.magnitude, 1f);
+                rb.velocity -= (movingVelocity * brakeMagnitude);
+            }
+            else
+            {
+                // increase velocity in direction of platform movement
+                Vector3 component = Vector3.Project(rb.velocity, -movingVelocity);
+                float boostMagnitude = Mathf.Min(component.magnitude / movingVelocity.magnitude, 1f);
+                rb.velocity += (movingVelocity * boostMagnitude);
+            }
+
+            landing = false;
+        }
     }
 
     /*
@@ -98,6 +124,7 @@ public class RelativeMovementController : MonoBehaviour
         if (colObject != relativeMotionObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
         {
             relativeMotionObject = colObject;
+            landing = true;
         }
     }
 
