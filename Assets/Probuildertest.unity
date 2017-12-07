@@ -30616,19 +30616,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba11220ce0ceaef468cd5e42dc3d6c96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followGravityDirection: 1
-  followPlayerPosition: 0
-  ambientRot: 0
-  ambientRotAxis: {x: 0, y: 0, z: 0}
-  ambientRotSpeed: 1
-  modifyRotation: 1
-  xMod: 0
-  yMod: -1
-  zMod: 2
-  startRot: {x: 0, y: 0, z: 0, w: 0}
-  endRot: {x: 0, y: 0, z: 0, w: 0}
-  duration: 0
-  player: {fileID: 0}
 --- !u!43 &1428671231
 Mesh:
   m_ObjectHideFlags: 0

@@ -537,9 +537,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cfdd8c0afe791549b00cba7a676d268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relativeMotionLayers:
-    serializedVersion: 2
-    m_Bits: 16384
 --- !u!114 &114187896168502112
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -551,6 +548,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f21fd6dde332bf4097334bc3ea38875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relativeMotionLayers:
+    serializedVersion: 2
+    m_Bits: 16384
 --- !u!114 &114550902150594042
 MonoBehaviour:
   m_ObjectHideFlags: 1

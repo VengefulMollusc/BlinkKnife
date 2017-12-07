@@ -12,6 +12,8 @@ public class RelativeMovementController : MonoBehaviour
 
     private Rigidbody rb;
 
+    [SerializeField] private LayerMask relativeMotionLayers;
+
     /*
      * TODO: this needs to be refactored to NOT use JumpCollider notifications. 
      * Object should be selected by this script, and by direct collisions.
@@ -84,5 +86,31 @@ public class RelativeMovementController : MonoBehaviour
             return;
 
         // Relative rotation logic here
+    }
+
+    void OnCollisionStay(Collision col)
+    {
+        if (col.collider.isTrigger)
+            return;
+
+        GameObject colObject = col.gameObject;
+
+        if (colObject != relativeMotionObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
+        {
+            relativeMotionObject = colObject;
+        }
+    }
+
+    void OnCollisionExit(Collision col)
+    {
+        if (col.collider.isTrigger)
+            return;
+
+        GameObject colObject = col.gameObject;
+
+        if (colObject == relativeMotionObject)
+        {
+            relativeMotionObject = null;
+        }
     }
 }

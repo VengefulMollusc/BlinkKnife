@@ -8,9 +8,9 @@ public class JumpCollider : MonoBehaviour
     private static bool colliding;
 
     public const string MovementObjectNotification = "JumpCollider.MovementObjectNotification";
-    private GameObject relativeMovementObject;
+    //private GameObject relativeMovementObject;
 
-    [SerializeField] private LayerMask relativeMotionLayers;
+    //[SerializeField] private LayerMask relativeMotionLayers;
 
     //private PhysicMaterial playerMaterial;
     //private float staticFriction;
@@ -22,7 +22,7 @@ public class JumpCollider : MonoBehaviour
 
         colliding = false;
 
-        relativeMovementObject = null;
+        //relativeMovementObject = null;
 
         Utilities.IgnoreCollisions(GetComponent<Collider>(), player.GetComponents<Collider>(), true);
 
@@ -50,13 +50,13 @@ public class JumpCollider : MonoBehaviour
         //playerMotor.SetOnGround(true);
 
 
-        GameObject colObject = col.gameObject;
+        //GameObject colObject = col.gameObject;
 
-        if (colObject != relativeMovementObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
-        {
-            relativeMovementObject = colObject;
-            this.PostNotification(MovementObjectNotification, relativeMovementObject);
-        }
+        //if (colObject != relativeMovementObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
+        //{
+        //    relativeMovementObject = colObject;
+        //    this.PostNotification(MovementObjectNotification, relativeMovementObject);
+        //}
 
 
         // TODO: replace parenting code with relative movement while colliding
@@ -81,13 +81,13 @@ public class JumpCollider : MonoBehaviour
 
         colliding = false;
 
-        GameObject colObject = col.gameObject;
+        //GameObject colObject = col.gameObject;
 
-        if (colObject == relativeMovementObject)
-        {
-            relativeMovementObject = null;
-            this.PostNotification(MovementObjectNotification, null);
-        }
+        //if (colObject == relativeMovementObject)
+        //{
+        //    relativeMovementObject = null;
+        //    this.PostNotification(MovementObjectNotification, null);
+        //}
             
 
         //if (relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
