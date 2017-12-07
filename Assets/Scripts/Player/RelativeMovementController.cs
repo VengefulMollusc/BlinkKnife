@@ -23,14 +23,14 @@ public class RelativeMovementController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        this.AddObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
+        //this.AddObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
         this.AddObserver(OnRelativeMovementNotification, RelativeMovementNotification);
         this.AddObserver(OnRelativeRotationNotification, RelativeRotationNotification);
     }
 
     void OnDisable()
     {
-        this.RemoveObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
+        //this.RemoveObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
         this.RemoveObserver(OnRelativeMovementNotification, RelativeMovementNotification);
         this.RemoveObserver(OnRelativeRotationNotification, RelativeRotationNotification);
     }
@@ -39,18 +39,18 @@ public class RelativeMovementController : MonoBehaviour
      * Handler for RelativeMotionNotification sent from JumpCollider
      *  - Allows player to move with moving platforms etc without parenting
      */
-    void OnMovementObjectNotification(object sender, object args)
-    {
-        GameObject newObject = (GameObject)args;
+    //void OnMovementObjectNotification(object sender, object args)
+    //{
+    //    GameObject newObject = (GameObject)args;
 
-        if (newObject == null && relativeMotionObject != null)
-        {
-            rb.AddForce(lastMovementVector, ForceMode.VelocityChange);
-            lastMovementVector = Vector3.zero;
-        }
+    //    if (newObject == null && relativeMotionObject != null)
+    //    {
+    //        rb.AddForce(lastMovementVector, ForceMode.VelocityChange);
+    //        lastMovementVector = Vector3.zero;
+    //    }
 
-        relativeMotionObject = newObject;
-    }
+    //    relativeMotionObject = newObject;
+    //}
 
     /*
      * Handles notifications of moving objects and moves the object to match.
@@ -111,6 +111,9 @@ public class RelativeMovementController : MonoBehaviour
         if (colObject == relativeMotionObject)
         {
             relativeMotionObject = null;
+            //rb.AddForce(lastMovementVector, ForceMode.VelocityChange);
+            rb.velocity += (lastMovementVector / Time.deltaTime);
+            lastMovementVector = Vector3.zero;
         }
     }
 }
