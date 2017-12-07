@@ -86,13 +86,13 @@ public class RelativeMovementController : MonoBehaviour
                 float brakeMagnitude = Mathf.Min(component.magnitude / movingVelocity.magnitude, 1f);
                 rb.velocity -= (movingVelocity * brakeMagnitude);
             }
-            else
-            {
-                // increase velocity in direction of platform movement
-                Vector3 component = Vector3.Project(rb.velocity, -movingVelocity);
-                float boostMagnitude = Mathf.Min(component.magnitude / movingVelocity.magnitude, 1f);
-                rb.velocity += (movingVelocity * boostMagnitude);
-            }
+            //else
+            //{
+            //    // increase velocity in direction of platform movement
+            //    Vector3 component = Vector3.Project(rb.velocity, -movingVelocity);
+            //    float boostMagnitude = Mathf.Min(component.magnitude / movingVelocity.magnitude, 1f);
+            //    rb.velocity += (movingVelocity * boostMagnitude);
+            //}
 
             landing = false;
         }
