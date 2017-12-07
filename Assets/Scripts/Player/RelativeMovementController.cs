@@ -5,6 +5,7 @@ using UnityEngine;
 public class RelativeMovementController : MonoBehaviour
 {
     public const string RelativeMovementNotification = "RelativeMovementController.RelativeMovementNotification";
+    public const string RelativeRotationNotification = "RelativeMovementController.RelativeRotationNotification";
 
     private GameObject relativeMotionObject;
     private Vector3 lastMovementVector = Vector3.zero;
@@ -22,12 +23,14 @@ public class RelativeMovementController : MonoBehaviour
 
         this.AddObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
         this.AddObserver(OnRelativeMovementNotification, RelativeMovementNotification);
+        this.AddObserver(OnRelativeRotationNotification, RelativeRotationNotification);
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
         this.RemoveObserver(OnRelativeMovementNotification, RelativeMovementNotification);
+        this.RemoveObserver(OnRelativeRotationNotification, RelativeRotationNotification);
     }
 
     /*
@@ -65,5 +68,21 @@ public class RelativeMovementController : MonoBehaviour
 
         // store movement vector for use during jumps/leaving contact with moving object
         lastMovementVector = info.arg1;
+    }
+
+    /*
+     * Handles notifications of rotating objects and moves the object to match.
+     */
+    void OnRelativeRotationNotification(object sender, object args)
+    {
+        if (relativeMotionObject == null)
+            return;
+
+        Info<GameObject, Quaternion> info = (Info<GameObject, Quaternion>)args;
+
+        if (info.arg0 != relativeMotionObject)
+            return;
+
+        // Relative rotation logic here
     }
 }

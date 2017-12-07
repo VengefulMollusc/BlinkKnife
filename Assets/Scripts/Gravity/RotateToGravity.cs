@@ -89,7 +89,12 @@ public class RotateToGravity : MonoBehaviour
         // perform ambient rotation
         if (ambientRot)
         {
+            Quaternion initialRotation = transform.rotation;
             transform.Rotate(ambientRotAxis, ambientRotSpeed * Time.deltaTime);
+            Quaternion relative = Quaternion.Inverse(initialRotation) * transform.rotation;
+
+            Info<GameObject, Quaternion> info = new Info<GameObject,Quaternion>(gameObject, relative);
+            this.PostNotification(RelativeMovementController.RelativeRotationNotification, info);
         }
 
         // TODO: Not sure why this is here....
