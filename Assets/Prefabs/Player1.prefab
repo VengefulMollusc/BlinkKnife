@@ -444,7 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backMoveMax: 0.9
-  lookSensitivity: 3
+  lookSensitivity: 100
   jumpStrength: 12
   xMovAxis: Horizontal
   zMovAxis: Vertical

@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 4000011560170540}
   - component: {fileID: 114000010447455698}
   - component: {fileID: 64000010567267298}
-  - component: {fileID: 114000014135708666}
+  - component: {fileID: 114098667019174330}
   m_Layer: 14
   m_Name: Monolith2
   m_TagString: Untagged
@@ -748,26 +748,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 3
---- !u!114 &114000014135708666
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013924832972}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba11220ce0ceaef468cd5e42dc3d6c96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  followGravityDirection: 0
-  followPlayerPosition: 0
-  ambientRot: 1
-  ambientRotAxis: {x: 0, y: 1, z: 0}
-  ambientRotSpeed: 3
-  modifyRotation: 0
-  xMod: 1
-  yMod: 1
-  zMod: 1
 --- !u!114 &114026698960545674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -779,6 +759,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114098667019174330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013924832972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb5d7a03f5b6ae4e965b1a20856b7ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followGravityDirection: 0
+  followPlayerPosition: 0
+  ambientRot: 1
+  ambientRotAxis: {x: 0, y: 1, z: 0}
+  ambientRotSpeed: 3
+  modifyRotation: 0
+  xMod: 1
+  yMod: 1
+  zMod: 1
 --- !u!114 &114368904273181510
 MonoBehaviour:
   m_ObjectHideFlags: 1

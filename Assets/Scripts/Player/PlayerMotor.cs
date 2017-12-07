@@ -134,27 +134,51 @@ public class PlayerMotor : MonoBehaviour
     }
 
     // gets rotation vector 
-    public void Rotate(Vector3 _rotation)
+    //public void Rotate(Vector3 _rotation)
+    //{
+    //    if (frozen)
+    //    {
+    //        rotation = Vector3.zero;
+    //        return;
+    //    }
+
+    //    rotation = _rotation;
+    //}
+
+    //// gets camera rotation vector 
+    //public void RotateCamera(float _cameraRotationX)
+    //{
+    //    if (frozen)
+    //    {
+    //        cameraRotationX = 0f;
+    //        return;
+    //    }
+
+    //    cameraRotationX = _cameraRotationX;
+    //}
+
+    // Recieves rotation values from PlayerController and applies rotation
+    public void LookRotation(Vector3 _rotation, float _cameraRotationX)
     {
         if (frozen)
         {
             rotation = Vector3.zero;
-            return;
-        }
-
-        rotation = _rotation;
-    }
-
-    // gets camera rotation vector 
-    public void RotateCamera(float _cameraRotationX)
-    {
-        if (frozen)
-        {
             cameraRotationX = 0f;
             return;
         }
 
+        rotation = _rotation;
         cameraRotationX = _cameraRotationX;
+
+        // Rotate player for horizontal camera movement
+        rb.rotation *= Quaternion.Euler(rotation);
+
+        // rotation calculation - clamps to limit values
+        currentCamRotX -= cameraRotationX;
+        currentCamRotX = Mathf.Clamp(currentCamRotX, -cameraRotLimit, cameraRotLimit);
+
+        // apply rotation to transform of camera
+        cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
     }
 
     //void Update()
@@ -181,10 +205,40 @@ public class PlayerMotor : MonoBehaviour
         }
 
         // Freezing needs to stop rotation too
-        PerformRotation();
+        //PerformRotation();
 
         //Debug.Log(rb.velocity.magnitude);
     }
+
+    /*
+     * Try locking skybox and scene lighting to XZ orientation of the player
+     * 
+     *  - Could take this one step further
+     *  Rotate skybox and lighting at the same time as gravity, but in 
+     *  a different (opposite?) direction.
+     *  
+     *  Get a cool light/shadow sweep effect when warping
+     *  Will need a slower warp for this effect though
+     *  
+     *  Puzzle elements!!
+     *  Other pieces of scenery that rotate when gravity shifts
+     *  paths that can only be accessed when gravity is in a particular direction?
+     */
+
+    //perform rotation based on rotation variable
+    //private void PerformRotation()
+    //{
+    //    //rb.MoveRotation(transform.rotation * Quaternion.Euler(rotation)); // switched off this as update to 2017 seems to have bugged it
+    //    //transform.rotation *= Quaternion.Euler(rotation);
+    //    rb.rotation *= Quaternion.Euler(rotation);
+
+    //    // rotation calculation - clamps to limit values
+    //    currentCamRotX -= cameraRotationX;
+    //    currentCamRotX = Mathf.Clamp(currentCamRotX, -cameraRotLimit, cameraRotLimit);
+
+    //    // apply rotation to transform of camera
+    //    cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
+    //}
 
     void OnGravityChange(object sender, object args)
     {
@@ -508,36 +562,6 @@ public class PlayerMotor : MonoBehaviour
             crouchVelFactor *= 1.01f;
             yield return new WaitForFixedUpdate();
         }
-    }
-
-    /*
-     * Try locking skybox and scene lighting to XZ orientation of the player
-     * 
-     *  - Could take this one step further
-     *  Rotate skybox and lighting at the same time as gravity, but in 
-     *  a different (opposite?) direction.
-     *  
-     *  Get a cool light/shadow sweep effect when warping
-     *  Will need a slower warp for this effect though
-     *  
-     *  Puzzle elements!!
-     *  Other pieces of scenery that rotate when gravity shifts
-     *  paths that can only be accessed when gravity is in a particular direction?
-     */
-
-    //perform rotation based on rotation variable
-    private void PerformRotation()
-    {
-        //rb.MoveRotation(transform.rotation * Quaternion.Euler(rotation)); // switched off this as update to 2017 seems to have bugged it
-        //transform.rotation *= Quaternion.Euler(rotation);
-        rb.rotation *= Quaternion.Euler(rotation);
-
-        // rotation calculation - clamps to limit values
-        currentCamRotX -= cameraRotationX;
-        currentCamRotX = Mathf.Clamp(currentCamRotX, -cameraRotLimit, cameraRotLimit);
-
-        // apply rotation to transform of camera
-        cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
     }
 
     // perform jump when triggered by PlayerController

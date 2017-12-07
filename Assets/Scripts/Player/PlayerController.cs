@@ -45,8 +45,8 @@ public class PlayerController : MonoBehaviour {
 	void Update (){
 
 		// calculate movement as 3d vector
-		float xMov = Input.GetAxis (xMovAxis); // USE GetAxisRaw for unsmoothed input
-		float zMov = Input.GetAxis (zMovAxis);
+		float xMov = Input.GetAxisRaw (xMovAxis); // USE GetAxisRaw for unsmoothed input
+		float zMov = Input.GetAxisRaw (zMovAxis); // GetAxis for smoothed
 
         // apply backwards movement limit
         zMov = Mathf.Clamp(zMov, -backMoveMax, 1.0f);
@@ -75,20 +75,22 @@ public class PlayerController : MonoBehaviour {
         motor.Move (velocity, sprinting);
 
 		// calculate rotation as 3d vector: for turning on y axis
-		float yRot = Input.GetAxisRaw (xLookAxis);
+		float yRot = Input.GetAxisRaw (xLookAxis) * Time.deltaTime;
 
 		Vector3 rotation = new Vector3 (0.0f, yRot, 0.0f) * lookSensitivity;
 
 		// apply rotation
-		motor.Rotate (rotation);
+		//motor.Rotate (rotation);
 
 		// calculate camera rotation as 3d vector: for turning on x axis
-		float xRot = Input.GetAxisRaw (yLookAxis);
+		float xRot = Input.GetAxisRaw (yLookAxis) * Time.deltaTime;
 
 		float cameraRotationX = xRot * lookSensitivity;
 
 		// apply rotation
-		motor.RotateCamera (cameraRotationX);
+		//motor.RotateCamera (cameraRotationX);
+
+	    motor.LookRotation(rotation, cameraRotationX);
 
 		// jump code
 		if (Input.GetButtonDown (jumpButton)) {

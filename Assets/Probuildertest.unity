@@ -30625,6 +30625,10 @@ MonoBehaviour:
   xMod: 0
   yMod: -1
   zMod: 2
+  startRot: {x: 0, y: 0, z: 0, w: 0}
+  endRot: {x: 0, y: 0, z: 0, w: 0}
+  duration: 0
+  player: {fileID: 0}
 --- !u!43 &1428671231
 Mesh:
   m_ObjectHideFlags: 0

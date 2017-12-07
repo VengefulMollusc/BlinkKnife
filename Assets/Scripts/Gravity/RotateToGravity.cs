@@ -90,37 +90,10 @@ public class RotateToGravity : MonoBehaviour
         if (ambientRot)
         {
             transform.Rotate(ambientRotAxis, ambientRotSpeed * Time.deltaTime);
-            if (player.transform.IsChildOf(transform))
-            {
-                Vector3 currentGravDir = GlobalGravityControl.GetGravityTarget();
-                Vector3 newGravDir = -player.transform.up;
-
-                //float angle = Vector3.Angle(currentGravDir, newGravDir);
-
-                // angle threshold here instead??
-                // appears to be generally worse...
-                if (currentGravDir != newGravDir)
-                {
-                    /*
-                     * If ambient rotation is low (<~10) this causes 'stutters'
-                     * in scene geometry following gravity.
-                     * 
-                     * Could be something to do with the lack of smoothing?
-                     * player and ambient rotation is smooth though...
-                     * 
-                     * following geometry catches up before the next step?
-                     * higher numbers work because it doesn't catch up?
-                     */
-
-                    /*
-                     * Could refactor to apply the ambient rotation to the global control?
-                     */
-                    GlobalGravityControl.ChangeGravity(newGravDir, true);
-                }
-            }
         }
 
         // TODO: Not sure why this is here....
+        // Might be for skybox...
         if (followPlayerPosition)
             transform.position = Camera.main.transform.position;
     }
