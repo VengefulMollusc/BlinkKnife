@@ -669,7 +669,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
-
+        // TODO: move inherited velocity code to endwarp
         if (_bounceWarp && _velocity != Vector3.zero)
         {
             // adding magnitude here allows cumulative velocity gain
