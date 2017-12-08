@@ -161,12 +161,14 @@ public class PlayerKnifeController : MonoBehaviour {
 		currentWarps = maxWarps;
 
         this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
+	    this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
 
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
+        this.RemoveObserver(EndWarp, TransitionCameraController.WarpEndNotification);
     }
 
 	void Update (){
@@ -379,17 +381,21 @@ public class PlayerKnifeController : MonoBehaviour {
 		{
 			bounceWarp = false;
 		}
+	}
 
+    void EndWarp(object sender, object args)
+    {
         // return knife once warped
         ReturnKnife();
 
         // remove a warp from warp counters and begin recharge
-		currentWarps -= 1;
-		//warpCounters [currentWarps].enabled = false;
-		if (warpRecharge <= 0){
-			warpRecharge = warpRechargeTime;
-		}
-	}
+        currentWarps -= 1;
+
+        if (warpRecharge <= 0)
+        {
+            warpRecharge = warpRechargeTime;
+        }
+    }
 
     /*
      * Hide and show the knife view model

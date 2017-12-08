@@ -1,20 +1,20 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using AssemblyCSharp;
 using UnityStandardAssets.ImageEffects;
 
 public class TransitionCameraController : MonoBehaviour
 {
+    public const string WarpEndNotification = "TransitionCameraController.WarpEndNotification";
 
     private Vector3 startPos;
-    private Vector3 endPos;
+    private KnifeController knifeController;
+    private Vector3 camRelativePos;
     private Quaternion startRot;
     private Quaternion endRot;
 
     private bool gravityShift;
-
-    private Camera playerCam;
-    private PlayerMotor playerMotor;
 
     [Header("Default Warp")]
     [SerializeField] private float baseTransDuration = 1f; // 0.5f
@@ -41,27 +41,20 @@ public class TransitionCameraController : MonoBehaviour
     private float fovSpeedModMax = 50f;
     private float fovDiff;
 
-    public void Setup(Camera _playerCam, PlayerMotor _playerMotor)
+    public void Setup(float _fov, Vector3 _startPos, KnifeController _knifeController, Vector3 _camRelativePos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift)
     {
-        playerCam = _playerCam;
-        playerMotor = _playerMotor;
-    }
-
-    public void Setup(Camera _playerCam, PlayerMotor _playerMotor, Vector3 _startPos, Vector3 _endPos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift)
-    {
-        playerCam = _playerCam;
-        playerMotor = _playerMotor;
         startPos = _startPos;
-        endPos = _endPos;
+        knifeController = _knifeController;
         startRot = _startRot;
         endRot = _endRot;
+        camRelativePos = endRot * _camRelativePos;
         gravityShift = _gravityShift;
 
         chromAberration = GetComponent<VignetteAndChromaticAberration>();
         chromDiff = chromaticAberrationMaxValue - chromAberration.chromaticAberration;
 
         cam = GetComponent<Camera>();
-        cam.fieldOfView = playerCam.fieldOfView;
+        cam.fieldOfView = _fov;
 
         CalculateDuration();
 
@@ -70,7 +63,7 @@ public class TransitionCameraController : MonoBehaviour
 
     private void CalculateDuration()
     {
-        float dist = Vector3.Distance(startPos, endPos);
+        float dist = Vector3.Distance(startPos, knifeController.GetWarpPosition() + camRelativePos);
 
         if (gravityShift)
             CalculateDuration(dist, gravBaseTransDuration, gravMaxDistModifier);
@@ -98,9 +91,6 @@ public class TransitionCameraController : MonoBehaviour
     // Triggers the transition animation, unsure if this is needed, could put in setup
     public void StartTransition()
     {
-        playerCam.enabled = false;
-        playerMotor.Freeze();
-
         StartCoroutine(TransitionCamera());
     }
 
@@ -113,7 +103,7 @@ public class TransitionCameraController : MonoBehaviour
 
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
 
-            transform.position = Vector3.Lerp(startPos, endPos, lerpPercent);
+            transform.position = Vector3.Lerp(startPos, knifeController.GetWarpPosition() + camRelativePos, lerpPercent);
             
             // tAlt transitions from 0-1-0 over warp
             float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
@@ -138,9 +128,7 @@ public class TransitionCameraController : MonoBehaviour
             yield return 0;
         }
 
-        playerCam.enabled = true;
-
-        playerMotor.UnFreeze();
+        this.PostNotification(WarpEndNotification, knifeController.GetWarpPosition());
 
         Destroy(gameObject);
     }

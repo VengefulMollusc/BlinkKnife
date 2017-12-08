@@ -95,12 +95,14 @@ public class PlayerMotor : MonoBehaviour
         UpdateGravityValues();
         this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
+        this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
+        this.RemoveObserver(EndWarp, TransitionCameraController.WarpEndNotification);
     }
 
     void Start()
@@ -630,7 +632,7 @@ public class PlayerMotor : MonoBehaviour
         Quaternion camStartRot = cam.transform.rotation;
         Vector3 relativeFacing = cam.transform.forward;
 
-        Vector3 newPos = _knifeController.GetWarpPosition();
+        //Vector3 newPos = _knifeController.GetWarpPosition();
         Vector3 newGravDirection = _knifeController.GetGravVector();
 
         // Shift gravity if the difference between current gravity and surface normal is
@@ -657,9 +659,9 @@ public class PlayerMotor : MonoBehaviour
         // NOTE: this needs to be double-checked, moving rb by itself doesnt update position properly for grav warp
         //rb.MovePosition(newPos);
         //rb.position = newPos;
-        transform.position = newPos;
+        //transform.position = newPos;
 
-        Vector3 camEndPos = newPos + (transform.rotation * cameraRelativePos); //Needs to get position camera will be in after move
+        //Vector3 camEndPos = newPos + (transform.rotation * cameraRelativePos); //Needs to get position camera will be in after move
         Quaternion camEndRot = camStartRot;
         if (gravityShift)
         {
@@ -699,8 +701,12 @@ public class PlayerMotor : MonoBehaviour
         GameObject transCamera = (GameObject)Instantiate(transitionCameraPrefab, camStartPos, cam.transform.rotation);
 
         TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
-        transCamController.Setup(cam, this, camStartPos, camEndPos, camStartRot, camEndRot, gravityShift);
+        transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift);
         float duration = transCamController.GetDuration();
+
+        cam.enabled = false;
+        Freeze();
+
         transCamController.StartTransition();
 
         if (gravityShift)
@@ -708,8 +714,16 @@ public class PlayerMotor : MonoBehaviour
             GlobalGravityControl.TransitionGravity(newGravDirection, duration);
         }
 
-        canHover = true;
+    }
 
+    void EndWarp(object sender, object args)
+    {
+        Vector3 endPos = (Vector3) args;
+        transform.position = endPos;
+
+        canHover = true;
+        cam.enabled = true;
+        UnFreeze();
     }
 
     // TODO: try out altering camera angles to maintain global look direction
