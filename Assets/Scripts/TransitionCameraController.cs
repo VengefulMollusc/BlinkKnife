@@ -128,7 +128,8 @@ public class TransitionCameraController : MonoBehaviour
             yield return 0;
         }
 
-        this.PostNotification(WarpEndNotification, knifeController.GetWarpPosition());
+        Info<Vector3, Vector3, bool> info = new Info<Vector3, Vector3, bool>(knifeController.GetWarpPosition(), knifeController.GetVelocity(), knifeController.IsBounceKnife());
+        this.PostNotification(WarpEndNotification, info);
 
         Destroy(gameObject);
     }

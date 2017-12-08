@@ -127,6 +127,11 @@ namespace AssemblyCSharp
             return stuckInSurface;
         }
 
+        public virtual bool IsBounceKnife()
+        {
+            return false;
+        }
+
         /*
          * whether to shift gravity on warp
          */

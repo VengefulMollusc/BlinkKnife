@@ -20,9 +20,9 @@ public class PlayerKnifeController : MonoBehaviour {
 	private float warpRecharge;
 
     [SerializeField]
-    private float warpWaitTime = 0.2f;
+    private float warpWaitTime = 0.1f;
     [SerializeField]
-    private float bounceWarpWaitTime = 0.5f;
+    private float bounceWarpWaitTime = 0.2f;
     private float warpCountDown = 0;
     
     private bool bounceWarp = false;
@@ -375,7 +375,7 @@ public class PlayerKnifeController : MonoBehaviour {
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
 		Vector3 _velocity = knifeController.GetVelocity().normalized;
 		//playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetStuckObject(), knifeController.GetSurfaceNormal());
-        playerMotor.WarpToKnife(shiftGravity, _velocity, knifeController, bounceWarp);
+        playerMotor.WarpToKnife(shiftGravity, knifeController, bounceWarp);
 
         if (bounceWarp)
 		{

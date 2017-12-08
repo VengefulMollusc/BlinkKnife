@@ -41,6 +41,11 @@ public class BounceKnifeController : KnifeController {
         this.PostNotification(KnifeBounceNotification);
     }
 
+    public override bool IsBounceKnife()
+    {
+        return true;
+    }
+
     //public override void Setup (PlayerKnifeController _controller)
     //{
     //    base.Setup(_controller);

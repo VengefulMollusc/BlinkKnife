@@ -625,7 +625,7 @@ public class PlayerMotor : MonoBehaviour
      * TODO: either here or somewhere in knife code - need to project player hitbox to see if can fit.
      * And cause warp to 'fizzle' if no good place for player to warp to is found (eg knife is between two close walls)
      */
-    public void WarpToKnife(bool _shiftGravity, Vector3 _velocity, KnifeController _knifeController, bool _bounceWarp)
+    public void WarpToKnife(bool _shiftGravity, KnifeController _knifeController, bool _bounceWarp)
     {
         if (frozen) return;
         Vector3 camStartPos = cam.transform.position;
@@ -668,33 +668,6 @@ public class PlayerMotor : MonoBehaviour
             camEndRot = transform.rotation;
         }
 
-        // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
-        // TODO: move inherited velocity code to endwarp
-        if (_bounceWarp && _velocity != Vector3.zero)
-        {
-            // adding magnitude here allows cumulative velocity gain
-            // dot product to get component of velocity in direction of travel
-            float projectedVelMagnitude = Vector3.Dot(rb.velocity, _velocity);
-
-            // This line makes sure we only add player momentum if moving faster than base inherited momentum
-            float relativeSpeed = Mathf.Max(projectedVelMagnitude - warpVelocityModifier, 0f);
-            // adds component of current velocity along axis of knife movement
-
-            //rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
-
-            // inherit player velocity
-            rb.velocity = (_velocity * (warpVelocityModifier + relativeSpeed));
-            if (rb.velocity.magnitude > airSpeedThreshold)
-                momentumFlight = true;
-
-            // fixes horizontal momentum lock when warping
-            //onGround = false;
-        }
-        else
-        {
-            rb.velocity = _velocity;
-        }
-
         // fixes horizontal momentum lock when warping
         //onGround = false;
 
@@ -718,12 +691,40 @@ public class PlayerMotor : MonoBehaviour
 
     void EndWarp(object sender, object args)
     {
-        Vector3 endPos = (Vector3) args;
-        transform.position = endPos;
+        Info<Vector3, Vector3, bool> info = (Info<Vector3, Vector3, bool>) args;
+        transform.position = info.arg0;
 
         canHover = true;
         cam.enabled = true;
         UnFreeze();
+
+        // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
+        // TODO: move inherited velocity code to endwarp
+        Vector3 knifeVel = info.arg1.normalized;
+        if (info.arg2 && knifeVel != Vector3.zero)
+        {
+            // adding magnitude here allows cumulative velocity gain
+            // dot product to get component of velocity in direction of travel
+            float projectedVelMagnitude = Vector3.Dot(rb.velocity, knifeVel);
+
+            // This line makes sure we only add player momentum if moving faster than base inherited momentum
+            float relativeSpeed = Mathf.Max(projectedVelMagnitude - warpVelocityModifier, 0f);
+            // adds component of current velocity along axis of knife movement
+
+            //rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
+
+            // inherit player velocity
+            rb.velocity = (knifeVel * (warpVelocityModifier + relativeSpeed));
+            if (rb.velocity.magnitude > airSpeedThreshold)
+                momentumFlight = true;
+
+            // fixes horizontal momentum lock when warping
+            //onGround = false;
+        }
+        else
+        {
+            rb.velocity = knifeVel;
+        }
     }
 
     // TODO: try out altering camera angles to maintain global look direction
