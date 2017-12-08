@@ -112,6 +112,8 @@ public class RelativeMovementController : MonoBehaviour
             return;
 
         // Relative rotation logic here
+        if (landing)
+            landing = false;
     }
 
     void OnCollisionStay(Collision col)
