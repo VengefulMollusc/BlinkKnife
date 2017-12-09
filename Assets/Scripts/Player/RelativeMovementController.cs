@@ -111,12 +111,20 @@ public class RelativeMovementController : MonoBehaviour
         if (!relativeMotionTransform.IsChildOf(info.arg0))
             return;
 
-        Vector3 rotationMovement = GetRotationMovement(info.arg0, info.arg1);
+        Vector3 centerToContact = contactPoint.point - info.arg0.position;
+        Vector3 newContactPoint = info.arg1 * centerToContact;
+        
+        Vector3 rotationMovement = newContactPoint - centerToContact;
 
         rb.MovePosition(rb.position + rotationMovement);
         thisMovementVector += rotationMovement;
 
-        // TODO: Add code here somewhere to rotate view of player to match rotation around gravity axis
+        centerToContact = Vector3.ProjectOnPlane(centerToContact, transform.up); // may need this to be gravity axis
+        newContactPoint = Vector3.ProjectOnPlane(newContactPoint, transform.up);
+
+        Quaternion lookRotation = Quaternion.FromToRotation(centerToContact, newContactPoint);
+        rb.rotation *= lookRotation;
+        
     }
 
     /*
