@@ -93,7 +93,7 @@ public class RotateToGravity : MonoBehaviour
             transform.Rotate(ambientRotAxis, ambientRotSpeed * Time.fixedDeltaTime);
             Quaternion relative = Quaternion.Inverse(initialRotation) * transform.rotation;
 
-            Info<GameObject, Quaternion> info = new Info<GameObject,Quaternion>(gameObject, relative);
+            Info<Transform, Quaternion> info = new Info<Transform,Quaternion>(transform, relative);
             this.PostNotification(RelativeMovementController.RelativeRotationNotification, info);
         }
 

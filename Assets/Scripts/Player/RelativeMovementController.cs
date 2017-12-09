@@ -7,7 +7,7 @@ public class RelativeMovementController : MonoBehaviour
     public const string RelativeMovementNotification = "RelativeMovementController.RelativeMovementNotification";
     public const string RelativeRotationNotification = "RelativeMovementController.RelativeRotationNotification";
 
-    private GameObject relativeMotionObject;
+    private Transform relativeMotionTransform;
     private Vector3 lastMovementVector = Vector3.zero;
     private ContactPoint contactPoint;
 
@@ -60,12 +60,12 @@ public class RelativeMovementController : MonoBehaviour
      */
     void OnRelativeMovementNotification(object sender, object args)
     {
-        if (relativeMotionObject == null)
+        if (relativeMotionTransform == null)
             return;
 
-        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>) args;
+        Info<Transform, Vector3> info = (Info<Transform, Vector3>) args;
 
-        if (info.arg0 != relativeMotionObject)
+        if (!relativeMotionTransform.IsChildOf(info.arg0))
             return;
 
         // apply movement vector
@@ -113,15 +113,15 @@ public class RelativeMovementController : MonoBehaviour
      */
     void OnRelativeRotationNotification(object sender, object args)
     {
-        if (relativeMotionObject == null)
+        if (relativeMotionTransform == null)
             return;
 
-        Info<GameObject, Quaternion> info = (Info<GameObject, Quaternion>)args;
+        Info<Transform, Quaternion> info = (Info<Transform, Quaternion>)args;
 
-        if (info.arg0 != relativeMotionObject)
+        if (!relativeMotionTransform.IsChildOf(info.arg0))
             return;
 
-        Vector3 rotationMovement = GetRotationMovement(info.arg1);
+        Vector3 rotationMovement = GetRotationMovement(info.arg0, info.arg1);
 
         rb.MovePosition(rb.position + rotationMovement);
 
@@ -130,9 +130,9 @@ public class RelativeMovementController : MonoBehaviour
             landing = false;
     }
 
-    Vector3 GetRotationMovement(Quaternion _rotation)
+    Vector3 GetRotationMovement(Transform _transform, Quaternion _rotation)
     {
-        Vector3 centerToContact = contactPoint.point - relativeMotionObject.transform.position;
+        Vector3 centerToContact = contactPoint.point - _transform.position;
         Vector3 newContactPoint = _rotation * centerToContact;
 
         return newContactPoint - centerToContact;
@@ -143,16 +143,16 @@ public class RelativeMovementController : MonoBehaviour
         if (col.collider.isTrigger)
             return;
 
-        GameObject colObject = col.gameObject;
+        Transform colTransform = col.transform;
 
-        if (colObject != relativeMotionObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
+        if (colTransform != relativeMotionTransform && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
         {
-            relativeMotionObject = colObject;
+            relativeMotionTransform = colTransform;
             landing = true;
         }
 
         //if relativemotionobjects exists, check that a suitable contact point can be found
-        if (relativeMotionObject != null)
+        if (relativeMotionTransform != null)
         {
             bool suitablePoint = false;
             Vector3 gravVector = GlobalGravityControl.GetCurrentGravityVector();
@@ -177,12 +177,12 @@ public class RelativeMovementController : MonoBehaviour
 
     void OnCollisionExit(Collision col)
     {
-        if (relativeMotionObject == null || col.collider.isTrigger)
+        if (relativeMotionTransform == null || col.collider.isTrigger)
             return;
 
-        GameObject colObject = col.gameObject;
+        Transform colTransform = col.transform;
 
-        if (colObject == relativeMotionObject)
+        if (colTransform == relativeMotionTransform)
         {
             ExitRelativeMotion();
         }
@@ -190,7 +190,7 @@ public class RelativeMovementController : MonoBehaviour
 
     void ExitRelativeMotion()
     {
-        relativeMotionObject = null;
+        relativeMotionTransform = null;
         //Debug.Log(rb.velocity + " " + lastMovementVector / Time.deltaTime);
         rb.velocity += (lastMovementVector / Time.deltaTime);
         //lastMovementVector = Vector3.zero;
