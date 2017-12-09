@@ -9,6 +9,7 @@ public class RelativeMovementController : MonoBehaviour
 
     private GameObject relativeMotionObject;
     private Vector3 lastMovementVector = Vector3.zero;
+    private ContactPoint contactPoint;
 
     private Rigidbody rb;
 
@@ -83,8 +84,17 @@ public class RelativeMovementController : MonoBehaviour
             {
                 // dampen velocity in direction of platform movement
                 Vector3 component = Vector3.Project(rb.velocity, movingVelocity);
-                float brakeMagnitude = Mathf.Min(component.magnitude / movingVelocity.magnitude, 1f);
-                rb.velocity -= (movingVelocity * brakeMagnitude);
+                //float brakeMagnitude = Mathf.Min(component.magnitude / movingVelocity.magnitude, 1f);
+                //rb.velocity -= (movingVelocity * brakeMagnitude);
+
+                // alt logic
+                if (component.magnitude < movingVelocity.magnitude)
+                {
+                    rb.velocity -= component;
+                } else
+                {
+                    rb.velocity -= movingVelocity;
+                }
             }
             //else
             //{
@@ -127,6 +137,27 @@ public class RelativeMovementController : MonoBehaviour
         {
             relativeMotionObject = colObject;
             landing = true;
+        }
+
+        //if relativemotionobjects exists, check that a suitable contact point can be found
+        if (relativeMotionObject != null)
+        {
+            bool suitablePoint = false;
+            Vector3 gravVector = GlobalGravityControl.GetCurrentGravityVector();
+
+            foreach (ContactPoint point in col.contacts)
+            {
+                Vector3 relative = point.point - transform.position;
+                if (Vector3.Angle(gravVector, relative) < 20f)
+                {
+                    contactPoint = point;
+                    suitablePoint = true;
+                    break;
+                }
+            }
+
+            if (!suitablePoint)
+                relativeMotionObject = null;
         }
     }
 

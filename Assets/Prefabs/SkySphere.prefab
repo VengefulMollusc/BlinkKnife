@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4000014188056842}
   - component: {fileID: 33000012011386032}
   - component: {fileID: 23000012591812354}
-  - component: {fileID: 114000012007888918}
+  - component: {fileID: 114211510161473704}
   m_Layer: 0
   m_Name: SkySphere
   m_TagString: Untagged
@@ -81,6 +81,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -96,6 +97,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -147,7 +149,7 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114000012007888918
+--- !u!114 &114211510161473704
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -155,15 +157,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000010000117124}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba11220ce0ceaef468cd5e42dc3d6c96, type: 3}
+  m_Script: {fileID: 11500000, guid: 6cb5d7a03f5b6ae4e965b1a20856b7ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   followGravityDirection: 1
   followPlayerPosition: 0
   ambientRot: 0
-  ambientRotAxis: {x: 0, y: 1, z: 0}
-  ambientRotSpeed: 2
+  ambientRotAxis: {x: 0, y: 0, z: 0}
+  ambientRotSpeed: 1
   modifyRotation: 0
-  xMod: 0.5
-  yMod: -0.5
+  xMod: 1
+  yMod: 1
   zMod: 1
