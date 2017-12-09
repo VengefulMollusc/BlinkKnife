@@ -157,23 +157,30 @@ public class RelativeMovementController : MonoBehaviour
             }
 
             if (!suitablePoint)
-                relativeMotionObject = null;
+            {
+                ExitRelativeMotion();
+            }
         }
     }
 
     void OnCollisionExit(Collision col)
     {
-        if (col.collider.isTrigger)
+        if (relativeMotionObject == null || col.collider.isTrigger)
             return;
 
         GameObject colObject = col.gameObject;
 
         if (colObject == relativeMotionObject)
         {
-            relativeMotionObject = null;
-            //rb.AddForce(lastMovementVector, ForceMode.VelocityChange);
-            rb.velocity += (lastMovementVector / Time.deltaTime);
-            lastMovementVector = Vector3.zero;
+            ExitRelativeMotion();
         }
+    }
+
+    void ExitRelativeMotion()
+    {
+        relativeMotionObject = null;
+        //Debug.Log(rb.velocity + " " + lastMovementVector / Time.deltaTime);
+        rb.velocity += (lastMovementVector / Time.deltaTime);
+        //lastMovementVector = Vector3.zero;
     }
 }

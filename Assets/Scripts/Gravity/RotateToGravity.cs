@@ -84,13 +84,13 @@ public class RotateToGravity : MonoBehaviour
         transform.rotation = endRot;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // perform ambient rotation
         if (ambientRot)
         {
             Quaternion initialRotation = transform.rotation;
-            transform.Rotate(ambientRotAxis, ambientRotSpeed * Time.deltaTime);
+            transform.Rotate(ambientRotAxis, ambientRotSpeed * Time.fixedDeltaTime);
             Quaternion relative = Quaternion.Inverse(initialRotation) * transform.rotation;
 
             Info<GameObject, Quaternion> info = new Info<GameObject,Quaternion>(gameObject, relative);

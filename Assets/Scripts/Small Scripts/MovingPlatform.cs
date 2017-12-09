@@ -23,10 +23,9 @@ public class MovingPlatform : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
     }
-
-	// Update is called once per frame
-	void Update () {
-        Vector3 newPos = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * moveSpeed);
+    
+	void FixedUpdate () {
+        Vector3 newPos = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * moveSpeed);
 	    Info<GameObject, Vector3> info = new Info<GameObject, Vector3>(gameObject, newPos - rb.position);
 	    rb.position = newPos;
 
