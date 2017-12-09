@@ -17,12 +17,7 @@ public class RelativeMovementController : MonoBehaviour
     private bool landing = false;
 
     [SerializeField] private LayerMask relativeMotionLayers;
-
-    /*
-     * TODO: this needs to be refactored to NOT use JumpCollider notifications. 
-     * Object should be selected by this script, and by direct collisions.
-     * This should be able to be used for anything to which relative movement might apply.
-     */
+    
     void OnEnable()
     {
         rb = GetComponent<Rigidbody>();
@@ -84,23 +79,6 @@ public class RelativeMovementController : MonoBehaviour
     }
 
     /*
-     * Handler for RelativeMotionNotification sent from JumpCollider
-     *  - Allows player to move with moving platforms etc without parenting
-     */
-    //void OnMovementObjectNotification(object sender, object args)
-    //{
-    //    GameObject newObject = (GameObject)args;
-
-    //    if (newObject == null && relativeMotionObject != null)
-    //    {
-    //        rb.AddForce(lastMovementVector, ForceMode.VelocityChange);
-    //        lastMovementVector = Vector3.zero;
-    //    }
-
-    //    relativeMotionObject = newObject;
-    //}
-
-    /*
      * Handles notifications of moving objects and moves the object to match.
      */
     void OnRelativeMovementNotification(object sender, object args)
@@ -118,7 +96,6 @@ public class RelativeMovementController : MonoBehaviour
         thisMovementVector += info.arg1;
 
         // store movement vector for use during jumps/leaving contact with moving object
-        //lastMovementVector = info.arg1;
     }
 
     /*
@@ -138,6 +115,8 @@ public class RelativeMovementController : MonoBehaviour
 
         rb.MovePosition(rb.position + rotationMovement);
         thisMovementVector += rotationMovement;
+
+        // TODO: Add code here somewhere to rotate view of player to match rotation around gravity axis
     }
 
     /*
@@ -208,7 +187,6 @@ public class RelativeMovementController : MonoBehaviour
     void ExitRelativeMotion()
     {
         relativeMotionTransform = null;
-        //Debug.Log(rb.velocity + " " + lastMovementVector / Time.deltaTime);
         rb.velocity += (lastMovementVector / Time.deltaTime);
         lastMovementVector = Vector3.zero;
     }

@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 20000013540887572}
-  cameraRotLimit: 90
+  cameraRotLimit: 89
   transitionCameraPrefab: {fileID: 1000010902589228, guid: 2c7b8a853a2dfcc4ab7a2ef5dacf0eea,
     type: 2}
   warpGravShiftAngle: 1

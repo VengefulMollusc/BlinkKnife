@@ -26,8 +26,8 @@ public class MovingPlatform : MonoBehaviour
     
 	void FixedUpdate () {
         Vector3 newPos = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * moveSpeed);
-	    Info<Transform, Vector3> info = new Info<Transform, Vector3>(transform, newPos - rb.position);
-	    rb.position = newPos;
+        Info<Transform, Vector3> info = new Info<Transform, Vector3>(transform, newPos - rb.position);
+        rb.position = newPos;
 
         // Send notification with movementVector here
         this.PostNotification(RelativeMovementController.RelativeMovementNotification, info);
