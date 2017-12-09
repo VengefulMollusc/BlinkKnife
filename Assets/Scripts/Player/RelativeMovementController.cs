@@ -121,9 +121,21 @@ public class RelativeMovementController : MonoBehaviour
         if (info.arg0 != relativeMotionObject)
             return;
 
+        Vector3 rotationMovement = GetRotationMovement(info.arg1);
+
+        rb.MovePosition(rb.position + rotationMovement);
+
         // Relative rotation logic here
         if (landing)
             landing = false;
+    }
+
+    Vector3 GetRotationMovement(Quaternion _rotation)
+    {
+        Vector3 centerToContact = contactPoint.point - relativeMotionObject.transform.position;
+        Vector3 newContactPoint = _rotation * centerToContact;
+
+        return newContactPoint - centerToContact;
     }
 
     void OnCollisionStay(Collision col)
