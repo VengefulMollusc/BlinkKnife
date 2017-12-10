@@ -111,20 +111,30 @@ public class RelativeMovementController : MonoBehaviour
         if (!relativeMotionTransform.IsChildOf(info.arg0))
             return;
 
-        Vector3 centerToContact = contactPoint.point - info.arg0.position;
+        //Quaternion modifiedRot = info.arg1;
+        //Debug.Log((Quaternion.Inverse(modifiedRot) * GlobalGravityControl.GetGravityRotation()).eulerAngles);
+
+        Quaternion rotateToGrav = GlobalGravityControl.GetRotationToGravity(info.arg0.up) * GlobalGravityControl.GetGravityRotation();
+
+        Vector3 centerToContact = rotateToGrav * (contactPoint.point - info.arg0.position);
         Vector3 newContactPoint = info.arg1 * centerToContact;
-        
+
+        centerToContact = Quaternion.Inverse(rotateToGrav) * centerToContact;
+        newContactPoint = Quaternion.Inverse(rotateToGrav) * newContactPoint;
+            
         Vector3 rotationMovement = newContactPoint - centerToContact;
+
+        //Vector3 modifiedToRotation = info.arg0.rotation * rotationMovement;
 
         rb.MovePosition(rb.position + rotationMovement);
         thisMovementVector += rotationMovement;
 
-        centerToContact = Vector3.ProjectOnPlane(centerToContact, transform.up); // may need this to be gravity axis
-        newContactPoint = Vector3.ProjectOnPlane(newContactPoint, transform.up);
+        centerToContact = GlobalGravityControl.GetGravityRotation() * Vector3.ProjectOnPlane(centerToContact, transform.up); // may need this to be gravity axis
+        newContactPoint = GlobalGravityControl.GetGravityRotation() * Vector3.ProjectOnPlane(newContactPoint, transform.up);
 
         Quaternion lookRotation = Quaternion.FromToRotation(centerToContact, newContactPoint);
         rb.rotation *= lookRotation;
-        
+
     }
 
     /*

@@ -70,6 +70,21 @@ public class GlobalGravityControl : MonoBehaviour {
         return targetGravDirection;
     }
 
+    public static Quaternion GetGravityRotation()
+    {
+        return Quaternion.FromToRotation(Vector3.down, currentGravDirection);
+    }
+
+    public static Quaternion GetRotationToDefaultAxis()
+    {
+        return Quaternion.FromToRotation(currentGravDirection, Vector3.down);
+    }
+
+    public static Quaternion GetRotationToGravity(Vector3 _up)
+    {
+        return Quaternion.FromToRotation(-_up, currentGravDirection);
+    }
+
     public static void TransitionGravity(Vector3 _newGravDirection, float _duration)
     {
         duration = _duration;
