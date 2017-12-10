@@ -111,30 +111,41 @@ public class RelativeMovementController : MonoBehaviour
         if (!relativeMotionTransform.IsChildOf(info.arg0))
             return;
 
-        //Quaternion modifiedRot = info.arg1;
-        //Debug.Log((Quaternion.Inverse(modifiedRot) * GlobalGravityControl.GetGravityRotation()).eulerAngles);
+        ApplyRelativeRotation(info.arg0, info.arg1);
+    }
 
-        Quaternion rotateToGrav = GlobalGravityControl.GetRotationToGravity(info.arg0.up) * GlobalGravityControl.GetGravityRotation();
+    void ApplyRelativeRotation(Transform _transform, Quaternion _rotation)
+    {
+        // Gravity rotation and rotation from relative motion object axis to global
+        Quaternion gravRotation = GlobalGravityControl.GetGravityRotation();
+        Quaternion rotateToGlobalAxis = Quaternion.FromToRotation(_transform.up, Vector3.up);
 
-        Vector3 centerToContact = rotateToGrav * (contactPoint.point - info.arg0.position);
-        Vector3 newContactPoint = info.arg1 * centerToContact;
+        // rotate relative position vector of contact point to global axis
+        Vector3 centerToContact = rotateToGlobalAxis * (contactPoint.point - _transform.position);
 
-        centerToContact = Quaternion.Inverse(rotateToGrav) * centerToContact;
-        newContactPoint = Quaternion.Inverse(rotateToGrav) * newContactPoint;
-            
+        // apply rotation to relative position vector
+        Vector3 newContactPoint = _rotation * centerToContact;
+
+        // rotate both old and new position vectors back to relative motion object axis
+        centerToContact = Quaternion.Inverse(rotateToGlobalAxis) * centerToContact;
+        newContactPoint = Quaternion.Inverse(rotateToGlobalAxis) * newContactPoint;
+
+        // calculate movement vector due to rotation
         Vector3 rotationMovement = newContactPoint - centerToContact;
 
-        //Vector3 modifiedToRotation = info.arg0.rotation * rotationMovement;
-
+        // move the player to the new position
         rb.MovePosition(rb.position + rotationMovement);
         thisMovementVector += rotationMovement;
 
-        centerToContact = GlobalGravityControl.GetGravityRotation() * Vector3.ProjectOnPlane(centerToContact, transform.up); // may need this to be gravity axis
-        newContactPoint = GlobalGravityControl.GetGravityRotation() * Vector3.ProjectOnPlane(newContactPoint, transform.up);
+        // project position vectors onto plane defined by player up direction and rotate to match gravity
+        centerToContact = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(centerToContact, transform.up);
+        newContactPoint = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(newContactPoint, transform.up);
 
+        // get angle of view rotation from projected vectors
         Quaternion lookRotation = Quaternion.FromToRotation(centerToContact, newContactPoint);
-        rb.rotation *= lookRotation;
 
+        // apply rotation
+        rb.rotation *= lookRotation;
     }
 
     /*
