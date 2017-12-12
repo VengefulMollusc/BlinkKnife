@@ -324,7 +324,7 @@ public class PlayerMotor : MonoBehaviour
         else
         {
             // airborne
-            //AirMovement();
+            AirMovement();
         }
     }
 

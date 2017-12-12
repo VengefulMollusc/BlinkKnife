@@ -4898,7 +4898,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh-449652
+  m_Name: pb_Mesh13894
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -19166,7 +19166,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh13356
+  m_Name: pb_Mesh13842
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -25012,14 +25012,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1779814978}
-  m_LocalRotation: {x: 0.13699633, y: 0.021209955, z: -0.15152122, w: 0.97868454}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -18.96, y: 0, z: 24.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1742219033}
   m_Father: {fileID: 0}
   m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 15.937001, y: 0, z: -17.601002}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1780956185
 Prefab:
   m_ObjectHideFlags: 0
@@ -25059,7 +25059,13 @@ Prefab:
       propertyPath: m_RootOrder
       value: 22
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 114098667019174330, guid: 0cacca3bcb6516842ad072fad8cfaa12,
+        type: 2}
+      propertyPath: ambientRotSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114000010447455698, guid: 0cacca3bcb6516842ad072fad8cfaa12, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 0cacca3bcb6516842ad072fad8cfaa12, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &1798088573
@@ -27128,12 +27134,12 @@ Prefab:
     - target: {fileID: 224000010677328466, guid: 07eced2206ddc4b468bce9a90fa67703,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 482
+      value: 268
       objectReference: {fileID: 0}
     - target: {fileID: 224000010677328466, guid: 07eced2206ddc4b468bce9a90fa67703,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 271
+      value: 151
       objectReference: {fileID: 0}
     - target: {fileID: 224000010677328466, guid: 07eced2206ddc4b468bce9a90fa67703,
         type: 2}
