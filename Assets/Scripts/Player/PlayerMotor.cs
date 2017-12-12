@@ -64,7 +64,7 @@ public class PlayerMotor : MonoBehaviour
     private float currentCamRotX;
 
     private int jumpTimer;
-    private bool momentumFlight;
+    //private bool momentumFlight;
 
     private Rigidbody rb;
 
@@ -313,7 +313,7 @@ public class PlayerMotor : MonoBehaviour
         if (UseGroundMovement() && jumpTimer <= 0)
         {
             // grounded
-            momentumFlight = false;
+            //momentumFlight = false;
             GroundMovement();
         }
         else if (colliding && jumpTimer <= 0)
@@ -475,29 +475,18 @@ public class PlayerMotor : MonoBehaviour
 
         if (flatVel.magnitude > airSpeedThreshold)
         {
-            momentumFlight = true;
+            //momentumFlight = true;
         }
 
         if (velocity != Vector3.zero)
         {
             HandleMidairInput(flatVel);
         }
-        //else
-        //{
-        //    // handle situation in which movement is below walk speed
-        //    // cancel momentum to allow precise small jumps
-
-        //    if (!momentumFlight)
-        //    {
-        //        // dampen movement
-        //        rb.velocity -= (flatVel * 0.1f);
-        //    }
-        //}
 
         if (crouching && canHover)
         {
             canHover = false;
-            momentumFlight = false; // comment this out when reworking hover - should depend on air speed
+            //momentumFlight = false; // comment this out when reworking hover - should depend on air speed
             hoverCoroutine = StartCoroutine(HoverCoroutine());
         }
     }
@@ -527,17 +516,9 @@ public class PlayerMotor : MonoBehaviour
             // cancel positive movement in direction of flight
             velocityTemp -= Vector3.Project(velocityTemp, _flatVel);
         }
-
-        //if (momentumFlight)
-        //{
-            // use impulse force to allow slower changes to direction/speed when at high midair speed
-            rb.AddForce(velocityTemp, ForceMode.Impulse);
-        //}
-        //else
-        //{
-        //    // use direct velocity changes to allow more responsive jump control at slower speeds
-        //    rb.velocity += (velocityTemp * 0.5f);
-        //}
+        
+        // use impulse force to allow gradual speed/direction changes when midair
+        rb.AddForce(velocityTemp, ForceMode.Impulse);
     }
 
     /*
@@ -592,32 +573,13 @@ public class PlayerMotor : MonoBehaviour
     public void SetCrouching(bool _crouching)
     {
         crouching = _crouching;
-
-        //if (crouching)
-        //    crouchVelFactor = 0.5f;
-        //else
-        //    crouchVelFactor = 1f;
     }
-
-    //public void SetOnGround(bool _onGround)
-    //{
-    //    if (jumpTimer > 0)
-    //        return;
-    //    onGround = _onGround;
-
-    //    if (onGround)
-    //        canHover = true;
-    //}
 
     public void SetCollisionState(bool _sliding, bool _colliding)
     {
         sliding = _sliding;
         colliding = _colliding;
     }
-
-    //private void OnCollisionStay(){
-    //	colliding = true;
-    //}
 
     /*
      * Warps the player to the current knife position, inheriting velocity and moving gravity vectors if required
@@ -715,8 +677,8 @@ public class PlayerMotor : MonoBehaviour
 
             // inherit player velocity
             rb.velocity = (knifeVel * (warpVelocityModifier + relativeSpeed));
-            if (rb.velocity.magnitude > airSpeedThreshold)
-                momentumFlight = true;
+            //if (rb.velocity.magnitude > airSpeedThreshold)
+            //    momentumFlight = true;
 
             // fixes horizontal momentum lock when warping
             //onGround = false;
