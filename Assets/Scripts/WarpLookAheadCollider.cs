@@ -7,10 +7,22 @@ public class WarpLookAheadCollider : MonoBehaviour
     private Collider[] lookAheadColliders;
     private List<Collider> colliding;
 
+    /*
+     * Several way I could do this.
+     * 
+     * find closest point to final knife position where collider will fit.
+     * 
+     * Follow path of knife and record last position where not colliding with anything. 
+     * (THIS ONE LOOKING MOST LIKELY - not too complicated and provides easy fix for knife in crevice issues. 
+     * Wouldn't have to have warp fizzle state)
+     */
+
     void OnEnable()
     {
         colliding = new List<Collider>();
         lookAheadColliders = GetComponents<Collider>();
+
+        Utilities.IgnoreCollisions(lookAheadColliders, GameObject.FindGameObjectWithTag("Player").GetComponents<Collider>(), true);
 
         Enabled(false);
     }
