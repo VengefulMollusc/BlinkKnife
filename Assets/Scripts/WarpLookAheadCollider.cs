@@ -6,12 +6,16 @@ using UnityEngine;
 public class WarpLookAheadCollider : MonoBehaviour
 {
     private Collider[] lookAheadColliders;
-    private List<Collider> colliding;
+    private bool colliding;
 
     private GameObject knifeObject;
     private KnifeController knifeController;
 
-    private Vector3 lastUsablePos;
+    private Vector3 lastKnifePos;
+
+    private Rigidbody rb;
+
+    //private Vector3 lastUsablePos;
 
     private bool enabled;
 
@@ -27,8 +31,10 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     void OnEnable()
     {
-        colliding = new List<Collider>();
+        colliding = false;
         lookAheadColliders = GetComponents<Collider>();
+
+        rb = GetComponent<Rigidbody>();
 
         Utilities.IgnoreCollisions(lookAheadColliders, GameObject.FindGameObjectWithTag("Player").GetComponents<Collider>(), true);
 
@@ -53,26 +59,38 @@ public class WarpLookAheadCollider : MonoBehaviour
             return;
         }
 
-        if (CanWarp())
-            lastUsablePos = transform.position;
-        
+        rb.velocity = Vector3.zero;
+
+        //if (CanWarp())
+        //    lastUsablePos = transform.position;
+
+        //Debug.Log(CanWarp());
+
         MatchKnifePosition();
+
+        colliding = false;
     }
 
     public void LockToKnife(GameObject _knife)
     {
         knifeObject = _knife;
         knifeController = knifeObject.GetComponent<KnifeController>();
+        colliding = false;
         Utilities.IgnoreCollisions(lookAheadColliders, knifeObject.GetComponents<Collider>(), true);
         Enabled(true);
-        MatchKnifePosition();
-        lastUsablePos = Vector3.negativeInfinity;
+        transform.position = knifeObject.transform.position;
+        //lastUsablePos = knifeObject.transform.position;
+        lastKnifePos = knifeObject.transform.position;
     }
 
     // Update position to match knife position
     private void MatchKnifePosition()
     {
-        transform.position = knifeController.GetWarpTestPosition();
+        if (lastKnifePos != knifeObject.transform.position)
+        {
+            rb.MovePosition(knifeController.GetWarpTestPosition());
+            lastKnifePos = knifeObject.transform.position;
+        }
     }
 
     private void OnGravityChange(object sender, object args)
@@ -89,26 +107,30 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         enabled = _enabled;
     }
-    
+
     // should return true only if the internal trigger collider is not touching any other colliders
-    bool CanWarp()
-    {
-        return colliding.Count <= 0;
-    }
+    //bool CanWarp()
+    //{
+    //    //return colliding.Count <= 0;
+    //    return !colliding;
+    //}
 
     public Vector3 WarpPosition()
     {
-        return lastUsablePos;
+        //return lastUsablePos;
+        return transform.position;
     }
 
-    void OnTriggerStay(Collider col)
-    {
-        if (!colliding.Contains(col) && !col.isTrigger)
-            colliding.Add(col);
-    }
+    //void OnTriggerStay(Collider col)
+    //{
+    //    //if (!colliding.Contains(col) && !col.isTrigger)
+    //    //    colliding.Add(col);
+    //    colliding = true;
+    //}
 
-    void OnTriggerExit(Collider col)
-    {
-        colliding.Remove(col);
-    }
+    //void OnTriggerExit(Collider col)
+    //{
+    //    //colliding.Remove(col);
+    //    colliding = false;
+    //}
 }
