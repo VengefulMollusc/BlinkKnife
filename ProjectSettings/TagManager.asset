@@ -9,6 +9,7 @@ TagManager:
   - UIParent
   - Knife
   - TargetOverride
+  - WarpLookAheadCollider
   layers:
   - Default
   - TransparentFX

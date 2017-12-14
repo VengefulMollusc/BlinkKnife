@@ -104,7 +104,6 @@ public class WarpLookAheadCollider : MonoBehaviour
         {
             col.enabled = _enabled;
         }
-
         enabled = _enabled;
     }
 

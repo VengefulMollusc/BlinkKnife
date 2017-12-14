@@ -6,7 +6,6 @@ using AssemblyCSharp;
 public class PlayerKnifeController : MonoBehaviour
 {
 
-    [SerializeField] private WarpLookAheadCollider warpLookAheadCollider;
 
     [Header("General Settings")]
 	[SerializeField]
@@ -74,6 +73,8 @@ public class PlayerKnifeController : MonoBehaviour
 	private GameObject knife;
 	private KnifeController knifeController;
 
+    private WarpLookAheadCollider warpLookAheadCollider;
+
     //[SerializeField]
     //[Range(-100f, 0f)]
     //private float warpCost = -30f;
@@ -131,7 +132,7 @@ public class PlayerKnifeController : MonoBehaviour
      * warp uses percentage of bar?
      */
 
-	void OnEnable (){
+    void OnEnable (){
 	    uiControllerObject = GameObject.FindGameObjectWithTag("UIParent");
         // check for missing prefabs
         if (blinkKnifePrefab == null){
@@ -166,6 +167,7 @@ public class PlayerKnifeController : MonoBehaviour
         this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
 	    this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
 
+        warpLookAheadCollider = GameObject.FindGameObjectWithTag("WarpLookAheadCollider").GetComponent<WarpLookAheadCollider>();
     }
 
     void OnDisable()
