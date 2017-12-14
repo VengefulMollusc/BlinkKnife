@@ -4451,6 +4451,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
+        type: 2}
+      propertyPath: warpLookAheadCollider
+      value: 
+      objectReference: {fileID: 792179343}
     - target: {fileID: 1000013453240542, guid: 27124a539f1f17b48a2e0d6d99a75e46, type: 2}
       propertyPath: m_Name
       value: Player

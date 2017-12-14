@@ -40,6 +40,8 @@ public class BlinkKnifeController : KnifeController {
 
         // disable gravity for a moment to allow more accurate throws at close range
         GetComponent<UtiliseGravity>().TempDisableGravity(0.1f);
+
+        AttachWarpCollider();
 	}
 
 	void OnCollisionEnter (Collision _col)

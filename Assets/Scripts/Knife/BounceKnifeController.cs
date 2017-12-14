@@ -24,6 +24,7 @@ public class BounceKnifeController : KnifeController {
     {
         // throw the knife in the given direction with a certain force
         rb.AddForce(_velocity * throwStrengthMod, ForceMode.VelocityChange);
+        AttachWarpCollider();
     }
 
     void OnCollisionEnter(Collision _col)

@@ -1,11 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using AssemblyCSharp;
 using UnityEngine;
 
 public class WarpLookAheadCollider : MonoBehaviour
 {
     private Collider[] lookAheadColliders;
     private List<Collider> colliding;
+
+    private GameObject knifeObject;
+    private KnifeController knifeController;
+
+    private Vector3 lastUsablePos;
+
+    private bool enabled;
 
     /*
      * Several way I could do this.
@@ -25,6 +33,51 @@ public class WarpLookAheadCollider : MonoBehaviour
         Utilities.IgnoreCollisions(lookAheadColliders, GameObject.FindGameObjectWithTag("Player").GetComponents<Collider>(), true);
 
         Enabled(false);
+
+        this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+    }
+
+    void FixedUpdate()
+    {
+        if (!enabled)
+            return;
+
+        if (knifeObject == null)
+        {
+            Enabled(false);
+            return;
+        }
+
+        if (CanWarp())
+            lastUsablePos = transform.position;
+        
+        MatchKnifePosition();
+    }
+
+    public void LockToKnife(GameObject _knife)
+    {
+        knifeObject = _knife;
+        knifeController = knifeObject.GetComponent<KnifeController>();
+        Utilities.IgnoreCollisions(lookAheadColliders, knifeObject.GetComponents<Collider>(), true);
+        Enabled(true);
+        MatchKnifePosition();
+        lastUsablePos = Vector3.negativeInfinity;
+    }
+
+    // Update position to match knife position
+    private void MatchKnifePosition()
+    {
+        transform.position = knifeController.GetWarpTestPosition();
+    }
+
+    private void OnGravityChange(object sender, object args)
+    {
+        transform.rotation = GlobalGravityControl.GetGravityRotation();
     }
 
     public void Enabled(bool _enabled)
@@ -33,35 +86,19 @@ public class WarpLookAheadCollider : MonoBehaviour
         {
             col.enabled = _enabled;
         }
-    }
 
-    public void ProjectWarpPosition(Vector3 _warpPos, Vector3 _newGravVector)
-    {
-        transform.up = -_newGravVector;
-        ProjectWarpPosition(_warpPos);
-    }
-
-    public void ProjectWarpPosition(Vector3 _warpPos, Quaternion _rotation)
-    {
-        transform.rotation = _rotation;
-        ProjectWarpPosition(_warpPos);
-    }
-
-    public void ProjectWarpPosition(Vector3 _warpPos)
-    {
-        transform.position = _warpPos;
-        Enabled(true);
+        enabled = _enabled;
     }
     
     // should return true only if the internal trigger collider is not touching any other colliders
-    public bool CanWarp()
+    bool CanWarp()
     {
         return colliding.Count <= 0;
     }
 
     public Vector3 WarpPosition()
     {
-        return transform.position;
+        return lastUsablePos;
     }
 
     void OnTriggerStay(Collider col)

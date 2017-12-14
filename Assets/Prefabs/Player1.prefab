@@ -397,6 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f048899c88b6df4c915e0a1d4e49dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  warpLookAheadCollider: {fileID: 0}
   alwaysGravShift: 0
   maxWarps: 3
   warpRechargeTime: 1

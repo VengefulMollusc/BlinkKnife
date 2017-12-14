@@ -5,9 +5,11 @@ namespace AssemblyCSharp
 {
     public class KnifeController : MonoBehaviour
     {
-        private PlayerKnifeController playerKnifeController;
+        //private PlayerKnifeController playerKnifeController;
         [HideInInspector]
         public Rigidbody rb;
+
+        private WarpLookAheadCollider warpLookAheadCollider;
 
         private bool stuckInSurface;
         private GameObject objectStuck;
@@ -21,9 +23,10 @@ namespace AssemblyCSharp
         /*
          * Passes the knifecontroller and parameter spin speed to the knife
          */
-        public virtual void Setup(PlayerKnifeController _controller)
+        public virtual void Setup(PlayerKnifeController _controller, WarpLookAheadCollider _lookAhead)
         {
-            playerKnifeController = _controller;
+            //playerKnifeController = _controller;
+            warpLookAheadCollider = _lookAhead;
             rb = GetComponent<Rigidbody>();
 
             stuckInSurface = false;
@@ -47,6 +50,12 @@ namespace AssemblyCSharp
         public virtual void Throw(Vector3 _velocity)
         {
             Debug.LogError("Throw method must be overridden");
+        }
+
+        public void AttachWarpCollider()
+        {
+            if (warpLookAheadCollider != null)
+                warpLookAheadCollider.LockToKnife(gameObject);
         }
 
         /*
@@ -95,6 +104,14 @@ namespace AssemblyCSharp
          * for the player collider to move
          */
         public virtual Vector3 GetWarpPosition()
+        {
+            return warpLookAheadCollider != null ? warpLookAheadCollider.WarpPosition() : GetWarpTestPosition();
+        }
+
+        /*
+         * Gives the position needed to be tested by the warp lookahead collider
+         */
+        public virtual Vector3 GetWarpTestPosition()
         {
             return transform.position + (collisionNormal * 0.5f);
         }

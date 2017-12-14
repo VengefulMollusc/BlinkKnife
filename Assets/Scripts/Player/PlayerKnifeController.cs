@@ -3,7 +3,10 @@ using System.Collections;
 using UnityEngine.UI;
 using AssemblyCSharp;
 
-public class PlayerKnifeController : MonoBehaviour {
+public class PlayerKnifeController : MonoBehaviour
+{
+
+    [SerializeField] private WarpLookAheadCollider warpLookAheadCollider;
 
     [Header("General Settings")]
 	[SerializeField]
@@ -327,7 +330,7 @@ public class PlayerKnifeController : MonoBehaviour {
         }
 
         // set up and throw knife object
-        knifeController.Setup (this);
+        knifeController.Setup (this, warpLookAheadCollider);
 //		knifeController.Throw ((transform.forward * throwStrength) 
 //			+ (playerRb.velocity * 0.5f), this);
 		knifeController.Throw (throwDirection * _strength);
