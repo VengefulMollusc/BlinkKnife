@@ -73,17 +73,17 @@ public class WarpLookAheadCollider : MonoBehaviour
             // if colliding at current position
             // move slightly back towards last safe position.
             // this continues until either the knife reaches a new safe position, or we move back far enough to be safe
-            //rb.position = Vector3.MoveTowards(transform.position, lastUsablePos, 0.2f);
+            rb.position = Vector3.MoveTowards(transform.position, lastUsablePos, 0.2f);
 
 
-            float newDist = backCheckDistance.magnitude - 0.1f;
+            //float newDist = backCheckDistance.magnitude - 0.1f;
 
-            if (newDist <= 0)
-                backCheckDistance = Vector3.zero;
-            else
-                backCheckDistance = backCheckDistance.normalized * newDist;
+            //if (newDist <= 0)
+            //    backCheckDistance = Vector3.zero;
+            //else
+            //    backCheckDistance = backCheckDistance.normalized * newDist;
 
-            rb.position = lastUsablePos + backCheckDistance;
+            //rb.position = lastUsablePos + backCheckDistance;
         }
 
         MatchKnifePosition();
@@ -126,6 +126,9 @@ public class WarpLookAheadCollider : MonoBehaviour
             col.enabled = _enabled;
         }
         enabled = _enabled;
+
+        if (!enabled)
+            rb.velocity = Vector3.zero;
     }
 
     public Vector3 WarpPosition()
