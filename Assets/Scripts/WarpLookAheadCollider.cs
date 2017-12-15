@@ -75,6 +75,7 @@ public class WarpLookAheadCollider : MonoBehaviour
             // this continues until either the knife reaches a new safe position, or we move back far enough to be safe
             rb.position = Vector3.MoveTowards(transform.position, lastUsablePos, 0.2f);
 
+            // TODO: rework this so it checks from lastUsablePos towards knife rather than the other way round
 
             //float newDist = backCheckDistance.magnitude - 0.1f;
 
