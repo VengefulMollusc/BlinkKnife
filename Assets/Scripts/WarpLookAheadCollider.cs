@@ -15,7 +15,8 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     private Rigidbody rb;
 
-    //private Vector3 lastUsablePos;
+    private Vector3 lastUsablePos;
+    private Vector3 backCheckDistance;
 
     private bool enabled;
 
@@ -61,10 +62,29 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         rb.velocity = Vector3.zero;
 
-        //if (CanWarp())
-        //    lastUsablePos = transform.position;
+        if (!colliding)
+        {
+            // if not colliding, this spot is safe
+            lastUsablePos = transform.position;
+            backCheckDistance = Vector3.zero;
+        }
+        else
+        {
+            // if colliding at current position
+            // move slightly back towards last safe position.
+            // this continues until either the knife reaches a new safe position, or we move back far enough to be safe
+            //rb.position = Vector3.MoveTowards(transform.position, lastUsablePos, 0.2f);
 
-        //Debug.Log(CanWarp());
+
+            float newDist = backCheckDistance.magnitude - 0.1f;
+
+            if (newDist <= 0)
+                backCheckDistance = Vector3.zero;
+            else
+                backCheckDistance = backCheckDistance.normalized * newDist;
+
+            rb.position = lastUsablePos + backCheckDistance;
+        }
 
         MatchKnifePosition();
 
@@ -79,8 +99,9 @@ public class WarpLookAheadCollider : MonoBehaviour
         Utilities.IgnoreCollisions(lookAheadColliders, knifeObject.GetComponents<Collider>(), true);
         Enabled(true);
         transform.position = knifeObject.transform.position;
-        //lastUsablePos = knifeObject.transform.position;
+        lastUsablePos = knifeObject.transform.position;
         lastKnifePos = knifeObject.transform.position;
+        backCheckDistance = Vector3.zero;
     }
 
     // Update position to match knife position
@@ -107,25 +128,21 @@ public class WarpLookAheadCollider : MonoBehaviour
         enabled = _enabled;
     }
 
-    // should return true only if the internal trigger collider is not touching any other colliders
-    //bool CanWarp()
-    //{
-    //    //return colliding.Count <= 0;
-    //    return !colliding;
-    //}
-
     public Vector3 WarpPosition()
     {
         //return lastUsablePos;
         return transform.position;
     }
 
-    //void OnTriggerStay(Collider col)
-    //{
-    //    //if (!colliding.Contains(col) && !col.isTrigger)
-    //    //    colliding.Add(col);
-    //    colliding = true;
-    //}
+    void OnTriggerStay(Collider col)
+    {
+        //if (!colliding.Contains(col) && !col.isTrigger)
+        //    colliding.Add(col);
+        colliding = true;
+
+        if (backCheckDistance == Vector3.zero)
+            backCheckDistance = transform.position - lastUsablePos;
+    }
 
     //void OnTriggerExit(Collider col)
     //{
