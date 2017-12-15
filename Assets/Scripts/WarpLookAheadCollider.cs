@@ -133,7 +133,9 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     public Vector3 WarpPosition()
     {
-        //return lastUsablePos;
+        if (colliding)
+            return lastUsablePos;
+
         return transform.position;
     }
 
