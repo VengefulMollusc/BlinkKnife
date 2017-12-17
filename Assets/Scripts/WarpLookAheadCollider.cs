@@ -16,7 +16,7 @@ public class WarpLookAheadCollider : MonoBehaviour
     private Rigidbody rb;
 
     private Vector3 lastUsablePos;
-    private Vector3 backCheckDistance;
+    //private Vector3 backCheckDistance;
 
     private bool enabled;
 
@@ -66,26 +66,27 @@ public class WarpLookAheadCollider : MonoBehaviour
         {
             // if not colliding, this spot is safe
             lastUsablePos = transform.position;
-            backCheckDistance = Vector3.zero;
+            //backCheckDistance = Vector3.zero;
         }
-        else
-        {
-            // if colliding at current position
-            // move slightly back towards last safe position.
-            // this continues until either the knife reaches a new safe position, or we move back far enough to be safe
-            rb.position = Vector3.MoveTowards(transform.position, lastUsablePos, 0.2f);
+        //else
+        //{
+        //    // if colliding at current position
+        //    // move slightly back towards last safe position.
+        //    // this continues until either the knife reaches a new safe position, or we move back far enough to be safe
+        //    rb.position = Vector3.MoveTowards(transform.position, lastUsablePos, 0.2f);
 
-            // TODO: rework this so it checks from lastUsablePos towards knife rather than the other way round
+        //    // TODO: rework this so it checks from lastUsablePos towards knife rather than the other way round
+        //    // May need second collider?????
 
-            //float newDist = backCheckDistance.magnitude - 0.1f;
+        //    //float newDist = backCheckDistance.magnitude - 0.1f;
 
-            //if (newDist <= 0)
-            //    backCheckDistance = Vector3.zero;
-            //else
-            //    backCheckDistance = backCheckDistance.normalized * newDist;
+        //    //if (newDist <= 0)
+        //    //    backCheckDistance = Vector3.zero;
+        //    //else
+        //    //    backCheckDistance = backCheckDistance.normalized * newDist;
 
-            //rb.position = lastUsablePos + backCheckDistance;
-        }
+        //    //rb.position = lastUsablePos + backCheckDistance;
+        //}
 
         MatchKnifePosition();
 
@@ -102,15 +103,19 @@ public class WarpLookAheadCollider : MonoBehaviour
         transform.position = knifeObject.transform.position;
         lastUsablePos = knifeObject.transform.position;
         lastKnifePos = knifeObject.transform.position;
-        backCheckDistance = Vector3.zero;
+        //backCheckDistance = Vector3.zero;
     }
 
     // Update position to match knife position
     private void MatchKnifePosition()
     {
+        rb.MovePosition(Vector3.MoveTowards(transform.position, knifeController.GetWarpTestPosition(), 1f));
+
         if (lastKnifePos != knifeObject.transform.position)
         {
-            rb.MovePosition(knifeController.GetWarpTestPosition());
+            //rb.MovePosition(knifeController.GetWarpTestPosition());
+            //rb.MovePosition(Vector3.MoveTowards(transform.position, knifeController.GetWarpTestPosition(), 1f));
+            
             lastKnifePos = knifeObject.transform.position;
         }
     }
@@ -146,8 +151,8 @@ public class WarpLookAheadCollider : MonoBehaviour
         //    colliding.Add(col);
         colliding = true;
 
-        if (backCheckDistance == Vector3.zero)
-            backCheckDistance = transform.position - lastUsablePos;
+        //if (backCheckDistance == Vector3.zero)
+        //    backCheckDistance = transform.position - lastUsablePos;
     }
 
     //void OnTriggerExit(Collider col)
