@@ -41,13 +41,13 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         Enabled(false);
 
-        this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+        //this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
     }
 
-    void OnDisable()
-    {
-        this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
-    }
+    //void OnDisable()
+    //{
+    //    this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+    //}
 
     void FixedUpdate()
     {
@@ -56,6 +56,8 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         if (knifeObject == null)
         {
+            transform.position = lastUsablePos; // TODO: THIS LINE PURELY FOR DEBUGGING
+
             Enabled(false);
             return;
         }
@@ -88,6 +90,8 @@ public class WarpLookAheadCollider : MonoBehaviour
         //    //rb.position = lastUsablePos + backCheckDistance;
         //}
 
+        CheckGravityWarp();
+
         MatchKnifePosition();
 
         colliding = false;
@@ -101,6 +105,7 @@ public class WarpLookAheadCollider : MonoBehaviour
         Utilities.IgnoreCollisions(lookAheadColliders, knifeObject.GetComponents<Collider>(), true);
         Enabled(true);
         transform.position = knifeObject.transform.position;
+        transform.rotation = GlobalGravityControl.GetGravityRotation();
         lastUsablePos = knifeObject.transform.position;
         lastKnifePos = knifeObject.transform.position;
         //backCheckDistance = Vector3.zero;
@@ -109,7 +114,6 @@ public class WarpLookAheadCollider : MonoBehaviour
     // Update position to match knife position
     private void MatchKnifePosition()
     {
-
         if (lastKnifePos != knifeObject.transform.position || Vector3.Distance(transform.position, knifeController.GetWarpTestPosition()) > 1f)
         {
             //rb.MovePosition(knifeController.GetWarpTestPosition());
@@ -119,10 +123,19 @@ public class WarpLookAheadCollider : MonoBehaviour
         }
     }
 
-    private void OnGravityChange(object sender, object args)
+    // Updates collider rotation if knife is going to perform a gravwarp
+    private void CheckGravityWarp()
     {
-        transform.rotation = GlobalGravityControl.GetGravityRotation();
+        if (knifeController.ShiftGravity() && transform.up != -knifeController.GetGravVector())
+        {
+            transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
+        }
     }
+
+    //private void OnGravityChange(object sender, object args)
+    //{
+    //    transform.rotation = GlobalGravityControl.GetGravityRotation();
+    //}
 
     public void Enabled(bool _enabled)
     {
