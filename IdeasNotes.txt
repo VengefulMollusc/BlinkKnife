@@ -15,6 +15,17 @@ issues but it seems too hard to land accurately, even at low speed.
 still need to work on knife warp prediction: working well at the moment but need to have a deep look for bugs.
 also need to make sure behaviour is right when knife spends extended period of time travelling through 
 small space.
+	Detail:
+		Add trigger collider to knife object 
+			(probably spherical radius 1? encompass entire player collider?
+			capsule would probably work better but would need to make sure rotation
+			always correct to gravity. too wide/large and this will be triggering
+			too often while knife moves next to a wall/floor etc)
+		if trigger not colliding, location guaranteed 100% safe.
+			match warplookahead collider to knife exactly.
+		if trigger colliding, location may not be ok
+			use (current) distance-limited MoveTowards code to step in direction of knife
+			when warplookahead colliding again, just match knife position
 	ALSO: need to make sure bounceknife works properly as knife rapidly changes direction
 
 
