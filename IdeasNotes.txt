@@ -12,14 +12,19 @@ need to check midair hover behaviour with various speeds.
 midair movement/turning doesn't feel right. I know knife provides a fix to most air movement
 issues but it seems too hard to land accurately, even at low speed.
 
+still need to work on knife warp prediction: working well at the moment but need to have a deep look for bugs.
+also need to make sure behaviour is right when knife spends extended period of time travelling through 
+small space.
+	ALSO: need to make sure bounceknife works properly as knife rapidly changes direction
+
+
+MINOR/VISUAL
 low-mid-distance regular warp feedback needs to be ramped up. FOV? more distortion?
 
-still need to work on knife warp prediction: cast player-sized collider ahead to 
-see if can warp. otherwise 'fizzle' warp and return knife
+Need solution to black-out camera when transition camera is inside mesh.
+possibly just add a small spherical trigger collider to the transition camera and disable the camera or 
+add some sort of effect/overlay when trigger is inside mesh.
 
-parenting player(or knife or anything really) to objects gets really screwy with parent scale.
-possible alternative is to just store the object to be 'parented' and manually copy/update from its
-position/rotation?
 
 
 Puzzles:
