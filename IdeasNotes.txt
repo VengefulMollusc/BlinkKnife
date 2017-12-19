@@ -15,6 +15,10 @@ issues but it seems too hard to land accurately, even at low speed.
 still need to work on knife warp prediction: working well at the moment but need to have a deep look for bugs.
 also need to make sure behaviour is right when knife spends extended period of time travelling through 
 small space.
+There is also a bug with warping to a knife that's stuck in a moving object. lastUsablePos before collision
+is used rather than the collision point which is better. Probably fixed if I can change the collision normal 
+warp offset to work relative to the angle (eg: whatever the right distance is to the bounds of the player collider
+rather than a fixed value)
 	Detail:
 		Add trigger collider to knife object 
 			(probably spherical radius 1? encompass entire player collider?
