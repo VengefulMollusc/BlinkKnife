@@ -114,7 +114,8 @@ public class WarpLookAheadCollider : MonoBehaviour
     // Update position to match knife position
     private void MatchKnifePosition()
     {
-        if (lastKnifePos != knifeObject.transform.position || Vector3.Distance(transform.position, knifeController.GetWarpTestPosition()) > 1f)
+        if (lastKnifePos != knifeObject.transform.position ||
+            Vector3.Distance(transform.position, knifeController.GetWarpTestPosition()) > 1f)
         {
             //rb.MovePosition(knifeController.GetWarpTestPosition());
             rb.MovePosition(Vector3.MoveTowards(transform.position, knifeController.GetWarpTestPosition(), 1f));

@@ -8,6 +8,8 @@ public class BounceKnifeController : KnifeController {
     [SerializeField]
     private float throwStrengthMod = 1f;
 
+    private Vector3 warpVelocity;
+
 	//[SerializeField]
 	//private GameObject visuals;
 
@@ -19,6 +21,22 @@ public class BounceKnifeController : KnifeController {
     //    if (rb.velocity != Vector3.zero)
     //        transform.forward = rb.velocity;
     //}
+
+    void OnEnable()
+    {
+        this.AddObserver(OnWarpNotification, PlayerMotor.WarpNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnWarpNotification, PlayerMotor.WarpNotification);
+    }
+
+    void OnWarpNotification(object sender, object args)
+    {
+        warpVelocity = rb.velocity;
+        rb.isKinematic = true;
+    }
 
     public override void Throw(Vector3 _velocity)
     {
@@ -45,6 +63,11 @@ public class BounceKnifeController : KnifeController {
     public override bool IsBounceKnife()
     {
         return true;
+    }
+
+    public override Vector3 GetVelocity()
+    {
+        return warpVelocity;
     }
 
     //public override void Setup (PlayerKnifeController _controller)

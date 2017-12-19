@@ -606,6 +606,10 @@ public class PlayerMotor : MonoBehaviour
         {
             this.PostNotification(GravityWarpNotification, _knifeController.GetStuckObject());
         }
+        else
+        {
+            this.PostNotification(WarpNotification);
+        }
 
         transform.SetParent(null);
 
