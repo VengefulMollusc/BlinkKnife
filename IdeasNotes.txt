@@ -15,6 +15,8 @@ issues but it seems too hard to land accurately, even at low speed.
 Noticed an issue with Jumping while being pushed by moving object. Should still inherit platform momentum?
 currently seems to add velocity in OPPOSITE direction to platform movement - possibly to do with the code to 
 cancel momentum when landing on a moving platform? jumping while being pushed might trigger the landing code.
+	Might be able to build this right into basic jump code, as it just has to 
+	retain any rigidbody movement from the player
 
 still need to work on knife warp prediction: working well at the moment but need to have a deep look for bugs.
 also need to make sure behaviour is right when knife spends extended period of time travelling through 
