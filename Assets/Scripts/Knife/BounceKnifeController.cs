@@ -55,7 +55,7 @@ public class BounceKnifeController : KnifeController {
 
         // If collided surface is not a HardSurface, stick knife into it
         if (other.GetComponent<SoftSurface>() != null)
-            StickToSurface(collide.normal, other);
+            StickToSurface(collide.point, collide.normal, other);
 
         this.PostNotification(KnifeBounceNotification);
     }

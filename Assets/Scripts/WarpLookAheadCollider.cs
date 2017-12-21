@@ -114,14 +114,35 @@ public class WarpLookAheadCollider : MonoBehaviour
     // Update position to match knife position
     private void MatchKnifePosition()
     {
+        Vector3 warpPosition = CalculateWarpPosition();
+
         if (lastKnifePos != knifeObject.transform.position ||
-            Vector3.Distance(transform.position, knifeController.GetWarpTestPosition()) > 1f)
+            Vector3.Distance(transform.position, warpPosition) > 1f)
         {
             //rb.MovePosition(knifeController.GetWarpTestPosition());
-            rb.MovePosition(Vector3.MoveTowards(transform.position, knifeController.GetWarpTestPosition(), 1f));
+            rb.MovePosition(Vector3.MoveTowards(transform.position, warpPosition, 1f));
 
             lastKnifePos = knifeObject.transform.position;
         }
+    }
+
+    // Uses the position and collisionNormal from the knife to calculate where the player should warp to
+    private Vector3 CalculateWarpPosition()
+    {
+        Vector3 collisionNormal = knifeController.GetCollisionNormal();
+
+        if (collisionNormal == Vector3.zero)
+        {
+            return knifeController.GetPosition();
+        }
+
+        Vector3 collisionPos = knifeController.GetCollisionPosition();
+        Vector3 closestPointOnCollider = lookAheadColliders[0]
+            .ClosestPointOnBounds(transform.position - collisionNormal);
+
+        Vector3 pointDiff = closestPointOnCollider - transform.position;
+
+        return collisionPos - pointDiff;
     }
 
     // Updates collider rotation if knife is going to perform a gravwarp

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Policy;
 using UnityEngine;
 
 namespace AssemblyCSharp
@@ -13,6 +14,7 @@ namespace AssemblyCSharp
 
         private bool stuckInSurface;
         private GameObject objectStuck;
+        private Vector3 collisionPosition;
         private Vector3 collisionNormal;
 
         private GravityPanel gravPanel;
@@ -61,13 +63,14 @@ namespace AssemblyCSharp
         /*
         * Sticks knife into surface when colliding with an object
         */
-        public void StickToSurface(Vector3 _normal, GameObject _other)
+        public void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other)
         {
             // disable rigidbody
             rb.detectCollisions = false;
             rb.isKinematic = true;
 
             stuckInSurface = true;
+            collisionPosition = _position;
             collisionNormal = _normal;
 
             // stick knife out of surface at collision point
@@ -97,6 +100,16 @@ namespace AssemblyCSharp
             return transform.position;
         }
 
+        public virtual Vector3 GetCollisionPosition()
+        {
+            return collisionPosition;
+        }
+
+        public virtual Vector3 GetCollisionNormal()
+        {
+            return collisionNormal;
+        }
+
         /*
          * Returns position player will warp to
          * 
@@ -113,7 +126,7 @@ namespace AssemblyCSharp
          */
         public virtual Vector3 GetWarpTestPosition()
         {
-            return transform.position + (collisionNormal * 0.5f);
+            return transform.position + (collisionNormal * 0.5f); // need to change this depending on gravity angle to match distance to edge of collider
         }
 
         /*

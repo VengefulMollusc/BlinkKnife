@@ -55,7 +55,7 @@ public class BlinkKnifeController : KnifeController {
         // If collided surface is not a HardSurface, stick knife into it
         // else post bounce notification
         if (other.GetComponent<HardSurface>() == null)
-            StickToSurface (collide.normal, other);
+            StickToSurface (collide.point, collide.normal, other);
         else
             this.PostNotification(KnifeBounceNotification);
     }
