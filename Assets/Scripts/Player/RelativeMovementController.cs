@@ -183,7 +183,7 @@ public class RelativeMovementController : MonoBehaviour
                 foreach (ContactPoint point in col.contacts)
                 {
                     Vector3 relative = point.point - transform.position;
-                    if (Vector3.Angle(gravVector, relative) < 20f)
+                    if (Vector3.Angle(gravVector, relative) < 45f) // TODO: work on this to solve bug when being pushed by moving object
                     {
                         contactPoint = point;
                         suitablePoint = true;
