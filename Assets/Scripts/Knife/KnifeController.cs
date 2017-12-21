@@ -14,7 +14,7 @@ namespace AssemblyCSharp
 
         private bool stuckInSurface;
         private GameObject objectStuck;
-        private Vector3 collisionPosition;
+        private Vector3 collisionPositionOffset;
         private Vector3 collisionNormal;
 
         private GravityPanel gravPanel;
@@ -70,7 +70,7 @@ namespace AssemblyCSharp
             rb.isKinematic = true;
 
             stuckInSurface = true;
-            collisionPosition = _position;
+            collisionPositionOffset = _position - transform.position;
             collisionNormal = _normal;
 
             // stick knife out of surface at collision point
@@ -102,7 +102,7 @@ namespace AssemblyCSharp
 
         public virtual Vector3 GetCollisionPosition()
         {
-            return collisionPosition;
+            return transform.position + collisionPositionOffset;
         }
 
         public virtual Vector3 GetCollisionNormal()
