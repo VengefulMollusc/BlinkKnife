@@ -40,7 +40,7 @@ low-mid-distance regular warp feedback needs to be ramped up. FOV? more distorti
 
 Need solution to black-out camera when transition camera is inside mesh.
 possibly just add a small spherical trigger collider to the transition camera and disable the camera or 
-add some sort of effect/overlay when trigger is inside mesh.
+add some sort of effect/overlay when trigger is inside mesh. (this seems to be trickier than I first thought)
 
 
 
