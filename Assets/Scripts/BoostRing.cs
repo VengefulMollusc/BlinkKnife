@@ -48,7 +48,7 @@ public class BoostRing : MonoBehaviour
 
     private Vector3 GetBoostVector(Vector3 toBoost, Vector3 target)
     {
-        return (target - toBoost).normalized;
+        return (target - toBoost);
     }
 
     void OnTriggerEnter(Collider col) // could be OnTriggerStay/Enter
@@ -60,22 +60,37 @@ public class BoostRing : MonoBehaviour
 
         //col.transform.position = transform.position + (transform.up * 0.5f); // Added 0.5 up here as position zero currently sits at one edge
 
+        Vector3 boostDirection;
         float magnitude = Mathf.Max(rb.velocity.magnitude + boostStrength, minMagnitude);
 
         if (Vector3.Dot(transform.up, rb.velocity) > 0f)
         {
             if (nextTarget != Vector3.zero)
-                rb.velocity = GetBoostVector(col.transform.position, nextTarget) * magnitude;
+            {
+                boostDirection = GetBoostVector(col.transform.position, nextTarget);
+                // record distance/time here to next ring if needed
+                boostDirection.Normalize();
+            }
             else
-                rb.velocity = transform.up * magnitude;
+            {
+                boostDirection = transform.up;
+            }
         }
         else
         {
             if (previousTarget != Vector3.zero)
-                rb.velocity = GetBoostVector(col.transform.position, previousTarget) * magnitude;
+            {
+                boostDirection = GetBoostVector(col.transform.position, previousTarget);
+                // record distance/time here to next ring if needed
+                boostDirection.Normalize();
+            }
             else
-                rb.velocity = -transform.up * magnitude;
+            {
+                boostDirection = -transform.up;
+            }
         }
+
+        rb.velocity = boostDirection * magnitude;
 
         this.PostNotification(BoostNotification, col.gameObject);
     }
