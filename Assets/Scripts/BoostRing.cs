@@ -68,7 +68,7 @@ public class BoostRing : MonoBehaviour
             if (nextTarget != Vector3.zero)
             {
                 boostDirection = GetBoostVector(col.transform.position, nextTarget);
-                // record distance/time here to next ring if needed
+                // record distance/time here to next ring if needed for gravity cancelling duration
                 boostDirection.Normalize();
             }
             else
@@ -81,7 +81,7 @@ public class BoostRing : MonoBehaviour
             if (previousTarget != Vector3.zero)
             {
                 boostDirection = GetBoostVector(col.transform.position, previousTarget);
-                // record distance/time here to next ring if needed
+                // record distance/time here to next ring if needed for gravity cancelling duration
                 boostDirection.Normalize();
             }
             else
