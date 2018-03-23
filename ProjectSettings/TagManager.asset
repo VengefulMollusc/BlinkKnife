@@ -10,6 +10,7 @@ TagManager:
   - Knife
   - TargetOverride
   - WarpLookAheadCollider
+  - Sunlight
   layers:
   - Default
   - TransparentFX

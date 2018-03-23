@@ -39,8 +39,8 @@ GameObject:
   - component: {fileID: 4000013701596910}
   - component: {fileID: 108000014103610314}
   m_Layer: 0
-  m_Name: Directional Light
-  m_TagString: Untagged
+  m_Name: Sun Light
+  m_TagString: Sunlight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followGravityDirection: 1
-  followPlayerPosition: 0
+  followPlayerPosition: 1
   ambientRot: 0
   ambientRotAxis: {x: 0, y: 0, z: 0}
   ambientRotSpeed: 1
