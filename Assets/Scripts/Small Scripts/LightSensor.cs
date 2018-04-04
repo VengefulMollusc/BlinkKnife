@@ -11,7 +11,9 @@ public class LightSensor : MonoBehaviour
 
     private bool isLit;
 
-	void OnEnable ()
+    public const string LightStatusNotification = "LightSensor.LightStatusNotification";
+
+    void OnEnable ()
 	{
 	    sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
 
@@ -34,7 +36,10 @@ public class LightSensor : MonoBehaviour
 	    bool isInLocalLight = false;
 
 	    isLit = isInSunlight || isInLocalLight;
-	}
+
+        // send notification of light status (for UI etc)
+	    this.PostNotification(LightStatusNotification, new Info<GameObject, bool>(gameObject, isLit));
+    }
 
     public bool IsLit()
     {
