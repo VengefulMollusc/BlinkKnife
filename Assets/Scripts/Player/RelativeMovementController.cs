@@ -140,10 +140,10 @@ public class RelativeMovementController : MonoBehaviour
         // get axis of rotation for right angle check
         float tempAngle;
         Vector3 rotationAxis;
-        (rotateToGlobalAxis * _rotation).ToAngleAxis(out tempAngle, out rotationAxis);
+        _rotation.ToAngleAxis(out tempAngle, out rotationAxis);
 
         // Check if rotation axis is right angle
-        if (Mathf.Abs(Vector3.Angle(rotationAxis, transform.up) - 90f) > 1f)
+        if (Mathf.Abs(Vector3.Angle(rotateToGlobalAxis * rotationAxis, transform.up) - 90f) > 1f)
         {
             // project position vectors onto plane defined by player up direction and rotate to match gravity
             centerToContact = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(centerToContact, transform.up);
