@@ -137,15 +137,24 @@ public class RelativeMovementController : MonoBehaviour
         rb.MovePosition(rb.position + rotationMovement);
         thisMovementVector += rotationMovement;
 
-        // project position vectors onto plane defined by player up direction and rotate to match gravity
-        centerToContact = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(centerToContact, transform.up);
-        newContactPoint = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(newContactPoint, transform.up);
+        // get axis of rotation for right angle check
+        float tempAngle;
+        Vector3 rotationAxis;
+        (rotateToGlobalAxis * _rotation).ToAngleAxis(out tempAngle, out rotationAxis);
 
-        // get angle of view rotation from projected vectors
-        Quaternion lookRotation = Quaternion.FromToRotation(centerToContact, newContactPoint);
+        // Check if rotation axis is right angle
+        if (Mathf.Abs(Vector3.Angle(rotationAxis, transform.up) - 90f) > 1f)
+        {
+            // project position vectors onto plane defined by player up direction and rotate to match gravity
+            centerToContact = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(centerToContact, transform.up);
+            newContactPoint = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(newContactPoint, transform.up);
 
-        // apply rotation
-        rb.rotation *= lookRotation;
+            // get angle of view rotation from projected vectors
+            Quaternion lookRotation = Quaternion.FromToRotation(centerToContact, newContactPoint);
+
+            // apply rotation
+            rb.rotation *= lookRotation;
+        }
     }
 
     /*
