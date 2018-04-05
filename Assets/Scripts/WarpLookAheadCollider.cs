@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class WarpLookAheadCollider : MonoBehaviour
 {
+    public static float updateFrequency = 0.1f;
+
     private Collider[] lookAheadColliders;
     private bool colliding;
 
@@ -42,6 +44,8 @@ public class WarpLookAheadCollider : MonoBehaviour
         Enabled(false);
 
         //this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+
+        //InvokeRepeating("UpdateWarpLookahead", 0f, updateFrequency);
     }
 
     //void OnDisable()
@@ -50,6 +54,11 @@ public class WarpLookAheadCollider : MonoBehaviour
     //}
 
     void FixedUpdate()
+    {
+        UpdateWarpLookahead();
+    }
+
+    void UpdateWarpLookahead()
     {
         if (!enabled)
             return;
