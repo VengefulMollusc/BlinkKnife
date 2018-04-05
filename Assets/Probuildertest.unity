@@ -4579,11 +4579,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
-      propertyPath: warpLookAheadCollider
-      value: 
-      objectReference: {fileID: 792179343}
     - target: {fileID: 1000013453240542, guid: 27124a539f1f17b48a2e0d6d99a75e46, type: 2}
       propertyPath: m_Name
       value: Player
@@ -4591,22 +4586,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 27124a539f1f17b48a2e0d6d99a75e46, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &506988635 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1000013453240542, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-    type: 2}
-  m_PrefabInternal: {fileID: 506988634}
---- !u!114 &506988636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 506988635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd636bf21b9caf24a9b52c6a83754f9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!43 &514396755
 Mesh:
   m_ObjectHideFlags: 0
@@ -9411,12 +9390,6 @@ Transform:
   m_Father: {fileID: 581986094}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &792179343 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114740243902955744, guid: 657688e851d81a34eb1363afb0595679,
-    type: 2}
-  m_PrefabInternal: {fileID: 1082834443}
-  m_Script: {fileID: 11500000, guid: e0e02ac2253198545b270e3464fbf22f, type: 3}
 --- !u!43 &801122077
 Mesh:
   m_ObjectHideFlags: 0
