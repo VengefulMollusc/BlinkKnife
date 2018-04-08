@@ -42,6 +42,10 @@ public class PlayerCollisionController : MonoBehaviour
         UpdateCollisionState(frictionless, colliding, frictionOverride);
     }
 
+    /*
+     * Moving against a wall causes this to not detect the ground collision point.
+     * Right now this isn't an issue as the PlayerMotor will override sliding on ground if needed
+     */
     void OnCollisionStay(Collision col)
     {
         ContactPoint[] colContacts = col.contacts;
@@ -52,6 +56,7 @@ public class PlayerCollisionController : MonoBehaviour
                 colliding = true;
 
             float angle = Vector3.Angle(point.normal, transform.up);
+            
             if (angle < slideThreshold)
             {
                 frictionless = false;

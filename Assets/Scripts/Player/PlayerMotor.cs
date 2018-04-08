@@ -312,7 +312,7 @@ public class PlayerMotor : MonoBehaviour
 
         if (UseGroundMovement() && jumpTimer <= 0)
         {
-            // grounded
+            // Grounded
             //momentumFlight = false;
             GroundMovement();
         }
@@ -323,7 +323,7 @@ public class PlayerMotor : MonoBehaviour
         }
         else
         {
-            // airborne
+            // Airborne
             AirMovement();
         }
     }
@@ -339,7 +339,7 @@ public class PlayerMotor : MonoBehaviour
         float rayDistance = 0.5f;
         RaycastHit hitInfo;
 
-        Ray ray = new Ray(transform.position - transform.up, -transform.up);
+        Ray ray = new Ray(transform.position - (transform.up * 0.9f), -transform.up);
         if (Physics.Raycast(ray, out hitInfo, rayDistance))
         {
             if (hitInfo.normal != transform.up)
@@ -763,10 +763,10 @@ public class PlayerMotor : MonoBehaviour
     /*
      * Returns the current position of the feet of the player, relative to the current gravity direction
      */
-    Vector3 GetFootPosition()
-    {
-        return transform.position + GlobalGravityControl.GetCurrentGravityVector();
-    }
+    //Vector3 GetFootPosition()
+    //{
+    //    return transform.position + GlobalGravityControl.GetCurrentGravityVector();
+    //}
 
     public void Freeze()
     {
