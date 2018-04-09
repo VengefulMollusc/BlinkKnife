@@ -60,37 +60,28 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         if (knifeObject == null)
         {
-            transform.position = lastUsablePos; // TODO: THIS LINE PURELY FOR DEBUGGING - Visual indicator of warp position
+            //transform.position = lastUsablePos; // TODO: THIS LINE PURELY FOR DEBUGGING - Visual indicator of warp position
 
             Enabled(false);
             return;
         }
 
+        Transform safeColliderTransform = (Transform)args;
+
         rb.velocity = Vector3.zero;
-        transform.rotation = safeWarpCollider.transform.rotation;
+        transform.position = safeColliderTransform.position;
+        transform.rotation = safeColliderTransform.rotation;
 
-        if (safeWarpCollider.IsSafeToWarp())
+        if (safeWarpCollider.IsSafeToWarp() || !colliding)
         {
-            lastUsablePos = safeWarpCollider.transform.position;
-            transform.position = lastUsablePos;
-            //colliding = false;
-            //return;
-        }
-
-        transform.position = safeWarpCollider.transform.position;
-
-        if (!colliding)
-        {
-            // if not colliding, this spot is safe
             lastUsablePos = transform.position;
-            //backCheckDistance = Vector3.zero;
         }
 
         transform.position = lastUsablePos;
 
         colliding = false;
 
-        return;
+        //return;
         //else
         //{
         //    // if colliding at current position

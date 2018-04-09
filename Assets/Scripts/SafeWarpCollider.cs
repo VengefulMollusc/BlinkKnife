@@ -49,7 +49,7 @@ public class SafeWarpCollider : MonoBehaviour
 	        transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
 	    }
 
-        this.PostNotification(UpdateLookAheadColliderNotification, transform.position);
+        this.PostNotification(UpdateLookAheadColliderNotification, transform);
     }
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to
