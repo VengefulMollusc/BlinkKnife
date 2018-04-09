@@ -51,9 +51,9 @@ public class SafeWarpCollider : MonoBehaviour
         float dot = Vector3.Dot(transform.up, collisionNormal);
 
         // offset base position to use upper/lower hemispheres of collider
-        if (dot > 0)
+        if (dot > 0.001)
             closestPointBase -= (transform.up * 0.5f);
-        else if (dot < 0)
+        else if (dot < -0.001)
             closestPointBase += (transform.up * 0.5f);
 
         Vector3 closestPointOnCollider = GetComponent<Collider>()
