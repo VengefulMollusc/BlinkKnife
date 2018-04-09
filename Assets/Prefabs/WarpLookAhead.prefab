@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 23676359206154342}
   - component: {fileID: 114740243902955744}
   - component: {fileID: 54957291293332694}
-  m_Layer: 2
+  m_Layer: 15
   m_Name: WarpLookAhead
   m_TagString: WarpLookAheadCollider
   m_Icon: {fileID: 0}
@@ -51,7 +51,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1967099735100898}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

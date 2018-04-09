@@ -34,16 +34,19 @@ namespace AssemblyCSharp
             stuckInSurface = false;
             collisionNormal = Vector3.zero;
 
-            transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
+            //transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
         }
 
         void FixedUpdate()
         {
-            if (HasStuck() || rb == null)
-                return;
+            //if (HasStuck() || rb == null)
+            //    return;
 
-            if (rb.velocity != Vector3.zero)
-                transform.forward = rb.velocity;
+            //if (rb.velocity != Vector3.zero)
+            //    transform.forward = rb.velocity;
+
+            //if (transform.rotation != GlobalGravityControl.GetGravityRotation())
+            //    transform.rotation = GlobalGravityControl.GetGravityRotation();
         }
 
         /*

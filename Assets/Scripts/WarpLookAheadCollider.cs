@@ -13,6 +13,8 @@ public class WarpLookAheadCollider : MonoBehaviour
     private GameObject knifeObject;
     private KnifeController knifeController;
 
+    private SafeWarpCollider safeWarpCollider;
+
     private Vector3 lastKnifePos;
 
     private Rigidbody rb;
@@ -39,19 +41,8 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
-        Utilities.IgnoreCollisions(lookAheadColliders, GameObject.FindGameObjectWithTag("Player").GetComponents<Collider>(), true);
-
         Enabled(false);
-
-        //this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
-
-        //InvokeRepeating("UpdateWarpLookahead", 0f, updateFrequency);
     }
-
-    //void OnDisable()
-    //{
-    //    this.RemoveObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
-    //}
 
     void FixedUpdate()
     {
@@ -65,7 +56,7 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         if (knifeObject == null)
         {
-            transform.position = lastUsablePos; // TODO: THIS LINE PURELY FOR DEBUGGING
+            transform.position = lastUsablePos; // TODO: THIS LINE PURELY FOR DEBUGGING - Visual indicator of warp position
 
             Enabled(false);
             return;
@@ -73,7 +64,12 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         rb.velocity = Vector3.zero;
 
-        if (!colliding)
+        if (safeWarpCollider.IsSafeToWarp())
+        {
+            lastUsablePos = safeWarpCollider.transform.position;
+            transform.position = lastUsablePos;
+        }
+        else if (!colliding)
         {
             // if not colliding, this spot is safe
             lastUsablePos = transform.position;
@@ -110,6 +106,7 @@ public class WarpLookAheadCollider : MonoBehaviour
     {
         knifeObject = _knife;
         knifeController = knifeObject.GetComponent<KnifeController>();
+        safeWarpCollider = knifeObject.GetComponentInChildren<SafeWarpCollider>();
         colliding = false;
         Utilities.IgnoreCollisions(lookAheadColliders, knifeObject.GetComponents<Collider>(), true);
         Enabled(true);
