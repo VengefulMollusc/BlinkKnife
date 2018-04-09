@@ -15,9 +15,9 @@ namespace AssemblyCSharp
         private bool stuckInSurface;
         private GameObject objectStuck;
         private Vector3 collisionPositionOffset;
-        private Vector3 collisionNormal;
 
         private GravityPanel gravPanel;
+        private Vector3 gravShiftVector;
 
         public const string ShowKnifeMarkerNotification = "KnifeController.ShowKnifeMarkerNotification";
         public const string KnifeBounceNotification = "KnifeController.KnifeBounceNotification";
@@ -32,22 +32,23 @@ namespace AssemblyCSharp
             rb = GetComponent<Rigidbody>();
 
             stuckInSurface = false;
-            collisionNormal = Vector3.zero;
+
+            gravShiftVector = Vector3.zero;
 
             //transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
         }
 
-        void FixedUpdate()
-        {
-            //if (HasStuck() || rb == null)
-            //    return;
+        //void FixedUpdate()
+        //{
+        //    //if (HasStuck() || rb == null)
+        //    //    return;
 
-            //if (rb.velocity != Vector3.zero)
-            //    transform.forward = rb.velocity;
+        //    //if (rb.velocity != Vector3.zero)
+        //    //    transform.forward = rb.velocity;
 
-            //if (transform.rotation != GlobalGravityControl.GetGravityRotation())
-            //    transform.rotation = GlobalGravityControl.GetGravityRotation();
-        }
+        //    //if (transform.rotation != GlobalGravityControl.GetGravityRotation())
+        //    //    transform.rotation = GlobalGravityControl.GetGravityRotation();
+        //}
 
         /*
          * Throws the knife at the given velocity
@@ -74,7 +75,8 @@ namespace AssemblyCSharp
 
             stuckInSurface = true;
             collisionPositionOffset = _position - transform.position;
-            collisionNormal = _normal;
+            transform.rotation = Quaternion.FromToRotation(Vector3.up, _normal);
+            //transform.up = _normal;
 
             // stick knife out of surface at collision point
             rb.velocity = Vector3.zero;
@@ -88,9 +90,7 @@ namespace AssemblyCSharp
             if (objectStuck.GetComponent<GravityPanel>() != null)
             {
                 gravPanel = objectStuck.GetComponent<GravityPanel>();
-                Vector3 gravVector = gravPanel.GetGravityVector();
-                if (gravVector != Vector3.zero)
-                    collisionNormal = -gravVector;
+                gravShiftVector = gravPanel.GetGravityVector();
             }
 
             // activate knife marker ui
@@ -110,7 +110,10 @@ namespace AssemblyCSharp
 
         public virtual Vector3 GetCollisionNormal()
         {
-            return collisionNormal;
+            if (!HasStuck())
+                return Vector3.zero;
+
+            return transform.up;
         }
 
         /*
@@ -129,7 +132,7 @@ namespace AssemblyCSharp
          */
         public virtual Vector3 GetWarpTestPosition()
         {
-            return transform.position + (collisionNormal * 0.5f); // need to change this depending on gravity angle to match distance to edge of collider
+            return transform.position + (transform.up * 0.5f); // need to change this depending on gravity angle to match distance to edge of collider
         }
 
         /*
@@ -152,7 +155,7 @@ namespace AssemblyCSharp
 
         public virtual Vector3 GetGravVector()
         {
-            return -collisionNormal;
+            return gravShiftVector;
         }
 
         public virtual bool HasStuck()
