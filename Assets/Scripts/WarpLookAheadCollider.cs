@@ -151,7 +151,7 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     //    Vector3 collisionPos = knifeController.GetCollisionPosition();
     //    Vector3 closestPointOnCollider = lookAheadColliders[0]
-    //        .ClosestPointOnBounds(transform.position - collisionNormal);
+    //        .ClosestPoint(transform.position - collisionNormal);
 
     //    Vector3 pointDiff = closestPointOnCollider - transform.position;
 

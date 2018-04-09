@@ -75,11 +75,11 @@ public class SafeWarpCollider : MonoBehaviour
             closestPointBase += (transform.up * 0.5f);
 
         Vector3 closestPointOnCollider = GetComponent<Collider>()
-            .ClosestPointOnBounds(closestPointBase - collisionNormal);
+            .ClosestPoint(closestPointBase - collisionNormal);
 
         Vector3 pointDiff = closestPointOnCollider - transform.position;
 
-        return knifeController.GetCollisionPosition() - pointDiff;
+        return knifeController.GetPosition() - pointDiff;
     }
 
     private Vector3 SurfaceRaycastOffset(Vector3 basePosition)
@@ -100,8 +100,8 @@ public class SafeWarpCollider : MonoBehaviour
         //Debug.DrawLine(basePosition, basePosition + (right * 2), Color.magenta, 5f);
 
         Collider col = GetComponent<Collider>();
-        float forwardDist = Vector3.Distance(transform.position, col.ClosestPointOnBounds(transform.position + forward));
-        float rightDist = Vector3.Distance(transform.position, col.ClosestPointOnBounds(transform.position + right));
+        float forwardDist = Vector3.Distance(transform.position, col.ClosestPoint(transform.position + forward));
+        float rightDist = Vector3.Distance(transform.position, col.ClosestPoint(transform.position + right));
 
         RaycastHit hitInfo;
 

@@ -14,7 +14,7 @@ namespace AssemblyCSharp
 
         private bool stuckInSurface;
         private GameObject objectStuck;
-        private Vector3 collisionPositionOffset;
+        //private Vector3 collisionPositionOffset;
 
         private GravityPanel gravPanel;
         private Vector3 gravShiftVector;
@@ -83,7 +83,7 @@ namespace AssemblyCSharp
             transform.position = _position;
             transform.rotation = Quaternion.FromToRotation(Vector3.up, _normal);
 
-            collisionPositionOffset = _position - transform.position;
+            //collisionPositionOffset = _position - transform.position;
             //transform.up = _normal;
 
             // stick knife out of surface at collision point
@@ -114,10 +114,10 @@ namespace AssemblyCSharp
             return transform.position;
         }
 
-        public virtual Vector3 GetCollisionPosition()
-        {
-            return transform.position + collisionPositionOffset;
-        }
+        //public virtual Vector3 GetCollisionPosition()
+        //{
+        //    return transform.position + collisionPositionOffset;
+        //}
 
         public virtual Vector3 GetCollisionNormal()
         {
