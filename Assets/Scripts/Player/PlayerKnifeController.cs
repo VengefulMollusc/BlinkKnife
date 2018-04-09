@@ -335,7 +335,7 @@ public class PlayerKnifeController : MonoBehaviour
         }
 
         // set up and throw knife object
-        knifeController.Setup (this, warpLookAheadCollider);
+        knifeController.Setup (warpLookAheadCollider);
 //		knifeController.Throw ((transform.forward * throwStrength) 
 //			+ (playerRb.velocity * 0.5f), this);
 		knifeController.Throw (throwDirection * _strength);

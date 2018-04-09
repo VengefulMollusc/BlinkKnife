@@ -42,14 +42,18 @@ public class WarpLookAheadCollider : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         Enabled(false);
+
+        this.AddObserver(OnAttachKnife, KnifeController.AttachLookAheadColliderNotification);
+        this.AddObserver(UpdateWarpLookAhead, SafeWarpCollider.UpdateLookAheadColliderNotification);
     }
 
-    void FixedUpdate()
+    void OnDisable()
     {
-        UpdateWarpLookahead();
+        this.RemoveObserver(OnAttachKnife, KnifeController.AttachLookAheadColliderNotification);
+        this.RemoveObserver(UpdateWarpLookAhead, SafeWarpCollider.UpdateLookAheadColliderNotification);
     }
 
-    void UpdateWarpLookahead()
+    void UpdateWarpLookAhead(object sender, object args)
     {
         if (!enabled)
             return;
@@ -69,9 +73,11 @@ public class WarpLookAheadCollider : MonoBehaviour
         {
             lastUsablePos = safeWarpCollider.transform.position;
             transform.position = lastUsablePos;
-            colliding = false;
-            return;
+            //colliding = false;
+            //return;
         }
+
+        transform.position = safeWarpCollider.transform.position;
 
         if (!colliding)
         {
@@ -79,6 +85,12 @@ public class WarpLookAheadCollider : MonoBehaviour
             lastUsablePos = transform.position;
             //backCheckDistance = Vector3.zero;
         }
+
+        transform.position = lastUsablePos;
+
+        colliding = false;
+
+        return;
         //else
         //{
         //    // if colliding at current position
@@ -101,15 +113,15 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         //CheckGravityWarp();
 
-        MatchKnifePosition();
+        //MatchKnifePosition();
 
-        colliding = false;
+        //colliding = false;
     }
 
-    public void LockToKnife(GameObject _knife)
+    void OnAttachKnife(object sender, object args)
     {
-        knifeObject = _knife;
-        knifeController = knifeObject.GetComponent<KnifeController>();
+        knifeController = (KnifeController)args;
+        knifeObject = knifeController.gameObject;
         safeWarpCollider = knifeObject.GetComponentInChildren<SafeWarpCollider>();
         colliding = false;
         Utilities.IgnoreCollisions(lookAheadColliders, knifeObject.GetComponents<Collider>(), true);
@@ -118,24 +130,23 @@ public class WarpLookAheadCollider : MonoBehaviour
         transform.rotation = GlobalGravityControl.GetGravityRotation();
         lastUsablePos = knifeObject.transform.position;
         lastKnifePos = knifeObject.transform.position;
-        //backCheckDistance = Vector3.zero;
     }
 
     // Update position to match knife position
-    private void MatchKnifePosition()
-    {
-        //Vector3 warpPosition = CalculateWarpPosition();
-        Vector3 targetPosition = safeWarpCollider.transform.position;
+    //private void MatchKnifePosition()
+    //{
+    //    //Vector3 warpPosition = CalculateWarpPosition();
+    //    Vector3 targetPosition = safeWarpCollider.transform.position;
 
-        if (lastKnifePos != safeWarpCollider.transform.position ||
-            Vector3.Distance(transform.position, targetPosition) > 1f)
-        {
-            //rb.MovePosition(knifeController.GetWarpTestPosition());
-            rb.MovePosition(Vector3.MoveTowards(transform.position, targetPosition, 1f));
+    //    if (lastKnifePos != safeWarpCollider.transform.position ||
+    //        Vector3.Distance(transform.position, targetPosition) > 1f)
+    //    {
+    //        //rb.MovePosition(knifeController.GetWarpTestPosition());
+    //        rb.MovePosition(Vector3.MoveTowards(transform.position, targetPosition, 1f));
 
-            lastKnifePos = knifeObject.transform.position;
-        }
-    }
+    //        lastKnifePos = knifeObject.transform.position;
+    //    }
+    //}
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to
     //private Vector3 CalculateWarpPosition()

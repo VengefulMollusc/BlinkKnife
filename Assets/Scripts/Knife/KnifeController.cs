@@ -22,10 +22,12 @@ namespace AssemblyCSharp
         public const string ShowKnifeMarkerNotification = "KnifeController.ShowKnifeMarkerNotification";
         public const string KnifeBounceNotification = "KnifeController.KnifeBounceNotification";
 
+        public const string AttachLookAheadColliderNotification = "KnifeController.AttachLookAheadColliderNotification";
+
         /*
          * Passes the knifecontroller and parameter spin speed to the knife
          */
-        public virtual void Setup(PlayerKnifeController _controller, WarpLookAheadCollider _lookAhead)
+        public virtual void Setup(WarpLookAheadCollider _lookAhead)
         {
             //playerKnifeController = _controller;
             warpLookAheadCollider = _lookAhead;
@@ -34,6 +36,8 @@ namespace AssemblyCSharp
             stuckInSurface = false;
 
             gravShiftVector = Vector3.zero;
+
+            this.PostNotification(AttachLookAheadColliderNotification, this);
 
             //transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
         }
@@ -58,11 +62,11 @@ namespace AssemblyCSharp
             Debug.LogError("Throw method must be overridden");
         }
 
-        public void AttachWarpCollider()
-        {
-            if (warpLookAheadCollider != null)
-                warpLookAheadCollider.LockToKnife(gameObject);
-        }
+        //public void AttachWarpCollider()
+        //{
+        //    if (warpLookAheadCollider != null)
+        //        warpLookAheadCollider.LockToKnife(gameObject);
+        //}
 
         /*
         * Sticks knife into surface when colliding with an object

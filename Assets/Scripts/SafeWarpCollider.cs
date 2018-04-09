@@ -10,8 +10,10 @@ public class SafeWarpCollider : MonoBehaviour
 
     private bool safeToWarp;
 
-	// Use this for initialization
-	void OnEnable ()
+    public const string UpdateLookAheadColliderNotification = "SafeWarpCollider.UpdateLookAheadColliderNotification";
+
+    // Use this for initialization
+    void OnEnable ()
 	{
 	    knifeController = transform.parent.GetComponent<KnifeController>();
 	    safeToWarp = true;
@@ -35,7 +37,6 @@ public class SafeWarpCollider : MonoBehaviour
             }
             else if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
             {
-                Debug.Log("Aligning to gravity");
                 transform.rotation = GlobalGravityControl.GetGravityRotation();
             }
 
@@ -47,6 +48,8 @@ public class SafeWarpCollider : MonoBehaviour
 	    {
 	        transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
 	    }
+
+        this.PostNotification(UpdateLookAheadColliderNotification, transform.position);
     }
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to

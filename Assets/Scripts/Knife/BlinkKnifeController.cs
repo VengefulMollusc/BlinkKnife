@@ -39,10 +39,10 @@ public class BlinkKnifeController : KnifeController {
         rb.AddForce(_velocity * throwStrengthMod, ForceMode.VelocityChange);
 
         // disable gravity for a moment to allow more accurate throws at close range
-        GetComponent<UtiliseGravity>().TempDisableGravity(0.1f);
+        //GetComponent<UtiliseGravity>().TempDisableGravity(0.1f);
 
-        AttachWarpCollider();
-	}
+        this.PostNotification(AttachLookAheadColliderNotification, this);
+    }
 
 	void OnCollisionEnter (Collision _col)
 	{
