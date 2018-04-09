@@ -4585,23 +4585,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
         type: 2}
-      propertyPath: throwStrength
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
       propertyPath: throwAngleModifier
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
         type: 2}
-      propertyPath: timeToAutoRecall
-      value: 20
+      propertyPath: throwHeightModifier
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
         type: 2}
-      propertyPath: throwHeightModifier
-      value: 0
+      propertyPath: throwStrength
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
+        type: 2}
+      propertyPath: timeToAutoRecall
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 27124a539f1f17b48a2e0d6d99a75e46, type: 2}
@@ -4739,7 +4739,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh-56958
+  m_Name: pb_Mesh13536
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -12907,6 +12907,11 @@ Prefab:
       value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 23676359206154342, guid: 657688e851d81a34eb1363afb0595679,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 136976251115299810, guid: 657688e851d81a34eb1363afb0595679,
         type: 2}
       propertyPath: m_Enabled
       value: 1
@@ -26856,7 +26861,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh13174
+  m_Name: pb_Mesh13478
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
