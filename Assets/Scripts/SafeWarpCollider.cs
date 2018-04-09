@@ -17,25 +17,22 @@ public class SafeWarpCollider : MonoBehaviour
 	}
 	
 	void FixedUpdate () {
-        // Check if gravity warp
-	    if (knifeController.ShiftGravity())
+	    // if knife has stuck, get position offset from wall
+	    if (knifeController.HasStuck())
 	    {
-            if (transform.up != -knifeController.GetGravVector())
-	            transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
+	        // Check if gravity warp
+	        if (knifeController.ShiftGravity())
+	        {
+	            if (transform.up != -knifeController.GetGravVector())
+	                transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
+	        }
+	        else if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
+	        {
+	            transform.rotation = GlobalGravityControl.GetGravityRotation();
+            }
+
+	        transform.position = CollisionOffsetPosition();
 	    }
-        //else if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
-        //{
-        //    transform.rotation = GlobalGravityControl.GetGravityRotation();
-        //}
-
-        // if knife has stuck, get position offset from wall
-        if (knifeController.HasStuck())
-        {
-            if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
-                transform.rotation = GlobalGravityControl.GetGravityRotation();
-
-            transform.position = CollisionOffsetPosition();
-        }
     }
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to
@@ -68,7 +65,6 @@ public class SafeWarpCollider : MonoBehaviour
 
     public bool IsSafeToWarp()
     {
-        Debug.Log(safeToWarp);
         return safeToWarp;
     }
 

@@ -63,6 +63,7 @@ public class WarpLookAheadCollider : MonoBehaviour
         }
 
         rb.velocity = Vector3.zero;
+        transform.rotation = safeWarpCollider.transform.rotation;
 
         if (safeWarpCollider.IsSafeToWarp())
         {
@@ -95,7 +96,7 @@ public class WarpLookAheadCollider : MonoBehaviour
         //    //rb.position = lastUsablePos + backCheckDistance;
         //}
 
-        CheckGravityWarp();
+        //CheckGravityWarp();
 
         MatchKnifePosition();
 
@@ -120,45 +121,46 @@ public class WarpLookAheadCollider : MonoBehaviour
     // Update position to match knife position
     private void MatchKnifePosition()
     {
-        Vector3 warpPosition = CalculateWarpPosition();
+        //Vector3 warpPosition = CalculateWarpPosition();
+        Vector3 targetPosition = safeWarpCollider.transform.position;
 
-        if (lastKnifePos != knifeObject.transform.position ||
-            Vector3.Distance(transform.position, warpPosition) > 1f)
+        if (lastKnifePos != safeWarpCollider.transform.position ||
+            Vector3.Distance(transform.position, targetPosition) > 1f)
         {
             //rb.MovePosition(knifeController.GetWarpTestPosition());
-            rb.MovePosition(Vector3.MoveTowards(transform.position, warpPosition, 1f));
+            rb.MovePosition(Vector3.MoveTowards(transform.position, targetPosition, 1f));
 
             lastKnifePos = knifeObject.transform.position;
         }
     }
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to
-    private Vector3 CalculateWarpPosition()
-    {
-        Vector3 collisionNormal = knifeController.GetCollisionNormal();
+    //private Vector3 CalculateWarpPosition()
+    //{
+    //    Vector3 collisionNormal = knifeController.GetCollisionNormal();
 
-        if (collisionNormal == Vector3.zero)
-        {
-            return knifeController.GetPosition();
-        }
+    //    if (collisionNormal == Vector3.zero)
+    //    {
+    //        return knifeController.GetPosition();
+    //    }
 
-        Vector3 collisionPos = knifeController.GetCollisionPosition();
-        Vector3 closestPointOnCollider = lookAheadColliders[0]
-            .ClosestPointOnBounds(transform.position - collisionNormal);
+    //    Vector3 collisionPos = knifeController.GetCollisionPosition();
+    //    Vector3 closestPointOnCollider = lookAheadColliders[0]
+    //        .ClosestPointOnBounds(transform.position - collisionNormal);
 
-        Vector3 pointDiff = closestPointOnCollider - transform.position;
+    //    Vector3 pointDiff = closestPointOnCollider - transform.position;
 
-        return collisionPos - pointDiff;
-    }
+    //    return collisionPos - pointDiff;
+    //}
 
     // Updates collider rotation if knife is going to perform a gravwarp
-    private void CheckGravityWarp()
-    {
-        if (knifeController.ShiftGravity() && transform.up != -knifeController.GetGravVector())
-        {
-            transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
-        }
-    }
+    //private void CheckGravityWarp()
+    //{
+    //    if (knifeController.ShiftGravity() && transform.up != -knifeController.GetGravVector())
+    //    {
+    //        transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
+    //    }
+    //}
 
     //private void OnGravityChange(object sender, object args)
     //{
