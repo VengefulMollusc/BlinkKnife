@@ -8,12 +8,13 @@ public class SafeWarpCollider : MonoBehaviour
 {
     private KnifeController knifeController;
 
-    private bool safeToWarp = false;
+    private bool safeToWarp;
 
 	// Use this for initialization
 	void OnEnable ()
 	{
 	    knifeController = transform.parent.GetComponent<KnifeController>();
+	    safeToWarp = true;
 	}
 	
 	void FixedUpdate () {
