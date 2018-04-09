@@ -30,23 +30,28 @@ public class SafeWarpCollider : MonoBehaviour
 	        else if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
 	        {
 	            transform.rotation = GlobalGravityControl.GetGravityRotation();
-            }
+	        }
 
-	        transform.position = CollisionOffsetPosition();
+	        Vector3 newPosition = CollisionOffset();
+	        newPosition += SurfaceRaycastOffset(newPosition);
+	        transform.position = newPosition;
+	    }
+	    else if (!safeToWarp)
+	    {
+	        transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
 	    }
     }
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to
-    private Vector3 CollisionOffsetPosition()
+    private Vector3 CollisionOffset()
     {
-        Vector3 collisionPos = knifeController.GetCollisionPosition();
         Vector3 collisionNormal = knifeController.GetCollisionNormal();
 
         if (collisionNormal == Vector3.zero)
         {
-            return Vector3.zero;
+            return transform.position;
         }
-
+        
         Vector3 closestPointBase = transform.position;
         float dot = Vector3.Dot(transform.up, collisionNormal);
 
@@ -61,7 +66,85 @@ public class SafeWarpCollider : MonoBehaviour
 
         Vector3 pointDiff = closestPointOnCollider - transform.position;
 
-        return collisionPos - pointDiff;
+        return knifeController.GetCollisionPosition() - pointDiff;
+    }
+
+    private Vector3 SurfaceRaycastOffset(Vector3 basePosition)
+    {
+        Vector3 collisionNormal = knifeController.GetCollisionNormal();
+
+        if (collisionNormal == Vector3.zero)
+            return Vector3.zero;
+
+        Vector3 offset = Vector3.zero;
+
+        // Check directions at right angles from collision normal
+        Quaternion rotateToNormal = Quaternion.FromToRotation(Vector3.up, collisionNormal);
+        Vector3 forward = rotateToNormal * Vector3.forward;
+        Vector3 right = rotateToNormal * Vector3.right;
+
+        //Debug.DrawLine(basePosition, basePosition + (forward * 2), Color.cyan, 5f);
+        //Debug.DrawLine(basePosition, basePosition + (right * 2), Color.magenta, 5f);
+
+        Collider col = GetComponent<Collider>();
+        float forwardDist = Vector3.Distance(transform.position, col.ClosestPointOnBounds(transform.position + forward));
+        float rightDist = Vector3.Distance(transform.position, col.ClosestPointOnBounds(transform.position + right));
+
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(basePosition, forward, out hitInfo, forwardDist))
+            offset -= forward * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, -forward, out hitInfo, forwardDist))
+            offset += forward * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, right, out hitInfo, rightDist))
+            offset -= right * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, -right, out hitInfo, rightDist))
+            offset += right * hitInfo.distance;
+
+        Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
+
+        return offset;
+    }
+
+    private Vector3 OmniRaycastOffset(Vector3 basePosition)
+    {
+        Vector3 offset = Vector3.zero;
+
+        // Check distance at cardinal directions
+        Vector3 up = transform.up;
+        Vector3 forward = transform.forward;
+        Vector3 right = transform.right;
+
+        Collider col = GetComponent<Collider>();
+        float verDist = 1f;
+        float horDist = 0.5f;
+
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(basePosition, up, out hitInfo, verDist))
+            offset -= up * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, -up, out hitInfo, verDist))
+            offset += up * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, forward, out hitInfo, horDist))
+            offset -= forward * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist))
+            offset += forward * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, right, out hitInfo, horDist))
+            offset -= right * hitInfo.distance;
+
+        if (Physics.Raycast(basePosition, -right, out hitInfo, horDist))
+            offset += right * hitInfo.distance;
+
+        Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
+
+        return offset;
     }
 
     public bool IsSafeToWarp()

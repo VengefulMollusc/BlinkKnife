@@ -69,8 +69,11 @@ public class WarpLookAheadCollider : MonoBehaviour
         {
             lastUsablePos = safeWarpCollider.transform.position;
             transform.position = lastUsablePos;
+            colliding = false;
+            return;
         }
-        else if (!colliding)
+
+        if (!colliding)
         {
             // if not colliding, this spot is safe
             lastUsablePos = transform.position;
