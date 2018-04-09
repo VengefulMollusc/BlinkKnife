@@ -13,7 +13,7 @@ public class SafeWarpCollider : MonoBehaviour
 
     private bool safeToWarp;
 
-    private Vector3 lastPosition;
+    private Vector3 lastKnifePosition;
 
     public const string UpdateLookAheadColliderNotification = "SafeWarpCollider.UpdateLookAheadColliderNotification";
 
@@ -22,10 +22,16 @@ public class SafeWarpCollider : MonoBehaviour
 	{
 	    knifeController = transform.parent.GetComponent<KnifeController>();
 	    safeToWarp = true;
-	    lastPosition = transform.position;
+	    lastKnifePosition = knifeController.GetPosition();
 	}
 	
-	void FixedUpdate () {
+	void FixedUpdate ()
+	{
+	    if (knifeController.GetPosition() == lastKnifePosition)
+	        return;
+
+	    lastKnifePosition = knifeController.GetPosition();
+
         // reset to knife position and gravity rotation
         if (transform.position != knifeController.transform.position)
             transform.position = knifeController.transform.position;
@@ -54,13 +60,8 @@ public class SafeWarpCollider : MonoBehaviour
 	    {
 	        transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
 	    }
-
-	    if (transform.position != lastPosition)
-	    {
-	        lastPosition = transform.position;
-            // Only update WarpLookAhead if collider has moved
-	        this.PostNotification(UpdateLookAheadColliderNotification, transform);
-        }
+        
+	    this.PostNotification(UpdateLookAheadColliderNotification, transform);
 
     }
 
