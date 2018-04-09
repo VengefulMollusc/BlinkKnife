@@ -70,7 +70,7 @@ namespace AssemblyCSharp
         public void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other)
         {
             // disable rigidbody
-            rb.detectCollisions = false;
+            //rb.detectCollisions = true;
             rb.isKinematic = true;
 
             stuckInSurface = true;
