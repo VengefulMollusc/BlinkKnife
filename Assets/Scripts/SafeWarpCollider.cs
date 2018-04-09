@@ -18,23 +18,30 @@ public class SafeWarpCollider : MonoBehaviour
 	}
 	
 	void FixedUpdate () {
-	    // if knife has stuck, get position offset from wall
-	    if (knifeController.HasStuck())
+        // reset to knife position and gravity rotation
+        if (transform.position != knifeController.transform.position)
+            transform.position = knifeController.transform.position;
+
+        // if knife has stuck, get position offset from wall
+        if (knifeController.HasStuck())
 	    {
 	        // Check if gravity warp
 	        if (knifeController.ShiftGravity())
 	        {
-	            if (transform.up != -knifeController.GetGravVector())
-	                transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
-	        }
-	        else if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
-	        {
-	            transform.rotation = GlobalGravityControl.GetGravityRotation();
-	        }
+                if (transform.up != -knifeController.GetGravVector())
+                {
+                    transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
+                }
+            }
+            else if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
+            {
+                Debug.Log("Aligning to gravity");
+                transform.rotation = GlobalGravityControl.GetGravityRotation();
+            }
 
-	        Vector3 newPosition = CollisionOffset();
-	        newPosition += SurfaceRaycastOffset(newPosition);
-	        transform.position = newPosition;
+            Vector3 newPosition = CollisionOffset();
+            //newPosition += SurfaceRaycastOffset(newPosition);
+            transform.position = newPosition;
 	    }
 	    else if (!safeToWarp)
 	    {
@@ -93,18 +100,18 @@ public class SafeWarpCollider : MonoBehaviour
         RaycastHit hitInfo;
 
         if (Physics.Raycast(basePosition, forward, out hitInfo, forwardDist))
-            offset -= forward * hitInfo.distance;
+            offset -= forward * (forwardDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, -forward, out hitInfo, forwardDist))
-            offset += forward * hitInfo.distance;
+            offset += forward * (forwardDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, right, out hitInfo, rightDist))
-            offset -= right * hitInfo.distance;
+            offset -= right * (rightDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, -right, out hitInfo, rightDist))
-            offset += right * hitInfo.distance;
+            offset += right * (rightDist - hitInfo.distance);
 
-        Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
+        //Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
 
         return offset;
     }
@@ -125,24 +132,24 @@ public class SafeWarpCollider : MonoBehaviour
         RaycastHit hitInfo;
 
         if (Physics.Raycast(basePosition, up, out hitInfo, verDist))
-            offset -= up * hitInfo.distance;
+            offset -= up * (verDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, -up, out hitInfo, verDist))
-            offset += up * hitInfo.distance;
+            offset += up * (verDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, forward, out hitInfo, horDist))
-            offset -= forward * hitInfo.distance;
+            offset -= forward * (horDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist))
-            offset += forward * hitInfo.distance;
+            offset += forward * (horDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, right, out hitInfo, horDist))
-            offset -= right * hitInfo.distance;
+            offset -= right * (horDist - hitInfo.distance);
 
         if (Physics.Raycast(basePosition, -right, out hitInfo, horDist))
-            offset += right * hitInfo.distance;
+            offset += right * (horDist - hitInfo.distance);
 
-        Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
+        //Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
 
         return offset;
     }

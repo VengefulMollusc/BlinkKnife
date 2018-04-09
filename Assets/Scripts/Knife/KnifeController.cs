@@ -74,8 +74,12 @@ namespace AssemblyCSharp
             rb.isKinematic = true;
 
             stuckInSurface = true;
-            collisionPositionOffset = _position - transform.position;
+
+            // align knife position with collision position
+            transform.position = _position;
             transform.rotation = Quaternion.FromToRotation(Vector3.up, _normal);
+
+            collisionPositionOffset = _position - transform.position;
             //transform.up = _normal;
 
             // stick knife out of surface at collision point
@@ -91,7 +95,10 @@ namespace AssemblyCSharp
             {
                 gravPanel = objectStuck.GetComponent<GravityPanel>();
                 gravShiftVector = gravPanel.GetGravityVector();
-            }
+
+                if (gravShiftVector == Vector3.zero)
+                    gravShiftVector = -_normal;
+            } 
 
             // activate knife marker ui
             Info<Transform, bool> info = new Info<Transform, bool>(transform, gravPanel != null);

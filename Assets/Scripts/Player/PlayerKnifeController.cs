@@ -11,6 +11,7 @@ public class PlayerKnifeController : MonoBehaviour
 	[SerializeField]
 	private bool alwaysGravShift = false;
 
+    [SerializeField]
     private float timeToAutoRecall = 1.5f;
     private float autoRecallTimer;
 

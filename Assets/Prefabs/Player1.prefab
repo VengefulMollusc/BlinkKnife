@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 81000011721303736}
   - component: {fileID: 114000010097986432}
   - component: {fileID: 114000012321050414}
-  - component: {fileID: 114000013602115616}
   m_Layer: 13
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -515,18 +514,6 @@ MonoBehaviour:
   shaderFXAAPreset3: {fileID: 4800000, guid: c182fa94a5a0a4c02870641efcd38cd5, type: 3}
   shaderFXAAII: {fileID: 4800000, guid: cd5b323dcc592457790ff18b528f5e67, type: 3}
   shaderFXAAIII: {fileID: 4800000, guid: c547503fff0e8482ea5793727057041c, type: 3}
---- !u!114 &114000013602115616
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012131203330}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e43217f010fa9642a28a4c3f577eaef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cubePrefab: {fileID: 1000012355135860, guid: 4de3670ec48488d4780d01de60252ad6, type: 2}
 --- !u!114 &114000013987700400
 MonoBehaviour:
   m_ObjectHideFlags: 1
