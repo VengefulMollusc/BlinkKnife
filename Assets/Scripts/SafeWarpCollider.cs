@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class SafeWarpCollider : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask raycastMask;
+
     private KnifeController knifeController;
 
     private bool safeToWarp;
@@ -134,22 +137,22 @@ public class SafeWarpCollider : MonoBehaviour
 
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(basePosition, up, out hitInfo, verDist))
+        if (Physics.Raycast(basePosition, up, out hitInfo, verDist, raycastMask))
             offset -= up * (verDist - hitInfo.distance);
 
-        if (Physics.Raycast(basePosition, -up, out hitInfo, verDist))
+        if (Physics.Raycast(basePosition, -up, out hitInfo, verDist, raycastMask))
             offset += up * (verDist - hitInfo.distance);
 
-        if (Physics.Raycast(basePosition, forward, out hitInfo, horDist))
+        if (Physics.Raycast(basePosition, forward, out hitInfo, horDist, raycastMask))
             offset -= forward * (horDist - hitInfo.distance);
 
-        if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist))
+        if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist, raycastMask))
             offset += forward * (horDist - hitInfo.distance);
 
-        if (Physics.Raycast(basePosition, right, out hitInfo, horDist))
+        if (Physics.Raycast(basePosition, right, out hitInfo, horDist, raycastMask))
             offset -= right * (horDist - hitInfo.distance);
 
-        if (Physics.Raycast(basePosition, -right, out hitInfo, horDist))
+        if (Physics.Raycast(basePosition, -right, out hitInfo, horDist, raycastMask))
             offset += right * (horDist - hitInfo.distance);
 
         //Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
