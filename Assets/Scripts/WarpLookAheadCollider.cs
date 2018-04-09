@@ -15,12 +15,9 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     private SafeWarpCollider safeWarpCollider;
 
-    private Vector3 lastKnifePos;
-
     private Rigidbody rb;
 
     private Vector3 lastUsablePos;
-    //private Vector3 backCheckDistance;
 
     private bool enabled;
 
@@ -53,6 +50,11 @@ public class WarpLookAheadCollider : MonoBehaviour
         this.RemoveObserver(UpdateWarpLookAhead, SafeWarpCollider.UpdateLookAheadColliderNotification);
     }
 
+    void FixedUpdate()
+    {
+        rb.velocity = Vector3.zero;
+    }
+
     void UpdateWarpLookAhead(object sender, object args)
     {
         if (!enabled)
@@ -66,15 +68,12 @@ public class WarpLookAheadCollider : MonoBehaviour
 
         Transform safeColliderTransform = (Transform)args;
 
-        rb.velocity = Vector3.zero;
         rb.MovePosition(safeColliderTransform.position); // using MovePosition here updates collisions
         //transform.position = safeColliderTransform.position;
         transform.rotation = safeColliderTransform.rotation;
 
         if (safeWarpCollider.IsSafeToWarp() || !colliding)
-        {
-            lastUsablePos = transform.position;
-        }
+            lastUsablePos = safeColliderTransform.position;
 
         transform.position = lastUsablePos;
 
@@ -119,7 +118,6 @@ public class WarpLookAheadCollider : MonoBehaviour
         transform.position = knifeObject.transform.position;
         transform.rotation = GlobalGravityControl.GetGravityRotation();
         lastUsablePos = knifeObject.transform.position;
-        lastKnifePos = knifeObject.transform.position;
     }
 
     // Update position to match knife position
@@ -201,9 +199,9 @@ public class WarpLookAheadCollider : MonoBehaviour
         //    backCheckDistance = transform.position - lastUsablePos;
     }
 
-    //void OnTriggerExit(Collider col)
-    //{
-    //    //colliding.Remove(col);
-    //    colliding = false;
-    //}
+    void OnTriggerExit(Collider col)
+    {
+        //colliding.Remove(col);
+        colliding = false;
+    }
 }

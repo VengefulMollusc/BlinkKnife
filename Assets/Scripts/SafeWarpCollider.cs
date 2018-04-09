@@ -28,9 +28,12 @@ public class SafeWarpCollider : MonoBehaviour
 	void FixedUpdate ()
 	{
 	    if (knifeController.GetPosition() == lastKnifePosition)
+	    {
+	        this.PostNotification(UpdateLookAheadColliderNotification, transform);
 	        return;
+	    }
 
-	    lastKnifePosition = knifeController.GetPosition();
+        lastKnifePosition = knifeController.GetPosition();
 
         // reset to knife position and gravity rotation
         if (transform.position != knifeController.transform.position)
@@ -53,7 +56,7 @@ public class SafeWarpCollider : MonoBehaviour
             }
 
             Vector3 newPosition = CollisionOffset();
-            //newPosition += SurfaceRaycastOffset(newPosition);
+            newPosition += SurfaceRaycastOffset(newPosition);
             transform.position = newPosition;
 	    }
 	    else if (!safeToWarp)
@@ -62,7 +65,6 @@ public class SafeWarpCollider : MonoBehaviour
 	    }
         
 	    this.PostNotification(UpdateLookAheadColliderNotification, transform);
-
     }
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to
