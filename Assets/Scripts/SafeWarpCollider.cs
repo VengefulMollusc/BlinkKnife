@@ -34,7 +34,7 @@ public class SafeWarpCollider : MonoBehaviour
             if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
                 transform.rotation = GlobalGravityControl.GetGravityRotation();
 
-            transform.localPosition = CollisionOffsetPosition();
+            transform.position = CollisionOffsetPosition();
         }
     }
 
@@ -63,7 +63,7 @@ public class SafeWarpCollider : MonoBehaviour
 
         Vector3 pointDiff = closestPointOnCollider - transform.position;
 
-        return (collisionPos - pointDiff) - knifeController.GetPosition();
+        return collisionPos - pointDiff;
     }
 
     public bool IsSafeToWarp()
