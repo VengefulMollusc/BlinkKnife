@@ -13,6 +13,8 @@ public class SafeWarpCollider : MonoBehaviour
 
     private bool safeToWarp;
 
+    private Vector3 lastPosition;
+
     public const string UpdateLookAheadColliderNotification = "SafeWarpCollider.UpdateLookAheadColliderNotification";
 
     // Use this for initialization
@@ -20,6 +22,7 @@ public class SafeWarpCollider : MonoBehaviour
 	{
 	    knifeController = transform.parent.GetComponent<KnifeController>();
 	    safeToWarp = true;
+	    lastPosition = transform.position;
 	}
 	
 	void FixedUpdate () {
@@ -52,7 +55,13 @@ public class SafeWarpCollider : MonoBehaviour
 	        transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
 	    }
 
-        this.PostNotification(UpdateLookAheadColliderNotification, transform);
+	    if (transform.position != lastPosition)
+	    {
+	        lastPosition = transform.position;
+            // Only update WarpLookAhead if collider has moved
+	        this.PostNotification(UpdateLookAheadColliderNotification, transform);
+        }
+
     }
 
     // Uses the position and collisionNormal from the knife to calculate where the player should warp to
