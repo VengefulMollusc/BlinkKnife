@@ -7,7 +7,7 @@ using UnityEngine;
 public class SafeWarpCollider : MonoBehaviour
 {
     [SerializeField]
-    private LayerMask raycastMask;
+    private LayerMask collisionOffsetLayerMask;
 
     private KnifeController knifeController;
 
@@ -27,11 +27,11 @@ public class SafeWarpCollider : MonoBehaviour
 	
 	void FixedUpdate ()
 	{
-	    if (knifeController.GetPosition() == lastKnifePosition)
-	    {
-	        this.PostNotification(UpdateLookAheadColliderNotification, transform);
-	        return;
-	    }
+        if (knifeController.GetPosition() == lastKnifePosition)
+        {
+            this.PostNotification(UpdateLookAheadColliderNotification, transform);
+            return;
+        }
 
         lastKnifePosition = knifeController.GetPosition();
 
@@ -42,8 +42,8 @@ public class SafeWarpCollider : MonoBehaviour
         // if knife has stuck, get position offset from wall
         if (knifeController.HasStuck())
 	    {
-	        // Check if gravity warp
-	        if (knifeController.ShiftGravity())
+            // Check if gravity warp
+            if (knifeController.ShiftGravity())
 	        {
                 if (transform.up != -knifeController.GetGravVector())
                 {
@@ -61,7 +61,7 @@ public class SafeWarpCollider : MonoBehaviour
 	    }
 	    else if (!safeToWarp)
 	    {
-	        transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
+            transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
 	    }
         
 	    this.PostNotification(UpdateLookAheadColliderNotification, transform);
@@ -93,6 +93,29 @@ public class SafeWarpCollider : MonoBehaviour
 
         return knifeController.GetPosition() - pointDiff;
     }
+
+    //private Vector3 SphereCastOffset(Vector3 basePosition)
+    //{
+    //    Vector3 offset = Vector3.zero;
+    //    Vector3 collisionNormal = knifeController.GetCollisionNormal();
+
+    //    RaycastHit[] hits;
+
+    //    // SphereCast from one end of collider to the other
+    //    hits = Physics.SphereCastAll(basePosition - (transform.up * 0.5f), 0.5f, transform.up, 1f, collisionOffsetLayerMask);
+
+    //    bool reverseSweepNeeded = false;
+
+    //    foreach (RaycastHit hit in hits)
+    //    {
+    //        // check for point values of Vector3.zero - these were overlapped at start of sweep
+    //        // may require reverse sweep
+    //        if (hit.point == Vector3.zero)
+    //            reverseSweepNeeded = true;
+    //    }
+
+    //    return offset;
+    //}
 
     private Vector3 SurfaceRaycastOffset(Vector3 basePosition)
     {
@@ -149,23 +172,59 @@ public class SafeWarpCollider : MonoBehaviour
 
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(basePosition, up, out hitInfo, verDist, raycastMask))
-            offset -= up * (verDist - hitInfo.distance);
+        Vector3 posOffset = Vector3.zero;
+        Vector3 negOffset = Vector3.zero;
 
-        if (Physics.Raycast(basePosition, -up, out hitInfo, verDist, raycastMask))
-            offset += up * (verDist - hitInfo.distance);
 
-        if (Physics.Raycast(basePosition, forward, out hitInfo, horDist, raycastMask))
-            offset -= forward * (horDist - hitInfo.distance);
+        // Up/Down raycasts
+        if (Physics.Raycast(basePosition, up, out hitInfo, verDist, collisionOffsetLayerMask))
+        {
+            posOffset = up * (verDist - hitInfo.distance);
+        }
 
-        if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist, raycastMask))
-            offset += forward * (horDist - hitInfo.distance);
+        if (Physics.Raycast(basePosition, -up, out hitInfo, verDist, collisionOffsetLayerMask))
+        {
+            negOffset = up * (verDist - hitInfo.distance);
+        }
 
-        if (Physics.Raycast(basePosition, right, out hitInfo, horDist, raycastMask))
-            offset -= right * (horDist - hitInfo.distance);
+        if (posOffset != Vector3.zero && negOffset != Vector3.zero)
+        {
+            return Vector3.zero;
+        }
 
-        if (Physics.Raycast(basePosition, -right, out hitInfo, horDist, raycastMask))
-            offset += right * (horDist - hitInfo.distance);
+
+        // forward/back raycasts
+        if (Physics.Raycast(basePosition, forward, out hitInfo, horDist, collisionOffsetLayerMask))
+        {
+            posOffset = forward * (horDist - hitInfo.distance);
+        }
+
+        if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist, collisionOffsetLayerMask))
+        {
+            negOffset = forward * (horDist - hitInfo.distance);
+        }
+
+        if (posOffset != Vector3.zero && negOffset != Vector3.zero)
+        {
+            return Vector3.zero;
+        }
+
+
+        // right/left raycasts
+        if (Physics.Raycast(basePosition, right, out hitInfo, horDist, collisionOffsetLayerMask))
+        {
+            posOffset = right * (horDist - hitInfo.distance);
+        }
+
+        if (Physics.Raycast(basePosition, -right, out hitInfo, horDist, collisionOffsetLayerMask))
+        {
+            negOffset = right * (horDist - hitInfo.distance);
+        }
+
+        if (posOffset != Vector3.zero && negOffset != Vector3.zero)
+        {
+            return Vector3.zero;
+        }
 
         //Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
 
