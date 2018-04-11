@@ -53,6 +53,12 @@ public class WarpLookAheadCollider : MonoBehaviour
     void FixedUpdate()
     {
         rb.velocity = Vector3.zero;
+        
+        if (enabled && knifeObject == null)
+        {
+            transform.position = lastUsablePos; // TODO: remove - this for debugging
+            Enabled(false);
+        }
     }
 
     void UpdateWarpLookAhead(object sender, object args)
@@ -60,24 +66,29 @@ public class WarpLookAheadCollider : MonoBehaviour
         if (!enabled)
             return;
 
-        if (knifeObject == null)
-        {
-            Enabled(false);
-            return;
-        }
+        // If not colliding at current position, is safe
+        if (!colliding)
+            lastUsablePos = transform.position;
 
+        colliding = false;
+
+        // Move to safecollider position
         Transform safeColliderTransform = (Transform)args;
 
         rb.MovePosition(safeColliderTransform.position); // using MovePosition here updates collisions
-        //transform.position = safeColliderTransform.position;
         transform.rotation = safeColliderTransform.rotation;
 
-        if (safeWarpCollider.IsSafeToWarp() || !colliding)
+        // TODO: figure out if this is unnesessary - we are moving to this location anyway so colliding should be false next update
+        if (safeWarpCollider.IsSafeToWarp())
             lastUsablePos = safeColliderTransform.position;
 
-        //transform.position = lastUsablePos;
+        //if (safeWarpCollider.IsSafeToWarp() || !colliding)
+        //{
+        //    Debug.Log("SafeWarpCol: " + safeWarpCollider.IsSafeToWarp() + "  !colliding: " + !colliding);
+        //    lastUsablePos = transform.position;
+        //}
 
-        colliding = false;
+        //transform.position = lastUsablePos;
 
         //return;
         //else
