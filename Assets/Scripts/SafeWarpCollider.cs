@@ -172,59 +172,65 @@ public class SafeWarpCollider : MonoBehaviour
 
         RaycastHit hitInfo;
 
-        Vector3 posOffset = Vector3.zero;
-        Vector3 negOffset = Vector3.zero;
+        //Vector3 posOffset = Vector3.zero;
+        //Vector3 negOffset = Vector3.zero;
 
 
         // Up/Down raycasts
         if (Physics.Raycast(basePosition, up, out hitInfo, verDist, collisionOffsetLayerMask))
         {
-            posOffset = up * (verDist - hitInfo.distance);
+            offset -= up * (verDist - hitInfo.distance);
         }
 
         if (Physics.Raycast(basePosition, -up, out hitInfo, verDist, collisionOffsetLayerMask))
         {
-            negOffset = up * (verDist - hitInfo.distance);
+            offset += up * (verDist - hitInfo.distance);
         }
 
-        if (posOffset != Vector3.zero && negOffset != Vector3.zero)
-        {
-            return Vector3.zero;
-        }
+        //if (posOffset != Vector3.zero && negOffset != Vector3.zero)
+        //{
+        //    return Vector3.zero;
+        //}
+
+        //offset += negOffset + posOffset;
 
 
         // forward/back raycasts
         if (Physics.Raycast(basePosition, forward, out hitInfo, horDist, collisionOffsetLayerMask))
         {
-            posOffset = forward * (horDist - hitInfo.distance);
+            offset -= forward * (horDist - hitInfo.distance);
         }
 
         if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist, collisionOffsetLayerMask))
         {
-            negOffset = forward * (horDist - hitInfo.distance);
+            offset += forward * (horDist - hitInfo.distance);
         }
 
-        if (posOffset != Vector3.zero && negOffset != Vector3.zero)
-        {
-            return Vector3.zero;
-        }
+        //if (posOffset != Vector3.zero && negOffset != Vector3.zero)
+        //{
+        //    return Vector3.zero;
+        //}
+
+        //offset += negOffset + posOffset;
 
 
         // right/left raycasts
         if (Physics.Raycast(basePosition, right, out hitInfo, horDist, collisionOffsetLayerMask))
         {
-            posOffset = right * (horDist - hitInfo.distance);
+            offset -= right * (horDist - hitInfo.distance);
         }
 
         if (Physics.Raycast(basePosition, -right, out hitInfo, horDist, collisionOffsetLayerMask))
         {
-            negOffset = right * (horDist - hitInfo.distance);
+            offset += right * (horDist - hitInfo.distance);
         }
 
-        if (posOffset != Vector3.zero && negOffset != Vector3.zero)
-        {
-            return Vector3.zero;
-        }
+        //if (posOffset != Vector3.zero && negOffset != Vector3.zero)
+        //{
+        //    return Vector3.zero;
+        //}
+
+        //offset += negOffset + posOffset;
 
         //Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
 

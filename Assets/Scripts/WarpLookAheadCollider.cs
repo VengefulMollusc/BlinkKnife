@@ -75,7 +75,7 @@ public class WarpLookAheadCollider : MonoBehaviour
         if (safeWarpCollider.IsSafeToWarp() || !colliding)
             lastUsablePos = safeColliderTransform.position;
 
-        transform.position = lastUsablePos;
+        //transform.position = lastUsablePos;
 
         colliding = false;
 
