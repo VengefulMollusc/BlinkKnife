@@ -16,7 +16,7 @@ public class GlobalGravityControl : MonoBehaviour {
     private static Vector3 currentGravDirection;
     private static float currentGravityStrength = 35f;
 
-    private static Vector3 tempGravDir;
+    private static Vector3 gravTransitionFromDir;
 
     // gravity target direction and shift speed
     // used when shifting
@@ -79,11 +79,18 @@ public class GlobalGravityControl : MonoBehaviour {
         return Quaternion.FromToRotation(-_up, currentGravDirection);
     }
 
+    // Begins a smooth transition from the current gravity direction back to the default(down) direction
+    public static void TransitionToDefault(float _duration = 2f)
+    {
+        // TODO: test logic here to map duration to size of gravity change
+        TransitionGravity(Vector3.down, _duration);
+    }
+
     public static void TransitionGravity(Vector3 _newGravDirection, float _duration)
     {
         duration = _duration;
         targetGravDirection = _newGravDirection.normalized;
-        tempGravDir = currentGravDirection;
+        gravTransitionFromDir = currentGravDirection;
 
         // trigger scene objects to rotate
         foreach (RotateToGravity r in rotationObjects)
@@ -106,7 +113,7 @@ public class GlobalGravityControl : MonoBehaviour {
         while (t < 1f)
         {
             t += Time.deltaTime * (Time.timeScale / duration);
-            currentGravDirection = Vector3.Slerp(tempGravDir, targetGravDirection, t);
+            currentGravDirection = Vector3.Slerp(gravTransitionFromDir, targetGravDirection, t);
 
             // update gravity-dependant objects here
             //playerMotor.UpdateGravityDirection(currentGravDirection);

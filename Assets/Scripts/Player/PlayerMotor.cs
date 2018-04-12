@@ -30,7 +30,9 @@ public class PlayerMotor : MonoBehaviour
     private float warpGravShiftAngle = 1f;
 
     [SerializeField]
-    private float gravityShiftTimeLimit = 5f;
+    private float gravShiftTimeLimit = 5f;
+
+    private Coroutine gravShiftTimerCoroutine;
 
     //[SerializeField]
     //[Range(0f, 20f)]
@@ -655,11 +657,33 @@ public class PlayerMotor : MonoBehaviour
         {
             GlobalGravityControl.TransitionGravity(newGravDirection, duration);
 
-            // TODO: Begin gravity shift countdown - possibly coroutine??
+            // Begin gravity shift countdown coroutine
+            if (gravShiftTimerCoroutine != null)
+            {
+                StopCoroutine(gravShiftTimerCoroutine);
+            }
+            gravShiftTimerCoroutine = StartCoroutine("GravShiftCountdown");
         }
-
     }
 
+    // counts for the given gravity shift duration then triggers a transition back to default gravity
+    IEnumerator GravShiftCountdown()
+    {
+        float t = 0.0f;
+        while (t < 1f)
+        {
+            // Don't count down if frozen (stops countdown from running while warp transition is happening)
+            if (!frozen)
+                t += Time.deltaTime * (Time.timeScale / gravShiftTimeLimit);
+
+            yield return 0;
+        }
+
+        // trigger transition back to default gravity
+        GlobalGravityControl.TransitionToDefault();
+    }
+
+    // Resets/reenables player once warp transition has completed
     void EndWarp(object sender, object args)
     {
         Info<Vector3, Vector3, bool> info = (Info<Vector3, Vector3, bool>) args;
