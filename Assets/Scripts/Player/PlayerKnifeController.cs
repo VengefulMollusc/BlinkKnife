@@ -288,9 +288,9 @@ public class PlayerKnifeController : MonoBehaviour
 		if (currentWarps < maxWarps)
 		{
 		    if (playerMotor.IsOnGround())
-                warpRecharge -= Time.fixedDeltaTime;
+                warpRecharge -= Time.deltaTime;
 		    else
-		        warpRecharge -= (Time.fixedDeltaTime * 0.2f); // recharge at 1/5th rate when airborne
+		        warpRecharge -= (Time.deltaTime * 0.2f); // recharge at slower rate when airborne
 
             if (warpRecharge <= 0){
 				//warpCounters [currentWarps].enabled = true;
@@ -381,7 +381,7 @@ public class PlayerKnifeController : MonoBehaviour
 
         // move player to knife position and inherit velocity
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
-		Vector3 _velocity = knifeController.GetVelocity().normalized;
+		//Vector3 _velocity = knifeController.GetVelocity().normalized;
 		//playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetStuckObject(), knifeController.GetSurfaceNormal());
         playerMotor.WarpToKnife(shiftGravity, knifeController, bounceWarp);
 

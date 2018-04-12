@@ -29,6 +29,9 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField]
     private float warpGravShiftAngle = 1f;
 
+    [SerializeField]
+    private float gravityShiftTimeLimit = 5f;
+
     //[SerializeField]
     //[Range(0f, 20f)]
     //private float airVelThreshold = 10f;
@@ -651,6 +654,8 @@ public class PlayerMotor : MonoBehaviour
         if (gravityShift)
         {
             GlobalGravityControl.TransitionGravity(newGravDirection, duration);
+
+            // TODO: Begin gravity shift countdown - possibly coroutine??
         }
 
     }
