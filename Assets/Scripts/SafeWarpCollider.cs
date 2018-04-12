@@ -67,7 +67,8 @@ public class SafeWarpCollider : MonoBehaviour
 	    this.PostNotification(UpdateLookAheadColliderNotification, transform);
     }
 
-    // Uses the position and collisionNormal from the knife to calculate where the player should warp to
+    // Offsets collider position when knife has stuck to a surface
+    // Places collider so that it is touching the point where the knife has collided
     private Vector3 CollisionOffset()
     {
         Vector3 collisionNormal = knifeController.GetCollisionNormal();
@@ -94,29 +95,8 @@ public class SafeWarpCollider : MonoBehaviour
         return knifeController.GetPosition() - pointDiff;
     }
 
-    //private Vector3 SphereCastOffset(Vector3 basePosition)
-    //{
-    //    Vector3 offset = Vector3.zero;
-    //    Vector3 collisionNormal = knifeController.GetCollisionNormal();
-
-    //    RaycastHit[] hits;
-
-    //    // SphereCast from one end of collider to the other
-    //    hits = Physics.SphereCastAll(basePosition - (transform.up * 0.5f), 0.5f, transform.up, 1f, collisionOffsetLayerMask);
-
-    //    bool reverseSweepNeeded = false;
-
-    //    foreach (RaycastHit hit in hits)
-    //    {
-    //        // check for point values of Vector3.zero - these were overlapped at start of sweep
-    //        // may require reverse sweep
-    //        if (hit.point == Vector3.zero)
-    //            reverseSweepNeeded = true;
-    //    }
-
-    //    return offset;
-    //}
-
+    // raycasts in 4 cardinal directions parallel to the surface the knife collided with.
+    // shifts the collider along the surface according to the raycast result
     private Vector3 SurfaceRaycastOffset(Vector3 basePosition)
     {
         Vector3 collisionNormal = knifeController.GetCollisionNormal();
@@ -130,9 +110,6 @@ public class SafeWarpCollider : MonoBehaviour
         Quaternion rotateToNormal = Quaternion.FromToRotation(Vector3.up, collisionNormal);
         Vector3 forward = rotateToNormal * Vector3.forward;
         Vector3 right = rotateToNormal * Vector3.right;
-
-        //Debug.DrawLine(basePosition, basePosition + (forward * 2), Color.cyan, 5f);
-        //Debug.DrawLine(basePosition, basePosition + (right * 2), Color.magenta, 5f);
 
         Collider col = GetComponent<Collider>();
         float forwardDist = Vector3.Distance(transform.position, col.ClosestPoint(transform.position + forward));
@@ -157,6 +134,8 @@ public class SafeWarpCollider : MonoBehaviour
         return offset;
     }
 
+    // raycasts in 6 cardinal directions while the knife is airborne
+    // shifts the collider to avoid obstacles
     private Vector3 OmniRaycastOffset(Vector3 basePosition)
     {
         Vector3 offset = Vector3.zero;
@@ -172,67 +151,29 @@ public class SafeWarpCollider : MonoBehaviour
 
         RaycastHit hitInfo;
 
-        //Vector3 posOffset = Vector3.zero;
-        //Vector3 negOffset = Vector3.zero;
-
 
         // Up/Down raycasts
         if (Physics.Raycast(basePosition, up, out hitInfo, verDist, collisionOffsetLayerMask))
-        {
             offset -= up * (verDist - hitInfo.distance);
-        }
 
         if (Physics.Raycast(basePosition, -up, out hitInfo, verDist, collisionOffsetLayerMask))
-        {
             offset += up * (verDist - hitInfo.distance);
-        }
-
-        //if (posOffset != Vector3.zero && negOffset != Vector3.zero)
-        //{
-        //    return Vector3.zero;
-        //}
-
-        //offset += negOffset + posOffset;
 
 
         // forward/back raycasts
         if (Physics.Raycast(basePosition, forward, out hitInfo, horDist, collisionOffsetLayerMask))
-        {
             offset -= forward * (horDist - hitInfo.distance);
-        }
 
         if (Physics.Raycast(basePosition, -forward, out hitInfo, horDist, collisionOffsetLayerMask))
-        {
             offset += forward * (horDist - hitInfo.distance);
-        }
-
-        //if (posOffset != Vector3.zero && negOffset != Vector3.zero)
-        //{
-        //    return Vector3.zero;
-        //}
-
-        //offset += negOffset + posOffset;
 
 
         // right/left raycasts
         if (Physics.Raycast(basePosition, right, out hitInfo, horDist, collisionOffsetLayerMask))
-        {
             offset -= right * (horDist - hitInfo.distance);
-        }
 
         if (Physics.Raycast(basePosition, -right, out hitInfo, horDist, collisionOffsetLayerMask))
-        {
             offset += right * (horDist - hitInfo.distance);
-        }
-
-        //if (posOffset != Vector3.zero && negOffset != Vector3.zero)
-        //{
-        //    return Vector3.zero;
-        //}
-
-        //offset += negOffset + posOffset;
-
-        //Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
 
         return offset;
     }

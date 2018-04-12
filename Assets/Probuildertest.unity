@@ -4583,26 +4583,6 @@ Prefab:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
-      propertyPath: throwAngleModifier
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
-      propertyPath: throwHeightModifier
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
-      propertyPath: throwStrength
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010097986432, guid: 27124a539f1f17b48a2e0d6d99a75e46,
-        type: 2}
-      propertyPath: timeToAutoRecall
-      value: 20
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 27124a539f1f17b48a2e0d6d99a75e46, type: 2}
   m_IsPrefabParent: 0
