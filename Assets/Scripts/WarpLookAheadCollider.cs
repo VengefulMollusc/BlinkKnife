@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class WarpLookAheadCollider : MonoBehaviour
 {
-    public static float updateFrequency = 0.1f;
-
     private Collider[] lookAheadColliders;
     private bool colliding;
 
@@ -19,17 +17,7 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     private Vector3 lastUsablePos;
 
-    private bool enabled;
-
-    /*
-     * Several way I could do this.
-     * 
-     * find closest point to final knife position where collider will fit.
-     * 
-     * Follow path of knife and record last position where not colliding with anything. 
-     * (THIS ONE LOOKING MOST LIKELY - not too complicated and provides easy fix for knife in crevice issues. 
-     * Wouldn't have to have warp fizzle state)
-     */
+    private bool collidersEnabled;
 
     void OnEnable()
     {
@@ -52,27 +40,29 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     void FixedUpdate()
     {
+        // keeps velocity at zero without disabling rigidbody etc
         rb.velocity = Vector3.zero;
         
-        if (enabled && knifeObject == null)
+        if (collidersEnabled && knifeObject == null)
         {
-            transform.position = lastUsablePos; // TODO: remove - this for debugging
+            //transform.position = lastUsablePos; // TODO: remove - this is for debugging. Shows warp position once warped
             Enabled(false);
         }
     }
 
+    // called by notification from SafeWarpCollider
     void UpdateWarpLookAhead(object sender, object args)
     {
-        if (!enabled)
+        if (!collidersEnabled)
             return;
 
-        // If not colliding at current position, is safe
+        // If not colliding current position is safe
         if (!colliding)
             lastUsablePos = transform.position;
 
         colliding = false;
 
-        // Move to safecollider position
+        // Move to safecollider position and match rotation
         Transform safeColliderTransform = (Transform)args;
 
         rb.MovePosition(safeColliderTransform.position); // using MovePosition here updates collisions
@@ -81,41 +71,6 @@ public class WarpLookAheadCollider : MonoBehaviour
         // TODO: figure out if this is unnesessary - we are moving to this location anyway so colliding should be false next update
         if (safeWarpCollider.IsSafeToWarp())
             lastUsablePos = safeColliderTransform.position;
-
-        //if (safeWarpCollider.IsSafeToWarp() || !colliding)
-        //{
-        //    Debug.Log("SafeWarpCol: " + safeWarpCollider.IsSafeToWarp() + "  !colliding: " + !colliding);
-        //    lastUsablePos = transform.position;
-        //}
-
-        //transform.position = lastUsablePos;
-
-        //return;
-        //else
-        //{
-        //    // if colliding at current position
-        //    // move slightly back towards last safe position.
-        //    // this continues until either the knife reaches a new safe position, or we move back far enough to be safe
-        //    rb.position = Vector3.MoveTowards(transform.position, lastUsablePos, 0.2f);
-
-        //    // TODO: rework this so it checks from lastUsablePos towards knife rather than the other way round
-        //    // May need second collider?????
-
-        //    //float newDist = backCheckDistance.magnitude - 0.1f;
-
-        //    //if (newDist <= 0)
-        //    //    backCheckDistance = Vector3.zero;
-        //    //else
-        //    //    backCheckDistance = backCheckDistance.normalized * newDist;
-
-        //    //rb.position = lastUsablePos + backCheckDistance;
-        //}
-
-        //CheckGravityWarp();
-
-        //MatchKnifePosition();
-
-        //colliding = false;
     }
 
     void OnAttachKnife(object sender, object args)
@@ -124,74 +79,26 @@ public class WarpLookAheadCollider : MonoBehaviour
         knifeObject = knifeController.gameObject;
         safeWarpCollider = knifeObject.GetComponentInChildren<SafeWarpCollider>();
         colliding = false;
-        Utilities.IgnoreCollisions(lookAheadColliders, knifeObject.GetComponents<Collider>(), true);
-        Enabled(true);
         transform.position = knifeObject.transform.position;
         transform.rotation = GlobalGravityControl.GetGravityRotation();
         lastUsablePos = knifeObject.transform.position;
+        Enabled(true);
     }
 
-    // Update position to match knife position
-    //private void MatchKnifePosition()
-    //{
-    //    //Vector3 warpPosition = CalculateWarpPosition();
-    //    Vector3 targetPosition = safeWarpCollider.transform.position;
-
-    //    if (lastKnifePos != safeWarpCollider.transform.position ||
-    //        Vector3.Distance(transform.position, targetPosition) > 1f)
-    //    {
-    //        //rb.MovePosition(knifeController.GetWarpTestPosition());
-    //        rb.MovePosition(Vector3.MoveTowards(transform.position, targetPosition, 1f));
-
-    //        lastKnifePos = knifeObject.transform.position;
-    //    }
-    //}
-
-    // Uses the position and collisionNormal from the knife to calculate where the player should warp to
-    //private Vector3 CalculateWarpPosition()
-    //{
-    //    Vector3 collisionNormal = knifeController.GetCollisionNormal();
-
-    //    if (collisionNormal == Vector3.zero)
-    //    {
-    //        return knifeController.GetPosition();
-    //    }
-
-    //    Vector3 collisionPos = knifeController.GetCollisionPosition();
-    //    Vector3 closestPointOnCollider = lookAheadColliders[0]
-    //        .ClosestPoint(transform.position - collisionNormal);
-
-    //    Vector3 pointDiff = closestPointOnCollider - transform.position;
-
-    //    return collisionPos - pointDiff;
-    //}
-
-    // Updates collider rotation if knife is going to perform a gravwarp
-    //private void CheckGravityWarp()
-    //{
-    //    if (knifeController.ShiftGravity() && transform.up != -knifeController.GetGravVector())
-    //    {
-    //        transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
-    //    }
-    //}
-
-    //private void OnGravityChange(object sender, object args)
-    //{
-    //    transform.rotation = GlobalGravityControl.GetGravityRotation();
-    //}
-
+    // Enables and disables colliders if not needed
     public void Enabled(bool _enabled)
     {
         foreach (Collider col in lookAheadColliders)
         {
             col.enabled = _enabled;
         }
-        enabled = _enabled;
+        collidersEnabled = _enabled;
 
-        if (!enabled)
+        if (!collidersEnabled)
             rb.velocity = Vector3.zero;
     }
 
+    // TODO: may just need to return lastUsable Pos
     public Vector3 WarpPosition()
     {
         if (colliding)
@@ -202,17 +109,11 @@ public class WarpLookAheadCollider : MonoBehaviour
 
     void OnTriggerStay(Collider col)
     {
-        //if (!colliding.Contains(col) && !col.isTrigger)
-        //    colliding.Add(col);
         colliding = true;
-
-        //if (backCheckDistance == Vector3.zero)
-        //    backCheckDistance = transform.position - lastUsablePos;
     }
 
     void OnTriggerExit(Collider col)
     {
-        //colliding.Remove(col);
         colliding = false;
     }
 }

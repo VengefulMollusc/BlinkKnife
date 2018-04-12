@@ -37,6 +37,7 @@ namespace AssemblyCSharp
 
             gravShiftVector = Vector3.zero;
 
+            // Attach the WarpLookAheadCollider to this knife
             this.PostNotification(AttachLookAheadColliderNotification, this);
 
             //transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
