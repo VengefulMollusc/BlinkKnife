@@ -62,7 +62,7 @@ public class SafeWarpCollider : MonoBehaviour
 	    else if (!safeToWarp)
 	    {
             transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
-	    }
+        }
         
 	    this.PostNotification(UpdateLookAheadColliderNotification, transform);
     }
@@ -144,13 +144,11 @@ public class SafeWarpCollider : MonoBehaviour
         Vector3 up = transform.up;
         Vector3 forward = transform.forward;
         Vector3 right = transform.right;
-
-        Collider col = GetComponent<Collider>();
+        
         float verDist = 1f;
         float horDist = 0.5f;
 
         RaycastHit hitInfo;
-
 
         // Up/Down raycasts
         if (Physics.Raycast(basePosition, up, out hitInfo, verDist, collisionOffsetLayerMask))

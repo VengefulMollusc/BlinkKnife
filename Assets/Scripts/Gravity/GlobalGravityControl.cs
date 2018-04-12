@@ -49,12 +49,6 @@ public class GlobalGravityControl : MonoBehaviour {
         instance = this;
     }
 
-    // Use this for initialization
- //   void Start () {
-        
-    
-	//}
-
     public static float GetGravityStrength()
     {
         return currentGravityStrength;
