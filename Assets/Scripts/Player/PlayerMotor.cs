@@ -290,6 +290,21 @@ public class PlayerMotor : MonoBehaviour
         UpdateGravityDirection(-transitionUp);
     }
 
+    // TODO: make sure velocity stays global
+    // TODO: alter so player can still look in all directions while transitioning
+    // TODO: Possibly do something like RotateToDirection to keep global look direction
+    public void UpdateGravityDirection(Vector3 _newGrav)
+    {
+        Vector3 newUp = -_newGrav;
+        // might be nessecary
+        transform.LookAt(transform.position + transform.forward, newUp); //?
+        // probably need similar code to RotateToDirection to align in correct direction
+
+        // possible fix - take from site to eliminate setting transform.up issue
+        transform.rotation = Quaternion.LookRotation(newUp, -transform.forward);
+        transform.Rotate(Vector3.right, 90f);
+    }
+
     //private void KeepGrounded()
     //{
     //RaycastHit hit;
@@ -717,21 +732,6 @@ public class PlayerMotor : MonoBehaviour
         {
             rb.velocity = knifeVel;
         }
-    }
-
-    // TODO: make sure velocity stays global
-    // TODO: alter so player can still look in all directions while transitioning
-    // TODO: Possibly do something like RotateToDirection to keep global look direction
-    public void UpdateGravityDirection(Vector3 _newGrav)
-    {
-        Vector3 _newUp = -_newGrav;
-        // might be nessecary
-        transform.LookAt(transform.position + transform.forward, _newUp); //?
-        // probably need similar code to RotateToDirection to align in correct direction
-
-        // possible fix - take from site to eliminate setting transform.up issue
-        transform.rotation = Quaternion.LookRotation(_newUp, -transform.forward);
-        transform.Rotate(Vector3.right, 90f);
     }
 
     /*
