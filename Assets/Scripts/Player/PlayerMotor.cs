@@ -273,6 +273,13 @@ public class PlayerMotor : MonoBehaviour
             StopCoroutine(hoverCoroutine);
     }
 
+    /*
+     * Todo: redo this whole calculation to take angle between previous and current 
+     * gravity values and rotate player around a vector at right angles to both
+     * 
+     * Should hopefully be much simpler/easier on cpu and fix issues with rotation
+     * during transitions
+     */
     void CheckPlayerGravityAlignment()
     {
         // transition player orientation if not aligned to gravity
