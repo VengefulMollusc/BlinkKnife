@@ -79,10 +79,8 @@ public class PlayerMotor : MonoBehaviour
 
     private Vector3 currentGravVector;
     private float currentGravStrength;
-
-    private float viewShiftSpeed;
-    private const float maxViewShiftSpeed = 4f;
-    private const float viewShiftStrengthMax = 35f;
+    
+    private const float gravViewAlignSpeed = 4f;
 
     //private HealthController healthEnergy;
 
@@ -281,14 +279,13 @@ public class PlayerMotor : MonoBehaviour
         if (currentGravVector == -transform.up)
             return;
 
-        // gravShiftSpeed change relative to strength
-        if (currentGravStrength >= viewShiftStrengthMax)
-            viewShiftSpeed = maxViewShiftSpeed;
-        else
-            viewShiftSpeed = Utilities.MapValues(currentGravStrength, 0f, viewShiftStrengthMax, 0f, maxViewShiftSpeed, true);
+        //// gravShiftSpeed change relative to strength
+        //if (currentGravStrength >= viewShiftStrengthMax)
+        //    viewShiftSpeed = gravViewAlignSpeed;
+        //else
+        //    viewShiftSpeed = Utilities.MapValues(currentGravStrength, 0f, viewShiftStrengthMax, 0f, gravViewAlignSpeed, true);
 
-
-        Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, viewShiftSpeed * Mathf.Deg2Rad, 0f);
+        Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, gravViewAlignSpeed * Mathf.Deg2Rad, 0f);
 
         UpdateGravityDirection(-transitionUp);
     }
