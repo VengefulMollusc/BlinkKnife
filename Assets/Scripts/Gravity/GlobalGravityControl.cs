@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using TriangleNet.Tools;
 
 
 /**
@@ -15,9 +16,9 @@ public class GlobalGravityControl : MonoBehaviour {
     // current gravity DOWN direction and strength
     private static Vector3 currentGravDirection;
     private static float currentGravStrength = 35f;
+    private static float baseGravStrength;
 
     private static Vector3 gravTransitionFromDir;
-    private static float gravTransitionFromStr;
 
     // gravity target direction and shift speed
     // used when shifting
@@ -46,6 +47,8 @@ public class GlobalGravityControl : MonoBehaviour {
 
         currentGravDirection = -player.transform.up;
         targetGravDirection = currentGravDirection;
+
+        baseGravStrength = currentGravStrength;
 
         instance = this;
     }
@@ -92,7 +95,6 @@ public class GlobalGravityControl : MonoBehaviour {
         duration = _duration;
         targetGravDirection = _newGravDirection.normalized;
         gravTransitionFromDir = currentGravDirection;
-        gravTransitionFromStr = currentGravStrength;
 
         // trigger scene objects to rotate
         foreach (RotateToGravity r in rotationObjects)
@@ -134,7 +136,7 @@ public class GlobalGravityControl : MonoBehaviour {
 
         // transition strength
         float strT = Mathf.Abs((t * 2) - 1);
-        currentGravStrength = Mathf.Lerp(0f, gravTransitionFromStr, strT);
+        currentGravStrength = Mathf.Lerp(0f, baseGravStrength, strT);
     }
 
     /*
@@ -143,6 +145,7 @@ public class GlobalGravityControl : MonoBehaviour {
     public static void ChangeGravity(Vector3 _newGravDir, float _newStrength, bool _dontAllowSmoothing)
     {
         currentGravStrength = _newStrength; // possibly need some smoothing here
+        baseGravStrength = currentGravStrength;
 
         ChangeGravity(_newGravDir, _dontAllowSmoothing);
     }
