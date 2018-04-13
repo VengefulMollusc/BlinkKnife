@@ -29,8 +29,8 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField]
     private float warpGravShiftAngle = 1f;
 
-    [SerializeField]
-    private float gravShiftTimeLimit = 5f;
+    //[SerializeField]
+    private float gravShiftTimeLimit = 2f;
 
     private Coroutine gravShiftTimerCoroutine;
 
@@ -722,8 +722,9 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-    // TODO: try out altering camera angles to maintain global look direction
-    // TODO: - similar to RotateToDirection
+    // TODO: make sure velocity stays global
+    // TODO: alter so player can still look in all directions while transitioning
+    // TODO: Possibly do something like RotateToDirection to keep global look direction
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
         Vector3 _newUp = -_newGrav;

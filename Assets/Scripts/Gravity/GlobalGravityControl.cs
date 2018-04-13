@@ -14,9 +14,10 @@ public class GlobalGravityControl : MonoBehaviour {
 
     // current gravity DOWN direction and strength
     private static Vector3 currentGravDirection;
-    private static float currentGravityStrength = 35f;
+    private static float currentGravStrength = 35f;
 
     private static Vector3 gravTransitionFromDir;
+    private static float gravTransitionFromStr;
 
     // gravity target direction and shift speed
     // used when shifting
@@ -51,7 +52,7 @@ public class GlobalGravityControl : MonoBehaviour {
 
     public static float GetGravityStrength()
     {
-        return currentGravityStrength;
+        return currentGravStrength;
     }
 
     public static Vector3 GetCurrentGravityVector()
@@ -80,7 +81,7 @@ public class GlobalGravityControl : MonoBehaviour {
     }
 
     // Begins a smooth transition from the current gravity direction back to the default(down) direction
-    public static void TransitionToDefault(float _duration = 2f)
+    public static void TransitionToDefault(float _duration = 1f)
     {
         // TODO: test logic here to map duration to size of gravity change
         TransitionGravity(Vector3.down, _duration);
@@ -91,6 +92,7 @@ public class GlobalGravityControl : MonoBehaviour {
         duration = _duration;
         targetGravDirection = _newGravDirection.normalized;
         gravTransitionFromDir = currentGravDirection;
+        gravTransitionFromStr = currentGravStrength;
 
         // trigger scene objects to rotate
         foreach (RotateToGravity r in rotationObjects)
@@ -113,10 +115,8 @@ public class GlobalGravityControl : MonoBehaviour {
         while (t < 1f)
         {
             t += Time.deltaTime * (Time.timeScale / duration);
-            currentGravDirection = Vector3.Slerp(gravTransitionFromDir, targetGravDirection, t);
 
-            // update gravity-dependant objects here
-            //playerMotor.UpdateGravityDirection(currentGravDirection);
+            PerformGravTransition(t);
 
             this.PostNotification(GravityChangeNotification);
 
@@ -125,13 +125,24 @@ public class GlobalGravityControl : MonoBehaviour {
         shiftingCoroutine = null;
     }
 
+    // Apply gravity transition values relative to t
+    private void PerformGravTransition(float t)
+    {
+        // transition direction
+        float dirT = t * t;
+        currentGravDirection = Vector3.Slerp(gravTransitionFromDir, targetGravDirection, dirT);
+
+        // transition strength
+        float strT = Mathf.Abs((t * 2) - 1);
+        currentGravStrength = Mathf.Lerp(0f, gravTransitionFromStr, strT);
+    }
 
     /*
      * ChangeGravity methods
      */
     public static void ChangeGravity(Vector3 _newGravDir, float _newStrength, bool _dontAllowSmoothing)
     {
-        currentGravityStrength = _newStrength; // possibly need some smoothing here
+        currentGravStrength = _newStrength; // possibly need some smoothing here
 
         ChangeGravity(_newGravDir, _dontAllowSmoothing);
     }
