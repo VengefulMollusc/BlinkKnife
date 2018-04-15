@@ -176,7 +176,7 @@ public class PlayerMotor : MonoBehaviour
         cameraRotationX = _cameraRotationX;
 
         // Rotate player for horizontal camera movement
-        rb.rotation *= Quaternion.Euler(rotation);
+        transform.rotation *= Quaternion.Euler(rotation);
 
         // rotation calculation - clamps to limit values
         currentCamRotX -= cameraRotationX;
@@ -286,44 +286,16 @@ public class PlayerMotor : MonoBehaviour
         if (currentGravVector == -transform.up)
             return;
 
-        //// gravShiftSpeed change relative to strength
-        //if (currentGravStrength >= viewShiftStrengthMax)
-        //    viewShiftSpeed = gravViewAlignSpeed;
-        //else
-        //    viewShiftSpeed = Utilities.MapValues(currentGravStrength, 0f, viewShiftStrengthMax, 0f, gravViewAlignSpeed, true);
-
         Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, gravViewAlignSpeed * Mathf.Deg2Rad, 0f);
 
         UpdateGravityDirection(-transitionUp);
     }
-
-    // TODO: make sure velocity stays global
-    // TODO: alter so player can still look in all directions while transitioning
-    // TODO: Possibly do something like RotateToDirection to keep global look direction
+    
+    // Updates player rotation to gravity 
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
-        Vector3 newUp = -_newGrav;
-        // might be nessecary
-        transform.LookAt(transform.position + transform.forward, newUp); //?
-        // probably need similar code to RotateToDirection to align in correct direction
-
-        // possible fix - take from site to eliminate setting transform.up issue
-        transform.rotation = Quaternion.LookRotation(newUp, -transform.forward);
-        transform.Rotate(Vector3.right, 90f);
+        transform.LookAt(transform.position + transform.forward, -_newGrav);
     }
-
-    //private void KeepGrounded()
-    //{
-    //RaycastHit hit;
-    //if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, 2f))
-    //{
-    //    //			Debug.Log ("Grounding");
-    //    //rb.MovePosition (transform.position + new Vector3(0.0f, -hit.distance, 0.0f));
-    //    rb.MovePosition(transform.position - (transform.up * hit.distance));
-    //    //rb.velocity = Vector3.zero;
-    //    //rb.velocity = transform.rotation * new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
-    //}
-    //}
 
     // perform movement based on velocity variable
     private void PerformMovement()
