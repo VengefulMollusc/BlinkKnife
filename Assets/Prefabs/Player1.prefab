@@ -400,7 +400,7 @@ MonoBehaviour:
   alwaysGravShift: 0
   timeToAutoRecall: 1.5
   maxWarps: 3
-  warpRechargeTime: 1
+  warpRechargeTime: 1.5
   warpWaitTime: 0.1
   bounceWarpWaitTime: 0.2
   primaryKnifeBtn: Fire1

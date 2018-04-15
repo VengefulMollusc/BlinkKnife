@@ -76,6 +76,8 @@ public class PlayerKnifeController : MonoBehaviour
 
     private WarpLookAheadCollider warpLookAheadCollider;
 
+    private bool playerIsLit;
+
     //[SerializeField]
     //[Range(-100f, 0f)]
     //private float warpCost = -30f;
@@ -167,6 +169,7 @@ public class PlayerKnifeController : MonoBehaviour
 
         this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
 	    this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
+        this.AddObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
 
         warpLookAheadCollider = GameObject.FindGameObjectWithTag("WarpLookAheadCollider").GetComponent<WarpLookAheadCollider>();
     }
@@ -283,23 +286,42 @@ public class PlayerKnifeController : MonoBehaviour
         autoRecallTimer = timeToAutoRecall;
     }
 
-    // recharge warps based on time
-	void RechargeWarps (){
+    void OnLightStatusNotification(object sender, object args)
+    {
+        Info<GameObject, bool> info = (Info<GameObject, bool>) args;
+        if (info.arg0 == player)
+            playerIsLit = info.arg1;
+    }
+
+    // recharge warps based on time (if player is lit)
+    void RechargeWarps (){
 		if (currentWarps < maxWarps)
 		{
-		    if (playerMotor.IsOnGround())
-                warpRecharge -= Time.deltaTime;
+		    if (playerIsLit)
+		    {
+                // recharge warps normally
+		        if (playerMotor.IsOnGround())
+		            warpRecharge -= Time.deltaTime;
+		        else
+		            warpRecharge -= (Time.deltaTime * 0.2f); // recharge at slower rate when airborne
+
+		        if (warpRecharge <= 0)
+		        {
+		            currentWarps++;
+
+		            if (currentWarps < maxWarps)
+		                warpRecharge = warpRechargeTime;
+		        }
+		    }
 		    else
-		        warpRecharge -= (Time.deltaTime * 0.2f); // recharge at slower rate when airborne
+		    {
+                // decay partial recharges
+		        if (warpRecharge < warpRechargeTime)
+		            warpRecharge += (Time.deltaTime * 0.2f);
 
-            if (warpRecharge <= 0){
-				//warpCounters [currentWarps].enabled = true;
-				currentWarps++;
-
-				if (currentWarps < maxWarps){
-					warpRecharge = warpRechargeTime;
-				}
-			}
+		        if (warpRecharge > warpRechargeTime)
+		            warpRecharge = warpRechargeTime;
+            }
 		}
 	}
 

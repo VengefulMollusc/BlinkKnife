@@ -30,9 +30,9 @@ public class LightSensor : MonoBehaviour
 	void CheckLights () {
 		// raycast in opposite direction to sunlight direction for long distance
         // if another object is hit then this gameobject is in shadow
-	    bool isInSunlight = Physics.Raycast(transform.position, -sunlightObject.transform.forward, raycastLength);
+	    bool isInSunlight = !Physics.Raycast(transform.position, -sunlightObject.transform.forward, raycastLength);
 
-	    // also need a way of tracking and checking local light sources
+	    // TODO: also need a way of tracking and checking local light sources
 	    bool isInLocalLight = false;
 
 	    isLit = isInSunlight || isInLocalLight;
