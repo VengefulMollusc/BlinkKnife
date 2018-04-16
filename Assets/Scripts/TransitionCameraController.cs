@@ -41,6 +41,15 @@ public class TransitionCameraController : MonoBehaviour
     private float fovSpeedModMax = 50f;
     private float fovDiff;
 
+    [SerializeField]
+    private Camera blackoutCamera;
+
+    void OnEnable()
+    {
+        if (blackoutCamera == null)
+            Debug.LogError("No BlackoutCamera assigned");
+    }
+
     public void Setup(float _fov, Vector3 _startPos, KnifeController _knifeController, Vector3 _camRelativePos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift)
     {
         startPos = _startPos;
@@ -57,8 +66,6 @@ public class TransitionCameraController : MonoBehaviour
         cam.fieldOfView = _fov;
 
         CalculateDuration();
-
-        //baseLayerMask = cam.cullingMask;
     }
 
     private void CalculateDuration()
@@ -132,5 +139,27 @@ public class TransitionCameraController : MonoBehaviour
         this.PostNotification(WarpEndNotification, info);
 
         Destroy(gameObject);
+    }
+
+    void Blackout(bool blackout)
+    {
+        cam.enabled = !blackout;
+        blackoutCamera.enabled = blackout;
+    }
+
+    void OnTriggerStay(Collider col)
+    {
+        if (col.isTrigger)
+            return;
+
+        Blackout(true);
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.isTrigger)
+            return;
+
+        Blackout(false);
     }
 }
