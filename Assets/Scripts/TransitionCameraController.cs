@@ -48,8 +48,6 @@ public class TransitionCameraController : MonoBehaviour
     [SerializeField]
     private LayerMask raycastLayermask;
 
-    //private Vector3 lastPosition;
-
     void OnEnable()
     {
         if (blackoutCamera == null)
@@ -70,8 +68,6 @@ public class TransitionCameraController : MonoBehaviour
 
         cam = GetComponent<Camera>();
         cam.fieldOfView = _fov;
-
-        //lastPosition = startPos;
 
         Blackout(false);
 
@@ -142,10 +138,6 @@ public class TransitionCameraController : MonoBehaviour
                 //chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
 
-            //BlackoutCheck();
-
-            //lastPosition = transform.position;
-
             yield return 0;
         }
 
@@ -154,30 +146,6 @@ public class TransitionCameraController : MonoBehaviour
 
         Destroy(gameObject);
     }
-
-    // TODO: NOTE - RaycastAll apparently only records a single hit per collider. May cause some issues
-    //void BlackoutCheck()
-    //{
-    //    float dist = Vector3.Distance(lastPosition, transform.position);
-    //    Vector3 dir = (transform.position - lastPosition).normalized;
-    //    int hitCount = 0;
-
-    //    RaycastHit[] hits = Physics.RaycastAll(lastPosition, dir, dist, raycastLayermask,
-    //        QueryTriggerInteraction.Ignore);
-
-    //    hitCount += hits.Length;
-
-    //    hits = Physics.RaycastAll(transform.position, -dir, dist, raycastLayermask,
-    //        QueryTriggerInteraction.Ignore);
-
-    //    hitCount += hits.Length;
-
-    //    // if odd number of hits, has either entered or exited a mesh
-    //    if (hitCount % 2 == 1)
-    //    {
-    //        Blackout(cam.enabled);
-    //    }
-    //}
 
     // Performs a raycast check from the start position (guaranteed to be outside mesh)
     // to the current one to activate blackout camera accordingly
