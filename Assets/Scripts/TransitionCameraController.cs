@@ -166,10 +166,7 @@ public class TransitionCameraController : MonoBehaviour
         hitCount += hits.Length;
 
         // if odd number of hits, is inside a mesh
-        if (hitCount % 2 == 1)
-            Blackout(true);
-        else
-            Blackout(false);
+        Blackout(hitCount % 2 == 1);
     }
 
     void Blackout(bool blackout)
