@@ -286,15 +286,22 @@ public class PlayerMotor : MonoBehaviour
         if (currentGravVector == -transform.up)
             return;
 
-        Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, gravViewAlignSpeed * Mathf.Deg2Rad, 0f);
+        //Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, gravViewAlignSpeed * Mathf.Deg2Rad, 0f);
 
-        UpdateGravityDirection(-transitionUp);
+        //UpdateGravityDirection(-transitionUp);
+
+        UpdateGravityDirection(currentGravVector);
     }
     
     // Updates player rotation to gravity 
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
-        transform.LookAt(transform.position + transform.forward, -_newGrav);
+        float angle = Vector3.Angle(-transform.up, _newGrav);
+        Vector3 axis = Vector3.Cross(-transform.up, _newGrav);
+
+        transform.Rotate(axis, angle, Space.World);
+
+        //transform.LookAt(transform.position + transform.forward, -_newGrav);
     }
 
     // perform movement based on velocity variable
