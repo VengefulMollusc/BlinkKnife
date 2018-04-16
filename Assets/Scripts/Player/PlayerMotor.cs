@@ -290,14 +290,13 @@ public class PlayerMotor : MonoBehaviour
         UpdateGravityDirection(currentGravVector);
     }
     
-    // Updates player rotation to gravity 
-    // TODO: make sure this works/add extra case for if V3.Dot of grav and player is -1 (opposite)
+    // Updates player rotation to gravity
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
         float angle = Vector3.Angle(-transform.up, _newGrav);
         Vector3 axis;
 
-        if (Vector3.Dot(_newGrav, -transform.up) > -1)
+        if (_newGrav != transform.up)
             axis = Vector3.Cross(-transform.up, _newGrav);
         else
             axis = transform.forward;
