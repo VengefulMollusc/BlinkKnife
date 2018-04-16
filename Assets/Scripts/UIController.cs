@@ -78,7 +78,7 @@ public class UIController : MonoBehaviour {
 
     // Use this for initialization
     void OnEnable () {
-        playerCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        playerCamera = GameObject.Find("MainCamera");
 
         if (uiKnifeMarker == null)
             throw new MissingReferenceException("No knife marker object given.");

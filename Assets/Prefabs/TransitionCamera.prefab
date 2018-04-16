@@ -205,6 +205,9 @@ MonoBehaviour:
   fovMaxValue: 120
   fovSpeedModMax: 50
   blackoutCamera: {fileID: 20538256809304186}
+  raycastLayermask:
+    serializedVersion: 2
+    m_Bits: 16385
 --- !u!114 &114000012224977474
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -290,5 +293,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.2
+  m_Radius: 0.4
   m_Center: {x: 0, y: 0, z: 0}

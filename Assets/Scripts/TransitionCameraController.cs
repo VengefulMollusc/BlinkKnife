@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using AssemblyCSharp;
+using ProBuilder2.Common;
 using UnityStandardAssets.ImageEffects;
 
 public class TransitionCameraController : MonoBehaviour
@@ -44,6 +45,11 @@ public class TransitionCameraController : MonoBehaviour
     [SerializeField]
     private Camera blackoutCamera;
 
+    [SerializeField]
+    private LayerMask raycastLayermask;
+
+    private Vector3 lastPosition;
+
     void OnEnable()
     {
         if (blackoutCamera == null)
@@ -64,6 +70,8 @@ public class TransitionCameraController : MonoBehaviour
 
         cam = GetComponent<Camera>();
         cam.fieldOfView = _fov;
+
+        lastPosition = startPos;
 
         CalculateDuration();
     }
@@ -132,6 +140,10 @@ public class TransitionCameraController : MonoBehaviour
                 //chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
 
+            BlackoutCheck();
+
+            lastPosition = transform.position;
+
             yield return 0;
         }
 
@@ -141,25 +153,45 @@ public class TransitionCameraController : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // TODO: NOTE - RaycastAll apparently only records a single hit per collider. May cause some issues
+    void BlackoutCheck()
+    {
+        float dist = Vector3.Distance(lastPosition, transform.position);
+        Vector3 dir = transform.position - lastPosition;
+        int hitCount = 0;
+
+        RaycastHit[] hits = Physics.RaycastAll(lastPosition, dir, dist, raycastLayermask,
+            QueryTriggerInteraction.Ignore);
+
+        hitCount += hits.Length;
+
+        hits = Physics.RaycastAll(lastPosition, dir, dist, raycastLayermask,
+            QueryTriggerInteraction.Ignore);
+
+        hitCount += hits.Length;
+
+        // if odd number of hits, has either entered or exited a mesh
+        if (hitCount % 2 == 1)
+        {
+            if (cam.enabled)
+                Blackout(true);
+            else
+                Blackout(false);
+        }
+    }
+
     void Blackout(bool blackout)
     {
         cam.enabled = !blackout;
         blackoutCamera.enabled = blackout;
     }
 
+    // These alone are unreliable with large meshes (possibly something to do with Probuilder)
     void OnTriggerStay(Collider col)
     {
         if (col.isTrigger)
             return;
 
         Blackout(true);
-    }
-
-    void OnTriggerExit(Collider col)
-    {
-        if (col.isTrigger)
-            return;
-
-        Blackout(false);
     }
 }
