@@ -77,12 +77,7 @@ public class UIMarker : MonoBehaviour {
             onScreenImage.transform.position = targetPosOnScreen;
         }
         else if (useOffScreenMarker) {
-
-            //Vector3 targetRelative = transform.position - Camera.main.transform.position;
-            //Quaternion toTarget = Quaternion.FromToRotation(Camera.main.transform.forward, targetRelative);
-
-            // THIS WORKS
-            // OMG.
+            // position marker relative to offscreen target position
             Vector3 relativePos = targetPosOnScreen - center;
 
             if (relativePos.z < 0) relativePos.y = -relativePos.y;
