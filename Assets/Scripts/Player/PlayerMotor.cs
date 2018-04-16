@@ -274,11 +274,8 @@ public class PlayerMotor : MonoBehaviour
     }
 
     /*
-     * Todo: redo this whole calculation to take angle between previous and current 
-     * gravity values and rotate player around a vector at right angles to both
-     * 
-     * Should hopefully be much simpler/easier on cpu and fix issues with rotation
-     * during transitions
+     * Checks player orientation against gravity vector
+     * realigns if player does not match gravity direction
      */
     void CheckPlayerGravityAlignment()
     {
@@ -294,6 +291,7 @@ public class PlayerMotor : MonoBehaviour
     }
     
     // Updates player rotation to gravity 
+    // TODO: make sure this works/add extra case for if V3.Dot of grav and player is -1 (opposite)
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
         float angle = Vector3.Angle(-transform.up, _newGrav);
