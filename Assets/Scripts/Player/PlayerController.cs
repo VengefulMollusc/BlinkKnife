@@ -96,7 +96,12 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetButtonDown (jumpButton)) {
 			// jump code here, pass to motor
 			motor.Jump(jumpStrength);
-		} 
+		}
+	    if (Input.GetButton(jumpButton))
+	    {
+	        // jump button being held
+	        motor.JumpHold();
+	    }
 
         // crouch code
         if (Input.GetButtonDown(crouchButton))

@@ -22,7 +22,7 @@ TagManager:
   - 
   - PlayerProjectile
   - TransitionCamera
-  - 
+  - LedgeDetection
   - PlayerViewModel
   - Particles
   - Player

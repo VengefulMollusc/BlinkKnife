@@ -1,4 +1,5 @@
-﻿using AssemblyCSharp;
+﻿using System;
+using AssemblyCSharp;
 using System.Collections;
 using UnityEngine;
 
@@ -576,6 +577,23 @@ public class PlayerMotor : MonoBehaviour
 
         jumpTimer = jumpTimerDefault;
         SetCrouching(false);
+    }
+
+    // handle jump button being held
+    public void JumpHold()
+    {
+        if (PlayerCollisionController.GetVaultHeight() > 0f)
+        {
+            float force = Mathf.Sqrt(PlayerCollisionController.GetVaultHeight() * -2 *
+                                     -GlobalGravityControl.GetGravityStrength());
+
+            if (float.IsNaN(force))
+                return;
+
+            //rb.AddForce(transform.up * force, ForceMode.VelocityChange);
+            rb.velocity = transform.up * force;
+            jumpTimer = jumpTimerDefault;
+        }
     }
 
     // either begin or end crouching
