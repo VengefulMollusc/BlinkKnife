@@ -3,52 +3,33 @@ using UnityEngine;
 
 public class JumpCollider : MonoBehaviour
 {
-    private GameObject player;
-
     private static bool colliding;
 
-    public const string MovementObjectNotification = "JumpCollider.MovementObjectNotification";
-    //private GameObject relativeMovementObject;
-
-    //[SerializeField] private LayerMask relativeMotionLayers;
-
-    //private PhysicMaterial playerMaterial;
-    //private float staticFriction;
-    //private float dynamicFriction;
+    //public const string MovementObjectNotification = "JumpCollider.MovementObjectNotification";
 
     private float colExitDelay = 0.1f; 
     private Coroutine colExitCoroutine;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-
         colliding = false;
 
-        //relativeMovementObject = null;
-
-        Utilities.IgnoreCollisions(GetComponent<Collider>(), player.GetComponents<Collider>(), true);
-
-        //playerMaterial = player.GetComponent<Collider>().material;
-        //staticFriction = playerMaterial.staticFriction;
-        //dynamicFriction = playerMaterial.dynamicFriction;
+        Utilities.IgnoreCollisions(GetComponent<Collider>(), GameObject.FindGameObjectWithTag("Player").GetComponents<Collider>(), true);
     }
 
-    //void UpdateFriction()
-    //{
-        
-    //}
-
+    // Static method to check if player is 'grounded'
     public static bool IsColliding()
     {
         return colliding;
     }
 
+    // called when the player jumps - forces colliding to false
     public static void Jump()
     {
         colliding = false;
     }
 
+    // Collision methods
     void OnTriggerStay(Collider col)
     {
         if (col.isTrigger)
@@ -58,31 +39,6 @@ public class JumpCollider : MonoBehaviour
             StopCoroutine(colExitCoroutine);
 
         colliding = true;
-        //playerMotor.SetOnGround(true);
-
-
-        //GameObject colObject = col.gameObject;
-
-        //if (colObject != relativeMovementObject && relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
-        //{
-        //    relativeMovementObject = colObject;
-        //    this.PostNotification(MovementObjectNotification, relativeMovementObject);
-        //}
-
-
-        // TODO: replace parenting code with relative movement while colliding
-        // This will need to be changed to accomodate not all things being tagged scenery
-        // possibly use layers?
-        //if (col.CompareTag("Scenery") || col.CompareTag("GravityPanel"))
-        //{
-        //    playerMotor.transform.SetParent(col.transform);
-        //}
-
-        // layers method
-        //if (relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
-        //{
-        //    player.transform.SetParent(col.transform);
-        //}
     }
 
     void OnTriggerExit(Collider col)
@@ -90,28 +46,15 @@ public class JumpCollider : MonoBehaviour
         if (col.isTrigger)
             return;
 
-        //colliding = false;
-
         if (colExitCoroutine != null)
             StopCoroutine(colExitCoroutine);
 
+        // Start delay coroutine
         colExitCoroutine = StartCoroutine(ColExitDelay());
-
-        //GameObject colObject = col.gameObject;
-
-        //if (colObject == relativeMovementObject)
-        //{
-        //    relativeMovementObject = null;
-        //    this.PostNotification(MovementObjectNotification, null);
-        //}
-
-
-        //if (relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
-        //{
-        //    player.transform.SetParent(null);
-        //}
     }
 
+    // Delays switching colliding to false
+    // Allows the player a little more safety when jumping off a ledge etc
     IEnumerator ColExitDelay()
     {
         float t = 0;
