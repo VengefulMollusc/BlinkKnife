@@ -589,8 +589,7 @@ public class PlayerMotor : MonoBehaviour
 
             if (float.IsNaN(force))
                 return;
-
-            //rb.AddForce(transform.up * force, ForceMode.VelocityChange);
+            
             rb.velocity = transform.up * force;
             jumpTimer = jumpTimerDefault;
         }

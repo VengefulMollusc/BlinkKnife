@@ -82,10 +82,10 @@ public class PlayerCollisionController : MonoBehaviour
     float CheckVaultForwardSweep()
     {
         // initial check for ledge surface
-        Vector3 raycastOrigin = transform.position + transform.up + transform.forward;
+        Vector3 raycastOrigin = transform.position + (1.5f * transform.up) + transform.forward;
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(raycastOrigin, -transform.up, out hitInfo, 2f, raycastMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(raycastOrigin, -transform.up, out hitInfo, 2.5f, raycastMask, QueryTriggerInteraction.Ignore))
         {
             if (Vector3.Angle(hitInfo.normal, transform.up) > 5f)
                 return 0f;
@@ -106,7 +106,7 @@ public class PlayerCollisionController : MonoBehaviour
             }
 
             //return offset.magnitude;
-            return 2f - hitInfo.distance;
+            return 2.5f - hitInfo.distance;
         }
 
         return 0f;
