@@ -68,7 +68,8 @@ public class PlayerMotor : MonoBehaviour
     private float cameraRotationX;
     private float currentCamRotX;
 
-    private int jumpTimer;
+    private float jumpTimer;
+    private float jumpTimerDefault = 0.6f; // was 0.6f
     //private bool momentumFlight;
 
     private Rigidbody rb;
@@ -203,7 +204,8 @@ public class PlayerMotor : MonoBehaviour
             PerformMovement();
             //onGround = false;
 
-            jumpTimer--;
+            if (jumpTimer > 0)
+                jumpTimer -= Time.fixedDeltaTime;
 
             if (IsOnGround())
                 canHover = true;
@@ -267,7 +269,7 @@ public class PlayerMotor : MonoBehaviour
             return;
 
         // boosted object is the player
-        jumpTimer = 30;
+        jumpTimer = jumpTimerDefault;
 
         if (hoverCoroutine != null)
             StopCoroutine(hoverCoroutine);
@@ -570,7 +572,9 @@ public class PlayerMotor : MonoBehaviour
 
         rb.AddForce(transform.up * _jumpStrength, ForceMode.VelocityChange);
 
-        jumpTimer = 30;
+        JumpCollider.Jump();
+
+        jumpTimer = jumpTimerDefault;
         SetCrouching(false);
     }
 
@@ -827,7 +831,7 @@ public class PlayerMotor : MonoBehaviour
 
     public bool IsOnGround()
     {
-        return JumpCollider.IsColliding();
+        return JumpCollider.IsColliding() && jumpTimer <= 0;
     }
 
     public static float VelMod()

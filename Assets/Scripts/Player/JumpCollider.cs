@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class JumpCollider : MonoBehaviour
 {
-
     private GameObject player;
 
     private static bool colliding;
@@ -15,6 +15,9 @@ public class JumpCollider : MonoBehaviour
     //private PhysicMaterial playerMaterial;
     //private float staticFriction;
     //private float dynamicFriction;
+
+    private float colExitDelay = 0.1f; 
+    private Coroutine colExitCoroutine;
 
     void Start()
     {
@@ -41,10 +44,18 @@ public class JumpCollider : MonoBehaviour
         return colliding;
     }
 
+    public static void Jump()
+    {
+        colliding = false;
+    }
+
     void OnTriggerStay(Collider col)
     {
         if (col.isTrigger)
             return;
+
+        if (colExitCoroutine != null)
+            StopCoroutine(colExitCoroutine);
 
         colliding = true;
         //playerMotor.SetOnGround(true);
@@ -79,7 +90,12 @@ public class JumpCollider : MonoBehaviour
         if (col.isTrigger)
             return;
 
-        colliding = false;
+        //colliding = false;
+
+        if (colExitCoroutine != null)
+            StopCoroutine(colExitCoroutine);
+
+        colExitCoroutine = StartCoroutine(ColExitDelay());
 
         //GameObject colObject = col.gameObject;
 
@@ -88,7 +104,7 @@ public class JumpCollider : MonoBehaviour
         //    relativeMovementObject = null;
         //    this.PostNotification(MovementObjectNotification, null);
         //}
-            
+
 
         //if (relativeMotionLayers == (relativeMotionLayers | (1 << col.gameObject.layer)))
         //{
@@ -96,9 +112,15 @@ public class JumpCollider : MonoBehaviour
         //}
     }
 
-    //private void OnTriggerEnter(Collider col)
-    //{
-    //    // added to prevent errors with DontGoThroughThings
-    //}
+    IEnumerator ColExitDelay()
+    {
+        float t = 0;
+        while (t < colExitDelay)
+        {
+            t += Time.deltaTime;
+            yield return 0;
+        }
 
+        colliding = false;
+    }
 }
