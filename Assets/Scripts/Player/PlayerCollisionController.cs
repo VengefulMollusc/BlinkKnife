@@ -62,6 +62,12 @@ public class PlayerCollisionController : MonoBehaviour
                 colliding = true;
 
             float angle = Vector3.Angle(point.normal, transform.up);
+
+            if (Vector3.Dot(-transform.forward, point.normal) > 0.5f)
+            {
+                // check for ledges
+                jumpHeightToLedge = CheckVaultForwardSweep();
+            }
             
             if (angle < slideThreshold)
             {
@@ -71,9 +77,13 @@ public class PlayerCollisionController : MonoBehaviour
         }
 
         frictionless = true;
+    }
 
-        // check for ledges
-        jumpHeightToLedge = CheckVaultForwardSweep();
+    void OnCollisionExit()
+    {
+        frictionless = true;
+        colliding = false;
+        jumpHeightToLedge = 0f;
     }
 
     /*
@@ -115,13 +125,6 @@ public class PlayerCollisionController : MonoBehaviour
     public static float GetVaultHeight()
     {
         return jumpHeightToLedge;
-    }
-
-    void OnCollisionExit()
-    {
-        frictionless = true;
-        colliding = false;
-        jumpHeightToLedge = 0f;
     }
 
     void UpdateCollisionState(bool _frictionless, bool _colliding, bool _frictionOverride)
