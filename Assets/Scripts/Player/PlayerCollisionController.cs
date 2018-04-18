@@ -92,12 +92,12 @@ public class PlayerCollisionController : MonoBehaviour
     float CheckVaultForwardSweep()
     {
         // initial check for ledge surface
-        Vector3 raycastOrigin = transform.position + (1.5f * transform.up) + transform.forward;
+        Vector3 ledgeDetectionRaycastOrigin = transform.position + (1.5f * transform.up) + transform.forward;
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(raycastOrigin, -transform.up, out hitInfo, 2.5f, raycastMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ledgeDetectionRaycastOrigin, -transform.up, out hitInfo, 2.5f, raycastMask, QueryTriggerInteraction.Ignore))
         {
-            if (Vector3.Angle(hitInfo.normal, transform.up) > 5f)
+            if (Vector3.Angle(hitInfo.normal, transform.up) > 15f)
                 return 0f;
 
             // sweep collider to check if player can fit on ledge

@@ -742,6 +742,7 @@ public class PlayerMotor : MonoBehaviour
             rb.velocity = knifeVel;
         }
 
+        // TODO: Decide if this is for every warp or just default blinkknife warp
         GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.5f);
     }
 
