@@ -586,8 +586,10 @@ public class PlayerMotor : MonoBehaviour
         {
             float force = Mathf.Sqrt(PlayerCollisionController.GetVaultHeight() * -2 *
                                      -GlobalGravityControl.GetGravityStrength());
-
-            if (float.IsNaN(force))
+            
+            // Check that we haven't ended up with a NaN, and that we're not already moving up
+            float currentVerticalVel = Vector3.Project(rb.velocity, transform.up).magnitude;
+            if (float.IsNaN(force) || force <= currentVerticalVel)
                 return;
             
             rb.velocity = transform.up * force;
@@ -736,14 +738,17 @@ public class PlayerMotor : MonoBehaviour
 
             // fixes horizontal momentum lock when warping
             //onGround = false;
+
+
+            GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.2f);
         }
         else
         {
             rb.velocity = knifeVel;
-        }
 
-        // TODO: Decide if this is for every warp or just default blinkknife warp
-        GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.5f);
+            // TODO: Decide if this is for every warp or just default blinkknife warp
+            GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.5f);
+        }
     }
 
     /*

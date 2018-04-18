@@ -66,7 +66,7 @@ public class PlayerCollisionController : MonoBehaviour
             if (Vector3.Dot(-transform.forward, point.normal) > 0.5f)
             {
                 // check for ledges
-                jumpHeightToLedge = CheckVaultForwardSweep();
+                jumpHeightToLedge = CheckCanVault();
             }
             
             if (angle < slideThreshold)
@@ -89,10 +89,10 @@ public class PlayerCollisionController : MonoBehaviour
     /*
      * Checks for a ledge in front of the player that could be vaulted
      */
-    float CheckVaultForwardSweep()
+    float CheckCanVault()
     {
         // initial check for ledge surface
-        Vector3 ledgeDetectionRaycastOrigin = transform.position + (1.5f * transform.up) + transform.forward;
+        Vector3 ledgeDetectionRaycastOrigin = transform.position + (1.5f * transform.up) + (0.75f * transform.forward);
         RaycastHit hitInfo;
 
         if (Physics.Raycast(ledgeDetectionRaycastOrigin, -transform.up, out hitInfo, 2.5f, raycastMask, QueryTriggerInteraction.Ignore))
@@ -101,20 +101,36 @@ public class PlayerCollisionController : MonoBehaviour
                 return 0f;
 
             // sweep collider to check if player can fit on ledge
-            Vector3 offset = Vector3.Project((transform.position - transform.up) - hitInfo.point, transform.up) + (transform.up * 0.05f);
-            ledgeCheckObject.transform.position = transform.position + offset;
 
-            RaycastHit sweepHitInfo;
 
-            if (ledgeCheckObject.GetComponent<Rigidbody>().SweepTest(transform.forward, out sweepHitInfo, 1f))
+            // Sweep forward at height relative to raycast hit
+            //Vector3 offset = Vector3.Project((transform.position - transform.up) - hitInfo.point, transform.up) + (transform.up * 0.05f);
+            //ledgeCheckObject.transform.position = transform.position + offset;
+
+            //RaycastHit sweepHitInfo;
+
+            //if (ledgeCheckObject.GetComponent<Rigidbody>().SweepTest(transform.forward, out sweepHitInfo, 0.6f))
+            //{
+            //    Debug.Log("-- Sweep hit edge");
+            //    // No room
+            //    return 0f;
+            //}
+
+
+            // CapsuleCast down from position above player
+            Vector3 capsulePoint1 = ledgeDetectionRaycastOrigin;
+            Vector3 capsulePoint2 = capsulePoint1 + transform.up;
+
+            RaycastHit capsuleHitInfo;
+
+            if (Physics.CapsuleCast(capsulePoint1, capsulePoint2, 0.5f, -transform.up, out capsuleHitInfo,
+                hitInfo.distance, raycastMask, QueryTriggerInteraction.Ignore))
             {
-                if (sweepHitInfo.distance < 0.5f)
-                {
-                    // No room
-                    return 0f;
-                }
+                //Debug.Log((2.5f - hitInfo.distance) + " " + (2f - capsuleHitInfo.distance));
             }
 
+
+            //Debug.Log("-- Safe Sweep");
             //return offset.magnitude;
             return 2.5f - hitInfo.distance;
         }
