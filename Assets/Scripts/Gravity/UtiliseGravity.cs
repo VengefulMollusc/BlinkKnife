@@ -9,10 +9,12 @@ public class UtiliseGravity : MonoBehaviour {
 
     private bool useGravity;
 
-    private IEnumerator tempGravityDisableEnumerator;
+    private IEnumerator tempGravityDisableCoroutine;
 
     private Vector3 currentGravityVector;
     private float currentGravityStrength;
+
+    private float gravStrengthModifier = 1f;
 
     /*
      * This could have a lot more options,
@@ -72,8 +74,11 @@ public class UtiliseGravity : MonoBehaviour {
             return;
 
         UpdateGravityValues();
-        
-        rb.AddForce(currentGravityVector * currentGravityStrength, ForceMode.Acceleration);
+
+        if (!gravStrengthModifier.Equals(1f))
+            rb.AddForce(currentGravityVector * currentGravityStrength * gravStrengthModifier, ForceMode.Acceleration);
+        else
+            rb.AddForce(currentGravityVector * currentGravityStrength, ForceMode.Acceleration);
     }
 
     public bool UseGravity()
@@ -91,16 +96,16 @@ public class UtiliseGravity : MonoBehaviour {
         TempDisableGravity(0.2f);
     }
 
-    public void TempDisableGravity(float _time)
+    public void TempDisableGravity(float _time, float _fadeTime = 0f)
     {
-        if (tempGravityDisableEnumerator != null)
-            StopCoroutine(tempGravityDisableEnumerator);
+        if (tempGravityDisableCoroutine != null)
+            StopCoroutine(tempGravityDisableCoroutine);
 
-        tempGravityDisableEnumerator = TempDisableGravityCoroutine(_time);
-        StartCoroutine(tempGravityDisableEnumerator);
+        tempGravityDisableCoroutine = TempDisableGravityCoroutine(_time, _fadeTime);
+        StartCoroutine(tempGravityDisableCoroutine);
     }
 
-    private IEnumerator TempDisableGravityCoroutine(float _time)
+    private IEnumerator TempDisableGravityCoroutine(float _time, float _fadeTime)
     {
         useGravity = false;
         while (_time > 0f)
@@ -109,5 +114,15 @@ public class UtiliseGravity : MonoBehaviour {
             yield return 0;
         }
         useGravity = true;
+
+        // Fade gravity back in
+        float fade = _fadeTime;
+        while (fade > 0f)
+        {
+            gravStrengthModifier = Utilities.MapValues(fade, _fadeTime, 0f, 0f, 1f);
+            fade -= Time.deltaTime;
+            yield return 0;
+        }
+        gravStrengthModifier = 1f;
     }
 }

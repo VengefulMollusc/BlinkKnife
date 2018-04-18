@@ -489,7 +489,7 @@ MonoBehaviour:
   alwaysGravShift: 0
   timeToAutoRecall: 1.5
   maxWarps: 3
-  warpRechargeTime: 1.5
+  warpRechargeTime: 1
   warpWaitTime: 0.1
   bounceWarpWaitTime: 0.2
   primaryKnifeBtn: Fire1
@@ -656,7 +656,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16385
   ledgeCheckObject: {fileID: 1513552093603218}
-  ledgeCheckObjectYOffset: 0
 --- !u!114 &114871685062296912
 MonoBehaviour:
   m_ObjectHideFlags: 1

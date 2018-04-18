@@ -741,6 +741,8 @@ public class PlayerMotor : MonoBehaviour
         {
             rb.velocity = knifeVel;
         }
+
+        GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.5f);
     }
 
     /*
