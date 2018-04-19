@@ -26,7 +26,7 @@ public class FibreOpticController : MonoBehaviour
 	        otherEndFibreOpticController.SetOtherEndController(this);
 
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
-	}
+    }
 
     void OnDisable()
     {
@@ -35,8 +35,33 @@ public class FibreOpticController : MonoBehaviour
 
     /*
      * Handles start of fibre optic warp and triggers animation transition of knife along bezier
-     */ 
+     */
     void OnFibreOpticWarp(object sender, object args)
+    {
+        FibreOpticController fibreOpticController = (FibreOpticController)args;
+        if (fibreOpticController != this)
+            return;
+
+        if (!IsConnected())
+        {
+            Debug.LogError("Not connected to other FibreOpticController");
+            return;
+        }
+
+        Debug.Log("Fibre Optic warp effect here");
+
+
+        //Info<GameObject, KnifeController> info = (Info<GameObject, KnifeController>)args;
+        //KnifeController knifeController = info.arg1;
+
+        // stick knife into other end. Should allow lookahead colliders to do their thing
+        //knifeController.StickToSurface(otherEndFibreOpticController.transform.position, -otherEndFibreOpticController.transform.forward, otherEndFibreOpticController.gameObject, true);
+
+
+        //StartCoroutine(TransitionKnife(knifeTransform));
+    }
+
+    public void WarpKnife(KnifeController _knifeController)
     {
         if (!IsConnected())
         {
@@ -44,24 +69,22 @@ public class FibreOpticController : MonoBehaviour
             return;
         }
 
-        Info<GameObject, Transform> info = (Info<GameObject, Transform>) args;
-        Transform knifeTransform = info.arg1;
-
-        StartCoroutine(TransitionKnife(knifeTransform));
+        // stick knife into other end. Should allow lookahead colliders to do their thing
+        _knifeController.StickToSurface(otherEndFibreOpticController.transform.position, -otherEndFibreOpticController.transform.forward, otherEndFibreOpticController.gameObject, true);
     }
 
     // Transitions the knife along the bezier
-    private IEnumerator TransitionKnife(Transform _knifeTransform)
-    {
-        float t = 1f;
-        while (t > 0)
-        {
-            t -= Time.deltaTime * (Time.timeScale / transitionTime);
-            _knifeTransform.position = GetBezierPosition(t);
+    //private IEnumerator TransitionKnife(Transform _knifeTransform)
+    //{
+    //    float t = 1f;
+    //    while (t > 0)
+    //    {
+    //        t -= Time.deltaTime * (Time.timeScale / transitionTime);
+    //        _knifeTransform.position = GetBezierPosition(t);
 
-            yield return 0;
-        }
-    }
+    //        yield return 0;
+    //    }
+    //}
 
     /*
      * Lerps along the bezier defined by both FibreOpticControllers and the bezier targets

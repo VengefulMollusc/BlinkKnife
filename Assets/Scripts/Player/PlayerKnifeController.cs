@@ -401,9 +401,8 @@ public class PlayerKnifeController : MonoBehaviour
     {
         if (knife == null)
             return;
-
-        Info<GameObject, Transform> info = (Info<GameObject, Transform>) args;
-        FibreOpticController fibreOpticController = info.arg0.GetComponent<FibreOpticController>();
+        
+        FibreOpticController fibreOpticController = (FibreOpticController)args;
 
         playerMotor.WarpToKnife(false, knifeController, false, fibreOpticController);
 

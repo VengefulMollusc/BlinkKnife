@@ -74,7 +74,7 @@ namespace AssemblyCSharp
         /*
         * Sticks knife into surface when colliding with an object
         */
-        public void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other)
+        public void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other, bool _cancelNotifications = false)
         {
             // disable rigidbody
             //rb.detectCollisions = true;
@@ -97,6 +97,9 @@ namespace AssemblyCSharp
             transform.SetParent(_other.transform);
             objectStuck = _other;
 
+            if (_cancelNotifications)
+                return;
+
             if (objectStuck.GetComponent<GravityPanel>() != null)
             {
                 // Prepare to shift gravity if warping to GravityPanel
@@ -108,8 +111,8 @@ namespace AssemblyCSharp
             } else if (objectStuck.GetComponent<FibreOpticController>() != null)
             {
                 // Activate fibre optic warp
-                Info<GameObject, Transform> fibreInfo = new Info<GameObject, Transform>(objectStuck, transform);
-                this.PostNotification(FibreOpticWarpNotification, fibreInfo);
+                //Info<GameObject, KnifeController> fibreInfo = new Info<GameObject, KnifeController>(objectStuck, this);
+                this.PostNotification(FibreOpticWarpNotification, objectStuck.GetComponent<FibreOpticController>());
             }
 
             // activate knife marker ui

@@ -49,6 +49,7 @@ public class TransitionCameraController : MonoBehaviour
     private LayerMask raycastLayermask;
 
     private FibreOpticController fibreOpticController;
+    private bool fibreOpticWarp;
 
     void OnEnable()
     {
@@ -107,6 +108,15 @@ public class TransitionCameraController : MonoBehaviour
     public void FibreOpticWarp(FibreOpticController _fibreOpticController)
     {
         fibreOpticController = _fibreOpticController;
+        fibreOpticWarp = true;
+
+        if (knifeController == null)
+        {
+            Debug.LogError("Null knifeController");
+            return;
+        }
+
+        _fibreOpticController.WarpKnife(knifeController);
     }
 
     // Triggers the transition animation, unsure if this is needed, could put in setup
@@ -123,8 +133,10 @@ public class TransitionCameraController : MonoBehaviour
             t += Time.deltaTime * (Time.timeScale / duration);
 
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
-
-            transform.position = Vector3.Lerp(startPos, knifeController.GetWarpPosition() + camRelativePos, lerpPercent);
+            
+            transform.position = Vector3.Lerp(startPos, 
+                (fibreOpticWarp) ? fibreOpticController.transform.position : knifeController.GetWarpPosition() + camRelativePos, 
+                lerpPercent);
             
             // tAlt transitions from 0-1-0 over warp
             float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
@@ -138,13 +150,22 @@ public class TransitionCameraController : MonoBehaviour
                 cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
             }
 
-            if (gravityShift)
+            if (gravityShift || fibreOpticWarp)
             {
                 // lerp rotation as well
-                transform.rotation = Quaternion.Lerp(startRot, endRot, lerpPercent);
+                transform.rotation = Quaternion.Lerp(startRot, (fibreOpticWarp) ? fibreOpticController.transform.rotation : endRot, lerpPercent);
                 // increase chromatic aberration during gravity shift
                 //chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
+
+            yield return 0;
+        }
+
+        // Fibre optic warp transition here
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * (Time.timeScale / duration);
 
             yield return 0;
         }

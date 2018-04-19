@@ -126,11 +126,11 @@ public class UtiliseGravity : MonoBehaviour {
         //gravStrengthModifier = 1f;
 
         // Fade gravity back in
-        float fade = 1f;
-        while (fade > 0f)
+        float fade = 0f;
+        while (fade < 1f)
         {
             gravStrengthModifier = fade;
-            fade -= Time.deltaTime * (Time.timeScale / _fadeTime);
+            fade += Time.deltaTime * (Time.timeScale / _fadeTime);
             yield return 0;
         }
         gravStrengthModifier = 1f;
