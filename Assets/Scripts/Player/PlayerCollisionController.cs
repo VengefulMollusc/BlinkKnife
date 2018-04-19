@@ -121,7 +121,6 @@ public class PlayerCollisionController : MonoBehaviour
                 return 0f;
             }
 
-
             //ledgeCheckObject.transform.position = ledgeDetectionCastOrigin - ((ledgeHeightDiff - 1.01f) * transform.up);
             //RaycastHit sweepHitInfo;
             //if (ledgeCheckObject.GetComponent<Rigidbody>().SweepTest(transform.forward, out sweepHitInfo, 0.6f))
@@ -131,22 +130,6 @@ public class PlayerCollisionController : MonoBehaviour
             //    return 0f;
             //}
 
-
-            // CapsuleCast down from position above player
-            //Vector3 capsulePoint1 = ledgeDetectionRaycastOrigin;
-            //Vector3 capsulePoint2 = capsulePoint1 + transform.up;
-
-            //RaycastHit capsuleHitInfo;
-
-            //if (Physics.CapsuleCast(capsulePoint1, capsulePoint2, 0.5f, -transform.up, out capsuleHitInfo,
-            //    hitInfo.distance, raycastMask, QueryTriggerInteraction.Ignore))
-            //{
-            //    //Debug.Log((2.5f - hitInfo.distance) + " " + (2f - capsuleHitInfo.distance));
-            //}
-
-
-            //Debug.Log("-- Safe Sweep");
-            //return offset.magnitude;
             return 2.5f - ledgeHeightDiff;
         }
 
