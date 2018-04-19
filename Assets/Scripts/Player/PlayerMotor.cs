@@ -586,12 +586,12 @@ public class PlayerMotor : MonoBehaviour
         {
             float force = Mathf.Sqrt(PlayerCollisionController.GetVaultHeight() * -2 *
                                      -GlobalGravityControl.GetGravityStrength());
-            
+
             // Check that we haven't ended up with a NaN, and that we're not already moving up
-            //float currentVerticalVel = Vector3.Project(rb.velocity, transform.up).magnitude;
-            //if (float.IsNaN(force) || force <= currentVerticalVel)
-            //    return;
-            
+            float currentVerticalVel = Vector3.Project(rb.velocity, transform.up).magnitude;
+            if (float.IsNaN(force) || force <= currentVerticalVel)
+                return;
+
             rb.velocity = transform.up * force;
             jumpTimer = jumpTimerDefault;
         }
