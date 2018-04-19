@@ -130,7 +130,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4000010376404180
 Transform:
   m_ObjectHideFlags: 1
@@ -655,7 +655,6 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 16385
-  ledgeCheckObject: {fileID: 1513552093603218}
 --- !u!114 &114871685062296912
 MonoBehaviour:
   m_ObjectHideFlags: 1

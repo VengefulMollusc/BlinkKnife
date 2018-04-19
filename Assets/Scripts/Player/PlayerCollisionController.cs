@@ -9,7 +9,7 @@ public class PlayerCollisionController : MonoBehaviour
     public static float slideThreshold = 50f;
 
     [SerializeField] private LayerMask raycastMask;
-    [SerializeField] private GameObject ledgeCheckObject;
+    //[SerializeField] private GameObject ledgeCheckObject;
 
     private static float jumpHeightToLedge;
 
