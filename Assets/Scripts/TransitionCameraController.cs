@@ -181,7 +181,7 @@ public class TransitionCameraController : MonoBehaviour
         }
 
         // TODO: modify this to give velocity out of fibre optic warp. AND add rotation variable
-        Info<Vector3, Vector3, bool> info = new Info<Vector3, Vector3, bool>(knifeController.GetWarpPosition(), knifeController.GetVelocity(), knifeController.IsBounceKnife());
+        Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(), knifeController.GetVelocity(), knifeController.IsBounceKnife(), fibreOpticWarp);
         this.PostNotification(WarpEndNotification, info);
 
         Destroy(gameObject);

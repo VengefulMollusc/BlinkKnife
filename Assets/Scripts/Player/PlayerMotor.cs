@@ -707,7 +707,7 @@ public class PlayerMotor : MonoBehaviour
     // Resets/reenables player once warp transition has completed
     void EndWarp(object sender, object args)
     {
-        Info<Vector3, Vector3, bool> info = (Info<Vector3, Vector3, bool>) args;
+        Info<Vector3, Vector3, bool, bool> info = (Info<Vector3, Vector3, bool, bool>) args;
         transform.position = info.arg0;
 
         canHover = true;
@@ -740,7 +740,14 @@ public class PlayerMotor : MonoBehaviour
 
             GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.2f);
         }
-        else
+        else if (info.arg3)
+        {
+            // fibreOptic warp
+            RotateToDirection(currentGravVector, knifeVel, true);
+
+            rb.velocity = knifeVel * warpVelocityModifier;
+        }
+        else 
         {
             rb.velocity = knifeVel;
 
@@ -760,21 +767,21 @@ public class PlayerMotor : MonoBehaviour
      */
     private void RotateToDirection(Vector3 _gravDirection, Vector3 _lookDirection, bool _alignCameraElevation = false)
     {
-        Vector3 _newUpDir = -_gravDirection;
+        Vector3 newUpDir = -_gravDirection;
 
         // store local velocity before rotation
         Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
 
         // aim the player at the new look vector
-        Vector3 newAimVector = Vector3.ProjectOnPlane(_lookDirection, _newUpDir).normalized;
+        Vector3 newAimVector = Vector3.ProjectOnPlane(_lookDirection, newUpDir).normalized;
 
         // LookAt can take the surface normal
-        transform.LookAt(transform.position + newAimVector, _newUpDir);
+        transform.LookAt(transform.position + newAimVector, newUpDir);
 
         if (_alignCameraElevation)
         {
             float angle = Vector3.Angle(newAimVector, _lookDirection);
-            currentCamRotX = (Vector3.Dot(_newUpDir, _lookDirection) > 0) ? -angle : angle;
+            currentCamRotX = (Vector3.Dot(newUpDir, _lookDirection) > 0) ? -angle : angle;
         }
         else
         {
