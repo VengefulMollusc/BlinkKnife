@@ -8,8 +8,6 @@ public class FibreOpticController : MonoBehaviour
     [SerializeField] private FibreOpticController otherEndFibreOpticController;
     [SerializeField] private Transform bezierTargetTransform;
 
-    private float transitionTime = 2f; // TODO: replace with actual calculation based on overall bezier length
-
     /*
      * TODO: Need a method to designate one end as 'primary' controller
      * Primary controller will control drawing of fibre optic geometry etc
@@ -109,9 +107,9 @@ public class FibreOpticController : MonoBehaviour
     //}
 
     // used so player can warp at the right speed
-    public float GetTransitionTime()
+    public float GetDuration()  // TODO: replace with actual calculation based on overall bezier length
     {
-        return transitionTime;
+        return 2f;
     }
 
     // Used so that other end can get target position for bezier calculation
@@ -120,10 +118,31 @@ public class FibreOpticController : MonoBehaviour
         return bezierTargetTransform.position;
     }
 
+    public Vector3 GetStartPosition()
+    {
+        return transform.position;
+    }
+
     // Used to make sure that both ends are connected properly
     public void SetOtherEndController(FibreOpticController _other)
     {
         otherEndFibreOpticController = _other;
+    }
+
+    public Vector3 GetEndPosition()
+    {
+        return otherEndFibreOpticController.transform.position;
+    }
+
+    // Get rotations for aligning transition camera
+    public Quaternion GetStartRotation()
+    {
+        return transform.rotation;
+    }
+    
+    public Quaternion GetEndRotation()
+    {
+        return Quaternion.AngleAxis(180, otherEndFibreOpticController.transform.up) * otherEndFibreOpticController.transform.rotation;
     }
 
     // returns true if this controller has a reference to the controller at the other end

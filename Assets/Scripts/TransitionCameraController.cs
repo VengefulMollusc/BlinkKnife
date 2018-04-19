@@ -135,7 +135,7 @@ public class TransitionCameraController : MonoBehaviour
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
             
             transform.position = Vector3.Lerp(startPos, 
-                (fibreOpticWarp) ? fibreOpticController.transform.position : knifeController.GetWarpPosition() + camRelativePos, 
+                (fibreOpticWarp) ? fibreOpticController.GetStartPosition() : knifeController.GetWarpPosition() + camRelativePos, 
                 lerpPercent);
             
             // tAlt transitions from 0-1-0 over warp
@@ -161,15 +161,26 @@ public class TransitionCameraController : MonoBehaviour
             yield return 0;
         }
 
-        // Fibre optic warp transition here
-        t = 0f;
-        while (t < 1f)
+        if (fibreOpticWarp)
         {
-            t += Time.deltaTime * (Time.timeScale / duration);
+            // Fibre optic warp transition here
+            float fibreOpticDuration = fibreOpticController.GetDuration();
+            t = 0f;
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (Time.timeScale / fibreOpticDuration);
 
-            yield return 0;
+                transform.position = Vector3.Lerp(fibreOpticController.GetStartPosition(),
+                    fibreOpticController.GetEndPosition(),
+                    t);
+
+                transform.rotation = Quaternion.Lerp(fibreOpticController.GetStartRotation(), fibreOpticController.GetEndRotation(), t);
+
+                yield return 0;
+            }
         }
 
+        // TODO: modify this to give velocity out of fibre optic warp. AND add rotation variable
         Info<Vector3, Vector3, bool> info = new Info<Vector3, Vector3, bool>(knifeController.GetWarpPosition(), knifeController.GetVelocity(), knifeController.IsBounceKnife());
         this.PostNotification(WarpEndNotification, info);
 
