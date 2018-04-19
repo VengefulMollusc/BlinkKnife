@@ -214,8 +214,6 @@ public class PlayerMotor : MonoBehaviour
 
         // Freezing needs to stop rotation too
         //PerformRotation();
-
-        //Debug.Log(rb.velocity.magnitude);
     }
 
     /*
@@ -760,7 +758,7 @@ public class PlayerMotor : MonoBehaviour
      * Also rotates player momentum to new direction
      *  - allows fun things as well as removing enormous jump by falling
      */
-    private void RotateToDirection(Vector3 _gravDirection, Vector3 _relativeFacing)
+    private void RotateToDirection(Vector3 _gravDirection, Vector3 _lookDirection, bool _alignCameraElevation = false)
     {
         Vector3 _newUpDir = -_gravDirection;
 
@@ -768,13 +766,21 @@ public class PlayerMotor : MonoBehaviour
         Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
 
         // aim the player at the new look vector
-        Vector3 newAimVector = Vector3.ProjectOnPlane(_relativeFacing, _newUpDir);
+        Vector3 newAimVector = Vector3.ProjectOnPlane(_lookDirection, _newUpDir).normalized;
 
         // LookAt can take the surface normal
-        transform.LookAt(transform.position + newAimVector.normalized, _newUpDir);
+        transform.LookAt(transform.position + newAimVector, _newUpDir);
 
-        // reset camera pitch to parallel with surface
-        currentCamRotX = 0f;
+        if (_alignCameraElevation)
+        {
+            float angle = Vector3.Angle(newAimVector, _lookDirection);
+            currentCamRotX = (Vector3.Dot(_newUpDir, _lookDirection) > 0) ? -angle : angle;
+        }
+        else
+        {
+            // reset camera pitch to parallel with surface
+            currentCamRotX = 0f;
+        }
 
         // rotate velocity to new direction
         rb.velocity = transform.TransformDirection(localVelocity);
