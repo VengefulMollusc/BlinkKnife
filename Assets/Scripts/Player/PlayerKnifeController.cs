@@ -170,6 +170,7 @@ public class PlayerKnifeController : MonoBehaviour
         this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
 	    this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
         this.AddObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
+        this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
 
         warpLookAheadCollider = GameObject.FindGameObjectWithTag("WarpLookAheadCollider").GetComponent<WarpLookAheadCollider>();
     }
@@ -178,6 +179,7 @@ public class PlayerKnifeController : MonoBehaviour
     {
         this.RemoveObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
         this.RemoveObserver(EndWarp, TransitionCameraController.WarpEndNotification);
+        this.RemoveObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
     }
 
 	void Update (){
@@ -393,13 +395,28 @@ public class PlayerKnifeController : MonoBehaviour
     }
 
     /*
+     * Triggers FibreOptic warp in playerMotor
+     */
+    void OnFibreOpticWarp(object sender, object args)
+    {
+        if (knife == null)
+            return;
+
+        Info<GameObject, Transform> info = (Info<GameObject, Transform>) args;
+        FibreOpticController fibreOpticController = info.arg0.GetComponent<FibreOpticController>();
+
+        playerMotor.WarpToKnife(false, knifeController, false, fibreOpticController);
+
+        bounceWarp = false;
+    }
+
+    /*
      * Perform warp to current knife position
      */
-	public void Warp (){
+    public void Warp (){
 
-		if (knife == null){
+		if (knife == null)
 			return;
-		}
 
         // move player to knife position and inherit velocity
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
@@ -407,11 +424,8 @@ public class PlayerKnifeController : MonoBehaviour
 		//playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetStuckObject(), knifeController.GetSurfaceNormal());
         playerMotor.WarpToKnife(shiftGravity, knifeController, bounceWarp);
 
-        if (bounceWarp)
-		{
-			bounceWarp = false;
-		}
-	}
+        bounceWarp = false;
+    }
 
     void EndWarp(object sender, object args)
     {

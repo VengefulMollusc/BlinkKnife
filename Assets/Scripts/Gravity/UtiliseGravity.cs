@@ -116,11 +116,21 @@ public class UtiliseGravity : MonoBehaviour {
         useGravity = true;
 
         // Fade gravity back in
-        float fade = _fadeTime;
+        //float fade = _fadeTime;
+        //while (fade > 0f)
+        //{
+        //    gravStrengthModifier = Utilities.MapValues(fade, _fadeTime, 0f, 0f, 1f);
+        //    fade -= Time.deltaTime;
+        //    yield return 0;
+        //}
+        //gravStrengthModifier = 1f;
+
+        // Fade gravity back in
+        float fade = 1f;
         while (fade > 0f)
         {
-            gravStrengthModifier = Utilities.MapValues(fade, _fadeTime, 0f, 0f, 1f);
-            fade -= Time.deltaTime;
+            gravStrengthModifier = fade;
+            fade -= Time.deltaTime * (Time.timeScale / _fadeTime);
             yield return 0;
         }
         gravStrengthModifier = 1f;

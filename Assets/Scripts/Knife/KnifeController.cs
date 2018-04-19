@@ -24,6 +24,8 @@ namespace AssemblyCSharp
 
         public const string AttachLookAheadColliderNotification = "KnifeController.AttachLookAheadColliderNotification";
 
+        public const string FibreOpticWarpNotification = "KnifeController.FibreOpticWarpNotification";
+
         /*
          * Passes the knifecontroller and parameter spin speed to the knife
          */
@@ -95,15 +97,20 @@ namespace AssemblyCSharp
             transform.SetParent(_other.transform);
             objectStuck = _other;
 
-            // Prepare to shift gravity if warping to GravityPanel
             if (objectStuck.GetComponent<GravityPanel>() != null)
             {
+                // Prepare to shift gravity if warping to GravityPanel
                 gravPanel = objectStuck.GetComponent<GravityPanel>();
                 gravShiftVector = gravPanel.GetGravityVector();
 
                 if (gravShiftVector == Vector3.zero)
                     gravShiftVector = -_normal;
-            } 
+            } else if (objectStuck.GetComponent<FibreOpticController>() != null)
+            {
+                // Activate fibre optic warp
+                Info<GameObject, Transform> fibreInfo = new Info<GameObject, Transform>(objectStuck, transform);
+                this.PostNotification(FibreOpticWarpNotification, fibreInfo);
+            }
 
             // activate knife marker ui
             Info<Transform, bool> info = new Info<Transform, bool>(transform, gravPanel != null);

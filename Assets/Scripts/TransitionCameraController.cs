@@ -48,6 +48,8 @@ public class TransitionCameraController : MonoBehaviour
     [SerializeField]
     private LayerMask raycastLayermask;
 
+    private FibreOpticController fibreOpticController;
+
     void OnEnable()
     {
         if (blackoutCamera == null)
@@ -99,6 +101,12 @@ public class TransitionCameraController : MonoBehaviour
     public float GetDuration()
     {
         return duration;
+    }
+
+    // Activates extended warp transition that covers bezier curve of fibre optic objects
+    public void FibreOpticWarp(FibreOpticController _fibreOpticController)
+    {
+        fibreOpticController = _fibreOpticController;
     }
 
     // Triggers the transition animation, unsure if this is needed, could put in setup

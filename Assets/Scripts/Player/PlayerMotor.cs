@@ -611,11 +611,8 @@ public class PlayerMotor : MonoBehaviour
 
     /*
      * Warps the player to the current knife position, inheriting velocity and moving gravity vectors if required
-     * 
-     * TODO: either here or somewhere in knife code - need to project player hitbox to see if can fit.
-     * And cause warp to 'fizzle' if no good place for player to warp to is found (eg knife is between two close walls)
      */
-    public void WarpToKnife(bool _shiftGravity, KnifeController _knifeController, bool _bounceWarp)
+    public void WarpToKnife(bool _shiftGravity, KnifeController _knifeController, bool _bounceWarp, FibreOpticController _fibreOpticController = null)
     {
         if (frozen) return;
         Vector3 camStartPos = cam.transform.position;
@@ -639,6 +636,7 @@ public class PlayerMotor : MonoBehaviour
             this.PostNotification(WarpNotification);
         }
 
+        // TODO: parenting may be obsolete
         transform.SetParent(null);
 
         // Unsure if this needs to happen before or after the moveposition
@@ -669,7 +667,9 @@ public class PlayerMotor : MonoBehaviour
 
         TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
         transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift);
-        float duration = transCamController.GetDuration();
+
+        if (_fibreOpticController != null)
+            transCamController.FibreOpticWarp(_fibreOpticController);
 
         cam.enabled = false;
         Freeze();
@@ -678,7 +678,7 @@ public class PlayerMotor : MonoBehaviour
 
         if (gravityShift)
         {
-            GlobalGravityControl.TransitionGravity(newGravDirection, duration);
+            GlobalGravityControl.TransitionGravity(newGravDirection, transCamController.GetDuration());
 
             // Begin gravity shift countdown coroutine
             if (gravShiftTimerCoroutine != null)
