@@ -125,7 +125,7 @@ public class FibreOpticController : MonoBehaviour
     // used so player can warp at the right speed
     public float GetDuration()  // TODO: replace with actual calculation based on overall bezier length
     {
-        return Mathf.Max(Utilities.BezierLengthEstimate(GetBezierPoints()) * 0.01f, 0.4f);
+        return Mathf.Max(Utilities.BezierLengthEstimate(GetBezierPoints()) * 0.008f, 0.4f);
     }
 
     public Vector3 GetBezierTangent(float _t)
