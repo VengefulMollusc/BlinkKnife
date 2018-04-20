@@ -170,7 +170,7 @@ public class TransitionCameraController : MonoBehaviour
             {
                 t += Time.deltaTime * (Time.timeScale / fibreOpticDuration);
 
-                transform.position = fibreOpticController.GetBezierPosition(t);
+                transform.position = fibreOpticController.LerpBezierPosition(t);
 
                 transform.rotation = Quaternion.Lerp(fibreOpticController.GetStartRotation(), fibreOpticController.GetEndRotation(), t);
 

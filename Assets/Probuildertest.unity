@@ -113,34 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &4260500
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4260501}
-  m_Layer: 0
-  m_Name: FibreBezierTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4260501
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 4260500}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.1, y: -2.2, z: -56.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 635322564}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &56049663
 Mesh:
   m_ObjectHideFlags: 0
@@ -772,7 +744,7 @@ GameObject:
   - component: {fileID: 382593698}
   - component: {fileID: 382593697}
   - component: {fileID: 382593696}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherEndFibreOpticController: {fileID: 635322565}
-  bezierTargetTransform: {fileID: 654987997}
+  bezierTargetPosition: {x: -30.1557, y: 11.318889, z: 0}
 --- !u!23 &382593697
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -854,8 +826,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -41.6, y: 11.3, z: 43.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 654987997}
+  m_Children: []
   m_Father: {fileID: 430250617}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5064,7 +5035,7 @@ GameObject:
   - component: {fileID: 635322567}
   - component: {fileID: 635322566}
   - component: {fileID: 635322565}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5080,8 +5051,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -75.6, y: 245.8, z: 50.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 4260501}
+  m_Children: []
   m_Father: {fileID: 430250617}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5097,7 +5067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherEndFibreOpticController: {fileID: 382593696}
-  bezierTargetTransform: {fileID: 4260501}
+  bezierTargetPosition: {x: -10.6547165, y: 0, z: -39.312252}
 --- !u!23 &635322566
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5151,34 +5121,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 635322563}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &654987996
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 654987997}
-  m_Layer: 0
-  m_Name: FibreBezierTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &654987997
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 654987996}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.01, y: -4.2, z: 8.4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 382593700}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &663324277
 Mesh:
   m_ObjectHideFlags: 0
@@ -12647,7 +12589,7 @@ GameObject:
   - component: {fileID: 925179823}
   - component: {fileID: 925179822}
   - component: {fileID: 925179821}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12660,14 +12602,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 925179819}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.14294784, z: -0, w: 0.9897303}
   m_LocalPosition: {x: 43.9, y: 2.02, z: 17.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 967937265}
+  m_Children: []
   m_Father: {fileID: 1118406260}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 16.437, z: 0}
 --- !u!114 &925179821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12680,7 +12621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherEndFibreOpticController: {fileID: 2058045907}
-  bezierTargetTransform: {fileID: 967937265}
+  bezierTargetPosition: {x: 9.035124, y: 3.0300002, z: 6.142267}
 --- !u!23 &925179822
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12862,34 +12803,6 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
---- !u!1 &967937264
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 967937265}
-  m_Layer: 0
-  m_Name: FibreBezierTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &967937265
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 967937264}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.84, y: 2.29, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 925179820}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1034802370
 GameObject:
   m_ObjectHideFlags: 0
@@ -26730,34 +26643,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2021512195}
   m_Mesh: {fileID: 663324277}
---- !u!1 &2023088295
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 2023088296}
-  m_Layer: 0
-  m_Name: FibreBezierTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2023088296
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2023088295}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.5, y: 6.47, z: -0.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2058045906}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2037317812
 GameObject:
   m_ObjectHideFlags: 0
@@ -27270,7 +27155,7 @@ GameObject:
   - component: {fileID: 2058045909}
   - component: {fileID: 2058045908}
   - component: {fileID: 2058045907}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27286,8 +27171,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 43.9, y: 2.02, z: 36}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2023088296}
+  m_Children: []
   m_Father: {fileID: 1118406260}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -27303,7 +27187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherEndFibreOpticController: {fileID: 925179821}
-  bezierTargetTransform: {fileID: 2023088296}
+  bezierTargetPosition: {x: 7.2700005, y: 4.0692787, z: 0}
 --- !u!23 &2058045908
 MeshRenderer:
   m_ObjectHideFlags: 0

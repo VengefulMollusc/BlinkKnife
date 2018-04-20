@@ -7,7 +7,7 @@ using UnityEngine;
 public class FibreOpticController : MonoBehaviour
 {
     [SerializeField] private FibreOpticController otherEndFibreOpticController;
-    [SerializeField] private Transform bezierTargetTransform;
+    public Vector3 bezierTargetPosition;
 
     private KnifeController attachedKnife;
 
@@ -18,11 +18,6 @@ public class FibreOpticController : MonoBehaviour
 
     // Use this for initialization
     void OnEnable () {
-        if (bezierTargetTransform == null)
-            //          transform.LookAt(bezierTargetTransform);
-            //      else 
-            Debug.LogError("No Bezier Target Transform Given");
-
 	    if (IsConnected() && !otherEndFibreOpticController.IsConnected())
 	        otherEndFibreOpticController.SetOtherEndController(this);
 
@@ -51,7 +46,7 @@ public class FibreOpticController : MonoBehaviour
             return;
         }
 
-        Debug.Log("Fibre Optic warp effect here");
+        //Debug.Log("Fibre Optic warp effect here");
 
 
         //Info<GameObject, KnifeController> info = (Info<GameObject, KnifeController>)args;
@@ -88,7 +83,7 @@ public class FibreOpticController : MonoBehaviour
     //    while (t > 0)
     //    {
     //        t -= Time.deltaTime * (Time.timeScale / transitionTime);
-    //        _knifeTransform.position = GetBezierPosition(t);
+    //        _knifeTransform.position = LerpBezierPosition(t);
 
     //        yield return 0;
     //    }
@@ -110,10 +105,10 @@ public class FibreOpticController : MonoBehaviour
      * 
      * allows bezier control point movement during transition
      */
-    public Vector3 GetBezierPosition(float _t)
+    public Vector3 LerpBezierPosition(float _t)
     {
         return Utilities.LerpBezier(transform.position, 
-            bezierTargetTransform.position,
+            GetBezierTargetPosition(),
             otherEndFibreOpticController.GetBezierTargetPosition(), 
             otherEndFibreOpticController.GetPosition(),
             _t);
@@ -136,7 +131,7 @@ public class FibreOpticController : MonoBehaviour
     // Used so that other end can get target position for bezier calculation
     public Vector3 GetBezierTargetPosition()
     {
-        return bezierTargetTransform.position;
+        return transform.position + bezierTargetPosition;
     }
 
     public Vector3 GetPosition()
@@ -157,7 +152,7 @@ public class FibreOpticController : MonoBehaviour
 
     public Vector3 GetDirection()
     {
-        return (transform.position - bezierTargetTransform.position).normalized;
+        return transform.rotation * -bezierTargetPosition.normalized;
     }
 
     // Get rotations for aligning transition camera
@@ -182,9 +177,9 @@ public class FibreOpticController : MonoBehaviour
     // TODO: Currently only a debug method used for drawing in editor
     public Info<Vector3, Vector3, Vector3, Vector3> GetBezierPoints()
     {
-        return (otherEndFibreOpticController != null) ? new Info<Vector3, Vector3, Vector3, Vector3>(transform.position, 
-            bezierTargetTransform.position, 
-            otherEndFibreOpticController.GetBezierTargetPosition(), 
+        return (otherEndFibreOpticController != null) ? new Info<Vector3, Vector3, Vector3, Vector3>(transform.position,
+            transform.position + (transform.rotation * bezierTargetPosition),
+            otherEndFibreOpticController.transform.position + (otherEndFibreOpticController.transform.rotation * otherEndFibreOpticController.bezierTargetPosition), 
             otherEndFibreOpticController.transform.position) : null;
     }
 }
