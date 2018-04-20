@@ -113,6 +113,7 @@ namespace AssemblyCSharp
                 // Activate fibre optic warp
                 //Info<GameObject, KnifeController> fibreInfo = new Info<GameObject, KnifeController>(objectStuck, this);
                 this.PostNotification(FibreOpticWarpNotification, objectStuck.GetComponent<FibreOpticController>());
+                return;
             }
 
             // activate knife marker ui

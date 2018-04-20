@@ -2420,7 +2420,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: -5.9, y: 0, z: 180}
 --- !u!1 &474619749
 GameObject:
@@ -4966,6 +4966,7 @@ Transform:
   - {fileID: 340475446}
   - {fileID: 1826192817}
   - {fileID: 154509704}
+  - {fileID: 1715695291}
   - {fileID: 1370243287}
   - {fileID: 464273021}
   - {fileID: 827049613}
@@ -12135,7 +12136,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: -20.85, z: 180}
 --- !u!43 &828322994
 Mesh:
@@ -12557,7 +12558,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 925179819}
   m_LocalRotation: {x: -0, y: 0.14294784, z: -0, w: 0.9897303}
-  m_LocalPosition: {x: 43.9, y: 2.02, z: 17.5}
+  m_LocalPosition: {x: 42.8, y: 2.02, z: -36.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1118406260}
@@ -12575,7 +12576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherEndFibreOpticController: {fileID: 2058045907}
-  bezierTargetPosition: {x: 9.035124, y: 3.0300002, z: 6.142267}
+  bezierTargetPosition: {x: 91.14539, y: 32.153454, z: 30.366138}
 --- !u!23 &925179822
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13167,7 +13168,7 @@ Prefab:
     - target: {fileID: 23676359206154342, guid: 657688e851d81a34eb1363afb0595679,
         type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 657688e851d81a34eb1363afb0595679, type: 2}
@@ -18613,7 +18614,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_RootOrder
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 1000013945068360, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
       propertyPath: m_Name
@@ -19027,7 +19028,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!43 &1428671231
 Mesh:
@@ -24614,8 +24615,76 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1715695290
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 581986094}
+    m_Modifications:
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 11.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 47.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_RootOrder
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000013945068360, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_Name
+      value: GravityPad (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011047979872, guid: 0027516dd5720454196a0ce28774fa96,
+        type: 2}
+      propertyPath: useSurfaceNormal
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.0100000035
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.0100000035
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 0027516dd5720454196a0ce28774fa96, type: 2}
+  m_IsPrefabParent: 0
+--- !u!4 &1715695291 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4000011194952616, guid: 0027516dd5720454196a0ce28774fa96,
+    type: 2}
+  m_PrefabInternal: {fileID: 1715695290}
 --- !u!1 &1741488121
 GameObject:
   m_ObjectHideFlags: 0
@@ -25538,7 +25607,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011560170540, guid: 0cacca3bcb6516842ad072fad8cfaa12, type: 2}
       propertyPath: m_RootOrder
-      value: 22
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 114098667019174330, guid: 0cacca3bcb6516842ad072fad8cfaa12,
         type: 2}
@@ -26788,7 +26857,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 23
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &2044291026
 MeshCollider:
@@ -27187,7 +27256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherEndFibreOpticController: {fileID: 925179821}
-  bezierTargetPosition: {x: 7.2700005, y: 4.0692787, z: 0}
+  bezierTargetPosition: {x: 55.53208, y: 23.744299, z: 0}
 --- !u!23 &2058045908
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -27288,7 +27357,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh13192
+  m_Name: pb_Mesh13516
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -27570,7 +27639,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 581986094}
-  m_RootOrder: 24
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &2117037472
 MeshCollider:

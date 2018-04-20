@@ -128,6 +128,12 @@ public class FibreOpticController : MonoBehaviour
         return Mathf.Max(Utilities.BezierLengthEstimate(GetBezierPoints()) * 0.01f, 0.4f);
     }
 
+    public Vector3 GetBezierTangent(float _t)
+    {
+        return transform.TransformPoint(
+            Utilities.BezierDerivative(GetBezierPoints(), _t)) - transform.position;
+    }
+
     // Used so that other end can get target position for bezier calculation
     public Vector3 GetBezierTargetPosition()
     {

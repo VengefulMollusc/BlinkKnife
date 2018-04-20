@@ -102,12 +102,28 @@ public class Utilities : MonoBehaviour {
      */
     public static Vector3 LerpBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
     {
+        t = Mathf.Clamp01(t);
         float r = 1f - t;
         float f0 = r * r * r;
         float f1 = r * r * t * 3;
         float f2 = r * t * t * 3;
         float f3 = t * t * t;
         return f0 * p0 + f1 * p1 + f2 * p2 + f3 * p3;
+    }
+
+    public static Vector3 BezierDerivative(Info<Vector3, Vector3, Vector3, Vector3> _bezier, float _t)
+    {
+        return BezierDerivative(_bezier.arg0, _bezier.arg1, _bezier.arg2, _bezier.arg3, _t);
+    }
+
+    public static Vector3 BezierDerivative(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+    {
+        t = Mathf.Clamp01(t);
+        float r = 1f - t;
+        return
+            3f * r * r * (p1 - p0) +
+            6f * r * t * (p2 - p1) +
+            3f * t * t * (p3 - p2);
     }
 
     /*

@@ -228,6 +228,13 @@ public class UIController : MonoBehaviour {
 
     void HandleKnifeMarkerNotification(object sender, object args)
     {
+
+        if (args == null)
+        {
+            knifeMarker.SetTarget(null, false);
+            return;
+        }
+
         Info<Transform, bool> info = (Info<Transform, bool>) args;
         knifeMarker.SetTarget(info.arg0, info.arg1);
     }

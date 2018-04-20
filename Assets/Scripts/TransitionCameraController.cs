@@ -130,7 +130,7 @@ public class TransitionCameraController : MonoBehaviour
         float t = 0.0f;
         while (t < 1.0f)
         {
-            t += Time.deltaTime * (Time.timeScale / duration);
+            t += Time.deltaTime * (Time.timeScale / ((fibreOpticWarp) ? duration * 1.5f : duration));
 
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
             
@@ -172,7 +172,8 @@ public class TransitionCameraController : MonoBehaviour
 
                 transform.position = fibreOpticController.LerpBezierPosition(t);
 
-                transform.rotation = Quaternion.Lerp(fibreOpticController.GetStartRotation(), fibreOpticController.GetEndRotation(), t);
+                //transform.rotation = Quaternion.Lerp(fibreOpticController.GetStartRotation(), fibreOpticController.GetEndRotation(), t);
+                transform.rotation = GlobalGravityControl.GetRotationToDir(fibreOpticController.GetBezierTangent(t));
 
                 yield return 0;
             }
