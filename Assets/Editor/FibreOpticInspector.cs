@@ -21,6 +21,8 @@ public class FibreOpticInspector : Editor {
         Vector3 tangent2 = bezierPoints.arg2;
 
         Handles.DrawBezier(point1, point2, tangent1, tangent2, Color.red, null, 1f);
+        Handles.color = Color.green;
+        Handles.DrawLine(point1, tangent1);
 
         Quaternion handleRotation = Tools.pivotRotation == PivotRotation.Local ?
             fibreTransform.rotation : Quaternion.identity;

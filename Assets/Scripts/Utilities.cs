@@ -110,6 +110,15 @@ public class Utilities : MonoBehaviour {
         return f0 * p0 + f1 * p1 + f2 * p2 + f3 * p3;
     }
 
+    public static Vector3 LerpBezierAlt(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+    {
+        float r = 1f - t;
+        return r * r * r * p0 +
+               3f * r * r * t * p1 +
+               3f * r * t * t * p2 +
+               t * t * t * p3;
+    }
+
     //public static Color ChangeColorBrightness(Color color, float correctionFactor)
     //{
     //    float red = color.r;

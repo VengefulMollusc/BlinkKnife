@@ -5067,7 +5067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherEndFibreOpticController: {fileID: 382593696}
-  bezierTargetPosition: {x: -10.6547165, y: 0, z: -39.312252}
+  bezierTargetPosition: {x: -13.407501, y: 0, z: -49.940514}
 --- !u!23 &635322566
 MeshRenderer:
   m_ObjectHideFlags: 0

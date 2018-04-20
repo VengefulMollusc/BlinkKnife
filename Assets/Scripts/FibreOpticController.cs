@@ -96,7 +96,7 @@ public class FibreOpticController : MonoBehaviour
         // stick knife into this end. Should allow lookahead colliders to do their thing
         // places knife out from surface to give lookahead more room
         Vector3 normalVector = GetDirection();
-        Vector3 knifePosition = transform.position + normalVector + (0.5f * GlobalGravityControl.GetCurrentGravityVector()); // gravity offset to align camera
+        Vector3 knifePosition = transform.position + normalVector; // gravity offset to align camera
         _knifeController.StickToSurface(knifePosition, normalVector, gameObject, true);
     }
 
@@ -125,13 +125,13 @@ public class FibreOpticController : MonoBehaviour
     // used so player can warp at the right speed
     public float GetDuration()  // TODO: replace with actual calculation based on overall bezier length
     {
-        return 2f;
+        return 10f;
     }
 
     // Used so that other end can get target position for bezier calculation
     public Vector3 GetBezierTargetPosition()
     {
-        return transform.position + bezierTargetPosition;
+        return transform.position + (transform.rotation * bezierTargetPosition);
     }
 
     public Vector3 GetPosition()
@@ -145,14 +145,14 @@ public class FibreOpticController : MonoBehaviour
         otherEndFibreOpticController = _other;
     }
 
-    public Vector3 GetEndPosition()
-    {
-        return otherEndFibreOpticController.transform.position;
-    }
+    //public Vector3 GetEndPosition()
+    //{
+    //    return otherEndFibreOpticController.transform.position;
+    //}
 
     public Vector3 GetDirection()
     {
-        return transform.rotation * -bezierTargetPosition.normalized;
+        return (transform.rotation * -bezierTargetPosition).normalized;
     }
 
     // Get rotations for aligning transition camera
@@ -178,8 +178,8 @@ public class FibreOpticController : MonoBehaviour
     public Info<Vector3, Vector3, Vector3, Vector3> GetBezierPoints()
     {
         return (otherEndFibreOpticController != null) ? new Info<Vector3, Vector3, Vector3, Vector3>(transform.position,
-            transform.position + (transform.rotation * bezierTargetPosition),
-            otherEndFibreOpticController.transform.position + (otherEndFibreOpticController.transform.rotation * otherEndFibreOpticController.bezierTargetPosition), 
-            otherEndFibreOpticController.transform.position) : null;
+            GetBezierTargetPosition(),
+            otherEndFibreOpticController.GetBezierTargetPosition(), 
+            otherEndFibreOpticController.GetPosition()) : null;
     }
 }

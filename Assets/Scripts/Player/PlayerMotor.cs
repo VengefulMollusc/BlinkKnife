@@ -714,6 +714,8 @@ public class PlayerMotor : MonoBehaviour
         cam.enabled = true;
         UnFreeze();
 
+        GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.2f);
+
         // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
         // TODO: move inherited velocity code to endwarp
         Vector3 knifeVel = info.arg1.normalized;
@@ -737,8 +739,6 @@ public class PlayerMotor : MonoBehaviour
             // fixes horizontal momentum lock when warping
             //onGround = false;
 
-
-            GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.2f);
         }
         else if (info.arg3)
         {
