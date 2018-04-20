@@ -620,6 +620,8 @@ public class PlayerMotor : MonoBehaviour
         //Vector3 newPos = _knifeController.GetWarpPosition();
         Vector3 newGravDirection = _knifeController.GetGravVector();
 
+        bool fibreOpticWarp = _fibreOpticController != null;
+
         // Shift gravity if the difference between current gravity and surface normal is
         // above the threshold defined by warpGravShiftAngle
         float surfaceDiffAngle = Vector3.Angle(-transform.up, newGravDirection);
@@ -641,9 +643,9 @@ public class PlayerMotor : MonoBehaviour
 
         // rotate to surface normal
         if (gravityShift)
-        {
             RotateToDirection(newGravDirection, relativeFacing);
-        }
+        else if (fibreOpticWarp)
+            RotateToDirection(currentGravVector, _fibreOpticController.GetExitDirection(), true);
 
         // move to knife position
         // NOTE: this needs to be double-checked, moving rb by itself doesnt update position properly for grav warp
@@ -666,7 +668,7 @@ public class PlayerMotor : MonoBehaviour
         TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
         transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift);
 
-        if (_fibreOpticController != null)
+        if (fibreOpticWarp)
             transCamController.FibreOpticWarp(_fibreOpticController);
 
         cam.enabled = false;
@@ -743,7 +745,7 @@ public class PlayerMotor : MonoBehaviour
         else if (info.arg3)
         {
             // fibreOptic warp
-            RotateToDirection(currentGravVector, knifeVel, true);
+            //RotateToDirection(currentGravVector, knifeVel, true);
 
             rb.velocity = knifeVel * warpVelocityModifier;
         }

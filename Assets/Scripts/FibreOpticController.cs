@@ -162,6 +162,11 @@ public class FibreOpticController : MonoBehaviour
         return (transform.rotation * -bezierTargetPosition).normalized;
     }
 
+    public Vector3 GetExitDirection()
+    {
+        return otherEndFibreOpticController.GetDirection();
+    }
+
     // Get rotations for aligning transition camera
     public Quaternion GetStartRotation()
     {

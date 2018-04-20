@@ -18,11 +18,13 @@ public class TransitionCameraController : MonoBehaviour
     private bool gravityShift;
 
     [Header("Default Warp")]
-    [SerializeField] private float baseTransDuration = 1f; // 0.5f
+    [SerializeField]
+    private float baseTransDuration = 1f; // 0.5f
     [SerializeField] private float maxDistModifier = 1f;
 
     [Header("Gravity Warp")]
-    [SerializeField] private float gravBaseTransDuration = 1f; // 0.5f
+    [SerializeField]
+    private float gravBaseTransDuration = 1f; // 0.5f
     [SerializeField] private float gravMaxDistModifier = 1f;
 
     private float duration;
@@ -117,12 +119,80 @@ public class TransitionCameraController : MonoBehaviour
         }
 
         _fibreOpticController.WarpKnife(knifeController);
+
+        duration *= 1.5f;
     }
 
     // Triggers the transition animation, unsure if this is needed, could put in setup
     public void StartTransition()
     {
-        StartCoroutine(TransitionCamera());
+        if (fibreOpticWarp)
+            StartCoroutine(FibreTransitionCamera());
+        else
+            StartCoroutine(TransitionCamera());
+    }
+
+    IEnumerator FibreTransitionCamera()
+    {
+        float t = 0.0f;
+        while (t < 1.0f)
+        {
+            t += Time.deltaTime * (Time.timeScale / duration);
+
+            float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
+
+            transform.position = Vector3.Lerp(startPos, fibreOpticController.GetPosition(), lerpPercent);
+
+            // tAlt transitions from 0-1-0 over warp
+            float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
+
+            // use chromatic aberration durign warp
+            chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
+
+            if (duration > 0.4f)
+            {
+                // increase FOV while long/gravity shift
+                cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
+            }
+            // lerp rotation as well
+            transform.rotation = Quaternion.Lerp(startRot, fibreOpticController.GetStartRotation(), lerpPercent);
+
+            yield return 0;
+        }
+
+        // Fibre optic warp transition here
+        float fibreOpticDuration = fibreOpticController.GetDuration();
+        float t2 = 0f;
+        while (t2 < 1f)
+        {
+            t2 += Time.deltaTime * (Time.timeScale / fibreOpticDuration);
+
+            transform.position = fibreOpticController.LerpBezierPosition(t2);
+
+            // rotate camera to face bezier tangent and lean slightly depending on angle of turn
+            // Lots of calculations. may be a bit pointless :P
+            Vector3 tangent = fibreOpticController.GetBezierTangent(t2);
+            Vector3 flattened = Vector3.ProjectOnPlane(tangent, transform.up).normalized;
+            float angle = Vector3.Angle(transform.forward, flattened) * 10f;
+            float dot = Vector3.Dot(tangent, transform.right);
+
+            Quaternion lean = Quaternion.AngleAxis((dot < 0) ? angle : -angle, tangent);
+
+            Quaternion newRotation = GlobalGravityControl.GetRotationToDir(tangent);
+            newRotation = Quaternion.RotateTowards(newRotation, lean * newRotation, 10f);
+
+            transform.rotation = newRotation;
+
+            yield return 0;
+        }
+
+        // TODO: modify this to give velocity out of fibre optic warp. AND add rotation variable
+        Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(),
+            knifeController.transform.up,
+            knifeController.IsBounceKnife(), true);
+        this.PostNotification(WarpEndNotification, info);
+
+        Destroy(gameObject);
     }
 
     IEnumerator TransitionCamera()
@@ -130,14 +200,13 @@ public class TransitionCameraController : MonoBehaviour
         float t = 0.0f;
         while (t < 1.0f)
         {
-            t += Time.deltaTime * (Time.timeScale / ((fibreOpticWarp) ? duration * 1.5f : duration));
+            t += Time.deltaTime * (Time.timeScale / duration);
 
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
-            
-            transform.position = Vector3.Lerp(startPos, 
-                (fibreOpticWarp) ? fibreOpticController.GetPosition() : knifeController.GetWarpPosition() + camRelativePos, 
+
+            transform.position = Vector3.Lerp(startPos, knifeController.GetWarpPosition() + camRelativePos,
                 lerpPercent);
-            
+
             // tAlt transitions from 0-1-0 over warp
             float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
 
@@ -150,10 +219,10 @@ public class TransitionCameraController : MonoBehaviour
                 cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
             }
 
-            if (gravityShift || fibreOpticWarp)
+            if (gravityShift)
             {
                 // lerp rotation as well
-                transform.rotation = Quaternion.Lerp(startRot, (fibreOpticWarp) ? fibreOpticController.GetStartRotation() : endRot, lerpPercent);
+                transform.rotation = Quaternion.Lerp(startRot, endRot, lerpPercent);
                 // increase chromatic aberration during gravity shift
                 //chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
@@ -161,28 +230,10 @@ public class TransitionCameraController : MonoBehaviour
             yield return 0;
         }
 
-        if (fibreOpticWarp)
-        {
-            // Fibre optic warp transition here
-            float fibreOpticDuration = fibreOpticController.GetDuration();
-            t = 0f;
-            while (t < 1f)
-            {
-                t += Time.deltaTime * (Time.timeScale / fibreOpticDuration);
-
-                transform.position = fibreOpticController.LerpBezierPosition(t);
-
-                //transform.rotation = Quaternion.Lerp(fibreOpticController.GetStartRotation(), fibreOpticController.GetEndRotation(), t);
-                transform.rotation = GlobalGravityControl.GetRotationToDir(fibreOpticController.GetBezierTangent(t));
-
-                yield return 0;
-            }
-        }
-
         // TODO: modify this to give velocity out of fibre optic warp. AND add rotation variable
-        Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(), 
-            (fibreOpticWarp) ? knifeController.transform.up : knifeController.GetVelocity(), 
-            knifeController.IsBounceKnife(), fibreOpticWarp);
+        Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(),
+            knifeController.GetVelocity(),
+            knifeController.IsBounceKnife(), false);
         this.PostNotification(WarpEndNotification, info);
 
         Destroy(gameObject);
