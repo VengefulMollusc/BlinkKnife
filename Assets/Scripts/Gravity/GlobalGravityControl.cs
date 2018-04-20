@@ -83,6 +83,11 @@ public class GlobalGravityControl : MonoBehaviour {
         return Quaternion.FromToRotation(-_up, currentGravDirection);
     }
 
+    public static Quaternion GetRotationToDir(Vector3 _direction)
+    {
+        return Quaternion.LookRotation(_direction, -currentGravDirection);
+    }
+
     // Begins a smooth transition from the current gravity direction back to the default(down) direction
     public static void TransitionToDefault(float _duration = 1f)
     {

@@ -8,6 +8,8 @@ public class FibreOpticController : MonoBehaviour
     [SerializeField] private FibreOpticController otherEndFibreOpticController;
     [SerializeField] private Transform bezierTargetTransform;
 
+    private KnifeController attachedKnife;
+
     /*
      * TODO: Need a method to designate one end as 'primary' controller
      * Primary controller will control drawing of fibre optic geometry etc
@@ -24,11 +26,13 @@ public class FibreOpticController : MonoBehaviour
 	        otherEndFibreOpticController.SetOtherEndController(this);
 
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
+        this.AddObserver(OnWarpEnd, TransitionCameraController.WarpEndNotification);
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
+        this.RemoveObserver(OnWarpEnd, TransitionCameraController.WarpEndNotification);
     }
 
     /*
@@ -59,6 +63,12 @@ public class FibreOpticController : MonoBehaviour
         //StartCoroutine(TransitionKnife(knifeTransform));
     }
 
+    void OnWarpEnd(object sender, object args)
+    {
+        if (attachedKnife)
+            attachedKnife = null;
+    }
+
     public void WarpKnife(KnifeController _knifeController)
     {
         if (!IsConnected())
@@ -67,8 +77,7 @@ public class FibreOpticController : MonoBehaviour
             return;
         }
 
-        // stick knife into other end. Should allow lookahead colliders to do their thing
-        _knifeController.StickToSurface(otherEndFibreOpticController.transform.position, -otherEndFibreOpticController.transform.forward, otherEndFibreOpticController.gameObject, true);
+        otherEndFibreOpticController.AttachKnife(_knifeController);
     }
 
     // Transitions the knife along the bezier
@@ -84,6 +93,17 @@ public class FibreOpticController : MonoBehaviour
     //    }
     //}
 
+    public void AttachKnife(KnifeController _knifeController)
+    {
+        attachedKnife = _knifeController;
+
+        // stick knife into this end. Should allow lookahead colliders to do their thing
+        // places knife out from surface to give lookahead more room
+        Vector3 normalVector = -transform.forward;
+        Vector3 knifePosition = transform.position + normalVector + (0.5f * GlobalGravityControl.GetCurrentGravityVector()); // gravity offset to align camera
+        _knifeController.StickToSurface(knifePosition, normalVector, gameObject, true);
+    }
+
     /*
      * Lerps along the bezier defined by both FibreOpticControllers and the bezier targets
      * 
@@ -94,7 +114,7 @@ public class FibreOpticController : MonoBehaviour
         return Utilities.LerpBezier(transform.position, 
             bezierTargetTransform.position,
             otherEndFibreOpticController.GetBezierTargetPosition(), 
-            otherEndFibreOpticController.transform.position,
+            otherEndFibreOpticController.GetPosition(),
             _t);
     }
 
@@ -118,9 +138,9 @@ public class FibreOpticController : MonoBehaviour
         return bezierTargetTransform.position;
     }
 
-    public Vector3 GetStartPosition()
+    public Vector3 GetPosition()
     {
-        return transform.position;
+        return (attachedKnife) ? attachedKnife.GetPosition() : transform.position;
     }
 
     // Used to make sure that both ends are connected properly
@@ -137,12 +157,13 @@ public class FibreOpticController : MonoBehaviour
     // Get rotations for aligning transition camera
     public Quaternion GetStartRotation()
     {
-        return transform.rotation;
+        return GlobalGravityControl.GetRotationToDir(transform.forward);
     }
     
     public Quaternion GetEndRotation()
     {
-        return Quaternion.AngleAxis(180, otherEndFibreOpticController.transform.up) * otherEndFibreOpticController.transform.rotation;
+        //return Quaternion.AngleAxis(180, otherEndFibreOpticController.transform.up) * otherEndFibreOpticController.transform.rotation;
+        return GlobalGravityControl.GetRotationToDir(-otherEndFibreOpticController.transform.forward);
     }
 
     // returns true if this controller has a reference to the controller at the other end

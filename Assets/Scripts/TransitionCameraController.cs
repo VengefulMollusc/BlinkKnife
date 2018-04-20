@@ -153,7 +153,7 @@ public class TransitionCameraController : MonoBehaviour
             if (gravityShift || fibreOpticWarp)
             {
                 // lerp rotation as well
-                transform.rotation = Quaternion.Lerp(startRot, (fibreOpticWarp) ? fibreOpticController.transform.rotation : endRot, lerpPercent);
+                transform.rotation = Quaternion.Lerp(startRot, (fibreOpticWarp) ? fibreOpticController.GetStartRotation() : endRot, lerpPercent);
                 // increase chromatic aberration during gravity shift
                 //chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
@@ -170,9 +170,7 @@ public class TransitionCameraController : MonoBehaviour
             {
                 t += Time.deltaTime * (Time.timeScale / fibreOpticDuration);
 
-                transform.position = Vector3.Lerp(fibreOpticController.GetStartPosition(),
-                    fibreOpticController.GetEndPosition(),
-                    t);
+                transform.position = fibreOpticController.GetBezierPosition(t);
 
                 transform.rotation = Quaternion.Lerp(fibreOpticController.GetStartRotation(), fibreOpticController.GetEndRotation(), t);
 

@@ -15,6 +15,8 @@ public class SafeWarpCollider : MonoBehaviour
 
     private Vector3 lastKnifePosition;
 
+    private bool fibreOpticWarp;
+
     public const string UpdateLookAheadColliderNotification = "SafeWarpCollider.UpdateLookAheadColliderNotification";
 
     // Use this for initialization
@@ -23,16 +25,27 @@ public class SafeWarpCollider : MonoBehaviour
 	    knifeController = transform.parent.GetComponent<KnifeController>();
 	    safeToWarp = true;
 	    lastKnifePosition = knifeController.GetPosition();
-	}
-	
-	void FixedUpdate ()
+        this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
+    }
+
+    void FixedUpdate ()
 	{
-        if (knifeController.GetPosition() == lastKnifePosition)
+	    if (knifeController.GetPosition() == lastKnifePosition)
         {
             this.PostNotification(UpdateLookAheadColliderNotification, transform);
             return;
         }
 
+	    UpdatePosition();
+	}
+
+    private void UpdatePosition()
+    {
         lastKnifePosition = knifeController.GetPosition();
 
         // reset to knife position and gravity rotation
@@ -41,10 +54,10 @@ public class SafeWarpCollider : MonoBehaviour
 
         // if knife has stuck, get position offset from wall
         if (knifeController.HasStuck())
-	    {
+        {
             // Check if gravity warp
-            if (knifeController.ShiftGravity())
-	        {
+            if (knifeController.ShiftGravity() && !fibreOpticWarp)
+            {
                 if (transform.up != -knifeController.GetGravVector())
                 {
                     transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
@@ -58,13 +71,13 @@ public class SafeWarpCollider : MonoBehaviour
             Vector3 newPosition = CollisionOffset();
             newPosition += SurfaceRaycastOffset(newPosition);
             transform.position = newPosition;
-	    }
-	    else if (!safeToWarp)
-	    {
+        }
+        else if (!safeToWarp)
+        {
             transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
         }
-        
-	    this.PostNotification(UpdateLookAheadColliderNotification, transform);
+
+        this.PostNotification(UpdateLookAheadColliderNotification, transform);
     }
 
     // Offsets collider position when knife has stuck to a surface
@@ -174,6 +187,11 @@ public class SafeWarpCollider : MonoBehaviour
             offset += right * (horDist - hitInfo.distance);
 
         return offset;
+    }
+
+    private void OnFibreOpticWarp(object sender, object args)
+    {
+        fibreOpticWarp = true;
     }
 
     public bool IsSafeToWarp()
