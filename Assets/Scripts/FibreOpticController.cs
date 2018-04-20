@@ -18,9 +18,9 @@ public class FibreOpticController : MonoBehaviour
 
     // Use this for initialization
     void OnEnable () {
-		if (bezierTargetTransform != null)
-            transform.LookAt(bezierTargetTransform);
-        else 
+        if (bezierTargetTransform == null)
+            //          transform.LookAt(bezierTargetTransform);
+            //      else 
             Debug.LogError("No Bezier Target Transform Given");
 
 	    if (IsConnected() && !otherEndFibreOpticController.IsConnected())
@@ -100,7 +100,7 @@ public class FibreOpticController : MonoBehaviour
 
         // stick knife into this end. Should allow lookahead colliders to do their thing
         // places knife out from surface to give lookahead more room
-        Vector3 normalVector = -transform.forward;
+        Vector3 normalVector = GetDirection();
         Vector3 knifePosition = transform.position + normalVector + (0.5f * GlobalGravityControl.GetCurrentGravityVector()); // gravity offset to align camera
         _knifeController.StickToSurface(knifePosition, normalVector, gameObject, true);
     }
@@ -155,21 +155,36 @@ public class FibreOpticController : MonoBehaviour
         return otherEndFibreOpticController.transform.position;
     }
 
+    public Vector3 GetDirection()
+    {
+        return (transform.position - bezierTargetTransform.position).normalized;
+    }
+
     // Get rotations for aligning transition camera
     public Quaternion GetStartRotation()
     {
-        return GlobalGravityControl.GetRotationToDir(transform.forward);
+        return GlobalGravityControl.GetRotationToDir(-GetDirection());
     }
     
     public Quaternion GetEndRotation()
     {
         //return Quaternion.AngleAxis(180, otherEndFibreOpticController.transform.up) * otherEndFibreOpticController.transform.rotation;
-        return GlobalGravityControl.GetRotationToDir(-otherEndFibreOpticController.transform.forward);
+        return GlobalGravityControl.GetRotationToDir(otherEndFibreOpticController.GetDirection());
     }
 
     // returns true if this controller has a reference to the controller at the other end
     public bool IsConnected()
     {
         return otherEndFibreOpticController != null;
+    }
+
+
+    // TODO: Currently only a debug method used for drawing in editor
+    public Info<Vector3, Vector3, Vector3, Vector3> GetBezierPoints()
+    {
+        return (otherEndFibreOpticController != null) ? new Info<Vector3, Vector3, Vector3, Vector3>(transform.position, 
+            bezierTargetTransform.position, 
+            otherEndFibreOpticController.GetBezierTargetPosition(), 
+            otherEndFibreOpticController.transform.position) : null;
     }
 }
