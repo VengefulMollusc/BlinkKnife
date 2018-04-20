@@ -135,7 +135,7 @@ public class TransitionCameraController : MonoBehaviour
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
             
             transform.position = Vector3.Lerp(startPos, 
-                (fibreOpticWarp) ? fibreOpticController.GetStartPosition() : knifeController.GetWarpPosition() + camRelativePos, 
+                (fibreOpticWarp) ? fibreOpticController.GetPosition() : knifeController.GetWarpPosition() + camRelativePos, 
                 lerpPercent);
             
             // tAlt transitions from 0-1-0 over warp
