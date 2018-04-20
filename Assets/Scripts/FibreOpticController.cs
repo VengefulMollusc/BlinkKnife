@@ -125,7 +125,7 @@ public class FibreOpticController : MonoBehaviour
     // used so player can warp at the right speed
     public float GetDuration()  // TODO: replace with actual calculation based on overall bezier length
     {
-        return 10f;
+        return Mathf.Max(Utilities.BezierLengthEstimate(GetBezierPoints()) * 0.01f, 0.4f);
     }
 
     // Used so that other end can get target position for bezier calculation
@@ -136,6 +136,7 @@ public class FibreOpticController : MonoBehaviour
 
     public Vector3 GetPosition()
     {
+        //return transform.position;
         return (attachedKnife) ? attachedKnife.GetPosition() : transform.position;
     }
 

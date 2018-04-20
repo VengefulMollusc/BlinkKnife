@@ -79,7 +79,7 @@ namespace AssemblyCSharp
             // disable rigidbody
             //rb.detectCollisions = true;
             rb.isKinematic = true;
-
+            GetComponent<DontGoThroughThings>().enabled = false;
             stuckInSurface = true;
 
             // align knife position with collision position

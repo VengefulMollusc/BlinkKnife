@@ -110,13 +110,22 @@ public class Utilities : MonoBehaviour {
         return f0 * p0 + f1 * p1 + f2 * p2 + f3 * p3;
     }
 
-    public static Vector3 LerpBezierAlt(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+    /*
+     * Gives a rough estimate of the length of a cubic bezier curve
+     * 
+     * used for duration calculations in fibre optics
+     */
+    public static float BezierLengthEstimate(Info<Vector3, Vector3, Vector3, Vector3> _bezier)
     {
-        float r = 1f - t;
-        return r * r * r * p0 +
-               3f * r * r * t * p1 +
-               3f * r * t * t * p2 +
-               t * t * t * p3;
+        return BezierLengthEstimate(_bezier.arg0, _bezier.arg1, _bezier.arg2, _bezier.arg3);
+    }
+
+    public static float BezierLengthEstimate(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        float chord = (p3 - p0).magnitude;
+        float controlNet = (p0 - p1).magnitude + (p2 - p1).magnitude + (p3 - p2).magnitude;
+
+        return (controlNet + chord) / 2;
     }
 
     //public static Color ChangeColorBrightness(Color color, float correctionFactor)
