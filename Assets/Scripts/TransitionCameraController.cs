@@ -185,8 +185,7 @@ public class TransitionCameraController : MonoBehaviour
 
             yield return 0;
         }
-
-        // TODO: modify this to give velocity out of fibre optic warp. AND add rotation variable
+        
         Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(),
             knifeController.transform.up,
             knifeController.IsBounceKnife(), true);

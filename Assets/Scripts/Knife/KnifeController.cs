@@ -98,7 +98,10 @@ namespace AssemblyCSharp
             objectStuck = _other;
 
             if (_cancelNotifications)
+            {
+                GetComponentInChildren<TrailRenderer>().enabled = false;
                 return;
+            }
 
             if (objectStuck.GetComponent<GravityPanel>() != null)
             {
