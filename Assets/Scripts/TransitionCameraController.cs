@@ -134,6 +134,11 @@ public class TransitionCameraController : MonoBehaviour
 
     IEnumerator FibreTransitionCamera()
     {
+        float fibreOpticDuration = fibreOpticController.GetDuration();
+
+        float totalDuration = duration + fibreOpticDuration;
+        bool transitionFov = totalDuration > 0.5f;
+
         float t = 0.0f;
         while (t < 1.0f)
         {
@@ -141,27 +146,18 @@ public class TransitionCameraController : MonoBehaviour
 
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
 
+            // lerp position and rotation
             transform.position = Vector3.Lerp(startPos, fibreOpticController.GetPosition(), lerpPercent);
-
-            // tAlt transitions from 0-1-0 over warp
-            float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
-
-            // use chromatic aberration durign warp
-            chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
-
-            if (duration > 0.4f)
-            {
-                // increase FOV while long/gravity shift
-                cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
-            }
-            // lerp rotation as well
             transform.rotation = Quaternion.Lerp(startRot, fibreOpticController.GetStartRotation(), lerpPercent);
+
+            // Warp camera effects
+            float totalT = (t * duration) / totalDuration;
+            WarpCameraEffects(totalT, transitionFov);
 
             yield return 0;
         }
 
         // Fibre optic warp transition here
-        float fibreOpticDuration = fibreOpticController.GetDuration();
         float t2 = 0f;
         while (t2 < 1f)
         {
@@ -183,6 +179,10 @@ public class TransitionCameraController : MonoBehaviour
 
             transform.rotation = newRotation;
 
+            // Warp camera effects
+            float totalT = (1f + (t2 * fibreOpticDuration)) / totalDuration;
+            WarpCameraEffects(totalT, transitionFov);
+
             yield return 0;
         }
 
@@ -197,6 +197,8 @@ public class TransitionCameraController : MonoBehaviour
 
     IEnumerator TransitionCamera()
     {
+        bool transitionFov = gravityShift || duration > 0.4f;
+
         float t = 0.0f;
         while (t < 1.0f)
         {
@@ -207,36 +209,38 @@ public class TransitionCameraController : MonoBehaviour
             transform.position = Vector3.Lerp(startPos, knifeController.GetWarpPosition() + camRelativePos,
                 lerpPercent);
 
-            // tAlt transitions from 0-1-0 over warp
-            float tAlt = Mathf.Abs((lerpPercent * 2) - 1);
-
-            // use chromatic aberration durign warp
-            chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
-
-            if (gravityShift || duration > 0.4f)
-            {
-                // increase FOV while long/gravity shift
-                cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * tAlt), tAlt);
-            }
+            // camera effects
+            WarpCameraEffects(lerpPercent, transitionFov);
 
             if (gravityShift)
             {
                 // lerp rotation as well
                 transform.rotation = Quaternion.Lerp(startRot, endRot, lerpPercent);
-                // increase chromatic aberration during gravity shift
-                //chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * tAlt), tAlt);
             }
 
             yield return 0;
         }
-
-        // TODO: modify this to give velocity out of fibre optic warp. AND add rotation variable
+        
         Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(),
             knifeController.GetVelocity(),
             knifeController.IsBounceKnife(), false);
         this.PostNotification(WarpEndNotification, info);
 
         Destroy(gameObject);
+    }
+
+    /*
+     * Activates camera effects based on warp progression
+     */
+    private void WarpCameraEffects(float _t, bool _fov)
+    {
+        float lerpPercent = Mathf.Abs((2f * _t) - 1f);
+        // use chromatic aberration durign warp
+        chromAberration.chromaticAberration = Mathf.Lerp(chromaticAberrationMaxValue, chromaticAberrationMaxValue - (chromDiff * lerpPercent), lerpPercent);
+
+        if (_fov)
+            // increase FOV
+            cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * lerpPercent), lerpPercent);
     }
 
     // Performs a raycast check from the start position (guaranteed to be outside mesh)
