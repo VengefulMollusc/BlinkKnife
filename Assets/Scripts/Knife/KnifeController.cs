@@ -77,7 +77,6 @@ namespace AssemblyCSharp
         public void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other, bool _cancelNotifications = false)
         {
             // disable rigidbody
-            //rb.detectCollisions = true;
             rb.isKinematic = true;
             GetComponent<DontGoThroughThings>().enabled = false;
             stuckInSurface = true;
@@ -86,12 +85,8 @@ namespace AssemblyCSharp
             transform.position = _position;
             transform.rotation = Quaternion.FromToRotation(Vector3.up, _normal);
 
-            //collisionPositionOffset = _position - transform.position;
-            //transform.up = _normal;
-
             // stick knife out of surface at collision point
             rb.velocity = Vector3.zero;
-            //visuals.transform.forward = transform.forward; // obsolete as knife no longer spinning
 
             // parent knife to other gameobject (to handle moving objects)
             transform.SetParent(_other.transform);
@@ -114,7 +109,6 @@ namespace AssemblyCSharp
             } else if (objectStuck.GetComponent<FibreOpticController>() != null)
             {
                 // Activate fibre optic warp
-                //Info<GameObject, KnifeController> fibreInfo = new Info<GameObject, KnifeController>(objectStuck, this);
                 this.PostNotification(FibreOpticWarpNotification, objectStuck.GetComponent<FibreOpticController>());
                 return;
             }
