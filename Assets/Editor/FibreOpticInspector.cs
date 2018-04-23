@@ -65,6 +65,7 @@ public class FibreOpticInspector : Editor
             fibre.CreateBezierMesh();
         }
 
+        // create wireframe preview of fibre mesh
         if (GUILayout.Button("Wireframe Bezier Mesh"))
         {
             testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(fibre.GetBezierPoints());

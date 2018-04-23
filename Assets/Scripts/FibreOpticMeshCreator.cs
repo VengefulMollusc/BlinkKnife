@@ -26,6 +26,8 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         SetVertices();
         SetTriangles();
 
+        mesh.RecalculateNormals();
+
         return mesh;
     }
 
