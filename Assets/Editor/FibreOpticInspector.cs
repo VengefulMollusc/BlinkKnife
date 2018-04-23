@@ -2,7 +2,10 @@
 using UnityEngine;
 
 [CustomEditor(typeof(FibreOpticController))]
-public class FibreOpticInspector : Editor {
+public class FibreOpticInspector : Editor
+{
+
+    private Vector3[] testVertices; 
 
     private void OnSceneGUI()
     {
@@ -36,13 +39,18 @@ public class FibreOpticInspector : Editor {
             fibre.bezierTargetPosition = fibreTransform.InverseTransformPoint(tangent1);
         }
 
-        if (fibre.testVertices != null)
+        if (testVertices != null)
         {
-            Handles.color = Color.magenta;
-            for (int i = 0; i < fibre.testVertices.Length - 1; i++)
-            {
-                Handles.DrawLine(fibre.testVertices[i], fibre.testVertices[i + 1]);
-            }
+            DrawWireframeBezierMesh();
+        }
+    }
+
+    private void DrawWireframeBezierMesh()
+    {
+        Handles.color = Color.magenta;
+        for (int i = 0; i < testVertices.Length - 1; i += 2)
+        {
+            Handles.DrawLine(testVertices[i], testVertices[i + 1]);
         }
     }
 
@@ -59,7 +67,7 @@ public class FibreOpticInspector : Editor {
 
         if (GUILayout.Button("Wireframe Bezier Mesh"))
         {
-            fibre.WireframeBezierMesh();
+            testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(fibre.GetBezierPoints());
         }
     }
 }

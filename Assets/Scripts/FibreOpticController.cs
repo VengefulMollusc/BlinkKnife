@@ -14,9 +14,6 @@ public class FibreOpticController : MonoBehaviour
     [SerializeField]
     private GameObject bezierMeshPrefab;
 
-    //[HideInInspector]
-    public Vector3[] testVertices; // TODO: delete this after testing
-
     // Use this for initialization
     void OnEnable () {
         if (IsConnected() && !otherEndFibreOpticController.IsConnected())
@@ -124,23 +121,17 @@ public class FibreOpticController : MonoBehaviour
      */
     public void CreateBezierMesh()
     {
-        //if (bezierMeshPrefab == null)
-        //{
-        //    Debug.LogError("No BezierMeshPrefab given");
-        //    return;
-        //}
+        if (bezierMeshPrefab == null)
+        {
+            Debug.LogError("No BezierMeshPrefab given");
+            return;
+        }
 
         Debug.Log("Creating Bezier Mesh...");
         GameObject meshObject = Instantiate(bezierMeshPrefab, transform.parent);
         meshObject.transform.position = Vector3.zero;
         meshObject.transform.rotation = Quaternion.identity;
         meshObject.GetComponent<MeshFilter>().mesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints());
-    }
-
-    public void WireframeBezierMesh()
-    {
-        Debug.Log("Getting mesh vertices...");
-        testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(GetBezierPoints());
     }
 
     //public Quaternion GetInitialRotation()
