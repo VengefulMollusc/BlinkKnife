@@ -11,15 +11,10 @@ public class FibreOpticController : MonoBehaviour
 
     private KnifeController attachedKnife;
 
-    /*
-     * TODO: Need a method to designate one end as 'primary' controller
-     * Primary controller will control drawing of fibre optic geometry etc
-     */
-
     // Use this for initialization
     void OnEnable () {
-	    if (IsConnected() && !otherEndFibreOpticController.IsConnected())
-	        otherEndFibreOpticController.SetOtherEndController(this);
+        if (IsConnected() && !otherEndFibreOpticController.IsConnected())
+            otherEndFibreOpticController.SetOtherEndController(this);
 
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
         this.AddObserver(OnWarpEnd, TransitionCameraController.WarpEndNotification);
@@ -112,6 +107,14 @@ public class FibreOpticController : MonoBehaviour
             otherEndFibreOpticController.GetBezierTargetPosition(), 
             otherEndFibreOpticController.GetPosition(),
             _t);
+    }
+
+    /*
+     * Handles creation of fibre-optic cable mesh following bezier curve
+     */
+    public void CreateBezierMesh()
+    {
+        Debug.Log("Creating Bezier Mesh...");
     }
 
     //public Quaternion GetInitialRotation()

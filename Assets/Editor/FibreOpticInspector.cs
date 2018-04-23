@@ -36,4 +36,16 @@ public class FibreOpticInspector : Editor {
             fibre.bezierTargetPosition = fibreTransform.InverseTransformPoint(tangent1);
         }
     }
+
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        FibreOpticController fibre = target as FibreOpticController;
+        // Handle button to create mesh
+        if (GUILayout.Button("Create Bezier Mesh"))
+        {
+            fibre.CreateBezierMesh();
+        }
+    }
 }
