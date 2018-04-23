@@ -56,5 +56,10 @@ public class FibreOpticInspector : Editor {
         {
             fibre.CreateBezierMesh();
         }
+
+        if (GUILayout.Button("Wireframe Bezier Mesh"))
+        {
+            fibre.WireframeBezierMesh();
+        }
     }
 }
