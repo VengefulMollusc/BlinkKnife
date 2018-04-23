@@ -35,6 +35,15 @@ public class FibreOpticInspector : Editor {
             EditorUtility.SetDirty(fibre);
             fibre.bezierTargetPosition = fibreTransform.InverseTransformPoint(tangent1);
         }
+
+        if (fibre.testVertices != null)
+        {
+            Handles.color = Color.magenta;
+            for (int i = 0; i < fibre.testVertices.Length - 1; i++)
+            {
+                Handles.DrawLine(fibre.testVertices[i], fibre.testVertices[i + 1]);
+            }
+        }
     }
 
     public override void OnInspectorGUI()

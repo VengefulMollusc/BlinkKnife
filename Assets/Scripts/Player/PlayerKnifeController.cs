@@ -342,11 +342,11 @@ public class PlayerKnifeController : MonoBehaviour
         if (bounceWarp) {
             // throw bounce knife
 			//knife = (GameObject)Instantiate (bounceKnifePrefab, throwPosition, transform.rotation);
-            knife = (GameObject)Instantiate(bounceKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
+            knife = Instantiate(bounceKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
         } else {
             // throw regular (blink) knife
 			//knife = (GameObject)Instantiate (blinkKnifePrefab, throwPosition, transform.rotation * throwDirectionQuaternion);
-            knife = (GameObject)Instantiate(blinkKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
+            knife = Instantiate(blinkKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
         }
 		knifeController = knife.GetComponent<KnifeController> ();
 

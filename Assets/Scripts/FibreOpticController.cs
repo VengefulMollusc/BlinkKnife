@@ -11,6 +11,11 @@ public class FibreOpticController : MonoBehaviour
 
     private KnifeController attachedKnife;
 
+    [SerializeField]
+    private GameObject bezierMeshPrefab;
+
+    public Vector3[] testVertices; // TODO: delete this after testing
+
     // Use this for initialization
     void OnEnable () {
         if (IsConnected() && !otherEndFibreOpticController.IsConnected())
@@ -110,11 +115,29 @@ public class FibreOpticController : MonoBehaviour
     }
 
     /*
-     * Handles creation of fibre-optic cable mesh following bezier curve
+     * Handles creation of fibre-optic cable mesh following bezier curve.
+     * Only run through inspector button.
+     * 
+     * I think running this every frame/fixedupdate might be a bit much, 
+     * so no moving fibre-optics for the moment
      */
     public void CreateBezierMesh()
     {
-        Debug.Log("Creating Bezier Mesh...");
+        //if (bezierMeshPrefab == null)
+        //{
+        //    Debug.LogError("No BezierMeshPrefab given");
+        //    return;
+        //}
+
+        //Debug.Log("Creating Bezier Mesh...");
+        //GameObject meshObject = Instantiate(bezierMeshPrefab, transform.parent);
+        //meshObject.transform.position = Vector3.zero;
+        //meshObject.transform.rotation = Quaternion.identity;
+        //meshObject.GetComponent<MeshFilter>().mesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints());
+        //Debug.Log("Created Mesh");
+
+        Debug.Log("Getting mesh vertices");
+        testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(GetBezierPoints());
     }
 
     //public Quaternion GetInitialRotation()

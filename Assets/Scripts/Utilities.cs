@@ -100,6 +100,11 @@ public class Utilities : MonoBehaviour {
     /*
      * Lerps with t along the bezier curve defined by p0-3
      */
+    public static Vector3 LerpBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier, float _t)
+    {
+        return LerpBezier(_bezier.arg0, _bezier.arg1, _bezier.arg2, _bezier.arg3, _t);
+    }
+
     public static Vector3 LerpBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
     {
         t = Mathf.Clamp01(t);
