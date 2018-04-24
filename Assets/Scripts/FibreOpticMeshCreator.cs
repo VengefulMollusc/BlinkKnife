@@ -6,8 +6,9 @@ using UnityEngine;
 public class FibreOpticMeshCreator : MonoBehaviour {
 
     private static Info<Vector3, Vector3, Vector3, Vector3> bezier;
-    private static float radius = 1f;
-    private static int lengthSegmentCount = 20;
+    private static float radius = 0.5f;
+    private static int lengthSegmentCount;
+    private static float segmentModifier;
     private static int radiusSegmentCount = 10;
     private static Mesh mesh;
     private static Vector3[] meshVertices;
@@ -15,9 +16,10 @@ public class FibreOpticMeshCreator : MonoBehaviour {
     
     private static Vector3[,] vertexArray;
 
-    public static Mesh CreateMeshForBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier)
+    public static Mesh CreateMeshForBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments)
     {
         bezier = _bezier;
+        lengthSegmentCount = _segments;
 
         mesh = new Mesh();
         mesh.name = "FibreOptic Bezier";
@@ -31,9 +33,9 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         return mesh;
     }
 
-    public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier)
+    public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments)
     {
-        CreateMeshForBezier(_bezier);
+        CreateMeshForBezier(_bezier, _segments);
         return meshVertices;
     }
 

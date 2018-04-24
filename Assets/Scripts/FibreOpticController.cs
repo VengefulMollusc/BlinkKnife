@@ -14,6 +14,8 @@ public class FibreOpticController : MonoBehaviour
     [SerializeField]
     private GameObject bezierMeshPrefab;
 
+    [SerializeField] private int meshSegmentCount = 10;
+
     // Use this for initialization
     void OnEnable () {
         if (IsConnected() && !otherEndFibreOpticController.IsConnected())
@@ -131,7 +133,13 @@ public class FibreOpticController : MonoBehaviour
         GameObject meshObject = Instantiate(bezierMeshPrefab, transform.parent);
         meshObject.transform.position = Vector3.zero;
         meshObject.transform.rotation = Quaternion.identity;
-        meshObject.GetComponent<MeshFilter>().mesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints());
+        meshObject.GetComponent<MeshFilter>().mesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints(), meshSegmentCount);
+    }
+
+    // returns mesh segment count - used by inspector script to create wireframe
+    public int GetSegmentCount()
+    {
+        return meshSegmentCount;
     }
 
     //public Quaternion GetInitialRotation()
@@ -143,9 +151,9 @@ public class FibreOpticController : MonoBehaviour
     //}
 
     // used so player can warp at the right speed
-    public float GetDuration()  // TODO: replace with actual calculation based on overall bezier length
+    public float GetDuration()  // TODO: replace with exponential increase
     {
-        return Mathf.Max(Utilities.BezierLengthEstimate(GetBezierPoints()) * 0.008f, 0.4f);
+        return Mathf.Max(Utilities.BezierLengthEstimate(GetBezierPoints()) * 0.008f, 1f);
     }
 
     public Vector3 GetBezierTangent(float _t)

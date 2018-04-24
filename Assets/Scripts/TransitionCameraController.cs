@@ -165,17 +165,17 @@ public class TransitionCameraController : MonoBehaviour
 
             transform.position = fibreOpticController.LerpBezierPosition(t2);
 
+            Vector3 tangent = fibreOpticController.GetBezierTangent(t2);
+            Quaternion newRotation = GlobalGravityControl.GetRotationToDir(tangent);
+
             // rotate camera to face bezier tangent and lean slightly depending on angle of turn
             // Lots of calculations. may be a bit pointless :P
-            Vector3 tangent = fibreOpticController.GetBezierTangent(t2);
-            Vector3 flattened = Vector3.ProjectOnPlane(tangent, transform.up).normalized;
-            float angle = Vector3.Angle(transform.forward, flattened) * 10f;
-            float dot = Vector3.Dot(tangent, transform.right);
+            //Vector3 flattened = Vector3.ProjectOnPlane(tangent, transform.up).normalized;
+            //float angle = Vector3.Angle(transform.forward, flattened) * 10f;
+            //float dot = Vector3.Dot(tangent, transform.right);
 
-            Quaternion lean = Quaternion.AngleAxis((dot < 0) ? angle : -angle, tangent);
-
-            Quaternion newRotation = GlobalGravityControl.GetRotationToDir(tangent);
-            newRotation = Quaternion.RotateTowards(newRotation, lean * newRotation, 10f);
+            //Quaternion lean = Quaternion.AngleAxis((dot < 0) ? angle : -angle, tangent);
+            //newRotation = Quaternion.RotateTowards(newRotation, lean * newRotation, 10f);
 
             transform.rotation = newRotation;
 
