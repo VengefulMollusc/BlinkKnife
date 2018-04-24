@@ -39,6 +39,7 @@ public class FibreOpticInspector : Editor
             fibre.bezierTargetPosition = fibreTransform.InverseTransformPoint(tangent1);
         }
 
+        testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(fibre.GetBezierPoints(), fibre.GetSegmentCount());
         if (testVertices != null)
         {
             DrawWireframeBezierMesh();
@@ -65,10 +66,10 @@ public class FibreOpticInspector : Editor
             fibre.CreateBezierMesh();
         }
 
-        // create wireframe preview of fibre mesh
-        if (GUILayout.Button("Wireframe Bezier Mesh"))
-        {
-            testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(fibre.GetBezierPoints(), fibre.GetSegmentCount());
-        }
+        //// create wireframe preview of fibre mesh
+        //if (GUILayout.Button("Wireframe Bezier Mesh"))
+        //{
+        //    testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(fibre.GetBezierPoints(), fibre.GetSegmentCount());
+        //}
     }
 }

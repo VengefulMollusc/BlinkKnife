@@ -151,9 +151,9 @@ public class FibreOpticController : MonoBehaviour
     //}
 
     // used so player can warp at the right speed
-    public float GetDuration()  // TODO: replace with exponential increase
+    public float GetDuration()
     {
-        return Mathf.Max(GetLengthEstimate() * 0.008f, 1f); // was 1f
+        return Mathf.Max(GetLengthEstimate() * 0.008f, 1f);
     }
 
     public float GetLengthEstimate()
