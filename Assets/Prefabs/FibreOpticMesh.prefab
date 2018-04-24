@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4741027309338324}
   - component: {fileID: 33514789837570866}
   - component: {fileID: 23207699968197716}
-  m_Layer: 10
+  m_Layer: 16
   m_Name: FibreOpticMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

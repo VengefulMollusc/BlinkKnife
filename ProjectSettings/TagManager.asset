@@ -22,13 +22,13 @@ TagManager:
   - 
   - PlayerProjectile
   - TransitionCamera
-  - FibreOptic
+  - FibreOpticEnd
   - PlayerViewModel
   - Particles
   - Player
   - MovingObject
   - WarpLookAhead
-  - 
+  - FibreOpticTube
   - 
   - 
   - 
