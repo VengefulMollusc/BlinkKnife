@@ -169,7 +169,7 @@ public class TransitionCameraController : MonoBehaviour
             Quaternion newRotation = GlobalGravityControl.GetRotationToDir(tangent);
 
             // rotate camera to face bezier tangent and lean slightly depending on angle of turn
-            // Lots of calculations. may be a bit pointless :P
+            // Lots of calculations. may be a bit much for such a subtle effect :P
             float tAlt = Mathf.Abs((2f * t2) - 1f);
             tAlt = 1f - (tAlt * tAlt);
             Vector3 flattened = Vector3.ProjectOnPlane(tangent, transform.up).normalized;
