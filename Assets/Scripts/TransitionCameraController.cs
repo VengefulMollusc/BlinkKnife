@@ -59,7 +59,7 @@ public class TransitionCameraController : MonoBehaviour
             Debug.LogError("No BlackoutCamera assigned");
     }
 
-    public void Setup(float _fov, Vector3 _startPos, KnifeController _knifeController, Vector3 _camRelativePos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift)
+    public void Setup(float _fov, Vector3 _startPos, KnifeController _knifeController, Vector3 _camRelativePos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift, FibreOpticController _fibreController)
     {
         startPos = _startPos;
         knifeController = _knifeController;
@@ -76,6 +76,18 @@ public class TransitionCameraController : MonoBehaviour
 
         Blackout(false);
 
+        if (_fibreController)
+        {
+            fibreOpticController = _fibreController;
+            fibreOpticWarp = true;
+
+            fibreOpticController.WarpKnife(knifeController);
+
+            float speed = fibreOpticController.GetLengthEstimate() / fibreOpticController.GetDuration();
+            fovMaxValue = Utilities.MapValues(speed, 0f, fovSpeedModMax, cam.fieldOfView, fovMaxValue, true) * 1.2f;
+            fovDiff = fovMaxValue - cam.fieldOfView;
+        }
+
         CalculateDuration();
     }
 
@@ -87,6 +99,9 @@ public class TransitionCameraController : MonoBehaviour
             CalculateDuration(dist, gravBaseTransDuration, gravMaxDistModifier);
         else
             CalculateDuration(dist, baseTransDuration, maxDistModifier);
+
+        if (fibreOpticWarp)
+            duration *= 1.5f;
     }
 
     private void CalculateDuration(float _dist, float _baseDuration, float _modifier)
@@ -104,27 +119,6 @@ public class TransitionCameraController : MonoBehaviour
     public float GetDuration()
     {
         return duration;
-    }
-
-    // Activates extended warp transition that covers bezier curve of fibre optic objects
-    public void FibreOpticWarp(FibreOpticController _fibreOpticController)
-    {
-        fibreOpticController = _fibreOpticController;
-        fibreOpticWarp = true;
-
-        if (knifeController == null)
-        {
-            Debug.LogError("Null knifeController");
-            return;
-        }
-
-        _fibreOpticController.WarpKnife(knifeController);
-
-        duration *= 1.5f;
-
-        float speed = fibreOpticController.GetLengthEstimate() / fibreOpticController.GetDuration();
-        fovMaxValue = Utilities.MapValues(speed, 0f, fovSpeedModMax, cam.fieldOfView, fovMaxValue, true) * 1.2f;
-        fovDiff = fovMaxValue - cam.fieldOfView;
     }
 
     // Triggers the transition animation, unsure if this is needed, could put in setup
@@ -147,6 +141,7 @@ public class TransitionCameraController : MonoBehaviour
         while (t < 1.0f)
         {
             t += Time.deltaTime * (Time.timeScale / duration);
+            t = Mathf.Clamp01(t);
 
             float lerpPercent = t * t * t; // modify t value to allow non-linear transitions
 
@@ -166,8 +161,9 @@ public class TransitionCameraController : MonoBehaviour
         while (t2 < 1f)
         {
             t2 += Time.deltaTime * (Time.timeScale / fibreOpticDuration);
+            t2 = Mathf.Clamp01(t2);
 
-            transform.position = fibreOpticController.LerpBezierPosition(t2);
+            transform.position = fibreOpticController.GetBezierPosition(t2);
 
             Vector3 tangent = fibreOpticController.GetBezierTangent(t2);
             Quaternion newRotation = GlobalGravityControl.GetRotationToDir(tangent);

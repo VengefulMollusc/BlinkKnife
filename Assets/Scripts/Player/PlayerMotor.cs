@@ -666,10 +666,7 @@ public class PlayerMotor : MonoBehaviour
         GameObject transCamera = (GameObject)Instantiate(transitionCameraPrefab, camStartPos, cam.transform.rotation);
 
         TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
-        transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift);
-
-        if (fibreOpticWarp)
-            transCamController.FibreOpticWarp(_fibreOpticController);
+        transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift, _fibreOpticController);
 
         cam.enabled = false;
         Freeze();

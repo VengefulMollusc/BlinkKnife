@@ -83,7 +83,7 @@ public class FibreOpticController : MonoBehaviour
     //    while (t > 0)
     //    {
     //        t -= Time.deltaTime * (Time.timeScale / transitionTime);
-    //        _knifeTransform.position = LerpBezierPosition(t);
+    //        _knifeTransform.position = GetBezierPosition(t);
 
     //        yield return 0;
     //    }
@@ -105,9 +105,9 @@ public class FibreOpticController : MonoBehaviour
      * 
      * allows bezier control point movement during transition
      */
-    public Vector3 LerpBezierPosition(float _t)
+    public Vector3 GetBezierPosition(float _t)
     {
-        return Utilities.LerpBezier(transform.position, 
+        return Utilities.LerpBezier(GetPosition(), 
             GetBezierTargetPosition(),
             otherEndFibreOpticController.GetBezierTargetPosition(), 
             otherEndFibreOpticController.GetPosition(),
@@ -153,7 +153,7 @@ public class FibreOpticController : MonoBehaviour
     // used so player can warp at the right speed
     public float GetDuration()  // TODO: replace with exponential increase
     {
-        return Mathf.Max(GetLengthEstimate() * 0.008f, 1f);
+        return Mathf.Max(GetLengthEstimate() * 0.008f, 1f); // was 1f
     }
 
     public float GetLengthEstimate()
@@ -163,8 +163,7 @@ public class FibreOpticController : MonoBehaviour
 
     public Vector3 GetBezierTangent(float _t)
     {
-        return transform.TransformPoint(
-            Utilities.BezierDerivative(GetBezierPoints(), _t)) - transform.position;
+        return Utilities.BezierDerivative(GetBezierPoints(), _t);
     }
 
     // Used so that other end can get target position for bezier calculation
