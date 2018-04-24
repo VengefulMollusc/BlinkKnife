@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 4206513150749912}
   - component: {fileID: 108559030336995290}
   - component: {fileID: 96381929014120348}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 33161915660533858}
   - component: {fileID: 23030299712492768}
   - component: {fileID: 96799949486058788}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: blinkKnife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4551926484597700}
   - component: {fileID: 123041678788244074}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Flare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 136089090168224112}
   - component: {fileID: 23062626684198586}
   - component: {fileID: 114248397995965664}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: SafeWarpCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
