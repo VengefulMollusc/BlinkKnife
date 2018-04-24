@@ -170,12 +170,14 @@ public class TransitionCameraController : MonoBehaviour
 
             // rotate camera to face bezier tangent and lean slightly depending on angle of turn
             // Lots of calculations. may be a bit pointless :P
-            //Vector3 flattened = Vector3.ProjectOnPlane(tangent, transform.up).normalized;
-            //float angle = Vector3.Angle(transform.forward, flattened) * 10f;
-            //float dot = Vector3.Dot(tangent, transform.right);
+            float tAlt = Mathf.Abs((2f * t2) - 1f);
+            tAlt = 1f - (tAlt * tAlt);
+            Vector3 flattened = Vector3.ProjectOnPlane(tangent, transform.up).normalized;
+            float angle = Vector3.Angle(transform.forward, flattened) * 10f * tAlt;
+            float dot = Vector3.Dot(tangent, transform.right);
 
-            //Quaternion lean = Quaternion.AngleAxis((dot < 0) ? angle : -angle, tangent);
-            //newRotation = Quaternion.RotateTowards(newRotation, lean * newRotation, 10f);
+            Quaternion lean = Quaternion.AngleAxis((dot < 0) ? angle : -angle, tangent);
+            newRotation = Quaternion.RotateTowards(newRotation, lean * newRotation, 10f);
 
             transform.rotation = newRotation;
 
