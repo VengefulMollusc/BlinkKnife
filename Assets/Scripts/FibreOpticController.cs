@@ -133,7 +133,9 @@ public class FibreOpticController : MonoBehaviour
         GameObject meshObject = Instantiate(bezierMeshPrefab, transform.parent);
         meshObject.transform.position = Vector3.zero;
         meshObject.transform.rotation = Quaternion.identity;
-        meshObject.GetComponent<MeshFilter>().mesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints(), meshSegmentCount);
+        Mesh fibreMesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints(), meshSegmentCount);
+        meshObject.GetComponent<MeshFilter>().mesh = fibreMesh;
+        meshObject.GetComponent<MeshCollider>().sharedMesh = fibreMesh;
     }
 
     // returns mesh segment count - used by inspector script to create wireframe

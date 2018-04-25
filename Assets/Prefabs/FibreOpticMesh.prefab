@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4741027309338324}
   - component: {fileID: 33514789837570866}
   - component: {fileID: 23207699968197716}
+  - component: {fileID: 64162819732869990}
   m_Layer: 16
   m_Name: FibreOpticMesh
   m_TagString: Untagged
@@ -81,4 +82,18 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1142700280047862}
+  m_Mesh: {fileID: 0}
+--- !u!64 &64162819732869990
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1142700280047862}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 0}
