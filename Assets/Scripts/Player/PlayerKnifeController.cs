@@ -207,7 +207,7 @@ public class PlayerKnifeController : MonoBehaviour
             {
                 // return thrown blink knife
                 ReturnKnife();
-                knifeRenderer.enabled = true;
+                //knifeRenderer.enabled = true;
             }
         } else if (Input.GetButtonDown(abilityButton))
 		{
@@ -249,7 +249,7 @@ public class PlayerKnifeController : MonoBehaviour
         if (autoRecallTimer <= 0)
         {
             ReturnKnife();
-            knifeRenderer.enabled = true;
+            //knifeRenderer.enabled = true;
         }
     }
 
@@ -387,10 +387,11 @@ public class PlayerKnifeController : MonoBehaviour
      */
     public void ReturnKnife()
     {
-        DestroyImmediate(knife);
+        Destroy(knife);
         knife = null;
         knifeController = null;
 
+        UnHideKnife();
         //knifeRenderer.enabled = true;
     }
 
@@ -401,12 +402,21 @@ public class PlayerKnifeController : MonoBehaviour
     {
         if (knife == null)
             return;
-        
-        FibreOpticController fibreOpticController = (FibreOpticController)args;
 
-        playerMotor.WarpToKnife(false, knifeController, false, fibreOpticController);
+        if (currentWarps > 0)
+        {
+            // perform forced fibreoptic warp
+            FibreOpticController fibreOpticController = (FibreOpticController) args;
 
-        bounceWarp = false;
+            playerMotor.WarpToKnife(false, knifeController, false, fibreOpticController);
+
+            bounceWarp = false;
+        }
+        else
+        {
+            // return knife
+            ReturnKnife();
+        }
     }
 
     /*

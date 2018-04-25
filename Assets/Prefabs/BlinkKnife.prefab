@@ -514,7 +514,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionOffsetLayerMask:
     serializedVersion: 2
-    m_Bits: 16385
+    m_Bits: 82945
 --- !u!114 &114848270002936760
 MonoBehaviour:
   m_ObjectHideFlags: 1
