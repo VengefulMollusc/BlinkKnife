@@ -710,6 +710,9 @@ public class PlayerMotor : MonoBehaviour
         transform.position = info.arg0;
 
         canHover = true;
+
+        // make sure camera is properly angled before reenabling
+        cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
         cam.enabled = true;
         UnFreeze();
 
