@@ -49,7 +49,7 @@ public class FibreOpticInspector : Editor
     private void DrawWireframeBezierMesh()
     {
         Handles.color = Color.magenta;
-        for (int i = 0; i < testVertices.Length - 1; i += 2)
+        for (int i = 0; i < testVertices.Length - 1; i += 1) // was +2 when dealing with meshVertices input
         {
             Handles.DrawLine(testVertices[i], testVertices[i + 1]);
         }

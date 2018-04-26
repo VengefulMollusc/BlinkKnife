@@ -13,11 +13,12 @@ public class FibreOpticMeshCreator : MonoBehaviour {
     private static int[] meshTriangles;
     
     private static Vector3[,] vertexArray;
+    private static Vector3[] vertexList;
 
     // variables that define mesh creation/detail
     private static float autoCreateResolution = 0.01f;
-    private static float autoCreateTangentAngleThreshold = 10f;
-    private static float autoCreateMaxSegmentLength = 10f;
+    private static float autoCreateTangentAngleThreshold = 10f; // 10f
+    private static float autoCreateMaxSegmentLength = 10f; 
     private static float radius = 0.5f;
     private static int radiusSegmentCount = 10;
 
@@ -27,27 +28,33 @@ public class FibreOpticMeshCreator : MonoBehaviour {
 
         mesh = new Mesh{name = "FibreOptic Bezier"};
         AutoCreateMeshVertices();
-        SetVertices();
+        SetVerticesFromList();
 
         if (_createVerticesOnly)
             return mesh;
 
-        SetTriangles();
+        SetTrianglesFromList();
 
         mesh.RecalculateNormals();
         
-        CalculateSharedVertexNormals();
+        //CalculateSharedVertexNormals();
 
         return mesh;
     }
 
     public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier)
     {
+        //if (bezier == _bezier)
+        //    return meshVertices;
+
+        //CreateMeshForBezier(_bezier, true);
+        //return meshVertices;
+
         if (bezier == _bezier)
-            return meshVertices;
+            return vertexList;
 
         CreateMeshForBezier(_bezier, true);
-        return meshVertices;
+        return vertexList;
     }
 
     // distributes mesh vertices based on angle of change of bezier curve
@@ -62,17 +69,24 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         {
             Vector3 currentPoint = Utilities.LerpBezier(bezier, u);
             Vector3 currentTangent = Utilities.BezierDerivative(bezier, u);
-            if (u < autoCreateResolution || u > 1f - autoCreateResolution 
-                || Vector3.Angle(tangents[tangents.Count - 1], currentTangent) > autoCreateTangentAngleThreshold 
-                || Vector3.Distance(points[points.Count - 1], currentPoint) > autoCreateMaxSegmentLength)
+
+            // add points if:
+            // we are at each end or
+            // the angle is greater than the threshold or 
+            // we've reached the max segment length
+            if (points.Count == 0 || currentPoint != points[points.Count - 1])
             {
-                // always record points at each end
-                points.Add(currentPoint);
-                tangents.Add(currentTangent);
+                if (u < autoCreateResolution * 0.5f || u > 1f - (autoCreateResolution * 0.5f)
+                    || Vector3.Angle(tangents[tangents.Count - 1], currentTangent) > autoCreateTangentAngleThreshold
+                    || Vector3.Distance(points[points.Count - 1], currentPoint) > autoCreateMaxSegmentLength)
+                {
+                    points.Add(currentPoint);
+                    tangents.Add(currentTangent);
+                }
             }
 
             // increment and make sure the value at 1f will be checked
-            if (u + autoCreateResolution > 1f && u < 1f)
+            if (u + autoCreateResolution > 1f && u < 1f - (autoCreateResolution * 0.5f))
                 u = 1f;
             else
                 u += autoCreateResolution;
@@ -81,16 +95,27 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         lengthSegmentCount = points.Count - 1;
 
         // Create basic circle of points
-        Vector3[] circle = new Vector3[radiusSegmentCount + 1];
+        //Vector3[] circle = new Vector3[radiusSegmentCount + 1];
+        //Vector3 baseCircleVector = Vector3.up * radius;
+        //float angle = 360f / radiusSegmentCount;
+        //for (int i = 0; i <= radiusSegmentCount; i++)
+        //{
+        //    circle[i] = Quaternion.AngleAxis(angle * i, Vector3.forward) * baseCircleVector;
+        //}
+
+        Vector3[] circle = new Vector3[radiusSegmentCount];
         Vector3 baseCircleVector = Vector3.up * radius;
         float angle = 360f / radiusSegmentCount;
-        for (int i = 0; i <= radiusSegmentCount; i++)
+        for (int i = 0; i < radiusSegmentCount; i++)
         {
             circle[i] = Quaternion.AngleAxis(angle * i, Vector3.forward) * baseCircleVector;
         }
 
         // Align circle with bezier tangent at each step and record points
-        vertexArray = new Vector3[lengthSegmentCount + 1, radiusSegmentCount + 1];
+        vertexArray = new Vector3[lengthSegmentCount + 1, circle.Length];
+
+        vertexList = new Vector3[(lengthSegmentCount + 1) * circle.Length];
+        int index = 0;
 
         for (int i = 0; i <= lengthSegmentCount; i++)
         {
@@ -99,6 +124,9 @@ public class FibreOpticMeshCreator : MonoBehaviour {
             {
                 Vector3 vertex = points[i] + (rot * circle[j]);
                 vertexArray[i, j] = vertex;
+
+                vertexList[index] = vertex;
+                index++;
             }
         }
     }
@@ -143,109 +171,131 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         return vertexArray[iLength, iRadius];
     }
 
-    private static void SetVertices()
+    private static void SetVerticesFromList()
     {
-        meshVertices = new Vector3[lengthSegmentCount * radiusSegmentCount * 4];
-
-        CreateFirstQuadRing(1);
-
-        int iDelta = radiusSegmentCount * 4;
-        for (int u = 2, i = iDelta; u <= lengthSegmentCount; u++, i += iDelta)
-        {
-            CreateQuadRing(u, i);
-        }
-
-        mesh.vertices = meshVertices;
+        mesh.vertices = vertexList;
     }
 
-    private static void CreateFirstQuadRing(int u)
-    {
-        Vector3 vertexA = GetMeshVertex(0, 0);
-        Vector3 vertexB = GetMeshVertex(u, 0);
-        for (int v = 1, i = 0; v <= radiusSegmentCount; v++, i += 4)
-        {
-            meshVertices[i] = vertexA;
-            meshVertices[i + 1] = vertexA = GetMeshVertex(0, v);
-            meshVertices[i + 2] = vertexB;
-            meshVertices[i + 3] = vertexB = GetMeshVertex(u, v);
-        }
-    }
-
-    private static void CreateQuadRing(int u, int i)
-    {
-        int radiusOffset = radiusSegmentCount * 4;
-        Vector3 vertex = GetMeshVertex(u, 0);
-        for (int v = 1; v <= radiusSegmentCount; v++, i += 4)
-        {
-            meshVertices[i] = meshVertices[i - radiusOffset + 2];
-            meshVertices[i + 1] = meshVertices[i - radiusOffset + 3];
-            meshVertices[i + 2] = vertex;
-            meshVertices[i + 3] = vertex = GetMeshVertex(u, v);
-        }
-    }
-
-    private static void SetTriangles()
+    private static void SetTrianglesFromList()
     {
         meshTriangles = new int[lengthSegmentCount * radiusSegmentCount * 6];
-        for (int t = 0, i = 0; t < meshTriangles.Length; t += 6, i += 4)
+        for (int t = 0, i = 0; t < meshTriangles.Length; t += 6, i += 1)
         {
             meshTriangles[t] = i;
-            meshTriangles[t + 1] = meshTriangles[t + 4] = i + 1;
-            meshTriangles[t + 2] = meshTriangles[t + 3] = i + 2;
-            meshTriangles[t + 5] = i + 3;
+            meshTriangles[t + 2] = meshTriangles[t + 3] = i + radiusSegmentCount;
+
+            // Use different indices if this quad is the last of this pipe segment
+            bool mod = (i + 1) % radiusSegmentCount == 0;
+            meshTriangles[t + 1] = meshTriangles[t + 4] = (mod) ? i + 1 - radiusSegmentCount : i + 1;
+            meshTriangles[t + 5] = (mod) ? i + 1 : i + radiusSegmentCount + 1;
         }
         mesh.triangles = meshTriangles;
     }
 
-    private static void CalculateSharedVertexNormals()
-    {
-        Vector3[] vertices = mesh.vertices;
-        Vector3[] normals = mesh.normals;
-        List<int> checkedIndices = new List<int>();
+    // original vertices/triangles calculation
+    //private static void SetVertices()
+    //{
+    //    meshVertices = new Vector3[lengthSegmentCount * radiusSegmentCount * 4];
 
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            // skip if current index has already been checked
-            if (checkedIndices.Contains(i))
-                continue;
+    //    CreateFirstQuadRing(1);
 
-            // add current index to checked list
-            checkedIndices.Add(i);
+    //    int iDelta = radiusSegmentCount * 4;
+    //    for (int u = 2, i = iDelta; u <= lengthSegmentCount; u++, i += iDelta)
+    //    {
+    //        CreateQuadRing(u, i);
+    //    }
 
-            // get the current vertex
-            Vector3 vertex = vertices[i];
+    //    mesh.vertices = meshVertices;
+    //}
 
-            List<int> matchingVertices = new List<int>();
-            matchingVertices.Add(i);
+    //private static void CreateFirstQuadRing(int u)
+    //{
+    //    Vector3 vertexA = GetMeshVertex(0, 0);
+    //    Vector3 vertexB = GetMeshVertex(u, 0);
+    //    for (int v = 1, i = 0; v <= radiusSegmentCount; v++, i += 4)
+    //    {
+    //        meshVertices[i] = vertexA;
+    //        meshVertices[i + 1] = vertexA = GetMeshVertex(0, v);
+    //        meshVertices[i + 2] = vertexB;
+    //        meshVertices[i + 3] = vertexB = GetMeshVertex(u, v);
+    //    }
+    //}
 
-            // for each index higher than the current (that hasn't already been checked)
-            // compare the vertices
-            for (int j = i + 1; j < vertices.Length; j++)
-            {
-                if (!checkedIndices.Contains(j) && vertices[j] == vertex)
-                {
-                    matchingVertices.Add(j);
-                    checkedIndices.Add(j);
-                }
-            }
+    //private static void CreateQuadRing(int u, int i)
+    //{
+    //    int radiusOffset = radiusSegmentCount * 4;
+    //    Vector3 vertex = GetMeshVertex(u, 0);
+    //    for (int v = 1; v <= radiusSegmentCount; v++, i += 4)
+    //    {
+    //        meshVertices[i] = meshVertices[i - radiusOffset + 2];
+    //        meshVertices[i + 1] = meshVertices[i - radiusOffset + 3];
+    //        meshVertices[i + 2] = vertex;
+    //        meshVertices[i + 3] = vertex = GetMeshVertex(u, v);
+    //    }
+    //}
 
-            // go through each matching index and average the normals
-            Vector3 averageNormal = Vector3.zero;
-            foreach (int index in matchingVertices)
-            {
-                averageNormal += normals[index];
-            }
-            averageNormal /= matchingVertices.Count;
-            averageNormal.Normalize();
+    //private static void SetTriangles()
+    //{
+    //    meshTriangles = new int[lengthSegmentCount * radiusSegmentCount * 6];
+    //    for (int t = 0, i = 0; t < meshTriangles.Length; t += 6, i += 4)
+    //    {
+    //        meshTriangles[t] = i;
+    //        meshTriangles[t + 1] = meshTriangles[t + 4] = i + 1;
+    //        meshTriangles[t + 2] = meshTriangles[t + 3] = i + 2;
+    //        meshTriangles[t + 5] = i + 3;
+    //    }
+    //    mesh.triangles = meshTriangles;
+    //}
 
-            // reassign the averaged normal to each vertex
-            foreach (int index in matchingVertices)
-            {
-                normals[index] = averageNormal;
-            }
-        }
+    //private static void CalculateSharedVertexNormals()
+    //{
+    //    Vector3[] vertices = mesh.vertices;
+    //    Vector3[] normals = mesh.normals;
+    //    List<int> checkedIndices = new List<int>();
 
-        // replace the mesh normals with averaged normals
-        mesh.normals = normals;
-    }
+    //    for (int i = 0; i < vertices.Length; i++)
+    //    {
+    //        // skip if current index has already been checked
+    //        if (checkedIndices.Contains(i))
+    //            continue;
+
+    //        // add current index to checked list
+    //        checkedIndices.Add(i);
+
+    //        // get the current vertex
+    //        Vector3 vertex = vertices[i];
+
+    //        List<int> matchingVertices = new List<int>();
+    //        matchingVertices.Add(i);
+
+    //        // for each index higher than the current (that hasn't already been checked)
+    //        // compare the vertices
+    //        for (int j = i + 1; j < vertices.Length; j++)
+    //        {
+    //            if (!checkedIndices.Contains(j) && vertices[j] == vertex)
+    //            {
+    //                matchingVertices.Add(j);
+    //                checkedIndices.Add(j);
+    //            }
+    //        }
+
+    //        // go through each matching index and average the normals
+    //        Vector3 averageNormal = Vector3.zero;
+    //        foreach (int index in matchingVertices)
+    //        {
+    //            averageNormal += normals[index];
+    //        }
+    //        averageNormal /= matchingVertices.Count;
+    //        averageNormal.Normalize();
+
+    //        // reassign the averaged normal to each vertex
+    //        foreach (int index in matchingVertices)
+    //        {
+    //            normals[index] = averageNormal;
+    //        }
+    //    }
+
+    //    // replace the mesh normals with averaged normals
+    //    mesh.normals = normals;
+    //}
 }
