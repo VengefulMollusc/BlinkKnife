@@ -19,6 +19,9 @@ public class FibreOpticMeshCreator : MonoBehaviour {
     private static float radius = 0.5f;
     private static int radiusSegmentCount = 10;
 
+    /*
+     * Builds a mesh to fit a given FibreOptic bezier curve
+     */
     public static Mesh CreateMeshForBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier, bool _createVerticesOnly = false)
     {
         bezier = _bezier;
@@ -37,6 +40,9 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         return mesh;
     }
 
+    /*
+     * Returns the constructed list of vertices - used to generate wireframe mesh preview
+     */
     public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier)
     {
         if (bezier == _bezier)
@@ -45,9 +51,12 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         CreateMeshForBezier(_bezier, true);
         return vertexList;
     }
-
-    // distributes mesh vertices based on angle of change of bezier curve
-    // should hopefully place more vertices on curved sections and less on straight
+    
+    /*
+     * distributes mesh vertices based on angle of change of bezier curve
+     * 
+     * places more vertices on curved sections and less on straight
+     */
     private static void AutoCreateMeshVertices()
     {
         List<Vector3> points = new List<Vector3>();
