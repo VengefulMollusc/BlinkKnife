@@ -30,6 +30,8 @@ public class FibreOpticMeshCreator : MonoBehaviour {
 
         mesh.RecalculateNormals();
 
+        CalculateSharedVertexNormals();
+
         return mesh;
     }
 
@@ -68,7 +70,8 @@ public class FibreOpticMeshCreator : MonoBehaviour {
             Quaternion rot = Quaternion.LookRotation(tangents[i]);
             for (int j = 0; j < circle.Length; j++)
             {
-                vertexArray[i, j] = points[i] + (rot * circle[j]);
+                Vector3 vertex = points[i] + (rot * circle[j]);
+                vertexArray[i, j] = vertex;
             }
         }
     }
@@ -130,5 +133,57 @@ public class FibreOpticMeshCreator : MonoBehaviour {
             meshTriangles[t + 5] = i + 3;
         }
         mesh.triangles = meshTriangles;
+    }
+
+    private static void CalculateSharedVertexNormals()
+    {
+        Vector3[] vertices = mesh.vertices;
+        Vector3[] normals = mesh.normals;
+        List<int> checkedIndices = new List<int>();
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            // skip if current index has already been checked
+            if (checkedIndices.Contains(i))
+                continue;
+
+            // add current index to checked list
+            checkedIndices.Add(i);
+
+            // get the current vertex
+            Vector3 vertex = vertices[i];
+
+            List<int> matchingVertices = new List<int>();
+            matchingVertices.Add(i);
+
+            // for each index higher than the current (that hasn't already been checked)
+            // compare the vertices
+            for (int j = i + 1; j < vertices.Length; j++)
+            {
+                if (!checkedIndices.Contains(j) && vertices[j] == vertex)
+                {
+                    matchingVertices.Add(j);
+                    checkedIndices.Add(j);
+                }
+            }
+
+            // go through each matching index and average the normals
+            Vector3 averageNormal = Vector3.zero;
+            foreach (int index in matchingVertices)
+            {
+                averageNormal += normals[index];
+            }
+            averageNormal /= matchingVertices.Count;
+            averageNormal.Normalize();
+
+            // reassign the averaged normal to each vertex
+            foreach (int index in matchingVertices)
+            {
+                normals[index] = averageNormal;
+            }
+        }
+
+        // replace the mesh normals with averaged normals
+        mesh.normals = normals;
     }
 }
