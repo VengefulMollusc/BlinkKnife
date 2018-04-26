@@ -16,20 +16,23 @@ public class FibreOpticMeshCreator : MonoBehaviour {
     
     private static Vector3[,] vertexArray;
 
-    public static Mesh CreateMeshForBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments)
+    public static Mesh CreateMeshForBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments, bool _createVerticesOnly = false)
     {
         bezier = _bezier;
         lengthSegmentCount = _segments;
 
         mesh = new Mesh();
         mesh.name = "FibreOptic Bezier";
-
         CreateMeshVertices();
         SetVertices();
+
+        if (_createVerticesOnly)
+            return mesh;
+
         SetTriangles();
 
         mesh.RecalculateNormals();
-
+        
         CalculateSharedVertexNormals();
 
         return mesh;
@@ -37,7 +40,7 @@ public class FibreOpticMeshCreator : MonoBehaviour {
 
     public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments)
     {
-        CreateMeshForBezier(_bezier, _segments);
+        CreateMeshForBezier(_bezier, _segments, true);
         return meshVertices;
     }
 

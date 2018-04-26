@@ -136,6 +136,7 @@ public class FibreOpticController : MonoBehaviour
         Mesh fibreMesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints(), meshSegmentCount);
         meshObject.GetComponent<MeshFilter>().mesh = fibreMesh;
         meshObject.GetComponent<MeshCollider>().sharedMesh = fibreMesh;
+        Debug.Log("Done Creating Mesh");
     }
 
     // returns mesh segment count - used by inspector script to create wireframe
