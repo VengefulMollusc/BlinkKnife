@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using ProBuilder2.Common;
 using UnityEngine;
 
 public class FibreOpticMeshCreator : MonoBehaviour {
@@ -12,7 +13,10 @@ public class FibreOpticMeshCreator : MonoBehaviour {
     
     private static Vector3[] vertexList;
 
+    private static Vector3[] innerVertexList;
+
     // variables that define mesh creation/detail
+    private static bool doubleSided = true;
     private static float autoCreateResolution = 0.01f;
     private static float autoCreateTangentAngleThreshold = 10f; // 10f
     private static float autoCreateMaxSegmentLength = 10f; 
@@ -67,9 +71,14 @@ public class FibreOpticMeshCreator : MonoBehaviour {
 
         // Create base circle from radius/radiusSegmentCount
         Vector3[] circle = CreateBaseCircle();
+        Vector3[] innerCircle = CreateBaseCircle(0.1f);
 
         // Align circle with bezier tangent at each step and record points
         vertexList = new Vector3[(lengthSegmentCount + 1) * circle.Length];
+
+        if (doubleSided)
+            innerVertexList = new Vector3[(lengthSegmentCount + 1) * circle.Length];
+
         int index = 0;
 
         for (int i = 0; i <= lengthSegmentCount; i++)
@@ -78,6 +87,10 @@ public class FibreOpticMeshCreator : MonoBehaviour {
             for (int j = 0; j < circle.Length; j++)
             {
                 vertexList[index] = points[i] + (rot * circle[j]);
+
+                if (doubleSided)
+                    innerVertexList[index] = points[i] + (rot * innerCircle[j]);
+
                 index++;
             }
         }
@@ -123,10 +136,10 @@ public class FibreOpticMeshCreator : MonoBehaviour {
     /*
      * Creates a circle of points defined by radius and radiusSegmentCount
      */
-    private static Vector3[] CreateBaseCircle()
+    private static Vector3[] CreateBaseCircle(float _thickness = 0f)
     {
         Vector3[] circle = new Vector3[radiusSegmentCount];
-        Vector3 baseCircleVector = Vector3.up * radius;
+        Vector3 baseCircleVector = Vector3.up * (radius - _thickness);
         float angle = 360f / radiusSegmentCount;
         for (int i = 0; i < radiusSegmentCount; i++)
         {
@@ -140,7 +153,7 @@ public class FibreOpticMeshCreator : MonoBehaviour {
      */
     private static void SetVertices()
     {
-        mesh.vertices = vertexList;
+        mesh.vertices = (doubleSided) ? vertexList.Concat(innerVertexList) : vertexList;
     }
 
     /*
@@ -159,6 +172,23 @@ public class FibreOpticMeshCreator : MonoBehaviour {
             meshTriangles[t + 1] = meshTriangles[t + 4] = (mod) ? i + 1 - radiusSegmentCount : i + 1;
             meshTriangles[t + 5] = (mod) ? i + 1 : i + radiusSegmentCount + 1;
         }
+
+        if (doubleSided)
+        {
+            int[] innerMeshTriangles = new int[lengthSegmentCount * radiusSegmentCount * 6];
+            for (int t = 0, i = vertexList.Length; t < innerMeshTriangles.Length; t += 6, i += 1)
+            {
+                innerMeshTriangles[t] = i;
+                innerMeshTriangles[t + 1] = innerMeshTriangles[t + 4] = i + radiusSegmentCount;
+
+                // Use different indices if this quad is the last of this pipe segment
+                bool mod = (i + 1) % radiusSegmentCount == 0;
+                innerMeshTriangles[t + 2] = innerMeshTriangles[t + 3] = (mod) ? i + 1 - radiusSegmentCount : i + 1;
+                innerMeshTriangles[t + 5] = (mod) ? i + 1 : i + radiusSegmentCount + 1;
+            }
+            meshTriangles = meshTriangles.Concat(innerMeshTriangles);
+        }
+
         mesh.triangles = meshTriangles;
     }
     
