@@ -718,11 +718,13 @@ public class PlayerMotor : MonoBehaviour
 
         GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.2f);
 
-        // INHERITED VELOCITY MUST BE RELATIVE TO PLAYER DIRECTION
-        // TODO: move inherited velocity code to endwarp
+        // Inherit knife velocity at end of warp
         Vector3 knifeVel = info.arg1.normalized;
         if (info.arg2 && knifeVel != Vector3.zero)
         {
+            // Bounce knife
+            // TODO: could use this logic for fibrewarp as well - need to choose best relative velocity direction though
+
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel
             float projectedVelMagnitude = Vector3.Dot(rb.velocity, knifeVel);
@@ -744,16 +746,14 @@ public class PlayerMotor : MonoBehaviour
         }
         else if (info.arg3)
         {
-            // fibreOptic warp
-            //RotateToDirection(currentGravVector, knifeVel, true);
-
+            // Fibreoptic warp
             rb.velocity = knifeVel * warpVelocityModifier;
         }
         else 
         {
             rb.velocity = knifeVel;
 
-            // TODO: Decide if this is for every warp or just default blinkknife warp
+            // extend gravity disable slightly for blinkknife - to give time to vault if needed
             GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.5f);
         }
     }
