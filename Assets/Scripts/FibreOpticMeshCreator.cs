@@ -17,6 +17,7 @@ public class FibreOpticMeshCreator : MonoBehaviour {
     // variables that define mesh creation/detail
     private static float autoCreateResolution = 0.01f;
     private static float autoCreateTangentAngleThreshold = 10f;
+    private static float autoCreateMaxSegmentLength = 10f;
     private static float radius = 0.5f;
     private static int radiusSegmentCount = 10;
 
@@ -59,11 +60,14 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         float u = 0f;
         while (u <= 1f)
         {
+            Vector3 currentPoint = Utilities.LerpBezier(bezier, u);
             Vector3 currentTangent = Utilities.BezierDerivative(bezier, u);
-            if (u < autoCreateResolution || u > 1f - autoCreateResolution || Vector3.Angle(tangents[tangents.Count - 1], currentTangent) > autoCreateTangentAngleThreshold)
+            if (u < autoCreateResolution || u > 1f - autoCreateResolution 
+                || Vector3.Angle(tangents[tangents.Count - 1], currentTangent) > autoCreateTangentAngleThreshold 
+                || Vector3.Distance(points[points.Count - 1], currentPoint) > autoCreateMaxSegmentLength)
             {
                 // always record points at each end
-                points.Add(Utilities.LerpBezier(bezier, u));
+                points.Add(currentPoint);
                 tangents.Add(currentTangent);
             }
 
