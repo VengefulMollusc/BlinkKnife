@@ -40,6 +40,9 @@ public class FibreOpticMeshCreator : MonoBehaviour {
 
     public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments)
     {
+        if (bezier == _bezier && lengthSegmentCount == _segments)
+            return meshVertices;
+
         CreateMeshForBezier(_bezier, _segments, true);
         return meshVertices;
     }
