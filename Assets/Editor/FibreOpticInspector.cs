@@ -39,7 +39,7 @@ public class FibreOpticInspector : Editor
             fibre.bezierTargetPosition = fibreTransform.InverseTransformPoint(tangent1);
         }
 
-        testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(fibre.GetBezierPoints(), fibre.GetSegmentCount());
+        testVertices = FibreOpticMeshCreator.GetBezierMeshVertices(fibre.GetBezierPoints());
         if (testVertices != null)
         {
             DrawWireframeBezierMesh();

@@ -6,24 +6,26 @@ using UnityEngine;
 public class FibreOpticMeshCreator : MonoBehaviour {
 
     private static Info<Vector3, Vector3, Vector3, Vector3> bezier;
-    private static float radius = 0.5f;
     private static int lengthSegmentCount;
     private static float segmentModifier;
-    private static int radiusSegmentCount = 10;
     private static Mesh mesh;
     private static Vector3[] meshVertices;
     private static int[] meshTriangles;
     
     private static Vector3[,] vertexArray;
 
-    public static Mesh CreateMeshForBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments, bool _createVerticesOnly = false)
+    // variables that define mesh creation/detail
+    private static float autoCreateResolution = 0.01f;
+    private static float autoCreateTangentAngleThreshold = 10f;
+    private static float radius = 0.5f;
+    private static int radiusSegmentCount = 10;
+
+    public static Mesh CreateMeshForBezier(Info<Vector3, Vector3, Vector3, Vector3> _bezier, bool _createVerticesOnly = false)
     {
         bezier = _bezier;
-        lengthSegmentCount = _segments;
 
-        mesh = new Mesh();
-        mesh.name = "FibreOptic Bezier";
-        CreateMeshVertices();
+        mesh = new Mesh{name = "FibreOptic Bezier"};
+        AutoCreateMeshVertices();
         SetVertices();
 
         if (_createVerticesOnly)
@@ -38,26 +40,41 @@ public class FibreOpticMeshCreator : MonoBehaviour {
         return mesh;
     }
 
-    public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier, int _segments)
+    public static Vector3[] GetBezierMeshVertices(Info<Vector3, Vector3, Vector3, Vector3> _bezier)
     {
-        if (bezier == _bezier && lengthSegmentCount == _segments)
+        if (bezier == _bezier)
             return meshVertices;
 
-        CreateMeshForBezier(_bezier, _segments, true);
+        CreateMeshForBezier(_bezier, true);
         return meshVertices;
     }
 
-    private static void CreateMeshVertices()
+    // distributes mesh vertices based on angle of change of bezier curve
+    // should hopefully place more vertices on curved sections and less on straight
+    private static void AutoCreateMeshVertices()
     {
-        // Get lists of points and tangents for bezier
-        Vector3[] points = new Vector3[lengthSegmentCount + 1];
-        Vector3[] tangents = new Vector3[lengthSegmentCount + 1];
-        for (int i = 0; i <= lengthSegmentCount; i++)
+        List<Vector3> points = new List<Vector3>();
+        List<Vector3> tangents = new List<Vector3>();
+
+        float u = 0f;
+        while (u <= 1f)
         {
-            float t = ((float) i / (float) lengthSegmentCount);
-            points[i] = Utilities.LerpBezier(bezier, t);
-            tangents[i] = Utilities.BezierDerivative(bezier, t);
+            Vector3 currentTangent = Utilities.BezierDerivative(bezier, u);
+            if (u < autoCreateResolution || u > 1f - autoCreateResolution || Vector3.Angle(tangents[tangents.Count - 1], currentTangent) > autoCreateTangentAngleThreshold)
+            {
+                // always record points at each end
+                points.Add(Utilities.LerpBezier(bezier, u));
+                tangents.Add(currentTangent);
+            }
+
+            // increment and make sure the value at 1f will be checked
+            if (u + autoCreateResolution > 1f && u < 1f)
+                u = 1f;
+            else
+                u += autoCreateResolution;
         }
+
+        lengthSegmentCount = points.Count - 1;
 
         // Create basic circle of points
         Vector3[] circle = new Vector3[radiusSegmentCount + 1];
@@ -81,6 +98,41 @@ public class FibreOpticMeshCreator : MonoBehaviour {
             }
         }
     }
+
+    //private static void CreateMeshVertices()
+    //{
+    //    // Get lists of points and tangents for bezier
+    //    Vector3[] points = new Vector3[lengthSegmentCount + 1];
+    //    Vector3[] tangents = new Vector3[lengthSegmentCount + 1];
+    //    for (int i = 0; i <= lengthSegmentCount; i++)
+    //    {
+    //        float t = ((float) i / (float) lengthSegmentCount);
+    //        points[i] = Utilities.LerpBezier(bezier, t);
+    //        tangents[i] = Utilities.BezierDerivative(bezier, t);
+    //    }
+
+    //    // Create basic circle of points
+    //    Vector3[] circle = new Vector3[radiusSegmentCount + 1];
+    //    Vector3 baseCircleVector = Vector3.up * radius;
+    //    float angle = 360f / radiusSegmentCount;
+    //    for (int i = 0; i <= radiusSegmentCount; i++)
+    //    {
+    //        circle[i] = Quaternion.AngleAxis(angle * i, Vector3.forward) * baseCircleVector;
+    //    }
+
+    //    // Align circle with bezier tangent at each step and record points
+    //    vertexArray = new Vector3[lengthSegmentCount + 1, radiusSegmentCount + 1];
+
+    //    for (int i = 0; i <= lengthSegmentCount; i++)
+    //    {
+    //        Quaternion rot = Quaternion.LookRotation(tangents[i]);
+    //        for (int j = 0; j < circle.Length; j++)
+    //        {
+    //            Vector3 vertex = points[i] + (rot * circle[j]);
+    //            vertexArray[i, j] = vertex;
+    //        }
+    //    }
+    //}
 
     private static Vector3 GetMeshVertex(int iLength, int iRadius)
     {

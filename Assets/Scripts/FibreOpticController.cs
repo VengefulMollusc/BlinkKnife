@@ -14,8 +14,6 @@ public class FibreOpticController : MonoBehaviour
     [SerializeField]
     private GameObject bezierMeshPrefab;
 
-    [SerializeField] private int meshSegmentCount = 10;
-
     // Use this for initialization
     void OnEnable () {
         if (IsConnected() && !otherEndFibreOpticController.IsConnected())
@@ -133,16 +131,10 @@ public class FibreOpticController : MonoBehaviour
         GameObject meshObject = Instantiate(bezierMeshPrefab, transform.parent);
         meshObject.transform.position = Vector3.zero;
         meshObject.transform.rotation = Quaternion.identity;
-        Mesh fibreMesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints(), meshSegmentCount);
+        Mesh fibreMesh = FibreOpticMeshCreator.CreateMeshForBezier(GetBezierPoints());
         meshObject.GetComponent<MeshFilter>().mesh = fibreMesh;
         meshObject.GetComponent<MeshCollider>().sharedMesh = fibreMesh;
         Debug.Log("Done Creating Mesh");
-    }
-
-    // returns mesh segment count - used by inspector script to create wireframe
-    public int GetSegmentCount()
-    {
-        return meshSegmentCount;
     }
 
     //public Quaternion GetInitialRotation()
