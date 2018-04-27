@@ -217,13 +217,14 @@ public class FibreOpticMeshCreator : MonoBehaviour
 
     private static void CreateMeshEndCaps()
     {
-        int zeroIndex = vertexList.Length + innerVertexList.Length;
 
         // create end-cap triangles
         int[] endTriangles = new int[(radiusSegmentCount - 2) * 6];
+        int halfway = (radiusSegmentCount - 2) * 3;
+        int zeroIndex = vertexList.Length + innerVertexList.Length;
+
         int baseTriIndex = zeroIndex;
         int vertexListIndex = baseTriIndex + 2;
-        int halfway = (radiusSegmentCount - 2) * 3;
 
         // first end
         for (int t = 0; t < halfway; t += 3, vertexListIndex++)
