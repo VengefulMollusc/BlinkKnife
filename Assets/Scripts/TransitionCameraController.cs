@@ -188,9 +188,9 @@ public class TransitionCameraController : MonoBehaviour
             yield return 0;
         }
         
-        Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(),
+        Info<Vector3, Vector3, bool, FibreOpticController> info = new Info<Vector3, Vector3, bool, FibreOpticController>(knifeController.GetWarpPosition(),
             knifeController.transform.up,
-            knifeController.IsBounceKnife(), true);
+            knifeController.IsBounceKnife(), fibreOpticController);
         this.PostNotification(WarpEndNotification, info);
 
         Destroy(gameObject);
@@ -222,9 +222,9 @@ public class TransitionCameraController : MonoBehaviour
             yield return 0;
         }
         
-        Info<Vector3, Vector3, bool, bool> info = new Info<Vector3, Vector3, bool, bool>(knifeController.GetWarpPosition(),
+        Info<Vector3, Vector3, bool, FibreOpticController> info = new Info<Vector3, Vector3, bool, FibreOpticController>(knifeController.GetWarpPosition(),
             knifeController.GetVelocity(),
-            knifeController.IsBounceKnife(), false);
+            knifeController.IsBounceKnife(), null);
         this.PostNotification(WarpEndNotification, info);
 
         Destroy(gameObject);

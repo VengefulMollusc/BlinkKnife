@@ -706,7 +706,7 @@ public class PlayerMotor : MonoBehaviour
     // Resets/reenables player once warp transition has completed
     void EndWarp(object sender, object args)
     {
-        Info<Vector3, Vector3, bool, bool> info = (Info<Vector3, Vector3, bool, bool>) args;
+        Info<Vector3, Vector3, bool, FibreOpticController> info = (Info<Vector3, Vector3, bool, FibreOpticController>) args;
         transform.position = info.arg0;
 
         canHover = true;
@@ -720,14 +720,12 @@ public class PlayerMotor : MonoBehaviour
 
         // Inherit knife velocity at end of warp
         Vector3 knifeVel = info.arg1.normalized;
-        if (info.arg2 && knifeVel != Vector3.zero)
+        if ((info.arg2 || info.arg3) && knifeVel != Vector3.zero)
         {
-            // Bounce knife
-            // TODO: could use this logic for fibrewarp as well - need to choose best relative velocity direction though
-
             // adding magnitude here allows cumulative velocity gain
             // dot product to get component of velocity in direction of travel
-            float projectedVelMagnitude = Vector3.Dot(rb.velocity, knifeVel);
+            // If fibreoptic knife, use velocity relative to direction of start of fibre
+            float projectedVelMagnitude = Vector3.Dot(rb.velocity, (info.arg3) ? -info.arg3.GetDirection() : knifeVel);
 
             // This line makes sure we only add player momentum if moving faster than base inherited momentum
             float relativeSpeed = Mathf.Max(projectedVelMagnitude - warpVelocityModifier, 0f);
@@ -743,11 +741,6 @@ public class PlayerMotor : MonoBehaviour
             // fixes horizontal momentum lock when warping
             //onGround = false;
 
-        }
-        else if (info.arg3)
-        {
-            // Fibreoptic warp
-            rb.velocity = knifeVel * warpVelocityModifier;
         }
         else 
         {
