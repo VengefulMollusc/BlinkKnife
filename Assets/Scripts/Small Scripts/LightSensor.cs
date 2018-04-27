@@ -13,6 +13,9 @@ public class LightSensor : MonoBehaviour
 
     public const string LightStatusNotification = "LightSensor.LightStatusNotification";
 
+    // TODO: remove if done testing - purely for debugging
+    private RaycastHit hitInfo; 
+
     void OnEnable ()
 	{
 	    sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
@@ -30,7 +33,7 @@ public class LightSensor : MonoBehaviour
 	void CheckLights () {
 		// raycast in opposite direction to sunlight direction for long distance
         // if another object is hit then this gameobject is in shadow
-	    bool isInSunlight = !Physics.Raycast(transform.position, -sunlightObject.transform.forward, raycastLength);
+	    bool isInSunlight = !Physics.Raycast(transform.position, -sunlightObject.transform.forward, out hitInfo, raycastLength);
 
 	    // TODO: also need a way of tracking and checking local light sources
 	    bool isInLocalLight = false;
@@ -47,7 +50,7 @@ public class LightSensor : MonoBehaviour
         if (sunlightObject == null)
             return null;
 
-        return new Info<Vector3, Vector3, bool>(transform.position, transform.position - (sunlightObject.transform.forward * raycastLength), isLit);
+        return new Info<Vector3, Vector3, bool>(transform.position, transform.position - (sunlightObject.transform.forward * ((isLit) ? raycastLength : hitInfo.distance)), isLit);
     }
 
     public bool IsLit()
