@@ -18,7 +18,7 @@ public class FibreOpticMeshCreator : MonoBehaviour
 
     // variables that define mesh creation/detail
     private static bool doubleSided = true;
-    private static float doubleSidedThickness = 0.05f;
+    private static float doubleSidedThickness = 0f;
     private static bool stitchEnds = true;
     private static float autoCreateResolution = 0.01f;
     private static float autoCreateTangentAngleThreshold = 10f; // 10f
@@ -74,7 +74,7 @@ public class FibreOpticMeshCreator : MonoBehaviour
 
         // Create base circle from radius/radiusSegmentCount
         Vector3[] circle = CreateBaseCircle();
-        Vector3[] innerCircle = CreateBaseCircle(doubleSidedThickness);
+        Vector3[] innerCircle = (doubleSided && doubleSidedThickness > 0f) ? CreateBaseCircle(doubleSidedThickness) : circle;
 
         // Align circle with bezier tangent at each step and record points
         vertexList = new Vector3[(lengthSegmentCount + 1) * circle.Length];
