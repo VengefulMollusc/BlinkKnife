@@ -16,10 +16,12 @@ public class FibreOpticMeshCreator : MonoBehaviour
 
     private static Vector3[] innerVertexList;
 
+    private static Vector3[] capVertexList;
+
     // variables that define mesh creation/detail
     private static bool doubleSided = true;
     private static float doubleSidedThickness = 0f;
-    private static bool stitchEnds = true;
+    private static bool capFibreEnds = true;
     private static float autoCreateResolution = 0.01f;
     private static float autoCreateTangentAngleThreshold = 10f; // 10f
     private static float autoCreateMaxSegmentLength = 10f;
@@ -59,6 +61,7 @@ public class FibreOpticMeshCreator : MonoBehaviour
         return vertexList;
     }
 
+
     /*
      * distributes mesh vertices based on angle of change of bezier curve
      * 
@@ -97,8 +100,18 @@ public class FibreOpticMeshCreator : MonoBehaviour
                 index++;
             }
         }
-    }
 
+        // record an extra copy of end vertices for sharp edge on caps
+        if (capFibreEnds)
+        {
+            capVertexList = new Vector3[circle.Length * 2];
+            for (int i = 0; i < circle.Length; i++)
+            {
+                capVertexList[i] = vertexList[i];
+                capVertexList[i + circle.Length] = vertexList[vertexList.Length - circle.Length + i];
+            }
+        }
+    }
 
     /*
      * Populates lists of points and tangents based on bezier curve
@@ -156,7 +169,11 @@ public class FibreOpticMeshCreator : MonoBehaviour
      */
     private static void SetVertices()
     {
-        mesh.vertices = (doubleSided) ? vertexList.Concat(innerVertexList) : vertexList;
+        if (!doubleSided)
+            mesh.vertices = vertexList;
+
+        Vector3[] tempList = (capFibreEnds) ? innerVertexList.Concat(capVertexList) : innerVertexList;
+        mesh.vertices = vertexList.Concat(tempList);
     }
 
     /*
@@ -191,38 +208,42 @@ public class FibreOpticMeshCreator : MonoBehaviour
             }
             meshTriangles = meshTriangles.Concat(innerMeshTriangles);
 
-            if (stitchEnds)
-            {
-                // create end-caps for mesh
-                int[] endTriangles = new int[(radiusSegmentCount - 2) * 6];
-                int baseTriIndex = 0;
-                int vertexListIndex = 2;
-                int halfway = (radiusSegmentCount - 2) * 3;
-
-                // first end
-                for (int t = 0; t < halfway; t += 3, vertexListIndex++)
-                {
-                    endTriangles[t] = baseTriIndex;
-                    endTriangles[t + 1] = vertexListIndex;
-                    endTriangles[t + 2] = vertexListIndex - 1;
-                }
-
-                baseTriIndex = vertexList.Length - radiusSegmentCount;
-                vertexListIndex = baseTriIndex + 2;
-
-                // other end (switch tri declaration direction)
-                for (int t = halfway; t < endTriangles.Length; t += 3, vertexListIndex++)
-                {
-                    endTriangles[t] = baseTriIndex;
-                    endTriangles[t + 1] = vertexListIndex - 1;
-                    endTriangles[t + 2] = vertexListIndex;
-                }
-
-                meshTriangles = meshTriangles.Concat(endTriangles);
-            }
+            if (capFibreEnds)
+                CreateMeshEndCaps();
         }
 
         mesh.triangles = meshTriangles;
     }
 
+    private static void CreateMeshEndCaps()
+    {
+        int zeroIndex = vertexList.Length + innerVertexList.Length;
+
+        // create end-cap triangles
+        int[] endTriangles = new int[(radiusSegmentCount - 2) * 6];
+        int baseTriIndex = zeroIndex;
+        int vertexListIndex = baseTriIndex + 2;
+        int halfway = (radiusSegmentCount - 2) * 3;
+
+        // first end
+        for (int t = 0; t < halfway; t += 3, vertexListIndex++)
+        {
+            endTriangles[t] = baseTriIndex;
+            endTriangles[t + 1] = vertexListIndex;
+            endTriangles[t + 2] = vertexListIndex - 1;
+        }
+
+        baseTriIndex = zeroIndex + radiusSegmentCount;
+        vertexListIndex = baseTriIndex + 2;
+
+        // other end (switch tri declaration direction)
+        for (int t = halfway; t < endTriangles.Length; t += 3, vertexListIndex++)
+        {
+            endTriangles[t] = baseTriIndex;
+            endTriangles[t + 1] = vertexListIndex - 1;
+            endTriangles[t + 2] = vertexListIndex;
+        }
+
+        meshTriangles = meshTriangles.Concat(endTriangles);
+    }
 }
