@@ -21,9 +21,7 @@ public class LightSensor : MonoBehaviour
 	    sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
 
 	    if (sunlightObject == null)
-	    {
 	        Debug.LogError("No Sunlight object found");
-	    }
 
 	    isLit = false;
 
@@ -34,6 +32,9 @@ public class LightSensor : MonoBehaviour
 		// raycast in opposite direction to sunlight direction for long distance
         // if another object is hit then this gameobject is in shadow
 	    bool isInSunlight = !Physics.Raycast(transform.position, -sunlightObject.transform.forward, out hitInfo, raycastLength);
+
+        // This is nowhere near as clear as the inspector method
+        //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? raycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
 
 	    // TODO: also need a way of tracking and checking local light sources
 	    bool isInLocalLight = false;
