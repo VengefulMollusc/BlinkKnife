@@ -41,6 +41,15 @@ public class LightSensor : MonoBehaviour
 	    this.PostNotification(LightStatusNotification, new Info<GameObject, bool>(gameObject, isLit));
     }
 
+    // TODO: debugging method for inspector
+    public Info<Vector3, Vector3, bool> GetRaycastInfo()
+    {
+        if (sunlightObject == null)
+            return null;
+
+        return new Info<Vector3, Vector3, bool>(transform.position, transform.position - (sunlightObject.transform.forward * raycastLength), isLit);
+    }
+
     public bool IsLit()
     {
         return isLit;
