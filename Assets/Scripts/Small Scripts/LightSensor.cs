@@ -5,7 +5,8 @@ using UnityEngine;
 public class LightSensor : MonoBehaviour
 {
     public static float updateFrequency = 0.1f;
-    public static float raycastLength = 100f;
+
+    public static float raycastLength = 200f;
 
     private GameObject sunlightObject;
 
