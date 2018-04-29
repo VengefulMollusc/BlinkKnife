@@ -13,6 +13,8 @@ public class LightSensor : MonoBehaviour
 
     public const string LightStatusNotification = "LightSensor.LightStatusNotification";
 
+    [SerializeField] private LayerMask raycastMask;
+
     // TODO: remove if done testing - purely for debugging
     private RaycastHit hitInfo; 
 
@@ -31,7 +33,7 @@ public class LightSensor : MonoBehaviour
 	void CheckLights () {
 		// raycast in opposite direction to sunlight direction for long distance
         // if another object is hit then this gameobject is in shadow
-	    bool isInSunlight = !Physics.Raycast(transform.position, -sunlightObject.transform.forward, out hitInfo, raycastLength);
+	    bool isInSunlight = !Physics.Raycast(transform.position, -sunlightObject.transform.forward, out hitInfo, raycastLength, raycastMask);
 
         // This is nowhere near as clear as the inspector method
         //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? raycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
