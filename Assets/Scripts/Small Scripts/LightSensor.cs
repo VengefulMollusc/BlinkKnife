@@ -11,6 +11,7 @@ public class LightSensor : MonoBehaviour
     private GameObject sunlightObject;
 
     private bool isLit;
+    private bool isInLocalLight;
 
     public const string LightStatusNotification = "LightSensor.LightStatusNotification";
 
@@ -39,13 +40,13 @@ public class LightSensor : MonoBehaviour
         // This is nowhere near as clear as the inspector method
         //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? raycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
 
-	    // TODO: also need a way of tracking and checking local light sources
-	    bool isInLocalLight = false;
-
 	    isLit = isInSunlight || isInLocalLight;
 
+        // reset local light variable
+	    isInLocalLight = false;
+
         // send notification of light status (for UI etc)
-	    this.PostNotification(LightStatusNotification, new Info<GameObject, bool>(gameObject, isLit));
+        this.PostNotification(LightStatusNotification, new Info<GameObject, bool>(gameObject, isLit));
     }
 
     // TODO: debugging method for inspector
@@ -60,5 +61,11 @@ public class LightSensor : MonoBehaviour
     public bool IsLit()
     {
         return isLit;
+    }
+
+    // called by LightSource objects when sensor is within range
+    public void LightObject()
+    {
+        isInLocalLight = true;
     }
 }

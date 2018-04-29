@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class LightSource : MonoBehaviour
 {
-    public static float updateFrequency = 0.1f;
+    private float updateFrequency = 0.1f;
 
     private Light light;
+
+    [SerializeField]
+    private LayerMask layerMask;
 
     void OnEnable()
     {
@@ -17,6 +20,16 @@ public class LightSource : MonoBehaviour
 
     private void LightSensorCheck()
     {
-        
+        Collider[] cols = Physics.OverlapSphere(transform.position, light.range, layerMask,
+            QueryTriggerInteraction.Ignore);
+
+        foreach (Collider col in cols)
+        {
+            LightSensor sensor = col.gameObject.GetComponent<LightSensor>();
+            if (sensor)
+            {
+                sensor.LightObject();
+            }
+        }
     }
 }
