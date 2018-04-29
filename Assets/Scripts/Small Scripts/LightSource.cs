@@ -26,9 +26,18 @@ public class LightSource : MonoBehaviour
         foreach (Collider col in cols)
         {
             LightSensor sensor = col.gameObject.GetComponent<LightSensor>();
-            if (sensor)
+            if (sensor == null)
+                continue;
+
+            RaycastHit hitInfo;
+            Ray ray = new Ray(transform.position, col.transform.position - transform.position);
+
+            // TODO: possibly also light object if raycast doesn't hit anything, as only part of collider may be in range
+            if (Physics.Raycast(ray, out hitInfo, light.range, layerMask, QueryTriggerInteraction.Ignore))
             {
-                sensor.LightObject();
+                // only trigger 'lit' status if raycast hits the sensor object
+                if (hitInfo.transform == col.transform)
+                    sensor.LightObject();
             }
         }
     }
