@@ -312,11 +312,19 @@ public class PlayerKnifeController : MonoBehaviour
     {
         if (currentWarps < ((playerIsLit) ? maxWarps : 1))
         {
-            // recharge warps normally
-            if (playerMotor.IsOnGround() && playerIsLit)
-                warpRecharge -= Time.deltaTime;
-            else
-                warpRecharge -= (Time.deltaTime * 0.2f); // recharge at slower rate when airborne
+            float rechargeSpeedMod = 1f;
+            if (!playerIsLit)
+                rechargeSpeedMod *= 0.5f;
+            if (!playerMotor.IsOnGround())
+                rechargeSpeedMod *= 0.25f;
+
+            warpRecharge -= (Time.deltaTime * rechargeSpeedMod);
+
+            //// recharge warps
+            //if (playerMotor.IsOnGround() && playerIsLit)
+            //    warpRecharge -= Time.deltaTime;
+            //else
+            //    warpRecharge -= (Time.deltaTime * 0.2f); // recharge at slower rate when airborne
 
             if (warpRecharge <= 0)
             {
@@ -325,6 +333,8 @@ public class PlayerKnifeController : MonoBehaviour
                 if (currentWarps < maxWarps) // should restrict recharge to a single warp while not lit
                     warpRecharge = warpRechargeTime;
             }
+
+
             //if (playerIsLit)
             //{
             //          // recharge warps normally
@@ -350,6 +360,16 @@ public class PlayerKnifeController : MonoBehaviour
             //    if (warpRecharge > warpRechargeTime)
             //        warpRecharge = warpRechargeTime;
             //      }
+        }
+
+        if (!playerIsLit && currentWarps > 0)
+        {
+            // decay partial recharges
+            if (warpRecharge < warpRechargeTime)
+                warpRecharge += (Time.deltaTime * 0.2f);
+
+            if (warpRecharge > warpRechargeTime)
+                warpRecharge = warpRechargeTime;
         }
     }
 

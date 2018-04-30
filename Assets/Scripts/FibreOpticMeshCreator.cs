@@ -19,14 +19,14 @@ public class FibreOpticMeshCreator : MonoBehaviour
     private static Vector3[] capVertexList;
 
     // variables that define mesh creation/detail
-    private static bool doubleSided = true;
-    private static float doubleSidedThickness = 0f;
-    private static bool capFibreEnds = true;
-    private static float autoCreateResolution = 0.01f;
+    private static bool doubleSided = true; // TRUE
+    private static bool capFibreEnds = true; // TRUE
+    private static float doubleSidedThickness = 0f; // 0f
+    private static float autoCreateResolution = 0.01f; // 0.1f
     private static float autoCreateTangentAngleThreshold = 10f; // 10f
-    private static float autoCreateMaxSegmentLength = 10f;
-    private static float radius = 0.5f;
-    private static int radiusSegmentCount = 10;
+    private static float autoCreateMaxSegmentLength = 10f; // 10f
+    private static float radius = 0.5f; // 0.5f
+    private static int radiusSegmentCount = 10; // 10
 
     /*
      * Builds a mesh to fit a given FibreOptic bezier curve
