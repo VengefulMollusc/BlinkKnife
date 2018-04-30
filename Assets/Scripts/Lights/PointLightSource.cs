@@ -16,15 +16,21 @@ public class PointLightSource : LightSource
             if (sensor == null)
                 continue;
 
-            RaycastHit hitInfo;
-            Ray ray = new Ray(transform.position, col.transform.position - transform.position);
-
-            // TODO: possibly also light object if raycast doesn't hit anything, as only part of collider may be in range
-            if (Physics.Raycast(ray, out hitInfo, light.range, layerMask, QueryTriggerInteraction.Ignore))
+            foreach (Vector3 point in sensor.GetLightCheckPoints(col.transform.position - transform.position))
             {
-                // only trigger 'lit' status if raycast hits the sensor object
-                if (hitInfo.transform == col.transform)
-                    sensor.LightObject();
+                RaycastHit hitInfo;
+                Ray ray = new Ray(transform.position, point - transform.position);
+                // TODO: possibly also light object if raycast doesn't hit anything, as only part of collider may be in range
+                // ^ lightcheckpoints should solve this
+                if (Physics.Raycast(ray, out hitInfo, light.range, layerMask, QueryTriggerInteraction.Ignore))
+                {
+                    // only trigger 'lit' status if raycast hits the sensor object
+                    if (hitInfo.transform == col.transform)
+                    {
+                        sensor.LightObject();
+                        break;
+                    }
+                }
             }
         }
     }

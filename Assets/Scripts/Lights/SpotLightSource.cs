@@ -25,27 +25,36 @@ public class SpotLightSource : LightSource {
             if (sensor == null)
                 continue;
 
-            if (hit.distance.Equals(0f) && hit.point == Vector3.zero)
-            {
-                // overlapping at start of sweep
-                // TODO: special case
-                continue;
-            }
+            //if (hit.distance.Equals(0f) && hit.point == Vector3.zero)
+            //{
+            //    // overlapping at start of sweep
+            //    // TODO: special case
+            //    // ^ this may be handled by lightCheckPoints
+            //    continue;
+            //}
 
-            // TODO: tweak these checks, this is going to be really sensitive
-            Vector3 dir = hit.point - transform.position;
-            float hitAngle = Vector3.Angle(transform.forward, dir);
-            if (hitAngle > lightAngle)
-                continue;
+            List<Vector3> lightCheckPoints = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
 
-            RaycastHit hitInfo;
-            Ray ray = new Ray(transform.position, dir);
-            float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
-            if (Physics.Raycast(ray, out hitInfo, rayLength, layerMask, QueryTriggerInteraction.Ignore))
+            foreach (Vector3 point in lightCheckPoints)
             {
-                // only trigger 'lit' status if raycast hits the sensor object
-                if (hitInfo.transform == hit.transform)
-                    sensor.LightObject();
+                // TODO: tweak these checks, this is going to be really sensitive
+                Vector3 dir = point - transform.position;
+                float hitAngle = Vector3.Angle(transform.forward, dir);
+                if (hitAngle > lightAngle)
+                    continue;
+
+                RaycastHit hitInfo;
+                Ray ray = new Ray(transform.position, dir);
+                float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
+                if (Physics.Raycast(ray, out hitInfo, rayLength, layerMask, QueryTriggerInteraction.Ignore))
+                {
+                    // only trigger 'lit' status if raycast hits the sensor object
+                    if (hitInfo.transform == sensor.transform)
+                    {
+                        sensor.LightObject();
+                        break;
+                    }
+                }
             }
         }
 
