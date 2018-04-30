@@ -24,7 +24,10 @@ public class LightSensor : MonoBehaviour
 	    sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
 
 	    if (sunlightObject == null)
+	    {
 	        Debug.LogError("No Sunlight object found");
+	        checkSunlight = false;
+	    }
 
 	    isLit = false;
 
