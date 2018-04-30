@@ -9,6 +9,7 @@ public class LightSensor : MonoBehaviour
     public static float raycastLength = 200f;
 
     private GameObject sunlightObject;
+    private bool checkSunlight = true;
 
     private bool isLit;
     private bool isInLocalLight;
@@ -35,7 +36,8 @@ public class LightSensor : MonoBehaviour
 	void CheckLights () {
 		// raycast in opposite direction to sunlight direction for long distance
         // if another object is hit then this gameobject is in shadow
-	    bool isInSunlight = !Physics.Raycast(transform.position, -sunlightObject.transform.forward, out hitInfo, raycastLength, raycastMask);
+	    bool isInSunlight = checkSunlight && 
+            !Physics.Raycast(transform.position, -sunlightObject.transform.forward, out hitInfo, raycastLength, raycastMask);
 
         // This is nowhere near as clear as the inspector method
         //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? raycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
@@ -67,5 +69,11 @@ public class LightSensor : MonoBehaviour
     public void LightObject()
     {
         isInLocalLight = true;
+    }
+
+    // used to enable/disable the sunlight check (for mainly dark environments with no global lighting)
+    public void EnableSunlightCheck(bool _checkSunlight)
+    {
+        checkSunlight = _checkSunlight;
     }
 }

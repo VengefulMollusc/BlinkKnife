@@ -18,6 +18,9 @@ public class LightSource : MonoBehaviour
         InvokeRepeating("LightSensorCheck", 0f, updateFrequency);
     }
 
+    /*
+     * Check light range for LightSensors that should be lit
+     */
     private void LightSensorCheck()
     {
         Collider[] cols = Physics.OverlapSphere(transform.position, light.range, layerMask,
