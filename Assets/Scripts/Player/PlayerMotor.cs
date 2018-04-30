@@ -1,6 +1,4 @@
-﻿using System;
-using AssemblyCSharp;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]

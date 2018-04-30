@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using AssemblyCSharp;
-using ProBuilder2.Common;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SafeWarpCollider : MonoBehaviour
 {

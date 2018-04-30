@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using AssemblyCSharp;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WarpLookAheadCollider : MonoBehaviour
 {

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using AssemblyCSharp;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BounceKnifeController : KnifeController {

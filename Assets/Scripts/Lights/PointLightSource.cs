@@ -1,27 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class LightSource : MonoBehaviour
+public class PointLightSource : LightSource
 {
-    private float updateFrequency = 0.1f;
-
-    private Light light;
-
-    [SerializeField]
-    private LayerMask layerMask;
-
-    void OnEnable()
-    {
-        light = GetComponent<Light>();
-
-        InvokeRepeating("LightSensorCheck", 0f, updateFrequency);
-    }
-
     /*
      * Check light range for LightSensors that should be lit
      */
-    private void LightSensorCheck()
+    public override void LightSensorCheck()
     {
         Collider[] cols = Physics.OverlapSphere(transform.position, light.range, layerMask,
             QueryTriggerInteraction.Ignore);

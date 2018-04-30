@@ -1,8 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
-using AssemblyCSharp;
-using ProBuilder2.Common;
 using UnityStandardAssets.ImageEffects;
 
 public class TransitionCameraController : MonoBehaviour

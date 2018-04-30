@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using AssemblyCSharp;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
