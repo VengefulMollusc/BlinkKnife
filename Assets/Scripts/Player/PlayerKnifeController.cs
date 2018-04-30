@@ -339,7 +339,7 @@ public class PlayerKnifeController : MonoBehaviour
         {
             // decay partial recharges
             if (warpRecharge < warpRechargeTime)
-                warpRecharge += (Time.deltaTime * 0.2f);
+                warpRecharge += (Time.deltaTime * 0.1f);
 
             if (warpRecharge > warpRechargeTime)
                 warpRecharge = warpRechargeTime;
