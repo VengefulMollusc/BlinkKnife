@@ -24,18 +24,15 @@ public class LightSensorInspector : Editor
             Handles.color = Color.yellow;
             if (sensor.useCustomLightCheckPoints && sensor.customLightCheckPoints.Count > 0)
             {
-                // draw handles
+                // draw custom points
                 foreach (Vector3 point in sensor.customLightCheckPoints)
-                {
                     Handles.SphereHandleCap(0, sensor.transform.position + point, Quaternion.identity, pointSize, EventType.Repaint);
-                }
             }
             else
             {
+                // draw default 5 point config
                 foreach (Vector3 point in sensor.GetLightCheckPoints(-sensor.transform.forward))
-                {
                     Handles.SphereHandleCap(0, point, Quaternion.identity, pointSize, EventType.Repaint);
-                }
             }
         }
     }
