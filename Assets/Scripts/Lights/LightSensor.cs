@@ -8,10 +8,10 @@ public class LightSensor : MonoBehaviour
 
     public float lightCheckRadius = 0.5f;
     public bool useCustomLightCheckPoints;
-    public bool rotateLightCheckHorOnly;
-    public bool rotateLightCheckAllAxis;
-    public Vector3[] customLightCheckPoints;
-    private List<Vector3> lightCheckPoints;
+    [SerializeField] private bool rotateLightCheckHorOnly;
+    [SerializeField] private bool rotateLightCheckAllAxis;
+    //public Vector3[] customLightCheckPoints;
+    public List<Vector3> customLightCheckPoints;
 
     private GameObject sunlightObject;
     private bool checkSunlight = true;
@@ -38,11 +38,11 @@ public class LightSensor : MonoBehaviour
 
 	    isLit = false;
 
-        // add custom points to list
-        // TODO: remove if can just use list
-	    lightCheckPoints = new List<Vector3>();
-	    foreach (Vector3 p in customLightCheckPoints)
-	        lightCheckPoints.Add(p);
+     //   // add custom points to list
+     //   // TODO: remove if can just use list
+	    //customLightCheckPoints = new List<Vector3>();
+	    //foreach (Vector3 p in customLightCheckPoints)
+	    //    customLightCheckPoints.Add(p);
 
         InvokeRepeating("CheckLights", 0f, updateFrequency);
 	}
@@ -84,7 +84,7 @@ public class LightSensor : MonoBehaviour
      */
     public List<Vector3> GetLightCheckPoints(Vector3 _dir)
     {
-        if (!useCustomLightCheckPoints || customLightCheckPoints.Length == 0)
+        if (!useCustomLightCheckPoints || customLightCheckPoints.Count == 0)
         {
             // return default points defined by radius
             Vector3 up;
@@ -108,7 +108,7 @@ public class LightSensor : MonoBehaviour
             Vector3 flattenedDir = Vector3.ProjectOnPlane(_dir, transform.up);
             Quaternion rot = Quaternion.FromToRotation(transform.forward, flattenedDir);
             List<Vector3> rotatedPoints = new List<Vector3>();
-            foreach (Vector3 point in lightCheckPoints)
+            foreach (Vector3 point in customLightCheckPoints)
                 rotatedPoints.Add(transform.position + (rot * point));
             return rotatedPoints;
         }
@@ -117,13 +117,13 @@ public class LightSensor : MonoBehaviour
         {
             Quaternion rot = Quaternion.FromToRotation(transform.forward, _dir);
             List<Vector3> rotatedPoints = new List<Vector3>();
-            foreach (Vector3 point in lightCheckPoints)
+            foreach (Vector3 point in customLightCheckPoints)
                 rotatedPoints.Add(transform.position + (rot * point));
             return rotatedPoints;
         }
 
         List<Vector3> points = new List<Vector3>();
-        foreach (Vector3 point in lightCheckPoints)
+        foreach (Vector3 point in customLightCheckPoints)
             points.Add(transform.position + point);
         return points;
     }
