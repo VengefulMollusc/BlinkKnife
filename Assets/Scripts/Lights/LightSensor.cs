@@ -116,28 +116,21 @@ public class LightSensor : MonoBehaviour
         if (rotateLightCheckAllAxis || rotateLightCheckHorOnly)
         {
             // return rotated custom points
-            Quaternion rot;
-            if (rotateLightCheckHorOnly)
+            List<Vector3> rotatedPoints = new List<Vector3>();
+            if (rotateLightCheckAllAxis)
             {
-                Vector3 flatDir = Vector3.ProjectOnPlane(-_lightDirection, transform.up);
-                rot = Quaternion.FromToRotation(transform.forward, flatDir);
-                List<Vector3> rotatedPoints = new List<Vector3>();
-                foreach (Vector3 point in customLightCheckPoints)
-                    rotatedPoints.Add(transform.TransformPoint(rot * point));
-                return rotatedPoints;
-            } else
-            {
-                Vector3 up;
-                if (Vector3.Angle(transform.up, _lightDirection) > 45f)
-                    up = Vector3.Cross(transform.up, _lightDirection).normalized * lightCheckRadius;
-                else
-                    up = Vector3.Cross(transform.right, _lightDirection).normalized * lightCheckRadius;
-                rot = Quaternion.LookRotation(-_lightDirection, up);
-                List<Vector3> rotatedPoints = new List<Vector3>();
+                Quaternion rot = Quaternion.LookRotation(-_lightDirection, transform.up);
                 foreach (Vector3 point in customLightCheckPoints)
                     rotatedPoints.Add(transform.position + (rot * point));
-                return rotatedPoints;
             }
+            else
+            {
+                Vector3 flatDir = Vector3.ProjectOnPlane(-_lightDirection, transform.up);
+                Quaternion horRot = Quaternion.FromToRotation(transform.forward, flatDir);
+                foreach (Vector3 point in customLightCheckPoints)
+                    rotatedPoints.Add(transform.TransformPoint(horRot * point));
+            }
+            return rotatedPoints;
         }
 
         // return custom points ignoring direction
