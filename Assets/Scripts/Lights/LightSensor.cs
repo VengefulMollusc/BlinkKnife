@@ -21,6 +21,9 @@ public class LightSensor : MonoBehaviour
 
     public const string LightStatusNotification = "LightSensor.LightStatusNotification";
 
+    // TODO: remove - debugging thing
+    private Info<List<Vector3>, List<Vector3>, List<bool>> testInfo;
+
     [SerializeField] private LayerMask raycastMask;
 
     void OnEnable()
@@ -67,14 +70,39 @@ public class LightSensor : MonoBehaviour
      */
     private bool IsInSunlight()
     {
-        foreach (Vector3 point in GetLightCheckPoints(sunlightObject.transform.forward))
-        {
-            if (!Physics.Raycast(point, -sunlightObject.transform.forward, sunCheckRaycastLength,
-                raycastMask))
-                return true;
-        }
+        // TODO: THIS IS THE CORRECT LOGIC - commenting out for testing
+        //foreach (Vector3 point in GetLightCheckPoints(sunlightObject.transform.forward))
+        //{
+        //    if (!Physics.Raycast(point, -sunlightObject.transform.forward, sunCheckRaycastLength,
+        //        raycastMask))
+        //        return true;
+        //}
 
-        return false;
+        //return false;
+
+        // TODO: remove this
+        List<Vector3> points = GetLightCheckPoints(sunlightObject.transform.forward);
+        List<Vector3> rays = new List<Vector3>();
+        List<bool> hits = new List<bool>();
+        bool inSunLight = false;
+        RaycastHit hitInfo;
+        foreach (Vector3 point in points)
+        {
+            if (!Physics.Raycast(point, -sunlightObject.transform.forward, out hitInfo, sunCheckRaycastLength,
+                raycastMask))
+            {
+                rays.Add(-sunlightObject.transform.forward * sunCheckRaycastLength);
+                hits.Add(true);
+                inSunLight = true;
+            }
+            else
+            {
+                rays.Add(-sunlightObject.transform.forward * hitInfo.distance);
+                hits.Add(false);
+            }
+        }
+        testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(points, rays, hits);
+        return inSunLight;
     }
 
     /*
@@ -91,17 +119,17 @@ public class LightSensor : MonoBehaviour
             Vector3 dir = (rotateLightCheckHorOnly)
                 ? Vector3.ProjectOnPlane(_lightDirection, transform.up)
                 : _lightDirection;
-            Quaternion rot = Quaternion.FromToRotation(transform.forward, _lightDirection);
+            Quaternion rot = Quaternion.FromToRotation(transform.forward, dir);
             List<Vector3> rotatedPoints = new List<Vector3>();
             foreach (Vector3 point in customLightCheckPoints)
-                rotatedPoints.Add(transform.position + (rot * point));
+                rotatedPoints.Add(transform.TransformPoint(rot * point));
             return rotatedPoints;
         }
 
         // return custom points ignoring direction
         List<Vector3> points = new List<Vector3>();
         foreach (Vector3 point in customLightCheckPoints)
-            points.Add(transform.position + point);
+            points.Add(transform.TransformPoint(point));
         return points;
     }
 
@@ -127,12 +155,12 @@ public class LightSensor : MonoBehaviour
     }
 
     // TODO: REMOVE? debugging method for inspector
-    public Info<Vector3, Vector3, bool> GetRaycastInfo()
+    public Info<List<Vector3>, List<Vector3>, List<bool>> GetRaycastInfo()
     {
         if (sunlightObject == null)
             return null;
 
-        return new Info<Vector3, Vector3, bool>(transform.position, transform.position - (sunlightObject.transform.forward * sunCheckRaycastLength), isLit);
+        return testInfo;
     }
 
     public bool IsLit()

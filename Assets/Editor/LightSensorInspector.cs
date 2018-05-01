@@ -1,21 +1,25 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(LightSensor))]
 public class LightSensorInspector : Editor
 {
     private bool drawLightCheckPoints = false;
-    private float pointSize = 1f;
+    private float pointSize = 0.1f;
 
     void OnSceneGUI()
     {
         LightSensor sensor = target as LightSensor;
 
-        Info<Vector3, Vector3, bool> info = sensor.GetRaycastInfo();
-        if (info != null)
+        Info<List<Vector3>, List<Vector3>, List<bool>> testInfo = sensor.GetRaycastInfo();
+        if (testInfo != null)
         {
-            Handles.color = (info.arg2) ? Color.green : Color.red;
-            Handles.DrawLine(info.arg0, info.arg1);
+            for (int i = 0; i < testInfo.arg1.Count; i++)
+            {
+                Handles.color = (testInfo.arg2[i]) ? Color.green : Color.red;
+                Handles.DrawLine(testInfo.arg0[i], testInfo.arg0[i] + testInfo.arg1[i]);
+            }
         }
 
         // Draw light check points
@@ -26,13 +30,13 @@ public class LightSensorInspector : Editor
             {
                 // draw custom points
                 foreach (Vector3 point in sensor.customLightCheckPoints)
-                    Handles.SphereHandleCap(0, sensor.transform.position + point, Quaternion.identity, pointSize, EventType.Repaint);
+                    Handles.SphereHandleCap(0, sensor.transform.TransformPoint(point), Quaternion.identity, pointSize, EventType.Repaint);
             }
             else
             {
                 // draw default 5 point config
                 foreach (Vector3 point in sensor.GetLightCheckPoints(-sensor.transform.forward))
-                    Handles.SphereHandleCap(0, point, Quaternion.identity, pointSize, EventType.Repaint);
+                    Handles.SphereHandleCap(0, sensor.transform.TransformPoint(point), Quaternion.identity, pointSize, EventType.Repaint);
             }
         }
     }
