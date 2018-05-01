@@ -11,10 +11,10 @@ public class LightSensorInspector : Editor
 
         Info<Vector3, Vector3, bool> info = lightSensor.GetRaycastInfo();
 
-        if (info == null)
-            return;
-
-        Handles.color = (info.arg2) ? Color.green : Color.red;
-        Handles.DrawLine(info.arg0, info.arg1);
+        if (info != null)
+        {
+            Handles.color = (info.arg2) ? Color.green : Color.red;
+            Handles.DrawLine(info.arg0, info.arg1);
+        }
     }
 }

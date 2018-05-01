@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class LightSensor : MonoBehaviour
 {
-    public static float updateFrequency = 0.1f;
-
-    public static float raycastLength = 200f;
+    private static float updateFrequency = 0.1f;
+    private static float sunCheckRaycastLength = 200f;
 
     public float lightCheckRadius = 0.5f;
+    public bool useCustomLightCheckPoints;
+    public bool rotateLightCheckHorOnly;
+    public bool rotateLightCheckAllAxis;
+    public Vector3[] customLightCheckPoints;
+    private List<Vector3> lightCheckPoints;
 
     private GameObject sunlightObject;
     private bool checkSunlight = true;
@@ -34,6 +38,12 @@ public class LightSensor : MonoBehaviour
 
 	    isLit = false;
 
+        // add custom points to list
+        // TODO: remove if can just use list
+	    lightCheckPoints = new List<Vector3>();
+	    foreach (Vector3 p in customLightCheckPoints)
+	        lightCheckPoints.Add(p);
+
         InvokeRepeating("CheckLights", 0f, updateFrequency);
 	}
 	
@@ -43,7 +53,7 @@ public class LightSensor : MonoBehaviour
 	    bool isInSunlight = checkSunlight && IsInSunlight();
 
         // This is nowhere near as clear as the inspector method
-        //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? raycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
+        //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? sunCheckRaycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
 
 	    isLit = isInSunlight || isInLocalLight;
 
@@ -61,7 +71,7 @@ public class LightSensor : MonoBehaviour
     {
         foreach (Vector3 point in GetLightCheckPoints(sunlightObject.transform.forward))
         {
-            if (!Physics.Raycast(point, -sunlightObject.transform.forward, out hitInfo, raycastLength,
+            if (!Physics.Raycast(point, -sunlightObject.transform.forward, out hitInfo, sunCheckRaycastLength,
                 raycastMask))
                 return true;
         }
@@ -74,20 +84,48 @@ public class LightSensor : MonoBehaviour
      */
     public List<Vector3> GetLightCheckPoints(Vector3 _dir)
     {
-        Vector3 up;
-        if (Vector3.Angle(transform.up, _dir) > 45f)
-            up = Vector3.Cross(transform.up, _dir).normalized * lightCheckRadius;
-        else
-            up = Vector3.Cross(transform.right, _dir).normalized * lightCheckRadius;
+        if (!useCustomLightCheckPoints || customLightCheckPoints.Length == 0)
+        {
+            // return default points defined by radius
+            Vector3 up;
+            if (Vector3.Angle(transform.up, _dir) > 45f)
+                up = Vector3.Cross(transform.up, _dir).normalized * lightCheckRadius;
+            else
+                up = Vector3.Cross(transform.right, _dir).normalized * lightCheckRadius;
 
-        Vector3 right = Vector3.Cross(up, _dir).normalized * lightCheckRadius;
+            Vector3 right = Vector3.Cross(up, _dir).normalized * lightCheckRadius;
 
-        return new List<Vector3>(){transform.position,
-            transform.position + up,
-            transform.position - up,
-            transform.position + right,
-            transform.position - right
-        };
+            return new List<Vector3>(){transform.position,
+                transform.position + up,
+                transform.position - up,
+                transform.position + right,
+                transform.position - right
+            };
+        }
+
+        if (rotateLightCheckHorOnly)
+        {
+            Vector3 flattenedDir = Vector3.ProjectOnPlane(_dir, transform.up);
+            Quaternion rot = Quaternion.FromToRotation(transform.forward, flattenedDir);
+            List<Vector3> rotatedPoints = new List<Vector3>();
+            foreach (Vector3 point in lightCheckPoints)
+                rotatedPoints.Add(transform.position + (rot * point));
+            return rotatedPoints;
+        }
+
+        if (rotateLightCheckAllAxis)
+        {
+            Quaternion rot = Quaternion.FromToRotation(transform.forward, _dir);
+            List<Vector3> rotatedPoints = new List<Vector3>();
+            foreach (Vector3 point in lightCheckPoints)
+                rotatedPoints.Add(transform.position + (rot * point));
+            return rotatedPoints;
+        }
+
+        List<Vector3> points = new List<Vector3>();
+        foreach (Vector3 point in lightCheckPoints)
+            points.Add(transform.position + point);
+        return points;
     }
 
     // TODO: REMOVE? debugging method for inspector
@@ -96,7 +134,7 @@ public class LightSensor : MonoBehaviour
         if (sunlightObject == null)
             return null;
 
-        return new Info<Vector3, Vector3, bool>(transform.position, transform.position - (sunlightObject.transform.forward * raycastLength), isLit);
+        return new Info<Vector3, Vector3, bool>(transform.position, transform.position - (sunlightObject.transform.forward * sunCheckRaycastLength), isLit);
     }
 
     public bool IsLit()
