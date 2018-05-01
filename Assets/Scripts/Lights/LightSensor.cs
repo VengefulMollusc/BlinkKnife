@@ -115,22 +115,7 @@ public class LightSensor : MonoBehaviour
 
         if (rotateLightCheckAllAxis || rotateLightCheckHorOnly)
         {
-            // return rotated custom points
-            List<Vector3> rotatedPoints = new List<Vector3>();
-            if (rotateLightCheckAllAxis)
-            {
-                Quaternion rot = Quaternion.LookRotation(-_lightDirection, transform.up);
-                foreach (Vector3 point in customLightCheckPoints)
-                    rotatedPoints.Add(transform.position + (rot * point));
-            }
-            else
-            {
-                Vector3 flatDir = Vector3.ProjectOnPlane(-_lightDirection, transform.up);
-                Quaternion horRot = Quaternion.FromToRotation(transform.forward, flatDir);
-                foreach (Vector3 point in customLightCheckPoints)
-                    rotatedPoints.Add(transform.TransformPoint(horRot * point));
-            }
-            return rotatedPoints;
+            return GetRotatedPoints(_lightDirection);
         }
 
         // return custom points ignoring direction
@@ -138,6 +123,29 @@ public class LightSensor : MonoBehaviour
         foreach (Vector3 point in customLightCheckPoints)
             points.Add(transform.TransformPoint(point));
         return points;
+    }
+
+    /*
+     * Returns a list of points rotated around all or just the vertical axes
+     */
+    private List<Vector3> GetRotatedPoints(Vector3 _lightDirection)
+    {
+        // return rotated custom points
+        List<Vector3> rotatedPoints = new List<Vector3>();
+        if (rotateLightCheckAllAxis)
+        {
+            Quaternion rot = Quaternion.LookRotation(-_lightDirection, transform.up);
+            foreach (Vector3 point in customLightCheckPoints)
+                rotatedPoints.Add(transform.position + (rot * point));
+        }
+        else
+        {
+            Vector3 flatDir = Vector3.ProjectOnPlane(-_lightDirection, transform.up);
+            Quaternion horRot = Quaternion.FromToRotation(transform.forward, flatDir);
+            foreach (Vector3 point in customLightCheckPoints)
+                rotatedPoints.Add(transform.TransformPoint(horRot * point));
+        }
+        return rotatedPoints;
     }
 
     private List<Vector3> GetDefaultLightCheckPoints(Vector3 _lightDirection)
