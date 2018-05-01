@@ -116,10 +116,16 @@ public class LightSensor : MonoBehaviour
         if (rotateLightCheckAllAxis || rotateLightCheckHorOnly)
         {
             // return rotated custom points
-            Vector3 dir = (rotateLightCheckHorOnly)
-                ? Vector3.ProjectOnPlane(_lightDirection, transform.up)
-                : _lightDirection;
-            Quaternion rot = Quaternion.FromToRotation(transform.forward, dir);
+            Quaternion rot;
+            if (rotateLightCheckAllAxis)
+            {
+                // TODO: double check rotation calculation here. possibly need something like Quaternion.LookRotation
+                rot = Quaternion.FromToRotation(transform.forward, _lightDirection);
+            } else {
+                Vector3 flatDir = Vector3.ProjectOnPlane(_lightDirection, transform.up);
+                rot = Quaternion.FromToRotation(transform.forward, flatDir);
+            }
+            
             List<Vector3> rotatedPoints = new List<Vector3>();
             foreach (Vector3 point in customLightCheckPoints)
                 rotatedPoints.Add(transform.TransformPoint(rot * point));
