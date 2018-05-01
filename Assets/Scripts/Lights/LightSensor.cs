@@ -24,41 +24,42 @@ public class LightSensor : MonoBehaviour
     [SerializeField] private LayerMask raycastMask;
 
     // TODO: remove if done testing - purely for debugging
-    private RaycastHit hitInfo; 
+    private RaycastHit hitInfo;
 
-    void OnEnable ()
-	{
-	    sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
+    void OnEnable()
+    {
+        sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
 
-	    if (sunlightObject == null)
-	    {
-	        Debug.LogError("No Sunlight object found");
-	        checkSunlight = false;
-	    }
+        if (sunlightObject == null)
+        {
+            Debug.LogError("No Sunlight object found");
+            checkSunlight = false;
+        }
 
-	    isLit = false;
+        isLit = false;
 
-     //   // add custom points to list
-     //   // TODO: remove if can just use list
-	    //customLightCheckPoints = new List<Vector3>();
-	    //foreach (Vector3 p in customLightCheckPoints)
-	    //    customLightCheckPoints.Add(p);
+        //   // add custom points to list
+        //   // TODO: remove if can just use list
+        //customLightCheckPoints = new List<Vector3>();
+        //foreach (Vector3 p in customLightCheckPoints)
+        //    customLightCheckPoints.Add(p);
 
         InvokeRepeating("CheckLights", 0f, updateFrequency);
-	}
-	
-	void CheckLights () {
-		// raycast in opposite direction to sunlight direction for long distance
+    }
+
+    void CheckLights()
+    {
+        // raycast in opposite direction to sunlight direction for long distance
         // if another object is hit then this gameobject is in shadow
-	    bool isInSunlight = checkSunlight && IsInSunlight();
+        bool isInSunlight = checkSunlight && IsInSunlight();
 
         // This is nowhere near as clear as the inspector method
         //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? sunCheckRaycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
 
-	    isLit = isInSunlight || isInLocalLight;
+        isLit = isInSunlight || isInLocalLight;
 
         // reset local light variable
-	    isInLocalLight = false;
+        isInLocalLight = false;
 
         // send notification of light status (for UI etc)
         this.PostNotification(LightStatusNotification, new Info<GameObject, bool>(gameObject, isLit));
@@ -82,50 +83,50 @@ public class LightSensor : MonoBehaviour
     /*
      * returns a list of points to check for this LightSensor
      */
-    public List<Vector3> GetLightCheckPoints(Vector3 _dir)
+    public List<Vector3> GetLightCheckPoints(Vector3 _lightDirection)
     {
         if (!useCustomLightCheckPoints || customLightCheckPoints.Count == 0)
+            return GetDefaultLightCheckPoints(_lightDirection);
+
+        if (rotateLightCheckAllAxis || rotateLightCheckHorOnly)
         {
-            // return default points defined by radius
-            Vector3 up;
-            if (Vector3.Angle(transform.up, _dir) > 45f)
-                up = Vector3.Cross(transform.up, _dir).normalized * lightCheckRadius;
-            else
-                up = Vector3.Cross(transform.right, _dir).normalized * lightCheckRadius;
-
-            Vector3 right = Vector3.Cross(up, _dir).normalized * lightCheckRadius;
-
-            return new List<Vector3>(){transform.position,
-                transform.position + up,
-                transform.position - up,
-                transform.position + right,
-                transform.position - right
-            };
-        }
-
-        if (rotateLightCheckHorOnly)
-        {
-            Vector3 flattenedDir = Vector3.ProjectOnPlane(_dir, transform.up);
-            Quaternion rot = Quaternion.FromToRotation(transform.forward, flattenedDir);
+            // return rotated custom points
+            Vector3 dir = (rotateLightCheckHorOnly)
+                ? Vector3.ProjectOnPlane(_lightDirection, transform.up)
+                : _lightDirection;
+            Quaternion rot = Quaternion.FromToRotation(transform.forward, _lightDirection);
             List<Vector3> rotatedPoints = new List<Vector3>();
             foreach (Vector3 point in customLightCheckPoints)
                 rotatedPoints.Add(transform.position + (rot * point));
             return rotatedPoints;
         }
 
-        if (rotateLightCheckAllAxis)
-        {
-            Quaternion rot = Quaternion.FromToRotation(transform.forward, _dir);
-            List<Vector3> rotatedPoints = new List<Vector3>();
-            foreach (Vector3 point in customLightCheckPoints)
-                rotatedPoints.Add(transform.position + (rot * point));
-            return rotatedPoints;
-        }
-
+        // return custom points ignoring direction
         List<Vector3> points = new List<Vector3>();
         foreach (Vector3 point in customLightCheckPoints)
             points.Add(transform.position + point);
         return points;
+    }
+
+    private List<Vector3> GetDefaultLightCheckPoints(Vector3 _lightDirection)
+    {
+        // return default points defined by radius
+        Vector3 up;
+        if (Vector3.Angle(transform.up, _lightDirection) > 45f)
+            up = Vector3.Cross(transform.up, _lightDirection).normalized * lightCheckRadius;
+        else
+            up = Vector3.Cross(transform.right, _lightDirection).normalized * lightCheckRadius;
+
+        Vector3 right = Vector3.Cross(up, _lightDirection).normalized * lightCheckRadius;
+
+        return new List<Vector3>()
+        {
+            transform.position,
+            transform.position + up,
+            transform.position - up,
+            transform.position + right,
+            transform.position - right
+        };
     }
 
     // TODO: REMOVE? debugging method for inspector
