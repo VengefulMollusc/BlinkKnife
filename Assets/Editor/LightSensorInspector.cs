@@ -12,13 +12,13 @@ public class LightSensorInspector : Editor
         LightSensor sensor = target as LightSensor;
 
         Info<Vector3, Vector3, bool> info = sensor.GetRaycastInfo();
-
         if (info != null)
         {
             Handles.color = (info.arg2) ? Color.green : Color.red;
             Handles.DrawLine(info.arg0, info.arg1);
         }
 
+        // Draw light check points
         if (drawLightCheckPoints)
         {
             Handles.color = Color.yellow;

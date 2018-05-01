@@ -23,9 +23,6 @@ public class LightSensor : MonoBehaviour
 
     [SerializeField] private LayerMask raycastMask;
 
-    // TODO: remove if done testing - purely for debugging
-    private RaycastHit hitInfo;
-
     void OnEnable()
     {
         sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
@@ -72,7 +69,7 @@ public class LightSensor : MonoBehaviour
     {
         foreach (Vector3 point in GetLightCheckPoints(sunlightObject.transform.forward))
         {
-            if (!Physics.Raycast(point, -sunlightObject.transform.forward, out hitInfo, sunCheckRaycastLength,
+            if (!Physics.Raycast(point, -sunlightObject.transform.forward, sunCheckRaycastLength,
                 raycastMask))
                 return true;
         }
