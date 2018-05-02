@@ -25,16 +25,10 @@ public class SpotLightSource : LightSource {
             if (sensor == null)
                 continue;
 
-            //if (hit.distance.Equals(0f) && hit.point == Vector3.zero)
-            //{
-            //    // overlapping at start of sweep
-            //    // TODO: special case
-            //    // ^ this may be handled by lightCheckPoints
-            //    continue;
-            //}
-
+            
             List<Vector3> points = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
             int litCount = 0;
+            bool useLitPercent = sensor.UseLitPercent();
             foreach (Vector3 point in points)
             {
                 // TODO: tweak these checks, this is going to be really sensitive
@@ -51,14 +45,17 @@ public class SpotLightSource : LightSource {
                     // only trigger 'lit' status if raycast hits the sensor object
                     if (hitInfo.transform == sensor.transform)
                     {
-                        //sensor.LightObject();
-                        //break;
+                        if (!useLitPercent)
+                        {
+                            sensor.LightObject(1f);
+                            break;
+                        }
                         litCount++;
                     }
                 }
             }
 
-            if (litCount > 0)
+            if (useLitPercent && litCount > 0) // the useLitPercent check here should be redundant
             {
                 sensor.LightObject((float)litCount / points.Count);
             }

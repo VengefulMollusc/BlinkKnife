@@ -6,20 +6,19 @@ public class LightSensor : MonoBehaviour
     private static float updateFrequency = 0.1f;
     private static float sunCheckRaycastLength = 200f;
 
+    [SerializeField] private bool useLitPercent = false;
     public float lightCheckRadius = 0.5f;
     public bool useCustomLightCheckPoints;
     [SerializeField] private bool rotateLightCheckHorOnly;
     [SerializeField] private bool rotateLightCheckAllAxis;
-    //public Vector3[] customLightCheckPoints;
     public List<Vector3> customLightCheckPoints;
 
     private GameObject sunlightObject;
     private bool checkSunlight = true;
-
-    //private bool isLit;
-    //private bool isInLocalLight;
+    
     private float sunLitPercent;
     private float localLitPercent;
+    private float overallLitPercent;
 
     public const string LightStatusNotification = "LightSensor.LightStatusNotification";
 
@@ -38,7 +37,7 @@ public class LightSensor : MonoBehaviour
             checkSunlight = false;
         }
 
-        //isLit = false;
+        sunLitPercent = localLitPercent = 0f;
 
         InvokeRepeating("CheckLights", 0f, updateFrequency);
     }
@@ -47,12 +46,11 @@ public class LightSensor : MonoBehaviour
     {
         // raycast in opposite direction to sunlight direction for long distance
         // if another object is hit then this gameobject is in shadow
-        //bool isInSunlight = checkSunlight && IsInSunlight();
         if (checkSunlight)
-            IsInSunlight();
+            CheckSunlight();
 
         //isLit = isInSunlight || isInLocalLight;
-        float overallLitPercent = Mathf.Max(sunLitPercent, localLitPercent);
+        overallLitPercent = Mathf.Max(sunLitPercent, localLitPercent);
 
         // reset local light variable
         //isInLocalLight = false;
@@ -65,45 +63,53 @@ public class LightSensor : MonoBehaviour
     /*
      * Checks for sunlight at transform position and in a radius around there
      */
-    private void IsInSunlight()
+    private void CheckSunlight()
     {
         // TODO: THIS IS THE SIMPLIFIED LOGIC - commenting out for testing
-        //foreach (Vector3 point in GetLightCheckPoints(sunlightObject.transform.forward))
+        //int litCount = 0;
+        //Vector3 sunLightDir = sunlightObject.transform.forward;
+        //foreach (Vector3 point in GetLightCheckPoints(sunLightDir))
         //{
-        //    if (!Physics.Raycast(point, -sunlightObject.transform.forward, sunCheckRaycastLength,
+        //    if (!Physics.Raycast(point, -sunLightDir, sunCheckRaycastLength,
         //        raycastMask))
-        //        return true;
+        //    {
+        //        if (!useLitPercent)
+        //        {
+        //            sunLitPercent = 1f;
+        //            return;
+        //        }
+        //        litCount++;
+        //    }
         //}
+        //sunLitPercent = (float)litCount / points.Count;
 
-        //return false;
 
         // TODO: remove this
-        List<Vector3> points = GetLightCheckPoints(sunlightObject.transform.forward);
+        Vector3 sunLightDir = sunlightObject.transform.forward;
+        List<Vector3> points = GetLightCheckPoints(sunLightDir);
         List<Vector3> rays = new List<Vector3>();
         List<bool> hits = new List<bool>();
         int litCount = 0;
         RaycastHit hitInfo;
         foreach (Vector3 point in points)
         {
-            if (!Physics.Raycast(point, -sunlightObject.transform.forward, out hitInfo, sunCheckRaycastLength,
+            if (!Physics.Raycast(point, -sunLightDir, out hitInfo, sunCheckRaycastLength,
                 raycastMask))
             {
-                rays.Add(-sunlightObject.transform.forward * sunCheckRaycastLength);
+                rays.Add(-sunLightDir * sunCheckRaycastLength);
                 hits.Add(true);
 
                 litCount++;
             }
             else
             {
-                rays.Add(-sunlightObject.transform.forward * hitInfo.distance);
+                rays.Add(-sunLightDir * hitInfo.distance);
                 hits.Add(false);
             }
         }
         testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(points, rays, hits);
 
         sunLitPercent = (float)litCount / points.Count;
-
-        //return litCount > 0;
     }
 
     /*
@@ -186,7 +192,7 @@ public class LightSensor : MonoBehaviour
      */
     public bool IsLit()
     {
-        return sunLitPercent > 0f;
+        return overallLitPercent > 0f;
     }
 
     /*
@@ -195,7 +201,12 @@ public class LightSensor : MonoBehaviour
      */
     public float GetLitPercent()
     {
-        return sunLitPercent;
+        return overallLitPercent;
+    }
+
+    public bool UseLitPercent()
+    {
+        return useLitPercent;
     }
 
     // called by LightSource objects when sensor is within range
@@ -203,12 +214,13 @@ public class LightSensor : MonoBehaviour
     {
         if (_litPercent > localLitPercent)
             localLitPercent = _litPercent;
-        //isInLocalLight = true;
     }
 
     // used to enable/disable the sunlight check (for mainly dark environments with no global lighting)
     public void EnableSunlightCheck(bool _checkSunlight)
     {
         checkSunlight = _checkSunlight;
+        if (!checkSunlight)
+            sunLitPercent = 0f;
     }
 }

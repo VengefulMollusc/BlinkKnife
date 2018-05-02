@@ -577,6 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd636bf21b9caf24a9b52c6a83754f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useLitPercent: 1
   lightCheckRadius: 0.5
   useCustomLightCheckPoints: 1
   rotateLightCheckHorOnly: 1
