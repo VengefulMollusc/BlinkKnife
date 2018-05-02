@@ -42,6 +42,9 @@ public class SpotLightSource : LightSource
                         continue;
                     }
                 }
+                // if no custom points defined, can just skip expanded check logic
+                if (!sensor.UseCustomPoints())
+                    continue;
             }
 
             List<Vector3> points = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);

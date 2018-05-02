@@ -6,11 +6,11 @@ public class LightSensor : MonoBehaviour
     private static float updateFrequency = 0.1f;
     private static float sunCheckRaycastLength = 200f;
 
-    [SerializeField] private bool useLitPercent = false;
-    public bool useCustomLightCheckPoints;
+    [SerializeField] private bool useLitPercent;
+    [SerializeField] private bool useCustomLightCheckPoints;
     [SerializeField] private bool rotateLightCheckHorOnly;
     [SerializeField] private bool rotateLightCheckAllAxis;
-    public List<Vector3> customLightCheckPoints;
+    [SerializeField] private List<Vector3> customLightCheckPoints;
 
     private GameObject sunlightObject;
     private bool checkSunlight = true;
@@ -37,6 +37,11 @@ public class LightSensor : MonoBehaviour
         }
 
         sunLitPercent = localLitPercent = 0f;
+
+        // If no custom points are defined, use non-percent logic by default
+        // Still checks transform.position, but less expensive
+        if (!useCustomLightCheckPoints || customLightCheckPoints.Count == 0)
+            useLitPercent = false;
 
         InvokeRepeating("CheckLights", 0f, updateFrequency);
     }
@@ -79,14 +84,20 @@ public class LightSensor : MonoBehaviour
     {
         // TODO: THIS IS THE SIMPLIFIED LOGIC - commenting out for testing
         //Vector3 sunLightDir = sunlightObject.transform.forward;
-        //if (!useLitPercent && !Physics.Raycast(transform.position, -sunLightDir, sunCheckRaycastLength, raycastMask))
+        //if (!useLitPercent)
         //{
-        //    // If percent doesn't matter, check position first to save time
-        //    sunLitPercent = 1f;
-        //    return;
+        //    if (!Physics.Raycast(transform.position, -sunLightDir, sunCheckRaycastLength, raycastMask))
+        //    {
+        //        // If percent doesn't matter, check position first to save time
+        //        sunLitPercent = 1f;
+        //        return;
+        //    }
+        //    if (!UseCustomPoints())
+        //        return;
         //}
         //int litCount = 0;
-        //foreach (Vector3 point in GetLightCheckPoints(sunLightDir))
+        //List<Vector3> points = GetLightCheckPoints(sunLightDir);
+        //foreach (Vector3 point in points)
         //{
         //    if (!Physics.Raycast(point, -sunLightDir, sunCheckRaycastLength, raycastMask))
         //    {
@@ -136,17 +147,28 @@ public class LightSensor : MonoBehaviour
     {
         // If no custom points are specified, return just the object position
         // - mainly for small/simple objects
+        // TODO: TEST - THIS SHOULD NEVER TRIGGER (OnEnable checks for this)
         if (!useCustomLightCheckPoints || customLightCheckPoints.Count == 0)
+        {
+            Debug.LogError("default LightCheckPoint generated for object that should not have any custom points");
             return new List<Vector3>() { transform.position };
-        //return GetDefaultLightCheckPoints(_lightDirection);
+            //return GetDefaultLightCheckPoints(_lightDirection);
+        }
 
         // return custom points rotated according to the light direction
         // - for cylindrical/symmetrical objects
         if (rotateLightCheckAllAxis || rotateLightCheckHorOnly)
             return GetRotatedPoints(_lightDirection);
 
+        // return unmodified points (still relative to transform though)
+        return GetUnmodifiedPoints();
+    }
+
+    public List<Vector3> GetUnmodifiedPoints()
+    {
         // return custom points ignoring direction
         // - for more complex objects, or ones that have a distinct shape
+        // Also for inspector testing
         List<Vector3> points = new List<Vector3>();
         foreach (Vector3 point in customLightCheckPoints)
             points.Add(transform.TransformPoint(point));
@@ -235,6 +257,15 @@ public class LightSensor : MonoBehaviour
     public bool UseLitPercent()
     {
         return useLitPercent;
+    }
+
+    /*
+     * returns whether to use custom check points
+     * also used by lightSources to simplify logic and reduce raycasts if this is false
+     */
+    public bool UseCustomPoints()
+    {
+        return useCustomLightCheckPoints && customLightCheckPoints.Count > 0;
     }
 
     // called by LightSource objects when sensor is lit by the object

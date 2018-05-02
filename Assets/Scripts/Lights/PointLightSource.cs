@@ -23,14 +23,20 @@ public class PointLightSource : LightSource
             int litCount = 0;
             bool useLitPercent = sensor.UseLitPercent();
             RaycastHit hitInfo;
-            if (!useLitPercent && Physics.Raycast(col.transform.position, col.transform.position - transform.position, out hitInfo, range, layerMask))
+            if (!useLitPercent)
             {
-                // perform initial position check
-                if (hitInfo.transform == col.transform)
+                if (Physics.Raycast(col.transform.position, col.transform.position - transform.position, out hitInfo, range, layerMask))
                 {
-                    sensor.LightObject();
-                    continue;
+                    // perform initial position check
+                    if (hitInfo.transform == col.transform)
+                    {
+                        sensor.LightObject();
+                        continue;
+                    }
                 }
+                // if no custom points defined, can just skip next bit of logic
+                if (!sensor.UseCustomPoints())
+                    continue;
             }
 
             List<Vector3> points = sensor.GetLightCheckPoints(col.transform.position - transform.position);
