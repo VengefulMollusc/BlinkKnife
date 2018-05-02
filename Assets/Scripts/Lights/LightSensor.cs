@@ -17,6 +17,7 @@ public class LightSensor : MonoBehaviour
     private bool checkSunlight = true;
 
     private bool isLit;
+    private float litPercent;
     private bool isInLocalLight;
 
     public const string LightStatusNotification = "LightSensor.LightStatusNotification";
@@ -37,12 +38,6 @@ public class LightSensor : MonoBehaviour
         }
 
         isLit = false;
-
-        //   // add custom points to list
-        //   // TODO: remove if can just use list
-        //customLightCheckPoints = new List<Vector3>();
-        //foreach (Vector3 p in customLightCheckPoints)
-        //    customLightCheckPoints.Add(p);
 
         InvokeRepeating("CheckLights", 0f, updateFrequency);
     }
@@ -70,7 +65,7 @@ public class LightSensor : MonoBehaviour
      */
     private bool IsInSunlight()
     {
-        // TODO: THIS IS THE CORRECT LOGIC - commenting out for testing
+        // TODO: THIS IS THE SIMPLIFIED LOGIC - commenting out for testing
         //foreach (Vector3 point in GetLightCheckPoints(sunlightObject.transform.forward))
         //{
         //    if (!Physics.Raycast(point, -sunlightObject.transform.forward, sunCheckRaycastLength,
@@ -84,7 +79,7 @@ public class LightSensor : MonoBehaviour
         List<Vector3> points = GetLightCheckPoints(sunlightObject.transform.forward);
         List<Vector3> rays = new List<Vector3>();
         List<bool> hits = new List<bool>();
-        bool inSunLight = false;
+        int litCount = 0;
         RaycastHit hitInfo;
         foreach (Vector3 point in points)
         {
@@ -93,7 +88,8 @@ public class LightSensor : MonoBehaviour
             {
                 rays.Add(-sunlightObject.transform.forward * sunCheckRaycastLength);
                 hits.Add(true);
-                inSunLight = true;
+
+                litCount++;
             }
             else
             {
@@ -102,7 +98,10 @@ public class LightSensor : MonoBehaviour
             }
         }
         testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(points, rays, hits);
-        return inSunLight;
+
+        litPercent = (float)litCount / points.Count;
+
+        return litCount > 0;
     }
 
     /*
@@ -114,9 +113,7 @@ public class LightSensor : MonoBehaviour
             return GetDefaultLightCheckPoints(_lightDirection);
 
         if (rotateLightCheckAllAxis || rotateLightCheckHorOnly)
-        {
             return GetRotatedPoints(_lightDirection);
-        }
 
         // return custom points ignoring direction
         List<Vector3> points = new List<Vector3>();
@@ -148,6 +145,10 @@ public class LightSensor : MonoBehaviour
         return rotatedPoints;
     }
 
+    /*
+     * returns a list of points arranged in a circle and rotated to face the light.
+     * Used by default when no custom points are defined
+     */
     private List<Vector3> GetDefaultLightCheckPoints(Vector3 _lightDirection)
     {
         // return default points defined by radius
@@ -178,9 +179,21 @@ public class LightSensor : MonoBehaviour
         return testInfo;
     }
 
+    /*
+     * returns true if the object is lit at all, regardless of percentage
+     */
     public bool IsLit()
     {
-        return isLit;
+        return litPercent > 0f;
+    }
+
+    /*
+     * returns the percentage of the object that is lit.
+     * Defined by the fraction of lightcheckpoints that are illuminated
+     */
+    public float GetLitPercent()
+    {
+        return litPercent;
     }
 
     // called by LightSource objects when sensor is within range
