@@ -7,7 +7,7 @@ public class LightSensor : MonoBehaviour
     private static float sunCheckRaycastLength = 200f;
 
     [SerializeField] private bool useLitPercent = false;
-    public float lightCheckRadius = 0.5f;
+    //public float lightCheckRadius = 0.5f;
     public bool useCustomLightCheckPoints;
     [SerializeField] private bool rotateLightCheckHorOnly;
     [SerializeField] private bool rotateLightCheckAllAxis;
@@ -42,6 +42,10 @@ public class LightSensor : MonoBehaviour
         InvokeRepeating("CheckLights", 0f, updateFrequency);
     }
 
+    /*
+     * determines overall lit percentage of object relative to sunlight and local light
+     * Sends notification with current lit value
+     */
     void CheckLights()
     {
         // raycast in opposite direction to sunlight direction for long distance
@@ -70,8 +74,7 @@ public class LightSensor : MonoBehaviour
         //Vector3 sunLightDir = sunlightObject.transform.forward;
         //foreach (Vector3 point in GetLightCheckPoints(sunLightDir))
         //{
-        //    if (!Physics.Raycast(point, -sunLightDir, sunCheckRaycastLength,
-        //        raycastMask))
+        //    if (!Physics.Raycast(point, -sunLightDir, sunCheckRaycastLength, raycastMask))
         //    {
         //        if (!useLitPercent)
         //        {
@@ -84,7 +87,8 @@ public class LightSensor : MonoBehaviour
         //sunLitPercent = (float)litCount / points.Count;
 
 
-        // TODO: remove this
+        // TODO: REMOVE
+        // - Expanded logic to allow inspector script to draw/debug all lightCheckPoints and rays
         Vector3 sunLightDir = sunlightObject.transform.forward;
         List<Vector3> points = GetLightCheckPoints(sunLightDir);
         List<Vector3> rays = new List<Vector3>();
@@ -108,7 +112,6 @@ public class LightSensor : MonoBehaviour
             }
         }
         testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(points, rays, hits);
-
         sunLitPercent = (float)litCount / points.Count;
     }
 
@@ -145,12 +148,14 @@ public class LightSensor : MonoBehaviour
         List<Vector3> rotatedPoints = new List<Vector3>();
         if (rotateLightCheckAllAxis)
         {
+            // Rotate around all axes
             Quaternion rot = Quaternion.LookRotation(-_lightDirection, transform.up);
             foreach (Vector3 point in customLightCheckPoints)
                 rotatedPoints.Add(transform.position + (rot * point));
         }
         else
         {
+            // rotate only around vertical axis
             Vector3 flatDir = Vector3.ProjectOnPlane(-_lightDirection, transform.up);
             Quaternion horRot = Quaternion.FromToRotation(transform.forward, flatDir);
             foreach (Vector3 point in customLightCheckPoints)
@@ -184,7 +189,7 @@ public class LightSensor : MonoBehaviour
     //    };
     //}
 
-    // TODO: REMOVE? debugging method for inspector
+    // TODO: REMOVE. debugging method for inspector
     public Info<List<Vector3>, List<Vector3>, List<bool>> GetRaycastInfo()
     {
         if (sunlightObject == null)
@@ -196,10 +201,10 @@ public class LightSensor : MonoBehaviour
     /*
      * returns true if the object is lit at all, regardless of percentage
      */
-    public bool IsLit()
-    {
-        return overallLitPercent > 0f;
-    }
+    //public bool IsLit()
+    //{
+    //    return overallLitPercent > 0f;
+    //}
 
     /*
      * returns the percentage of the object that is lit.
@@ -210,12 +215,16 @@ public class LightSensor : MonoBehaviour
         return overallLitPercent;
     }
 
+    /*
+     * returns whether to use full lit percentage calculations
+     * used by lightSources to simplify logic and reduce raycasts if this is false
+     */
     public bool UseLitPercent()
     {
         return useLitPercent;
     }
 
-    // called by LightSource objects when sensor is within range
+    // called by LightSource objects when sensor is lit by the object
     public void LightObject(float _litPercent)
     {
         if (_litPercent > localLitPercent)
