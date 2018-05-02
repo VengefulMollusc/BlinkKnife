@@ -117,13 +117,19 @@ public class LightSensor : MonoBehaviour
      */
     public List<Vector3> GetLightCheckPoints(Vector3 _lightDirection)
     {
+        // If no custom points are specified, return just the object position
+        // - mainly for small/simple objects
         if (!useCustomLightCheckPoints || customLightCheckPoints.Count == 0)
-            return GetDefaultLightCheckPoints(_lightDirection);
+            return new List<Vector3>(){transform.position};
+            //return GetDefaultLightCheckPoints(_lightDirection);
 
+        // return custom points rotated according to the light direction
+        // - for cylindrical/symmetrical objects
         if (rotateLightCheckAllAxis || rotateLightCheckHorOnly)
             return GetRotatedPoints(_lightDirection);
 
         // return custom points ignoring direction
+        // - for more complex objects, or ones that have a distinct shape
         List<Vector3> points = new List<Vector3>();
         foreach (Vector3 point in customLightCheckPoints)
             points.Add(transform.TransformPoint(point));
@@ -157,26 +163,26 @@ public class LightSensor : MonoBehaviour
      * returns a list of points arranged in a circle and rotated to face the light.
      * Used by default when no custom points are defined
      */
-    private List<Vector3> GetDefaultLightCheckPoints(Vector3 _lightDirection)
-    {
-        // return default points defined by radius
-        Vector3 up;
-        if (Vector3.Angle(transform.up, _lightDirection) > 45f)
-            up = Vector3.Cross(transform.up, _lightDirection).normalized * lightCheckRadius;
-        else
-            up = Vector3.Cross(transform.right, _lightDirection).normalized * lightCheckRadius;
+    //private List<Vector3> GetDefaultLightCheckPoints(Vector3 _lightDirection)
+    //{
+    //    // return default points defined by radius
+    //    Vector3 up;
+    //    if (Vector3.Angle(transform.up, _lightDirection) > 45f)
+    //        up = Vector3.Cross(transform.up, _lightDirection).normalized * lightCheckRadius;
+    //    else
+    //        up = Vector3.Cross(transform.right, _lightDirection).normalized * lightCheckRadius;
 
-        Vector3 right = Vector3.Cross(up, _lightDirection).normalized * lightCheckRadius;
+    //    Vector3 right = Vector3.Cross(up, _lightDirection).normalized * lightCheckRadius;
 
-        return new List<Vector3>()
-        {
-            transform.position,
-            transform.position + up,
-            transform.position - up,
-            transform.position + right,
-            transform.position - right
-        };
-    }
+    //    return new List<Vector3>()
+    //    {
+    //        transform.position,
+    //        transform.position + up,
+    //        transform.position - up,
+    //        transform.position + right,
+    //        transform.position - right
+    //    };
+    //}
 
     // TODO: REMOVE? debugging method for inspector
     public Info<List<Vector3>, List<Vector3>, List<bool>> GetRaycastInfo()
