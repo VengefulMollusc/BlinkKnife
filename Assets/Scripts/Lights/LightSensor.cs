@@ -7,7 +7,6 @@ public class LightSensor : MonoBehaviour
     private static float sunCheckRaycastLength = 200f;
 
     [SerializeField] private bool useLitPercent = false;
-    //public float lightCheckRadius = 0.5f;
     public bool useCustomLightCheckPoints;
     [SerializeField] private bool rotateLightCheckHorOnly;
     [SerializeField] private bool rotateLightCheckAllAxis;
@@ -15,7 +14,7 @@ public class LightSensor : MonoBehaviour
 
     private GameObject sunlightObject;
     private bool checkSunlight = true;
-    
+
     private float sunLitPercent;
     private float localLitPercent;
     private float overallLitPercent;
@@ -46,6 +45,13 @@ public class LightSensor : MonoBehaviour
      * determines overall lit percentage of object relative to sunlight and local light
      * Sends notification with current lit value
      */
+    /*
+     * TODO: Consider alternate solutions re: raycast efficiency
+     * one mention online of sweeptest being more efficient than ~3 or more raycasts.
+     * Could add sweeptest or something similar before raycasts?
+     * If nothing is hit we know we are fully lit.
+     * Still have to perform raycasts if hits something though - worst case more expensive.
+     */
     void CheckLights()
     {
         // raycast in opposite direction to sunlight direction for long distance
@@ -53,11 +59,9 @@ public class LightSensor : MonoBehaviour
         if (checkSunlight)
             CheckSunlight();
 
-        //isLit = isInSunlight || isInLocalLight;
         overallLitPercent = Mathf.Max(sunLitPercent, localLitPercent);
 
         // reset local light variable
-        //isInLocalLight = false;
         localLitPercent = 0f;
 
         // send notification of light status (for UI etc)
@@ -66,12 +70,22 @@ public class LightSensor : MonoBehaviour
 
     /*
      * Checks for sunlight at transform position and in a radius around there
+     * 
+     * NOTE: Due to how this logic works, a non-percent sensor with custom points does not 
+     *      need to include the base transform position in the list of custom points
+     *      (It's checked first anyway)
      */
     private void CheckSunlight()
     {
         // TODO: THIS IS THE SIMPLIFIED LOGIC - commenting out for testing
-        //int litCount = 0;
         //Vector3 sunLightDir = sunlightObject.transform.forward;
+        //if (!useLitPercent && !Physics.Raycast(transform.position, -sunLightDir, sunCheckRaycastLength, raycastMask))
+        //{
+        //    // If percent doesn't matter, check position first to save time
+        //    sunLitPercent = 1f;
+        //    return;
+        //}
+        //int litCount = 0;
         //foreach (Vector3 point in GetLightCheckPoints(sunLightDir))
         //{
         //    if (!Physics.Raycast(point, -sunLightDir, sunCheckRaycastLength, raycastMask))
@@ -123,8 +137,8 @@ public class LightSensor : MonoBehaviour
         // If no custom points are specified, return just the object position
         // - mainly for small/simple objects
         if (!useCustomLightCheckPoints || customLightCheckPoints.Count == 0)
-            return new List<Vector3>(){transform.position};
-            //return GetDefaultLightCheckPoints(_lightDirection);
+            return new List<Vector3>() { transform.position };
+        //return GetDefaultLightCheckPoints(_lightDirection);
 
         // return custom points rotated according to the light direction
         // - for cylindrical/symmetrical objects
@@ -144,7 +158,6 @@ public class LightSensor : MonoBehaviour
      */
     private List<Vector3> GetRotatedPoints(Vector3 _lightDirection)
     {
-        // return rotated custom points
         List<Vector3> rotatedPoints = new List<Vector3>();
         if (rotateLightCheckAllAxis)
         {
@@ -155,7 +168,7 @@ public class LightSensor : MonoBehaviour
         }
         else
         {
-            // rotate only around vertical axis
+            // Rotate only around vertical axis
             Vector3 flatDir = Vector3.ProjectOnPlane(-_lightDirection, transform.up);
             Quaternion horRot = Quaternion.FromToRotation(transform.forward, flatDir);
             foreach (Vector3 point in customLightCheckPoints)
@@ -166,7 +179,7 @@ public class LightSensor : MonoBehaviour
 
     /*
      * returns a list of points arranged in a circle and rotated to face the light.
-     * Used by default when no custom points are defined
+     * (was) used by default when no custom points are defined
      */
     //private List<Vector3> GetDefaultLightCheckPoints(Vector3 _lightDirection)
     //{
@@ -225,7 +238,7 @@ public class LightSensor : MonoBehaviour
     }
 
     // called by LightSource objects when sensor is lit by the object
-    public void LightObject(float _litPercent)
+    public void LightObject(float _litPercent = 1f)
     {
         if (_litPercent > localLitPercent)
             localLitPercent = _litPercent;

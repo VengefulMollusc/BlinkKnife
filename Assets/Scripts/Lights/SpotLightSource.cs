@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpotLightSource : LightSource {
+public class SpotLightSource : LightSource
+{
 
     /*
      * Check light range for LightSensors that should be lit
@@ -24,10 +25,28 @@ public class SpotLightSource : LightSource {
             LightSensor sensor = hit.transform.gameObject.GetComponent<LightSensor>();
             if (sensor == null)
                 continue;
-            
+
+            bool useLitPercent = sensor.UseLitPercent();
+            RaycastHit hitInfo;
+
+            if (!useLitPercent)
+            {
+                // perform initial position check
+                Vector3 sensorPos = hit.transform.position;
+                float hitAngle = Vector3.Angle(transform.forward, sensorPos - transform.position);
+                if (hitAngle <= lightAngle && Physics.Raycast(sensorPos, sensorPos - transform.position, out hitInfo, lightRange, layerMask))
+                {
+                    if (hitInfo.transform == hit.transform)
+                    {
+                        sensor.LightObject();
+                        continue;
+                    }
+                }
+            }
+
             List<Vector3> points = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
             int litCount = 0;
-            bool useLitPercent = sensor.UseLitPercent();
+
             foreach (Vector3 point in points)
             {
                 // check if the point is within the spot angle
@@ -36,7 +55,6 @@ public class SpotLightSource : LightSource {
                 if (hitAngle > lightAngle)
                     continue;
 
-                RaycastHit hitInfo;
                 Ray ray = new Ray(transform.position, dir);
                 float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
                 if (Physics.Raycast(ray, out hitInfo, rayLength, layerMask, QueryTriggerInteraction.Ignore))
@@ -46,7 +64,7 @@ public class SpotLightSource : LightSource {
                     {
                         if (!useLitPercent)
                         {
-                            sensor.LightObject(1f);
+                            sensor.LightObject();
                             break;
                         }
                         litCount++;
@@ -59,32 +77,5 @@ public class SpotLightSource : LightSource {
                 sensor.LightObject((float)litCount / points.Count);
             }
         }
-
-        //Collider[] cols = Physics.OverlapSphere(transform.position, lightRange, layerMask,
-        //    QueryTriggerInteraction.Ignore);
-
-        //foreach (Collider col in cols)
-        //{
-        //    // Check object has a LightSensor
-        //    LightSensor sensor = col.gameObject.GetComponent<LightSensor>();
-        //    if (sensor == null)
-        //        continue;
-
-        //    Vector3 dir = col.transform.position - transform.position;
-
-        //    // Check object is within the cone's forward angle
-        //    if (Vector3.Angle(transform.forward, dir) > lightAngle)
-        //        continue;
-
-        //    // TODO: need good solution for partially lit objects
-        //    RaycastHit hitInfo;
-        //    Ray ray = new Ray(transform.position, dir);
-        //    if (Physics.Raycast(ray, out hitInfo, lightRange, layerMask, QueryTriggerInteraction.Ignore))
-        //    {
-        //        // only trigger 'lit' status if raycast hits the sensor object
-        //        if (hitInfo.transform == col.transform)
-        //            sensor.LightObject();
-        //    }
-        //}
     }
 }
