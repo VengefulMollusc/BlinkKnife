@@ -15,6 +15,7 @@ public class PointLightSource : LightSource
 
         foreach (Collider col in cols)
         {
+            // check object has a LightSensor
             LightSensor sensor = col.gameObject.GetComponent<LightSensor>();
             if (sensor == null)
                 continue;
@@ -26,8 +27,6 @@ public class PointLightSource : LightSource
             {
                 RaycastHit hitInfo;
                 Ray ray = new Ray(transform.position, point - transform.position);
-                // TODO: possibly also light object if raycast doesn't hit anything, as only part of collider may be in range
-                // ^ lightcheckpoints should solve this
                 if (Physics.Raycast(ray, out hitInfo, range, layerMask, QueryTriggerInteraction.Ignore))
                 {
                     // only trigger 'lit' status if raycast hits the sensor object

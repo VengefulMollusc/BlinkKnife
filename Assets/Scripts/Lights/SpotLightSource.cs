@@ -24,14 +24,13 @@ public class SpotLightSource : LightSource {
             LightSensor sensor = hit.transform.gameObject.GetComponent<LightSensor>();
             if (sensor == null)
                 continue;
-
             
             List<Vector3> points = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
             int litCount = 0;
             bool useLitPercent = sensor.UseLitPercent();
             foreach (Vector3 point in points)
             {
-                // TODO: tweak these checks, this is going to be really sensitive
+                // check if the point is within the spot angle
                 Vector3 dir = point - transform.position;
                 float hitAngle = Vector3.Angle(transform.forward, dir);
                 if (hitAngle > lightAngle)
