@@ -48,16 +48,13 @@ public class LightSensor : MonoBehaviour
         // if another object is hit then this gameobject is in shadow
         bool isInSunlight = checkSunlight && IsInSunlight();
 
-        // This is nowhere near as clear as the inspector method
-        //Debug.DrawRay(transform.position, -sunlightObject.transform.forward * ((isLit) ? sunCheckRaycastLength : hitInfo.distance), ((isLit) ? Color.green : Color.red));
-
         isLit = isInSunlight || isInLocalLight;
 
         // reset local light variable
         isInLocalLight = false;
 
         // send notification of light status (for UI etc)
-        this.PostNotification(LightStatusNotification, new Info<GameObject, bool>(gameObject, isLit));
+        this.PostNotification(LightStatusNotification, new Info<GameObject, float>(gameObject, litPercent));
     }
 
     /*
@@ -197,7 +194,7 @@ public class LightSensor : MonoBehaviour
     }
 
     // called by LightSource objects when sensor is within range
-    public void LightObject()
+    public void LightObject(float _litPercent)
     {
         isInLocalLight = true;
     }

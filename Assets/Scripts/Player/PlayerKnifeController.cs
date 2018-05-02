@@ -299,9 +299,9 @@ public class PlayerKnifeController : MonoBehaviour
 
     void OnLightStatusNotification(object sender, object args)
     {
-        Info<GameObject, bool> info = (Info<GameObject, bool>)args;
+        Info<GameObject, float> info = (Info<GameObject, float>)args;
         if (info.arg0 == player)
-            playerIsLit = info.arg1;
+            playerIsLit = info.arg1 > 0f;
     }
 
     // recharge warps based on time (if player is lit)

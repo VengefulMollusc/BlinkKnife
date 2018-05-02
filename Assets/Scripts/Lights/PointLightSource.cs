@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class PointLightSource : LightSource
 {
@@ -16,7 +17,9 @@ public class PointLightSource : LightSource
             if (sensor == null)
                 continue;
 
-            foreach (Vector3 point in sensor.GetLightCheckPoints(col.transform.position - transform.position))
+            int litCount = 0;
+            List<Vector3> points = sensor.GetLightCheckPoints(col.transform.position - transform.position);
+            foreach (Vector3 point in points)
             {
                 RaycastHit hitInfo;
                 Ray ray = new Ray(transform.position, point - transform.position);
@@ -27,10 +30,16 @@ public class PointLightSource : LightSource
                     // only trigger 'lit' status if raycast hits the sensor object
                     if (hitInfo.transform == col.transform)
                     {
-                        sensor.LightObject();
-                        break;
+                        //sensor.LightObject();
+                        //break;
+                        litCount++;
                     }
                 }
+            }
+
+            if (litCount > 0)
+            {
+                sensor.LightObject((float)litCount / points.Count);
             }
         }
     }

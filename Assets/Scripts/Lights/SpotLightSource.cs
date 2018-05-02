@@ -33,9 +33,9 @@ public class SpotLightSource : LightSource {
             //    continue;
             //}
 
-            List<Vector3> lightCheckPoints = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
-
-            foreach (Vector3 point in lightCheckPoints)
+            List<Vector3> points = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
+            int litCount = 0;
+            foreach (Vector3 point in points)
             {
                 // TODO: tweak these checks, this is going to be really sensitive
                 Vector3 dir = point - transform.position;
@@ -51,10 +51,16 @@ public class SpotLightSource : LightSource {
                     // only trigger 'lit' status if raycast hits the sensor object
                     if (hitInfo.transform == sensor.transform)
                     {
-                        sensor.LightObject();
-                        break;
+                        //sensor.LightObject();
+                        //break;
+                        litCount++;
                     }
                 }
+            }
+
+            if (litCount > 0)
+            {
+                sensor.LightObject((float)litCount / points.Count);
             }
         }
 
