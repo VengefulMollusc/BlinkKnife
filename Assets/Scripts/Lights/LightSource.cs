@@ -28,7 +28,7 @@ public class LightSource : MonoBehaviour {
 
     /*
      * Gets the intensity of the light at a given point.
-     * 
+     * Currently uses attenuated logic (may need to adapt this for different light types)
      * Assumes specific LightSource script has checked that this is within bounds of light
      */
     public virtual float GetIntensity(Vector3 _point)
@@ -37,6 +37,11 @@ public class LightSource : MonoBehaviour {
         if (distance > light.range)
             return 0f;
 
-        return light.intensity * distance / light.range;
+        float normalised = distance / light.range;
+        float attenuatedIntensity = 1f / (1f + (25f * normalised * normalised));
+
+        return attenuatedIntensity * light.intensity;
+
+        //return light.intensity * distance / light.range;
     }
 }
