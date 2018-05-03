@@ -139,35 +139,6 @@ public class LightSensor : MonoBehaviour
         }
         testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
         return 0f;
-
-
-        //// TODO: REMOVE
-        //// - Expanded logic to allow inspector script to draw/debug all lightCheckPoints and rays
-        //Vector3 sunLightDir = sunlightObject.transform.forward;
-        //List<Vector3> points = GetLightCheckPoints(sunLightDir);
-        //List<Vector3> rays = new List<Vector3>();
-        //List<bool> hits = new List<bool>();
-        //float currSunIntensity = sunLight.intensity;
-        //float tempIntensity = 0f;
-        //foreach (Vector3 point in points)
-        //{
-        //    RaycastHit hitInfo;
-        //    if (!Physics.Raycast(point, -sunLightDir, out hitInfo, sunCheckRaycastLength,
-        //        raycastMask))
-        //    {
-        //        rays.Add(-sunLightDir * sunCheckRaycastLength);
-        //        hits.Add(true);
-
-        //        tempIntensity = currSunIntensity;
-        //    }
-        //    else
-        //    {
-        //        rays.Add(-sunLightDir * hitInfo.distance);
-        //        hits.Add(false);
-        //    }
-        //}
-        //testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(points, rays, hits);
-        //return tempIntensity;
     }
 
     /*
