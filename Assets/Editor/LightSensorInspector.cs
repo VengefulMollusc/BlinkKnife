@@ -12,6 +12,7 @@ public class LightSensorInspector : Editor
     {
         LightSensor sensor = target as LightSensor;
 
+        // Draw test sunlight raycasts
         Info<List<Vector3>, List<Vector3>, List<bool>> testInfo = sensor.GetRaycastInfo();
         if (testInfo != null)
         {
@@ -37,6 +38,7 @@ public class LightSensorInspector : Editor
         DrawDefaultInspector();
         if (GUILayout.Button("Toggle LightCheckPoints"))
         {
+            // Toggles drawing of the object's lightCheckPoints
             drawLightCheckPoints = !drawLightCheckPoints;
             Debug.Log("Draw Light Check Points: " + drawLightCheckPoints);
         }

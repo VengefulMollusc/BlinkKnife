@@ -48,13 +48,6 @@ public class LightSensor : MonoBehaviour
      * determines overall lit percentage of object relative to sunlight and local light
      * Sends notification with current lit value
      */
-    /*
-     * TODO: Consider alternate solutions re: raycast efficiency
-     * one mention online of sweeptest being more efficient than ~3 or more raycasts.
-     * Could add sweeptest or something similar before raycasts?
-     * If nothing is hit we know we are fully lit.
-     * Still have to perform raycasts if hits something though - worst case more expensive.
-     */
     void CheckLights()
     {
         // raycast in opposite direction to sunlight direction for long distance
@@ -75,7 +68,6 @@ public class LightSensor : MonoBehaviour
      * 
      * NOTE: Due to how this logic works, custom points list does not 
      *      need to include the base transform position
-     *      (It's checked first anyway)
      */
     private float GetSunIntensity()
     {
@@ -197,23 +189,6 @@ public class LightSensor : MonoBehaviour
             return null;
 
         return testInfo;
-    }
-
-    /*
-     * returns true if the object is lit at all, regardless of percentage
-     */
-    public bool IsLit()
-    {
-        return overallIntensity > 0f;
-    }
-
-    /*
-     * returns the percentage of the object that is lit.
-     * Defined by the fraction of lightcheckpoints that are illuminated
-     */
-    public float GetLitIntensity()
-    {
-        return overallIntensity;
     }
 
     /*
