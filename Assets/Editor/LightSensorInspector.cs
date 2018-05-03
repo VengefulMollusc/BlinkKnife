@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,27 @@ public class LightSensorInspector : Editor
 {
     private bool drawLightCheckPoints = false;
     private float pointSize = 0.1f;
+    private string intensity = "Run scene to see intensity";
+
+    void OnEnable()
+    {
+        this.AddObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
+    }
+
+    void OnLightStatusNotification(object sender, object args)
+    {
+        LightSensor sensor = target as LightSensor;
+        Info<GameObject, float> info = (Info<GameObject, float>) args;
+        if (info.arg0.GetComponent<LightSensor>() == sensor)
+        {
+            intensity = info.arg1.ToString();
+        }
+    }
 
     void OnSceneGUI()
     {
@@ -42,5 +64,7 @@ public class LightSensorInspector : Editor
             drawLightCheckPoints = !drawLightCheckPoints;
             Debug.Log("Draw Light Check Points: " + drawLightCheckPoints);
         }
+        GUILayout.Label("Current light intensity:");
+        GUILayout.TextField(intensity);
     }
 }
