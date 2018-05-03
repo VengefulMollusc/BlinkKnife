@@ -97,32 +97,77 @@ public class LightSensor : MonoBehaviour
 
 
         // TODO: REMOVE
-        // - Expanded logic to allow inspector script to draw/debug all lightCheckPoints and rays
-        Vector3 sunLightDir = sunlightObject.transform.forward;
-        List<Vector3> points = GetLightCheckPoints(sunLightDir);
+        // Same logic as above, but returns scene view test variables based on all performed raycasts
+        List<Vector3> testPoints = new List<Vector3>();
         List<Vector3> rays = new List<Vector3>();
         List<bool> hits = new List<bool>();
+        Vector3 raycastDir = -sunlightObject.transform.forward;
         float currSunIntensity = sunLight.intensity;
-        float tempIntensity = 0f;
+        RaycastHit hitInfo;
+        testPoints.Add(transform.position);
+        if (!Physics.Raycast(transform.position, raycastDir, out hitInfo, sunCheckRaycastLength, raycastMask))
+        {
+            rays.Add(raycastDir * sunCheckRaycastLength);
+            hits.Add(true);
+            testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+            // check position first to save time
+            return currSunIntensity;
+        }
+        rays.Add(raycastDir * hitInfo.distance);
+        hits.Add(false);
+
+        // if no custom points given, go no further
+        if (!UseCustomPoints())
+        {
+            testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+            return 0f;
+        }
+
+        List<Vector3> points = GetLightCheckPoints(-raycastDir);
         foreach (Vector3 point in points)
         {
-            RaycastHit hitInfo;
-            if (!Physics.Raycast(point, -sunLightDir, out hitInfo, sunCheckRaycastLength,
-                raycastMask))
+            testPoints.Add(point);
+            if (!Physics.Raycast(point, raycastDir, out hitInfo, sunCheckRaycastLength, raycastMask))
             {
-                rays.Add(-sunLightDir * sunCheckRaycastLength);
+                rays.Add(raycastDir * sunCheckRaycastLength);
                 hits.Add(true);
-
-                tempIntensity = currSunIntensity;
+                testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+                return currSunIntensity;
             }
-            else
-            {
-                rays.Add(-sunLightDir * hitInfo.distance);
-                hits.Add(false);
-            }
+            rays.Add(raycastDir * hitInfo.distance);
+            hits.Add(false);
         }
-        testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(points, rays, hits);
-        return tempIntensity;
+        testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+        return 0f;
+
+
+        //// TODO: REMOVE
+        //// - Expanded logic to allow inspector script to draw/debug all lightCheckPoints and rays
+        //Vector3 sunLightDir = sunlightObject.transform.forward;
+        //List<Vector3> points = GetLightCheckPoints(sunLightDir);
+        //List<Vector3> rays = new List<Vector3>();
+        //List<bool> hits = new List<bool>();
+        //float currSunIntensity = sunLight.intensity;
+        //float tempIntensity = 0f;
+        //foreach (Vector3 point in points)
+        //{
+        //    RaycastHit hitInfo;
+        //    if (!Physics.Raycast(point, -sunLightDir, out hitInfo, sunCheckRaycastLength,
+        //        raycastMask))
+        //    {
+        //        rays.Add(-sunLightDir * sunCheckRaycastLength);
+        //        hits.Add(true);
+
+        //        tempIntensity = currSunIntensity;
+        //    }
+        //    else
+        //    {
+        //        rays.Add(-sunLightDir * hitInfo.distance);
+        //        hits.Add(false);
+        //    }
+        //}
+        //testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(points, rays, hits);
+        //return tempIntensity;
     }
 
     /*
