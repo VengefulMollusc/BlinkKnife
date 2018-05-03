@@ -84,7 +84,7 @@ public class LightSensor : MonoBehaviour
         //// if no custom points given, go no further
         //if (!UseCustomPoints())
         //    return 0f;
-        
+
         //List<Vector3> points = GetLightCheckPoints(-raycastDir);
         //foreach (Vector3 point in points)
         //{
@@ -125,6 +125,10 @@ public class LightSensor : MonoBehaviour
 
     /*
      * returns a list of points to check for this LightSensor
+     */
+    /*
+     * TODO: try this with code to order points front-to-back along lightDirection?
+     * This may not actually affect anything enough to justify the cost
      */
     public List<Vector3> GetLightCheckPoints(Vector3 _lightDirection)
     {
