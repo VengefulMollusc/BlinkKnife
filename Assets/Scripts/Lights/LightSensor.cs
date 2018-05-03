@@ -29,13 +29,14 @@ public class LightSensor : MonoBehaviour
     void OnEnable()
     {
         sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
-        sunLight = sunlightObject.GetComponent<Light>();
 
         if (sunlightObject == null)
         {
             Debug.LogError("No Sunlight object found");
             checkSunlight = false;
         }
+        else
+            sunLight = sunlightObject.GetComponent<Light>();
 
         sunIntensity = localIntensity = 0f;
 
