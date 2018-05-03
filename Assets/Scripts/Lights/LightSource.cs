@@ -26,8 +26,17 @@ public class LightSource : MonoBehaviour {
         CancelInvoke("LightSensorCheck");
     }
 
+    /*
+     * Gets the intensity of the light at a given point.
+     * 
+     * Assumes specific LightSource script has checked that this is within bounds of light
+     */
     public virtual float GetIntensity(Vector3 _point)
     {
-        return 1f;
+        float distance = Vector3.Distance(transform.position, _point);
+        if (distance > light.range)
+            return 0f;
+
+        return light.intensity * distance / light.range;
     }
 }
