@@ -180,6 +180,7 @@ public class PlayerKnifeController : MonoBehaviour
     {
         this.RemoveObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
         this.RemoveObserver(EndWarp, TransitionCameraController.WarpEndNotification);
+        this.RemoveObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
         this.RemoveObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
     }
 

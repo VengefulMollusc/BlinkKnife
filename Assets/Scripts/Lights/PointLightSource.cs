@@ -34,6 +34,10 @@ public class PointLightSource : LightSource
             if (!sensor.UseCustomPoints())
                 continue;
 
+            // TODO: This section will finish when the first lit point is found. 
+            // Thus the intensity returned will be the first one found, rather then the highest of all points hit.
+            // Unsure what ways around this there might be without constantly needing to check every point.
+            // TODO: Somehow order points by distance from light????
             List<Vector3> points = sensor.GetLightCheckPoints(col.transform.position - transform.position);
             foreach (Vector3 point in points)
             {

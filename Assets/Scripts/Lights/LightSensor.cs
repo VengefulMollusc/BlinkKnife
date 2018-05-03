@@ -102,9 +102,9 @@ public class LightSensor : MonoBehaviour
         List<bool> hits = new List<bool>();
         float currSunIntensity = sunlightObject.GetComponent<Light>().intensity;
         float tempIntensity = 0f;
-        RaycastHit hitInfo;
         foreach (Vector3 point in points)
         {
+            RaycastHit hitInfo;
             if (!Physics.Raycast(point, -sunLightDir, out hitInfo, sunCheckRaycastLength,
                 raycastMask))
             {
@@ -133,7 +133,7 @@ public class LightSensor : MonoBehaviour
         // TODO: TEST - THIS SHOULD NEVER TRIGGER
         if (!useCustomLightCheckPoints || customLightCheckPoints.Count == 0)
         {
-            Debug.LogError("default LightCheckPoint generated for object that should not have any custom points");
+            Debug.LogError("GetLightCheckPoints called for object that has no custom points");
             return new List<Vector3>() { transform.position };
             //return GetDefaultLightCheckPoints(_lightDirection);
         }
