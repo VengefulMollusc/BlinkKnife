@@ -12,6 +12,7 @@ public class LightSensor : MonoBehaviour
     [SerializeField] private List<Vector3> customLightCheckPoints;
 
     private GameObject sunlightObject;
+    private Light sunLight;
     private bool checkSunlight = true;
 
     private float sunIntensity;
@@ -28,6 +29,7 @@ public class LightSensor : MonoBehaviour
     void OnEnable()
     {
         sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
+        sunLight = sunlightObject.GetComponent<Light>();
 
         if (sunlightObject == null)
         {
@@ -76,7 +78,7 @@ public class LightSensor : MonoBehaviour
 
         //// TODO: THIS IS THE SIMPLIFIED LOGIC - comment out for testing
         //Vector3 raycastDir = -sunlightObject.transform.forward;
-        //float currSunIntensity = sunlightObject.GetComponent<Light>().intensity;
+        //float currSunIntensity = sunLight.intensity;
         //if (!Physics.Raycast(transform.position, raycastDir, sunCheckRaycastLength, raycastMask))
         //    // check position first to save time
         //    return currSunIntensity;
@@ -100,7 +102,7 @@ public class LightSensor : MonoBehaviour
         List<Vector3> points = GetLightCheckPoints(sunLightDir);
         List<Vector3> rays = new List<Vector3>();
         List<bool> hits = new List<bool>();
-        float currSunIntensity = sunlightObject.GetComponent<Light>().intensity;
+        float currSunIntensity = sunLight.intensity;
         float tempIntensity = 0f;
         foreach (Vector3 point in points)
         {
