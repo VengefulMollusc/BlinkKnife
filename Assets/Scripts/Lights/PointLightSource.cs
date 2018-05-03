@@ -8,7 +8,8 @@ public class PointLightSource : LightSource
      */
     public override void LightSensorCheck()
     {
-        Collider[] cols = Physics.OverlapSphere(transform.position, light.range, layerMask,
+        Vector3 position = transform.position;
+        Collider[] cols = Physics.OverlapSphere(position, light.range, layerMask,
             QueryTriggerInteraction.Ignore);
 
         float range = light.range;
@@ -20,8 +21,9 @@ public class PointLightSource : LightSource
             if (sensor == null)
                 continue;
 
+            Vector3 colPos = col.transform.position;
             RaycastHit hitInfo;
-            if (Physics.Raycast(col.transform.position, col.transform.position - transform.position, out hitInfo, range, layerMask))
+            if (Physics.Raycast(colPos, colPos - position, out hitInfo, range, layerMask))
             {
                 // perform initial position check
                 if (hitInfo.transform == col.transform)
@@ -38,10 +40,10 @@ public class PointLightSource : LightSource
             // Thus the intensity returned will be the first one found, rather then the highest of all points hit.
             // Unsure what ways around this there might be without constantly needing to check every point.
             // TODO: Somehow order points by distance from light????
-            List<Vector3> points = sensor.GetLightCheckPoints(col.transform.position - transform.position);
+            List<Vector3> points = sensor.GetLightCheckPoints(colPos - position);
             foreach (Vector3 point in points)
             {
-                Ray ray = new Ray(transform.position, point - transform.position);
+                Ray ray = new Ray(position, point - position);
                 if (Physics.Raycast(ray, out hitInfo, range, layerMask, QueryTriggerInteraction.Ignore))
                 {
                     // only trigger 'lit' status if raycast hits the sensor object

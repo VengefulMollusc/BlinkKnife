@@ -174,8 +174,9 @@ public class LightSensor : MonoBehaviour
         {
             // Rotate around all axes
             Quaternion rot = Quaternion.LookRotation(-_lightDirection, transform.up);
+            Vector3 basePos = transform.position;
             foreach (Vector3 point in customLightCheckPoints)
-                rotatedPoints.Add(transform.position + (rot * point));
+                rotatedPoints.Add(basePos + (rot * point));
         }
         else
         {

@@ -9,12 +9,14 @@ public class SpotLightSource : LightSource
      */
     public override void LightSensorCheck()
     {
+        Vector3 position = transform.position;
+        Vector3 forward = transform.forward;
         float lightAngle = light.spotAngle * 0.5f;
         float lightRange = light.range;
         float radius = Mathf.Tan(lightAngle) * lightRange;
         float coneHyp = Mathf.Sqrt(lightRange * lightRange + radius * radius);
 
-        Ray sphereCastRay = new Ray(transform.position, transform.forward);
+        Ray sphereCastRay = new Ray(position, forward);
         RaycastHit[] hits = Physics.SphereCastAll(sphereCastRay, radius, lightRange, layerMask,
             QueryTriggerInteraction.Ignore);
 
@@ -28,8 +30,8 @@ public class SpotLightSource : LightSource
             RaycastHit hitInfo;
             // perform initial position check
             Vector3 sensorPos = hit.transform.position;
-            float hitAngle = Vector3.Angle(transform.forward, sensorPos - transform.position);
-            if (hitAngle <= lightAngle && Physics.Raycast(sensorPos, sensorPos - transform.position, out hitInfo, lightRange, layerMask))
+            float hitAngle = Vector3.Angle(forward, sensorPos - position);
+            if (hitAngle <= lightAngle && Physics.Raycast(sensorPos, sensorPos - position, out hitInfo, lightRange, layerMask))
             {
                 if (hitInfo.transform == hit.transform)
                 {
@@ -45,16 +47,16 @@ public class SpotLightSource : LightSource
             // Thus the intensity returned will be the first one found, rather then the highest of all points hit.
             // Unsure what ways around this there might be without constantly needing to check every point.
             // TODO: Somehow order points by distance from light????
-            List<Vector3> points = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
+            List<Vector3> points = sensor.GetLightCheckPoints(sensorPos - position);
             foreach (Vector3 point in points)
             {
                 // check if the point is within the spot angle
-                Vector3 dir = point - transform.position;
-                hitAngle = Vector3.Angle(transform.forward, dir);
+                Vector3 dir = point - position;
+                hitAngle = Vector3.Angle(forward, dir);
                 if (hitAngle > lightAngle)
                     continue;
 
-                Ray ray = new Ray(transform.position, dir);
+                Ray ray = new Ray(position, dir);
                 float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
                 if (Physics.Raycast(ray, out hitInfo, rayLength, layerMask, QueryTriggerInteraction.Ignore))
                 {
