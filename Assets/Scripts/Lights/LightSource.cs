@@ -25,4 +25,9 @@ public class LightSource : MonoBehaviour {
         Debug.LogError("LightSensorCheck must be overridden");
         CancelInvoke("LightSensorCheck");
     }
+
+    public virtual float GetIntensity(Vector3 _point)
+    {
+        return 1f;
+    }
 }

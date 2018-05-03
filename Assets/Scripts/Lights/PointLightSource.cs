@@ -20,24 +20,19 @@ public class PointLightSource : LightSource
             if (sensor == null)
                 continue;
 
-            int litCount = 0;
-            bool useLitPercent = sensor.UseLitPercent();
             RaycastHit hitInfo;
-            if (!useLitPercent)
+            if (Physics.Raycast(col.transform.position, col.transform.position - transform.position, out hitInfo, range, layerMask))
             {
-                if (Physics.Raycast(col.transform.position, col.transform.position - transform.position, out hitInfo, range, layerMask))
+                // perform initial position check
+                if (hitInfo.transform == col.transform)
                 {
-                    // perform initial position check
-                    if (hitInfo.transform == col.transform)
-                    {
-                        sensor.LightObject();
-                        continue;
-                    }
-                }
-                // if no custom points defined, can just skip next bit of logic
-                if (!sensor.UseCustomPoints())
+                    sensor.LightObject(GetIntensity(hitInfo.point));
                     continue;
+                }
             }
+            // if no custom points defined, can just skip next bit of logic
+            if (!sensor.UseCustomPoints())
+                continue;
 
             List<Vector3> points = sensor.GetLightCheckPoints(col.transform.position - transform.position);
             foreach (Vector3 point in points)
@@ -48,19 +43,10 @@ public class PointLightSource : LightSource
                     // only trigger 'lit' status if raycast hits the sensor object
                     if (hitInfo.transform == col.transform)
                     {
-                        if (!useLitPercent)
-                        {
-                            sensor.LightObject();
-                            break;
-                        }
-                        litCount++;
+                        sensor.LightObject(GetIntensity(hitInfo.point));
+                        break;
                     }
                 }
-            }
-
-            if (useLitPercent && litCount > 0) // the useLitPercent check here should be redundant
-            {
-                sensor.LightObject((float)litCount / points.Count);
             }
         }
     }

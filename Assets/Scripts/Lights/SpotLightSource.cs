@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpotLightSource : LightSource
 {
-
     /*
      * Check light range for LightSensors that should be lit
      */
@@ -26,35 +25,28 @@ public class SpotLightSource : LightSource
             if (sensor == null)
                 continue;
 
-            bool useLitPercent = sensor.UseLitPercent();
             RaycastHit hitInfo;
-
-            if (!useLitPercent)
+            // perform initial position check
+            Vector3 sensorPos = hit.transform.position;
+            float hitAngle = Vector3.Angle(transform.forward, sensorPos - transform.position);
+            if (hitAngle <= lightAngle && Physics.Raycast(sensorPos, sensorPos - transform.position, out hitInfo, lightRange, layerMask))
             {
-                // perform initial position check
-                Vector3 sensorPos = hit.transform.position;
-                float hitAngle = Vector3.Angle(transform.forward, sensorPos - transform.position);
-                if (hitAngle <= lightAngle && Physics.Raycast(sensorPos, sensorPos - transform.position, out hitInfo, lightRange, layerMask))
+                if (hitInfo.transform == hit.transform)
                 {
-                    if (hitInfo.transform == hit.transform)
-                    {
-                        sensor.LightObject();
-                        continue;
-                    }
-                }
-                // if no custom points defined, can just skip expanded check logic
-                if (!sensor.UseCustomPoints())
+                    sensor.LightObject(GetIntensity(hitInfo.point));
                     continue;
+                }
             }
+            // if no custom points defined, can just skip expanded check logic
+            if (!sensor.UseCustomPoints())
+                continue;
 
             List<Vector3> points = sensor.GetLightCheckPoints(sensor.transform.position - transform.position);
-            int litCount = 0;
-
             foreach (Vector3 point in points)
             {
                 // check if the point is within the spot angle
                 Vector3 dir = point - transform.position;
-                float hitAngle = Vector3.Angle(transform.forward, dir);
+                hitAngle = Vector3.Angle(transform.forward, dir);
                 if (hitAngle > lightAngle)
                     continue;
 
@@ -65,19 +57,10 @@ public class SpotLightSource : LightSource
                     // only trigger 'lit' status if raycast hits the sensor object
                     if (hitInfo.transform == sensor.transform)
                     {
-                        if (!useLitPercent)
-                        {
-                            sensor.LightObject();
-                            break;
-                        }
-                        litCount++;
+                        sensor.LightObject(GetIntensity(hitInfo.point));
+                        break;
                     }
                 }
-            }
-
-            if (useLitPercent && litCount > 0) // the useLitPercent check here should be redundant
-            {
-                sensor.LightObject((float)litCount / points.Count);
             }
         }
     }
