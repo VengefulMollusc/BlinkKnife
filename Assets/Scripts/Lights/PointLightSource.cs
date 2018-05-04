@@ -110,15 +110,24 @@ public class PointLightSource : LightSource
             List<Vector3> points = sensor.GetLightCheckPoints(colPos - position);
             foreach (Vector3 point in points)
             {
+                testPoints.Add(position);
                 Ray ray = new Ray(position, point - position);
                 if (Physics.Raycast(ray, out hitInfo, range, layerMask, QueryTriggerInteraction.Ignore))
                 {
+                    rays.Add((point - position).normalized * hitInfo.distance);
                     // only trigger 'lit' status if raycast hits the sensor object
                     if (hitInfo.transform == col.transform)
                     {
+                        hits.Add(true);
                         sensor.LightObject(GetIntensity(hitInfo.point));
                         break;
                     }
+                    hits.Add(false);
+                }
+                else
+                {
+                    rays.Add((point - position).normalized * range);
+                    hits.Add(false);
                 }
             }
         }

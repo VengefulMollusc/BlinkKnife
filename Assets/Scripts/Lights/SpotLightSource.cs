@@ -136,7 +136,7 @@ public class SpotLightSource : LightSource
                 if (hitAngle > lightAngle)
                     continue;
 
-                testPoints.Add(point);
+                testPoints.Add(position);
                 Ray ray = new Ray(position, dir);
                 float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
                 if (Physics.Raycast(ray, out hitInfo, rayLength, layerMask, QueryTriggerInteraction.Ignore))
@@ -153,7 +153,7 @@ public class SpotLightSource : LightSource
                 }
                 else
                 {
-                    rays.Add(dir.normalized * lightRange);
+                    rays.Add(dir.normalized * rayLength);
                     rayHits.Add(false);
                 }
             }
