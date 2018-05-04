@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 135882564489976058}
   - component: {fileID: 54694238066598660}
   - component: {fileID: 114959101962075814}
-  - component: {fileID: 114093840318723022}
   - component: {fileID: 114848270002936760}
   m_Layer: 8
   m_Name: BlinkKnife
@@ -489,18 +488,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114093840318723022
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1278214883471884}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a76f74cb631444ebcfe587ed5906ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gravityModifier: 0.4
 --- !u!114 &114248397995965664
 MonoBehaviour:
   m_ObjectHideFlags: 1
