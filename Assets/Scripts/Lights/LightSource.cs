@@ -10,6 +10,10 @@ public class LightSource : MonoBehaviour {
     
     public LayerMask layerMask;
 
+    // TODO: remove
+    [HideInInspector]
+    public Info<List<Vector3>, List<Vector3>, List<bool>> testRaycasts;
+
     public virtual void OnEnable()
     {
         light = GetComponent<Light>();
@@ -43,5 +47,11 @@ public class LightSource : MonoBehaviour {
         return attenuatedIntensity * light.intensity;
 
         //return light.intensity * distance / light.range;
+    }
+
+    // TODO: remove - test method
+    public virtual Info<List<Vector3>, List<Vector3>, List<bool>> GetTestRaycasts()
+    {
+        return testRaycasts;
     }
 }
