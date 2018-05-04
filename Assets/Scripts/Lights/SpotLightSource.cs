@@ -71,7 +71,6 @@ public class SpotLightSource : LightSource
     //    }
     //}
 
-
     // TODO: remove
     public override void LightSensorCheck()
     {
@@ -83,13 +82,25 @@ public class SpotLightSource : LightSource
         Vector3 forward = transform.forward;
         float lightAngle = light.spotAngle * 0.5f;
         float lightRange = light.range;
-        float radius = Mathf.Tan(lightAngle) * lightRange;
+        float radius = Mathf.Tan(lightAngle * Mathf.Deg2Rad) * lightRange;
         float coneHyp = Mathf.Sqrt(lightRange * lightRange + radius * radius);
 
         Ray sphereCastRay = new Ray(position, forward);
         RaycastHit[] hits = Physics.SphereCastAll(sphereCastRay, radius, lightRange, layerMask,
             QueryTriggerInteraction.Ignore);
 
+        //testPoints.Add(position);
+        //rays.Add(forward * radius);
+        //rayHits.Add(false);
+
+        //testPoints.Add(position);
+        //rays.Add(transform.right * radius);
+        //rayHits.Add(false);
+
+        //testPoints.Add(position);
+        //rays.Add(transform.up * radius);
+        //rayHits.Add(false);
+        
         foreach (RaycastHit hit in hits)
         {
             // Check object has a LightSensor

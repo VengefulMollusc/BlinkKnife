@@ -32,7 +32,7 @@ public class LightSensor : MonoBehaviour
 
         if (sunlightObject == null)
         {
-            Debug.LogError("No Sunlight object found");
+            Debug.Log("No Sunlight object found");
             checkSunlight = false;
         }
         else
