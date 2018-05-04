@@ -581,17 +581,17 @@ MonoBehaviour:
   rotateLightCheckHorOnly: 1
   rotateLightCheckAllAxis: 0
   customLightCheckPoints:
-  - {x: -0.45, y: 0, z: 0}
-  - {x: 0.45, y: 0, z: 0}
+  - {x: 0, y: 0.5, z: 0}
+  - {x: 0.4, y: 0, z: 0}
+  - {x: -0.4, y: 0, z: 0}
   - {x: 0, y: 0.9, z: 0}
   - {x: 0, y: -0.9, z: 0}
-  - {x: 0.3, y: 0.7, z: 0}
   - {x: -0.3, y: 0.7, z: 0}
-  - {x: 0.3, y: -0.7, z: 0}
+  - {x: 0.3, y: 0.7, z: 0}
   - {x: -0.3, y: -0.7, z: 0}
-  - {x: 0, y: 0.5, z: 0}
-  - {x: 0, y: -0.7, z: 0.4}
-  - {x: 0, y: 0.7, z: -0.4}
+  - {x: 0.3, y: -0.7, z: 0}
+  - {x: 0, y: 0.7, z: -0.35}
+  - {x: 0, y: -0.7, z: 0.35}
   raycastMask:
     serializedVersion: 2
     m_Bits: 16385
