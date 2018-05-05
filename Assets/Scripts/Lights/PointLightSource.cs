@@ -9,10 +9,9 @@ public class PointLightSource : LightSource
     //public override void LightSensorCheck()
     //{
     //    Vector3 position = transform.position;
-    //    Collider[] cols = Physics.OverlapSphere(position, light.range, layerMask,
-    //        QueryTriggerInteraction.Ignore);
-
     //    float range = light.range;
+    //    Collider[] cols = Physics.OverlapSphere(position, range, layerMask,
+    //        QueryTriggerInteraction.Ignore);
 
     //    foreach (Collider col in cols)
     //    {
@@ -64,10 +63,9 @@ public class PointLightSource : LightSource
         List<bool> hits = new List<bool>();
 
         Vector3 position = transform.position;
-        Collider[] cols = Physics.OverlapSphere(position, light.range, layerMask,
-            QueryTriggerInteraction.Ignore);
-
         float range = light.range;
+        Collider[] cols = Physics.OverlapSphere(position, range, layerMask,
+            QueryTriggerInteraction.Ignore);
 
         foreach (Collider col in cols)
         {

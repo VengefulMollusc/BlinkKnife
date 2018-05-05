@@ -31,7 +31,8 @@ public class SpotLightSource : LightSource
     //        // perform initial position check
     //        Vector3 sensorPos = hit.transform.position;
     //        float hitAngle = Vector3.Angle(forward, sensorPos - position);
-    //        if (hitAngle <= lightAngle && Physics.Raycast(sensorPos, sensorPos - position, out hitInfo, lightRange, layerMask))
+    //        float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
+    //        if (hitAngle <= lightAngle && Physics.Raycast(position, sensorPos - position, out hitInfo, rayLength, layerMask))
     //        {
     //            if (hitInfo.transform == hit.transform)
     //            {
@@ -57,7 +58,7 @@ public class SpotLightSource : LightSource
     //                continue;
 
     //            Ray ray = new Ray(position, dir);
-    //            float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
+    //            rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
     //            if (Physics.Raycast(ray, out hitInfo, rayLength, layerMask, QueryTriggerInteraction.Ignore))
     //            {
     //                // only trigger 'lit' status if raycast hits the sensor object
@@ -85,50 +86,42 @@ public class SpotLightSource : LightSource
         float radius = Mathf.Tan(lightAngle * Mathf.Deg2Rad) * lightRange;
         float coneHyp = Mathf.Sqrt(lightRange * lightRange + radius * radius);
 
-        Ray sphereCastRay = new Ray(position, forward);
-        RaycastHit[] hits = Physics.SphereCastAll(sphereCastRay, radius, lightRange, layerMask,
+        Collider[] cols = Physics.OverlapCapsule(position + (forward * radius), position + (forward * lightRange), radius, layerMask,
             QueryTriggerInteraction.Ignore);
 
-        //testPoints.Add(position);
-        //rays.Add(forward * radius);
-        //rayHits.Add(false);
-
-        //testPoints.Add(position);
-        //rays.Add(transform.right * radius);
-        //rayHits.Add(false);
-
-        //testPoints.Add(position);
-        //rays.Add(transform.up * radius);
-        //rayHits.Add(false);
-        
-        foreach (RaycastHit hit in hits)
+        foreach (Collider col in cols)
         {
             // Check object has a LightSensor
-            LightSensor sensor = hit.transform.gameObject.GetComponent<LightSensor>();
+            LightSensor sensor = col.GetComponent<LightSensor>();
             if (sensor == null)
                 continue;
 
             RaycastHit hitInfo;
             // perform initial position check
-            Vector3 sensorPos = hit.transform.position;
+            Vector3 sensorPos = sensor.transform.position;
             float hitAngle = Vector3.Angle(forward, sensorPos - position);
+            float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
             testPoints.Add(position);
-            if (hitAngle <= lightAngle && Physics.Raycast(sensorPos, sensorPos - position, out hitInfo, lightRange,
+            if (hitAngle <= lightAngle)
+            {
+                if (Physics.Raycast(position, sensorPos - position, out hitInfo, rayLength,
                     layerMask))
-            {
-                rays.Add((sensorPos - position).normalized * hitInfo.distance);
-                if (hitInfo.transform == hit.transform)
                 {
-                    rayHits.Add(true);
-                    sensor.LightObject(GetIntensity(hitInfo.point));
-                    continue;
+                    rays.Add((sensorPos - position).normalized * hitInfo.distance);
+                    if (hitInfo.transform == sensor.transform)
+                    {
+                        rayHits.Add(true);
+                        sensor.LightObject(GetIntensity(hitInfo.point));
+                        continue;
+                    }
+                    rayHits.Add(false);
                 }
-                rayHits.Add(false);
-            }
-            else
-            {
-                rays.Add((sensorPos - position).normalized * lightRange);
-                rayHits.Add(false);
+                else
+                {
+                    rays.Add((sensorPos - position).normalized * rayLength);
+                    rayHits.Add(false);
+                    //continue;
+                }
             }
             // if no custom points defined, can just skip expanded check logic
             if (!sensor.UseCustomPoints())
@@ -149,7 +142,7 @@ public class SpotLightSource : LightSource
 
                 testPoints.Add(position);
                 Ray ray = new Ray(position, dir);
-                float rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
+                rayLength = Utilities.MapValues(hitAngle, 0f, lightAngle, lightRange, coneHyp);
                 if (Physics.Raycast(ray, out hitInfo, rayLength, layerMask, QueryTriggerInteraction.Ignore))
                 {
                     rays.Add(dir.normalized * hitInfo.distance);
