@@ -78,68 +78,68 @@ public class LightSensor : MonoBehaviour
             return 0f;
 
         //// TODO: THIS IS THE SIMPLIFIED LOGIC - comment out for testing
-        //Vector3 raycastDir = -sunlightObject.transform.forward;
-        //float currSunIntensity = sunLight.intensity;
-        //if (!Physics.Raycast(transform.position, raycastDir, sunCheckRaycastLength, raycastMask))
-        //    // check position first to save time
-        //    return currSunIntensity;
-
-        //// if no custom points given, go no further
-        //if (!UseCustomPoints())
-        //    return 0f;
-
-        //List<Vector3> points = GetLightCheckPoints(-raycastDir);
-        //foreach (Vector3 point in points)
-        //{
-        //    if (!Physics.Raycast(point, raycastDir, sunCheckRaycastLength, raycastMask))
-        //        return currSunIntensity;
-        //}
-        //return 0f;
-
-
-        // TODO: REMOVE
-        // Same logic as above, but returns scene view test variables based on all performed raycasts
-        List<Vector3> testPoints = new List<Vector3>();
-        List<Vector3> rays = new List<Vector3>();
-        List<bool> hits = new List<bool>();
         Vector3 raycastDir = -sunlightObject.transform.forward;
         float currSunIntensity = sunLight.intensity;
-        RaycastHit hitInfo;
-        testPoints.Add(transform.position);
-        if (!Physics.Raycast(transform.position, raycastDir, out hitInfo, sunCheckRaycastLength, raycastMask))
-        {
-            rays.Add(raycastDir * sunCheckRaycastLength);
-            hits.Add(true);
-            testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+        if (!Physics.Raycast(transform.position, raycastDir, sunCheckRaycastLength, raycastMask))
             // check position first to save time
             return currSunIntensity;
-        }
-        rays.Add(raycastDir * hitInfo.distance);
-        hits.Add(false);
 
         // if no custom points given, go no further
         if (!UseCustomPoints())
-        {
-            testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
             return 0f;
-        }
 
         List<Vector3> points = GetLightCheckPoints(-raycastDir);
         foreach (Vector3 point in points)
         {
-            testPoints.Add(point);
-            if (!Physics.Raycast(point, raycastDir, out hitInfo, sunCheckRaycastLength, raycastMask))
-            {
-                rays.Add(raycastDir * sunCheckRaycastLength);
-                hits.Add(true);
-                testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+            if (!Physics.Raycast(point, raycastDir, sunCheckRaycastLength, raycastMask))
                 return currSunIntensity;
-            }
-            rays.Add(raycastDir * hitInfo.distance);
-            hits.Add(false);
         }
-        testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
         return 0f;
+
+
+        // TODO: REMOVE
+        // Same logic as above, but returns scene view test variables based on all performed raycasts
+        //List<Vector3> testPoints = new List<Vector3>();
+        //List<Vector3> rays = new List<Vector3>();
+        //List<bool> hits = new List<bool>();
+        //Vector3 raycastDir = -sunlightObject.transform.forward;
+        //float currSunIntensity = sunLight.intensity;
+        //RaycastHit hitInfo;
+        //testPoints.Add(transform.position);
+        //if (!Physics.Raycast(transform.position, raycastDir, out hitInfo, sunCheckRaycastLength, raycastMask))
+        //{
+        //    rays.Add(raycastDir * sunCheckRaycastLength);
+        //    hits.Add(true);
+        //    testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+        //    // check position first to save time
+        //    return currSunIntensity;
+        //}
+        //rays.Add(raycastDir * hitInfo.distance);
+        //hits.Add(false);
+
+        //// if no custom points given, go no further
+        //if (!UseCustomPoints())
+        //{
+        //    testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+        //    return 0f;
+        //}
+
+        //List<Vector3> points = GetLightCheckPoints(-raycastDir);
+        //foreach (Vector3 point in points)
+        //{
+        //    testPoints.Add(point);
+        //    if (!Physics.Raycast(point, raycastDir, out hitInfo, sunCheckRaycastLength, raycastMask))
+        //    {
+        //        rays.Add(raycastDir * sunCheckRaycastLength);
+        //        hits.Add(true);
+        //        testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+        //        return currSunIntensity;
+        //    }
+        //    rays.Add(raycastDir * hitInfo.distance);
+        //    hits.Add(false);
+        //}
+        //testInfo = new Info<List<Vector3>, List<Vector3>, List<bool>>(testPoints, rays, hits);
+        //return 0f;
     }
 
     /*
