@@ -68,19 +68,19 @@ public class PlayerMotor : MonoBehaviour
     private float currentCamRotX;
 
     private float jumpTimer;
-    private float jumpTimerDefault = 0.6f; // was 0.6f
+    private float jumpTimerDefault = 0.2f; // was 0.6f
     //private bool momentumFlight;
 
     private Rigidbody rb;
 
-    private UtiliseGravity grav;
+    //private UtiliseGravity grav;
 
     private Vector3 cameraRelativePos;
 
     private Vector3 currentGravVector;
-    private float currentGravStrength;
-    
-    private const float gravViewAlignSpeed = 4f;
+    //private float currentGravStrength;
+
+    //private const float gravViewAlignSpeed = 4f;
 
     //private HealthController healthEnergy;
 
@@ -90,6 +90,8 @@ public class PlayerMotor : MonoBehaviour
     private float airSpeedThreshold;
 
     private Vector3 slopeNormal;
+
+    private bool vaulting;
 
     void OnEnable()
     {
@@ -111,7 +113,7 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        grav = GetComponent<UtiliseGravity>();
+        //grav = GetComponent<UtiliseGravity>();
         if (transitionCameraPrefab == null)
         {
             throw new MissingReferenceException("No transitionCameraPrefab in PlayerMotor");
@@ -253,7 +255,7 @@ public class PlayerMotor : MonoBehaviour
     {
         // update gravity vector and strength from GlobalGravityControl
         currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
-        currentGravStrength = GlobalGravityControl.GetGravityStrength();
+        //currentGravStrength = GlobalGravityControl.GetGravityStrength();
     }
 
     /*
@@ -288,7 +290,7 @@ public class PlayerMotor : MonoBehaviour
 
         UpdateGravityDirection(currentGravVector);
     }
-    
+
     // Updates player rotation to gravity
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
@@ -313,23 +315,24 @@ public class PlayerMotor : MonoBehaviour
         //if (useGravity)
         //    rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
-
-        if (UseGroundMovement() && jumpTimer <= 0)
+        if (UseGroundMovement() && jumpTimer <= 0f)
         {
             // Grounded
             //momentumFlight = false;
             GroundMovement();
+            return;
+            //Debug.Log("Ground: " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
         }
-        else if (colliding && jumpTimer <= 0)
+        if (colliding)
         {
             // Sliding
             SlideMovement();
+            return;
+            //Debug.Log("Slide:  " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
         }
-        else
-        {
-            // Airborne
-            AirMovement();
-        }
+        // Airborne
+        AirMovement();
+        //Debug.Log("Air:    " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
     }
 
     private bool UseGroundMovement()
@@ -413,7 +416,9 @@ public class PlayerMotor : MonoBehaviour
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
-        bool aboveSpeedThreshold = rb.velocity.magnitude > groundSpeedThreshold;
+        float surfaceMagnitude = Vector3.Project(rb.velocity, _newVel).magnitude;
+        //bool aboveSpeedThreshold = rb.velocity.magnitude > groundSpeedThreshold;
+        bool aboveSpeedThreshold = surfaceMagnitude > groundSpeedThreshold;
         bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0f;
         bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
 
@@ -425,7 +430,7 @@ public class PlayerMotor : MonoBehaviour
         if (sprinting && inputInMovementDir && facingMovementDir)
         {
             // maintain velocity for a while
-            float newMagnitude = rb.velocity.magnitude * 0.998f; // possibly change this to whole constant * time.fixeddeltatime
+            float newMagnitude = surfaceMagnitude * (1f - (Time.fixedDeltaTime * 0.1f));
             _newVel = (rb.velocity + _newVel).normalized * newMagnitude;
         }
         else
@@ -490,7 +495,6 @@ public class PlayerMotor : MonoBehaviour
         if (crouching && canHover)
         {
             canHover = false;
-            //momentumFlight = false; // comment this out when reworking hover - should depend on air speed
             hoverCoroutine = StartCoroutine(HoverCoroutine());
         }
     }
@@ -520,7 +524,7 @@ public class PlayerMotor : MonoBehaviour
             // cancel positive movement in direction of flight
             velocityTemp -= Vector3.Project(velocityTemp, _flatVel);
         }
-        
+
         // use impulse force to allow gradual speed/direction changes when midair
         rb.AddForce(velocityTemp, ForceMode.Impulse);
     }
@@ -554,7 +558,7 @@ public class PlayerMotor : MonoBehaviour
     // perform jump when triggered by PlayerController
     public void Jump(float _jumpStrength)
     {
-        if (!IsOnGround() || frozen)
+        if (!IsOnGround() || frozen || vaulting)
             return;
 
         // if already moving up, keeps current vertical momentum
@@ -578,19 +582,25 @@ public class PlayerMotor : MonoBehaviour
     // handle jump button being held
     public void JumpHold()
     {
-        if (PlayerCollisionController.GetVaultHeight() > 0f)
+        if (!vaulting && PlayerCollisionController.GetVaultHeight() > 0f)
+        {
+            StartCoroutine("PerformVault");
+        }
+    }
+
+    private IEnumerator PerformVault()
+    {
+        vaulting = true;
+        while (PlayerCollisionController.GetVaultHeight() > 0f)
         {
             float force = Mathf.Sqrt(PlayerCollisionController.GetVaultHeight() * -2 *
                                      -GlobalGravityControl.GetGravityStrength());
 
-            // Check that we haven't ended up with a NaN, and that we're not already moving up
-            //float currentVerticalVel = Vector3.Project(rb.velocity, transform.up).magnitude;
-            //if (float.IsNaN(force) || force <= currentVerticalVel)
-            //    return;
-
             rb.velocity = transform.up * force;
-            jumpTimer = jumpTimerDefault;
+            //jumpTimer = jumpTimerDefault;
+            yield return 0;
         }
+        vaulting = false;
     }
 
     // either begin or end crouching
@@ -704,7 +714,7 @@ public class PlayerMotor : MonoBehaviour
     // Resets/reenables player once warp transition has completed
     void EndWarp(object sender, object args)
     {
-        Info<Vector3, Vector3, bool, FibreOpticController> info = (Info<Vector3, Vector3, bool, FibreOpticController>) args;
+        Info<Vector3, Vector3, bool, FibreOpticController> info = (Info<Vector3, Vector3, bool, FibreOpticController>)args;
         transform.position = info.arg0;
 
         canHover = true;
@@ -740,7 +750,7 @@ public class PlayerMotor : MonoBehaviour
             //onGround = false;
 
         }
-        else 
+        else
         {
             rb.velocity = knifeVel;
 

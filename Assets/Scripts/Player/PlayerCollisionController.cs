@@ -95,7 +95,7 @@ public class PlayerCollisionController : MonoBehaviour
         Vector3 ledgeDetectionCastOrigin = transform.position + (1.5f * transform.up);
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(ledgeDetectionCastOrigin + (0.75f * transform.forward), -transform.up, out hitInfo, 2.5f, raycastMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ledgeDetectionCastOrigin + (0.75f * transform.forward), -transform.up, out hitInfo, 2.4f, raycastMask, QueryTriggerInteraction.Ignore))
         {
             if (Vector3.Angle(hitInfo.normal, transform.up) > 15f)
                 return 0f;
