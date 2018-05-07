@@ -558,6 +558,8 @@ public class PlayerMotor : MonoBehaviour
     {
         if (!IsOnGround() || frozen || vaulting)
             return;
+        
+        string debugString = "pre: " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude + " post:";
 
         // if already moving up, keeps current vertical momentum
         // allows higher jumps when moving up slopes
@@ -575,6 +577,8 @@ public class PlayerMotor : MonoBehaviour
 
         jumpTimer = jumpTimerDefault;
         SetCrouching(false);
+
+        Debug.Log(debugString + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
     }
 
     // handle jump button being held
