@@ -328,8 +328,8 @@ public class PlayerKnifeController : MonoBehaviour
             {
                 currentWarps++;
 
-                if (currentWarps < maxWarps) // should restrict recharge to a single warp while not lit
-                    warpRecharge = warpRechargeTime;
+                //if (currentWarps < maxWarps) // should restrict recharge to a single warp while not lit
+                warpRecharge = warpRechargeTime;
             }
         }
 
