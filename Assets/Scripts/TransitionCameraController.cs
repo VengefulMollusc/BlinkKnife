@@ -59,12 +59,14 @@ public class TransitionCameraController : MonoBehaviour
             Debug.LogError("No BlackoutCamera assigned");
 
         cam = GetComponent<Camera>();
-        cam.enabled = false;
-        blackoutCamera.enabled = false;
+        //cam.enabled = false;
+        //blackoutCamera.enabled = false;
         chromAberration = GetComponent<VignetteAndChromaticAberration>();
 
         rb = GetComponent<Rigidbody>();
-        rb.detectCollisions = false;
+        //rb.detectCollisions = false;
+
+        Disable();
     }
 
     public void Setup(float _fov, Vector3 _startPos, KnifeController _knifeController, Vector3 _camRelativePos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift, FibreOpticController _fibreController)
@@ -203,9 +205,7 @@ public class TransitionCameraController : MonoBehaviour
         this.PostNotification(WarpEndNotification, info);
 
         //Destroy(gameObject);
-        blackoutCamera.enabled = false;
-        cam.enabled = false;
-        rb.detectCollisions = false;
+        Disable();
     }
 
     IEnumerator TransitionCamera()
@@ -240,6 +240,11 @@ public class TransitionCameraController : MonoBehaviour
         this.PostNotification(WarpEndNotification, info);
 
         //Destroy(gameObject);
+        Disable();
+    }
+
+    private void Disable()
+    {
         blackoutCamera.enabled = false;
         cam.enabled = false;
         rb.detectCollisions = false;
@@ -290,17 +295,17 @@ public class TransitionCameraController : MonoBehaviour
     // These alone are unreliable with large meshes (possibly something to do with Probuilder)
     void OnTriggerStay(Collider col)
     {
-        if (!cam.enabled || col.isTrigger)
+        if (col.isTrigger)
             return;
-
+        
         Blackout(true);
     }
 
     void OnTriggerExit(Collider col)
     {
-        if (!cam.enabled || col.isTrigger)
+        if (col.isTrigger)
             return;
-
+        
         BlackoutCheckFromOrigin();
     }
 }
