@@ -53,13 +53,14 @@ public class TransitionCameraController : MonoBehaviour
     private Rigidbody rb;
     
 
-    void Start()
+    void Awake()
     {
         if (blackoutCamera == null)
             Debug.LogError("No BlackoutCamera assigned");
 
         cam = GetComponent<Camera>();
         cam.enabled = false;
+        blackoutCamera.enabled = false;
         chromAberration = GetComponent<VignetteAndChromaticAberration>();
 
         rb = GetComponent<Rigidbody>();
@@ -202,7 +203,7 @@ public class TransitionCameraController : MonoBehaviour
         this.PostNotification(WarpEndNotification, info);
 
         //Destroy(gameObject);
-        Blackout(false);
+        blackoutCamera.enabled = false;
         cam.enabled = false;
         rb.detectCollisions = false;
     }
@@ -239,7 +240,7 @@ public class TransitionCameraController : MonoBehaviour
         this.PostNotification(WarpEndNotification, info);
 
         //Destroy(gameObject);
-        Blackout(false);
+        blackoutCamera.enabled = false;
         cam.enabled = false;
         rb.detectCollisions = false;
     }
