@@ -323,7 +323,7 @@ public class PlayerMotor : MonoBehaviour
             return;
             //Debug.Log("Ground: " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
         }
-        if (colliding)
+        if (colliding) // TODO: double-check that jumpTimer <= 0f check is not needed here
         {
             // Sliding
             SlideMovement();
