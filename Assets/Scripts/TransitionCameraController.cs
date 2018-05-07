@@ -50,27 +50,38 @@ public class TransitionCameraController : MonoBehaviour
     private FibreOpticController fibreOpticController;
     private bool fibreOpticWarp;
 
-    void OnEnable()
+    private Rigidbody rb;
+    
+
+    void Start()
     {
         if (blackoutCamera == null)
             Debug.LogError("No BlackoutCamera assigned");
+
+        cam = GetComponent<Camera>();
+        cam.enabled = false;
+        chromAberration = GetComponent<VignetteAndChromaticAberration>();
+
+        rb = GetComponent<Rigidbody>();
+        rb.detectCollisions = false;
     }
 
     public void Setup(float _fov, Vector3 _startPos, KnifeController _knifeController, Vector3 _camRelativePos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift, FibreOpticController _fibreController)
     {
         startPos = _startPos;
-        knifeController = _knifeController;
         startRot = _startRot;
+        transform.position = startPos;
+        transform.rotation = startRot;
+
+        knifeController = _knifeController;
         endRot = _endRot;
         camRelativePos = endRot * _camRelativePos;
         gravityShift = _gravityShift;
 
-        chromAberration = GetComponent<VignetteAndChromaticAberration>();
         chromDiff = chromaticAberrationMaxValue - chromAberration.chromaticAberration;
-
-        cam = GetComponent<Camera>();
+        
         cam.fieldOfView = _fov;
-
+        rb.detectCollisions = true;
         Blackout(false);
 
         if (_fibreController)
@@ -190,7 +201,10 @@ public class TransitionCameraController : MonoBehaviour
             knifeController.IsBounceKnife(), fibreOpticController);
         this.PostNotification(WarpEndNotification, info);
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        Blackout(false);
+        cam.enabled = false;
+        rb.detectCollisions = false;
     }
 
     IEnumerator TransitionCamera()
@@ -224,7 +238,10 @@ public class TransitionCameraController : MonoBehaviour
             knifeController.IsBounceKnife(), null);
         this.PostNotification(WarpEndNotification, info);
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        Blackout(false);
+        cam.enabled = false;
+        rb.detectCollisions = false;
     }
 
     /*
@@ -272,7 +289,7 @@ public class TransitionCameraController : MonoBehaviour
     // These alone are unreliable with large meshes (possibly something to do with Probuilder)
     void OnTriggerStay(Collider col)
     {
-        if (col.isTrigger)
+        if (!cam.enabled || col.isTrigger)
             return;
 
         Blackout(true);
@@ -280,7 +297,7 @@ public class TransitionCameraController : MonoBehaviour
 
     void OnTriggerExit(Collider col)
     {
-        if (col.isTrigger)
+        if (!cam.enabled || col.isTrigger)
             return;
 
         BlackoutCheckFromOrigin();

@@ -11,8 +11,8 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField]
     private float cameraRotLimit = 90f;
 
-    [SerializeField]
-    private GameObject transitionCameraPrefab;
+    //[SerializeField]
+    //private GameObject transitionCameraPrefab;
 
     //[SerializeField]
     //private float gravity = 0.3f;
@@ -93,6 +93,8 @@ public class PlayerMotor : MonoBehaviour
 
     private bool vaulting;
 
+    private TransitionCameraController transCamController;
+
     void OnEnable()
     {
         //healthEnergy = GetComponent<HealthController>();
@@ -114,10 +116,12 @@ public class PlayerMotor : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         //grav = GetComponent<UtiliseGravity>();
-        if (transitionCameraPrefab == null)
-        {
-            throw new MissingReferenceException("No transitionCameraPrefab in PlayerMotor");
-        }
+        //if (transitionCameraPrefab == null)
+        //{
+        //    throw new MissingReferenceException("No transitionCameraPrefab in PlayerMotor");
+        //}
+
+        transCamController = GameObject.Find("TransitionCamera").GetComponent<TransitionCameraController>();
 
         cameraRelativePos = cam.transform.position - transform.position;
         canHover = true;
@@ -671,9 +675,8 @@ public class PlayerMotor : MonoBehaviour
         // fixes horizontal momentum lock when warping
         //onGround = false;
 
-        GameObject transCamera = (GameObject)Instantiate(transitionCameraPrefab, camStartPos, cam.transform.rotation);
-
-        TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
+        //GameObject transCamera = (GameObject)Instantiate(transitionCameraPrefab, camStartPos, cam.transform.rotation);
+        //TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
         transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift, _fibreOpticController);
 
         cam.enabled = false;
