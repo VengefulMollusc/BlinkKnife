@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 114000012347977666}
   - component: {fileID: 135714543097390978}
   - component: {fileID: 54361090592654334}
+  - component: {fileID: 114553723970641604}
   m_Layer: 9
   m_Name: TransitionCamera
   m_TagString: MainCamera
@@ -269,6 +270,19 @@ MonoBehaviour:
   blurAndFlaresShader: {fileID: 4800000, guid: be6e39cf196f146d5be72fbefb18ed75, type: 3}
   brightPassFilterShader: {fileID: 4800000, guid: 0aeaa4cb29f5d4e9c8455f04c8575c8c,
     type: 3}
+--- !u!114 &114553723970641604
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010902589228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eed1d9cbe64423499f1fefc0ce50417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Resolution: 1
+  DefaultSpotCookie: {fileID: 2800000, guid: 5157bf6d690b6df458f6c0ce0c06d329, type: 3}
 --- !u!124 &124000010982410260
 Behaviour:
   m_ObjectHideFlags: 1
