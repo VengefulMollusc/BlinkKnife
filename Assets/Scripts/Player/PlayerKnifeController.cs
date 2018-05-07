@@ -467,10 +467,10 @@ public class PlayerKnifeController : MonoBehaviour
         // remove a warp from warp counters and begin recharge
         currentWarps -= 1;
 
-        if (warpRecharge <= 0)
-        {
-            warpRecharge = warpRechargeTime;
-        }
+        //if (warpRecharge <= 0)
+        //{
+        warpRecharge = warpRechargeTime;
+        //}
     }
 
     /*
