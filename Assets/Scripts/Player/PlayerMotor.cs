@@ -79,7 +79,7 @@ public class PlayerMotor : MonoBehaviour
 
     private Vector3 currentGravVector;
     //private float currentGravStrength;
-    
+
     //private const float gravViewAlignSpeed = 4f;
 
     //private HealthController healthEnergy;
@@ -290,7 +290,7 @@ public class PlayerMotor : MonoBehaviour
 
         UpdateGravityDirection(currentGravVector);
     }
-    
+
     // Updates player rotation to gravity
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
@@ -315,23 +315,24 @@ public class PlayerMotor : MonoBehaviour
         //if (useGravity)
         //    rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
 
-
-        if (UseGroundMovement() && jumpTimer <= 0)
+        if (UseGroundMovement() && jumpTimer <= 0f)
         {
             // Grounded
             //momentumFlight = false;
             GroundMovement();
+            return;
+            //Debug.Log("Ground: " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
         }
-        else if (colliding && jumpTimer <= 0)
+        if (colliding)
         {
             // Sliding
             SlideMovement();
+            return;
+            //Debug.Log("Slide:  " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
         }
-        else
-        {
-            // Airborne
-            AirMovement();
-        }
+        // Airborne
+        AirMovement();
+        //Debug.Log("Air:    " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
     }
 
     private bool UseGroundMovement()
@@ -415,7 +416,9 @@ public class PlayerMotor : MonoBehaviour
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
-        bool aboveSpeedThreshold = rb.velocity.magnitude > groundSpeedThreshold;
+        float surfaceMagnitude = Vector3.Project(rb.velocity, _newVel).magnitude;
+        //bool aboveSpeedThreshold = rb.velocity.magnitude > groundSpeedThreshold;
+        bool aboveSpeedThreshold = surfaceMagnitude > groundSpeedThreshold;
         bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0f;
         bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
 
@@ -427,7 +430,7 @@ public class PlayerMotor : MonoBehaviour
         if (sprinting && inputInMovementDir && facingMovementDir)
         {
             // maintain velocity for a while
-            float newMagnitude = rb.velocity.magnitude * 0.998f; // possibly change this to whole constant * time.fixeddeltatime
+            float newMagnitude = surfaceMagnitude * (1f - (Time.fixedDeltaTime * 0.1f));
             _newVel = (rb.velocity + _newVel).normalized * newMagnitude;
         }
         else
@@ -492,7 +495,6 @@ public class PlayerMotor : MonoBehaviour
         if (crouching && canHover)
         {
             canHover = false;
-            //momentumFlight = false; // comment this out when reworking hover - should depend on air speed
             hoverCoroutine = StartCoroutine(HoverCoroutine());
         }
     }
@@ -522,7 +524,7 @@ public class PlayerMotor : MonoBehaviour
             // cancel positive movement in direction of flight
             velocityTemp -= Vector3.Project(velocityTemp, _flatVel);
         }
-        
+
         // use impulse force to allow gradual speed/direction changes when midair
         rb.AddForce(velocityTemp, ForceMode.Impulse);
     }
@@ -558,8 +560,6 @@ public class PlayerMotor : MonoBehaviour
     {
         if (!IsOnGround() || frozen || vaulting)
             return;
-        
-        string debugString = "pre: " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude + " post:";
 
         // if already moving up, keeps current vertical momentum
         // allows higher jumps when moving up slopes
@@ -577,8 +577,6 @@ public class PlayerMotor : MonoBehaviour
 
         jumpTimer = jumpTimerDefault;
         SetCrouching(false);
-
-        Debug.Log(debugString + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
     }
 
     // handle jump button being held
@@ -716,7 +714,7 @@ public class PlayerMotor : MonoBehaviour
     // Resets/reenables player once warp transition has completed
     void EndWarp(object sender, object args)
     {
-        Info<Vector3, Vector3, bool, FibreOpticController> info = (Info<Vector3, Vector3, bool, FibreOpticController>) args;
+        Info<Vector3, Vector3, bool, FibreOpticController> info = (Info<Vector3, Vector3, bool, FibreOpticController>)args;
         transform.position = info.arg0;
 
         canHover = true;
@@ -752,7 +750,7 @@ public class PlayerMotor : MonoBehaviour
             //onGround = false;
 
         }
-        else 
+        else
         {
             rb.velocity = knifeVel;
 
