@@ -73,14 +73,14 @@ public class PlayerMotor : MonoBehaviour
 
     private Rigidbody rb;
 
-    private UtiliseGravity grav;
+    //private UtiliseGravity grav;
 
     private Vector3 cameraRelativePos;
 
     private Vector3 currentGravVector;
-    private float currentGravStrength;
+    //private float currentGravStrength;
     
-    private const float gravViewAlignSpeed = 4f;
+    //private const float gravViewAlignSpeed = 4f;
 
     //private HealthController healthEnergy;
 
@@ -113,7 +113,7 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        grav = GetComponent<UtiliseGravity>();
+        //grav = GetComponent<UtiliseGravity>();
         if (transitionCameraPrefab == null)
         {
             throw new MissingReferenceException("No transitionCameraPrefab in PlayerMotor");
@@ -255,7 +255,7 @@ public class PlayerMotor : MonoBehaviour
     {
         // update gravity vector and strength from GlobalGravityControl
         currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
-        currentGravStrength = GlobalGravityControl.GetGravityStrength();
+        //currentGravStrength = GlobalGravityControl.GetGravityStrength();
     }
 
     /*
