@@ -68,7 +68,7 @@ public class PlayerMotor : MonoBehaviour
     private float currentCamRotX;
 
     private float jumpTimer;
-    private float jumpTimerDefault = 0.6f; // was 0.6f
+    private float jumpTimerDefault = 0.2f; // was 0.6f
     //private bool momentumFlight;
 
     private Rigidbody rb;
@@ -90,6 +90,8 @@ public class PlayerMotor : MonoBehaviour
     private float airSpeedThreshold;
 
     private Vector3 slopeNormal;
+
+    private bool vaulting;
 
     void OnEnable()
     {
@@ -554,7 +556,7 @@ public class PlayerMotor : MonoBehaviour
     // perform jump when triggered by PlayerController
     public void Jump(float _jumpStrength)
     {
-        if (!IsOnGround() || frozen)
+        if (!IsOnGround() || frozen || vaulting)
             return;
 
         // if already moving up, keeps current vertical momentum
@@ -578,19 +580,25 @@ public class PlayerMotor : MonoBehaviour
     // handle jump button being held
     public void JumpHold()
     {
-        if (PlayerCollisionController.GetVaultHeight() > 0f)
+        if (!vaulting && PlayerCollisionController.GetVaultHeight() > 0f)
+        {
+            StartCoroutine("PerformVault");
+        }
+    }
+
+    private IEnumerator PerformVault()
+    {
+        vaulting = true;
+        while (PlayerCollisionController.GetVaultHeight() > 0f)
         {
             float force = Mathf.Sqrt(PlayerCollisionController.GetVaultHeight() * -2 *
                                      -GlobalGravityControl.GetGravityStrength());
 
-            // Check that we haven't ended up with a NaN, and that we're not already moving up
-            //float currentVerticalVel = Vector3.Project(rb.velocity, transform.up).magnitude;
-            //if (float.IsNaN(force) || force <= currentVerticalVel)
-            //    return;
-
             rb.velocity = transform.up * force;
-            jumpTimer = jumpTimerDefault;
+            //jumpTimer = jumpTimerDefault;
+            yield return 0;
         }
+        vaulting = false;
     }
 
     // either begin or end crouching
