@@ -248,6 +248,8 @@ public class TransitionCameraController : MonoBehaviour
         blackoutCamera.enabled = false;
         cam.enabled = false;
         rb.detectCollisions = false;
+        fibreOpticWarp = false;
+        fibreOpticController = null;
     }
 
     /*
