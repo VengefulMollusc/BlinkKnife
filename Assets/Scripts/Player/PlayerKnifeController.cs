@@ -21,8 +21,8 @@ public class PlayerKnifeController : MonoBehaviour
 
     [SerializeField]
     private float warpWaitTime = 0.1f;
-    [SerializeField]
-    private float bounceWarpWaitTime = 0.2f;
+    //[SerializeField]
+    //private float bounceWarpWaitTime = 0.2f;
     private float warpCountDown = 0;
 
     private bool bounceWarp = false;
@@ -168,7 +168,7 @@ public class PlayerKnifeController : MonoBehaviour
 
         currentWarps = maxWarps;
 
-        this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
+        //this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
         this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
         this.AddObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
@@ -178,7 +178,7 @@ public class PlayerKnifeController : MonoBehaviour
 
     void OnDisable()
     {
-        this.RemoveObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
+        //this.RemoveObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
         this.RemoveObserver(EndWarp, TransitionCameraController.WarpEndNotification);
         this.RemoveObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
         this.RemoveObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
@@ -264,23 +264,39 @@ public class PlayerKnifeController : MonoBehaviour
      */
     void CheckIfWarp()
     {
-        if (!lockKnife && knife != null && ((Input.GetButton(primaryKnifeBtn) && knifeController.HasStuck()) || bounceWarp))
+        if (!lockKnife && knife != null && knifeController.CanWarp() && currentWarps >= 1)
         { // Require mouse click to warp
           //if (!lockKnife && knife != null && (knifeController.HasStuck() || bounceWarp)) { // warps instantly without mouse click
           // we are trying to warp
-            if (((bounceWarp && warpCountDown >= bounceWarpWaitTime) || (!bounceWarp && warpCountDown >= warpWaitTime)) && currentWarps >= 1)
+            if (bounceWarp)
             {
-                // warp if wait time is reached
-
-                // Remove this line to have countdown ui stay filled while warping
-                warpCountDown = 0f;
-
                 Warp();
+                return;
             }
-            else
+            if (Input.GetButton(primaryKnifeBtn))
             {
-                warpCountDown += Time.deltaTime;
+                if (warpCountDown >= warpWaitTime)
+                {
+                    Warp();
+                }
+                else
+                {
+                    warpCountDown += Time.deltaTime;
+                }
             }
+
+
+            //if (((bounceWarp && warpCountDown >= bounceWarpWaitTime) || (!bounceWarp && warpCountDown >= warpWaitTime)) && currentWarps >= 1)
+            //{
+            //    // warp if wait time is reached
+
+
+            //    Warp();
+            //}
+            //else
+            //{
+            //    warpCountDown += Time.deltaTime;
+            //}
         }
         else
         {
@@ -292,11 +308,11 @@ public class PlayerKnifeController : MonoBehaviour
         //warpUIFill.rectTransform.localScale = new Vector3 (warpCountDown/warpWaitTime, warpCountDown/warpWaitTime, 1f);
     }
 
-    void OnKnifeBounce(object sender, object args)
-    {
-        warpCountDown = 0f;
-        autoRecallTimer = timeToAutoRecall;
-    }
+    //void OnKnifeBounce(object sender, object args)
+    //{
+    //    warpCountDown = 0f;
+    //    autoRecallTimer = timeToAutoRecall;
+    //}
 
     void OnLightStatusNotification(object sender, object args)
     {
@@ -446,9 +462,11 @@ public class PlayerKnifeController : MonoBehaviour
      */
     public void Warp()
     {
-
         if (knife == null)
             return;
+
+        // Remove this line to have countdown ui stay filled while warping
+        warpCountDown = 0f;
 
         // move player to knife position and inherit velocity
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
@@ -504,8 +522,8 @@ public class PlayerKnifeController : MonoBehaviour
 
     public float GetWarpCountdownNormalised()
     {
-        if (bounceWarp)
-            return warpCountDown / bounceWarpWaitTime;
+        //if (bounceWarp)
+        //    return warpCountDown / bounceWarpWaitTime;
         return warpCountDown / warpWaitTime;
     }
 

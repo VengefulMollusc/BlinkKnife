@@ -32,6 +32,11 @@ public class BlinkKnifeController : KnifeController {
 	//    //    SizeColliderToSpeed(); // probably only needs to happen once, as speed should be pretty constant
 	//}
 
+    public override bool CanWarp()
+    {
+        return HasStuck();
+    }
+
     public override void Throw (Vector3 _velocity)
     {
         // throw the knife in the given direction with a certain force
@@ -55,7 +60,7 @@ public class BlinkKnifeController : KnifeController {
         // else post bounce notification
         if (other.GetComponent<HardSurface>() == null)
             StickToSurface (collide.point, collide.normal, other);
-        else
-            this.PostNotification(KnifeBounceNotification);
+        //else
+        //    this.PostNotification(KnifeBounceNotification);
     }
 }

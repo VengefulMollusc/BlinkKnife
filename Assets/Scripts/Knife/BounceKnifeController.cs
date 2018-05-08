@@ -2,15 +2,23 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
-public class BounceKnifeController : KnifeController {
+public class BounceKnifeController : KnifeController
+{
 
     [SerializeField]
     private float throwStrengthMod = 1f;
 
+    [SerializeField]
+    private bool mustBounceToWarp = true;
+
+    [SerializeField]
+    private float bounceWarpWaitTime = 0.2f;
+    private float warpCountDown = 0;
+
     private Vector3 warpVelocity;
 
-	//[SerializeField]
-	//private GameObject visuals;
+    //[SerializeField]
+    //private GameObject visuals;
 
     //void FixedUpdate()
     //{
@@ -20,6 +28,16 @@ public class BounceKnifeController : KnifeController {
     //    if (rb.velocity != Vector3.zero)
     //        transform.forward = rb.velocity;
     //}
+
+    void Update()
+    {
+        warpCountDown += Time.deltaTime;
+    }
+
+    public override bool CanWarp()
+    {
+        return warpCountDown > bounceWarpWaitTime;
+    }
 
     void OnEnable()
     {
@@ -53,10 +71,10 @@ public class BounceKnifeController : KnifeController {
         GameObject other = collide.otherCollider.gameObject;
 
         // If collided surface is not a HardSurface, stick knife into it
-        if (other.GetComponent<SoftSurface>() != null)
+        if (other.GetComponent<SoftSurface>() != null || other.GetComponent<FibreOpticController>() != null)
             StickToSurface(collide.point, collide.normal, other);
-
-        this.PostNotification(KnifeBounceNotification);
+        else
+            warpCountDown = 0f;
     }
 
     public override bool IsBounceKnife()

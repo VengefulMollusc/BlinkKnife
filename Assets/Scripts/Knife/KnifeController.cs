@@ -18,7 +18,7 @@ public class KnifeController : MonoBehaviour
     private Vector3 gravShiftVector;
 
     public const string ShowKnifeMarkerNotification = "KnifeController.ShowKnifeMarkerNotification";
-    public const string KnifeBounceNotification = "KnifeController.KnifeBounceNotification";
+    //public const string KnifeBounceNotification = "KnifeController.KnifeBounceNotification";
 
     public const string AttachLookAheadColliderNotification = "KnifeController.AttachLookAheadColliderNotification";
 
@@ -184,6 +184,12 @@ public class KnifeController : MonoBehaviour
 
     public virtual bool IsBounceKnife()
     {
+        return false;
+    }
+
+    public virtual bool CanWarp()
+    {
+        Debug.LogError("CanWarp method must be overridden");
         return false;
     }
 
