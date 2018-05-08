@@ -501,8 +501,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   warpTimer: 0
+  returning: 0
   throwStrengthMod: 1
-  mustBounceToWarp: 0
+  mustBounceToWarp: 1
   bounceWarpWaitTime: 0.2
 --- !u!114 &114256750203955046
 MonoBehaviour:

@@ -36,10 +36,14 @@ public class BlinkKnifeController : KnifeController {
     //}
     void Update()
     {
+        if (returning)
+            return;
+
         warpTimer += Time.deltaTime;
 
         if (!CanWarp() && warpTimer > timeToAutoRecall)
-            this.PostNotification(ReturnKnifeNotification);
+            ReturnKnife();
+            //this.PostNotification(ReturnKnifeNotification);
     }
 
     public override bool CanWarp()

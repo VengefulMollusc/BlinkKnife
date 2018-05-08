@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Security.Policy;
 using UnityEngine;
 
 public class KnifeController : MonoBehaviour
 {
-    //private PlayerKnifeController playerKnifeController;
+    private Transform playerTransform;
+
     [HideInInspector]
     public Rigidbody rb;
 
@@ -15,7 +17,9 @@ public class KnifeController : MonoBehaviour
 
     private bool stuckInSurface;
     private GameObject objectStuck;
-    //private Vector3 collisionPositionOffset;
+
+    [HideInInspector]
+    public bool returning;
 
     private GravityPanel gravPanel;
     private Vector3 gravShiftVector;
@@ -30,9 +34,9 @@ public class KnifeController : MonoBehaviour
     /*
      * Passes the knifecontroller and parameter spin speed to the knife
      */
-    public virtual void Setup(WarpLookAheadCollider _lookAhead)
+    public virtual void Setup(Transform _playerTransform, WarpLookAheadCollider _lookAhead)
     {
-        //playerKnifeController = _controller;
+        playerTransform = _playerTransform;
         warpLookAheadCollider = _lookAhead;
         rb = GetComponent<Rigidbody>();
 
@@ -46,18 +50,6 @@ public class KnifeController : MonoBehaviour
         //transform.LookAt(transform.position + _controller.transform.forward, _controller.transform.up); //? <-(why is this question mark here?)
     }
 
-    //void FixedUpdate()
-    //{
-    //    //if (HasStuck() || rb == null)
-    //    //    return;
-
-    //    //if (rb.velocity != Vector3.zero)
-    //    //    transform.forward = rb.velocity;
-
-    //    //if (transform.rotation != GlobalGravityControl.GetGravityRotation())
-    //    //    transform.rotation = GlobalGravityControl.GetGravityRotation();
-    //}
-
     /*
      * Throws the knife at the given velocity
      */
@@ -65,12 +57,6 @@ public class KnifeController : MonoBehaviour
     {
         Debug.LogError("Throw method must be overridden");
     }
-
-    //public void AttachWarpCollider()
-    //{
-    //    if (warpLookAheadCollider != null)
-    //        warpLookAheadCollider.LockToKnife(gameObject);
-    //}
 
     /*
     * Sticks knife into surface when colliding with an object
@@ -118,6 +104,37 @@ public class KnifeController : MonoBehaviour
         // activate knife marker ui
         Info<Transform, bool> info = new Info<Transform, bool>(transform, gravPanel != null);
         this.PostNotification(ShowKnifeMarkerNotification, info);
+    }
+
+    public void ReturnKnife()
+    {
+        returning = true;
+        StartCoroutine("ReturnKnifeAnimation");
+    }
+
+    private IEnumerator ReturnKnifeAnimation()
+    {
+        rb.velocity = Vector3.zero;
+        rb.isKinematic = true;
+        rb.detectCollisions = false;
+        Vector3 startPos = transform.position;
+
+        float t = 0f;
+        while (t < 0.2f)
+        {
+            t += Time.deltaTime;
+            yield return 0;
+        }
+
+        t = 0f;
+        while (t <= 1f)
+        {
+            transform.position = Vector3.Lerp(startPos, playerTransform.position, t);
+            t += Time.deltaTime / 0.5f; // 0.5f here defines length of transition
+            yield return 0;
+        }
+
+        this.PostNotification(ReturnKnifeNotification);
     }
 
     public virtual Vector3 GetPosition()

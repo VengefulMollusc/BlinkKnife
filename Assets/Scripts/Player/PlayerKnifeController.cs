@@ -209,7 +209,7 @@ public class PlayerKnifeController : MonoBehaviour
             else if (knife != null && !bounceWarp)
             {
                 // return thrown blink knife
-                ReturnKnife();
+                knifeController.ReturnKnife();
                 //knifeRenderer.enabled = true;
             }
         }
@@ -380,7 +380,7 @@ public class PlayerKnifeController : MonoBehaviour
         }
 
         // set up and throw knife object
-        knifeController.Setup(warpLookAheadCollider);
+        knifeController.Setup(player.transform, warpLookAheadCollider);
         //		knifeController.Throw ((transform.forward * throwStrength) 
         //			+ (playerRb.velocity * 0.5f), this);
         knifeController.Throw(throwDirection * _strength);
