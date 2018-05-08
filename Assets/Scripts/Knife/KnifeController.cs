@@ -106,7 +106,7 @@ public class KnifeController : MonoBehaviour
         this.PostNotification(ShowKnifeMarkerNotification, info);
     }
 
-    public void ReturnKnife()
+    public void ReturnKnifeTransition()
     {
         returning = true;
         StartCoroutine("ReturnKnifeAnimation");

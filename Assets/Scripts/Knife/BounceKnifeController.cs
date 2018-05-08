@@ -38,8 +38,7 @@ public class BounceKnifeController : KnifeController
 
         if (mustBounceToWarp && !hasCollided && warpTimer > bounceWarpWaitTime)
             // return knife
-            ReturnKnife();
-            //this.PostNotification(ReturnKnifeNotification);
+            ReturnKnifeTransition();
     }
 
     public override bool CanWarp()

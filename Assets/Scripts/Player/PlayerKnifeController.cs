@@ -209,7 +209,7 @@ public class PlayerKnifeController : MonoBehaviour
             else if (knife != null && !bounceWarp)
             {
                 // return thrown blink knife
-                knifeController.ReturnKnife();
+                knifeController.ReturnKnifeTransition();
                 //knifeRenderer.enabled = true;
             }
         }
