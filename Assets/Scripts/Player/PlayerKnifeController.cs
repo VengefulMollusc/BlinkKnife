@@ -8,9 +8,9 @@ public class PlayerKnifeController : MonoBehaviour
     [SerializeField]
     private bool alwaysGravShift = false;
 
-    [SerializeField]
-    private float timeToAutoRecall = 1.5f;
-    private float autoRecallTimer;
+    //[SerializeField]
+    //private float timeToAutoRecall = 1.5f;
+    //private float autoRecallTimer;
 
     [SerializeField]
     private int maxWarps = 3;
@@ -168,7 +168,7 @@ public class PlayerKnifeController : MonoBehaviour
 
         currentWarps = maxWarps;
 
-        //this.AddObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
+        this.AddObserver(OnReturnKnifeNotification, KnifeController.ReturnKnifeNotification);
         this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
         this.AddObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
@@ -178,7 +178,7 @@ public class PlayerKnifeController : MonoBehaviour
 
     void OnDisable()
     {
-        //this.RemoveObserver(OnKnifeBounce, KnifeController.KnifeBounceNotification);
+        this.RemoveObserver(OnReturnKnifeNotification, KnifeController.ReturnKnifeNotification);
         this.RemoveObserver(EndWarp, TransitionCameraController.WarpEndNotification);
         this.RemoveObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
         this.RemoveObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
@@ -236,7 +236,7 @@ public class PlayerKnifeController : MonoBehaviour
         CheckIfWarp();
 
         // check if recall
-        CheckIfRecall();
+        //CheckIfRecall();
 
         // recharge warp counters
         RechargeWarps();
@@ -245,19 +245,19 @@ public class PlayerKnifeController : MonoBehaviour
     /*
      * Checks if the auto recall timer has run out, if so, returns the thrown knife
      */
-    void CheckIfRecall()
-    {
-        if (autoRecallTimer <= 0 || knife == null || knifeController.HasStuck())
-            return;
+    //void CheckIfRecall()
+    //{
+    //    if (autoRecallTimer <= 0 || knife == null || knifeController.HasStuck())
+    //        return;
 
-        autoRecallTimer -= Time.deltaTime;
+    //    autoRecallTimer -= Time.deltaTime;
 
-        if (autoRecallTimer <= 0)
-        {
-            ReturnKnife();
-            //knifeRenderer.enabled = true;
-        }
-    }
+    //    if (autoRecallTimer <= 0)
+    //    {
+    //        ReturnKnife();
+    //        //knifeRenderer.enabled = true;
+    //    }
+    //}
 
     /*
      * Checks the current warp countdown and whether we need to warp now
@@ -276,27 +276,10 @@ public class PlayerKnifeController : MonoBehaviour
             if (Input.GetButton(primaryKnifeBtn))
             {
                 if (warpCountDown >= warpWaitTime)
-                {
                     Warp();
-                }
                 else
-                {
                     warpCountDown += Time.deltaTime;
-                }
             }
-
-
-            //if (((bounceWarp && warpCountDown >= bounceWarpWaitTime) || (!bounceWarp && warpCountDown >= warpWaitTime)) && currentWarps >= 1)
-            //{
-            //    // warp if wait time is reached
-
-
-            //    Warp();
-            //}
-            //else
-            //{
-            //    warpCountDown += Time.deltaTime;
-            //}
         }
         else
         {
@@ -405,7 +388,7 @@ public class PlayerKnifeController : MonoBehaviour
         // hide knife view object
         knifeRenderer.enabled = false;
 
-        autoRecallTimer = timeToAutoRecall;
+        //autoRecallTimer = timeToAutoRecall;
 
     }
 
@@ -428,9 +411,14 @@ public class PlayerKnifeController : MonoBehaviour
         Destroy(knife);
         knife = null;
         knifeController = null;
-
+        bounceWarp = false;
         UnHideKnife();
         //knifeRenderer.enabled = true;
+    }
+
+    void OnReturnKnifeNotification(object sender, object args)
+    {
+        ReturnKnife();
     }
 
     /*

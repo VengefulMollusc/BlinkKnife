@@ -10,10 +10,10 @@ public class BounceKnifeController : KnifeController
 
     [SerializeField]
     private bool mustBounceToWarp = true;
+    private bool hasCollided;
 
     [SerializeField]
     private float bounceWarpWaitTime = 0.2f;
-    private float warpCountDown = 0;
 
     private Vector3 warpVelocity;
 
@@ -31,12 +31,16 @@ public class BounceKnifeController : KnifeController
 
     void Update()
     {
-        warpCountDown += Time.deltaTime;
+        warpTimer += Time.deltaTime;
+
+        if (mustBounceToWarp && !hasCollided && warpTimer > bounceWarpWaitTime)
+            // return knife
+            this.PostNotification(ReturnKnifeNotification);
     }
 
     public override bool CanWarp()
     {
-        return warpCountDown > bounceWarpWaitTime;
+        return warpTimer > bounceWarpWaitTime && (hasCollided || !mustBounceToWarp);
     }
 
     void OnEnable()
@@ -74,7 +78,9 @@ public class BounceKnifeController : KnifeController
         if (other.GetComponent<SoftSurface>() != null || other.GetComponent<FibreOpticController>() != null)
             StickToSurface(collide.point, collide.normal, other);
         else
-            warpCountDown = 0f;
+            warpTimer = 0f;
+
+        hasCollided = true;
     }
 
     public override bool IsBounceKnife()

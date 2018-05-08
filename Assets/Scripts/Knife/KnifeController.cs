@@ -8,6 +8,9 @@ public class KnifeController : MonoBehaviour
     [HideInInspector]
     public Rigidbody rb;
 
+    [HideInInspector]
+    public float warpTimer;
+
     private WarpLookAheadCollider warpLookAheadCollider;
 
     private bool stuckInSurface;
@@ -18,7 +21,7 @@ public class KnifeController : MonoBehaviour
     private Vector3 gravShiftVector;
 
     public const string ShowKnifeMarkerNotification = "KnifeController.ShowKnifeMarkerNotification";
-    //public const string KnifeBounceNotification = "KnifeController.KnifeBounceNotification";
+    public const string ReturnKnifeNotification = "KnifeController.ReturnKnifeNotification";
 
     public const string AttachLookAheadColliderNotification = "KnifeController.AttachLookAheadColliderNotification";
 
