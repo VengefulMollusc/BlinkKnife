@@ -30,7 +30,7 @@ public class BoomerangKnifeController : KnifeController
 
     // True if the knife has been boosted or bounced etc. 
     // Disables manual control of knife
-    private bool blockControl;
+    private bool disableControl;
 
     public override void Throw(Vector3 _velocity)
     {
@@ -45,6 +45,10 @@ public class BoomerangKnifeController : KnifeController
         tangentMagnitude = tangentTwo.magnitude;
     }
 
+    /*
+     * Handles the movement logic of the knife.
+     * Transitions along bezier curve to give boomerang motion
+     */
     void FixedUpdate()
     {
         if (returning)
@@ -55,19 +59,27 @@ public class BoomerangKnifeController : KnifeController
         if (HasStuck())
             return;
 
-        // calculate transition variables, bezier points etc
+        // calculate 0-1 transition variable
         transition = warpTimer / boomerangDuration;
 
         if (transition <= 1f)
         {
+            // Calculate current bezier points based on current owner view direction
             Vector3 ownerPos = ownerTransform.position;
-            Vector3 viewDirection = ownerTransform.forward * tangentMagnitude;
-            tangentTwo = Vector3.RotateTowards(tangentTwo, viewDirection, 0.5f * Mathf.Deg2Rad, 0f);
+            if (!disableControl)
+            {
+                // calculate second tangent if manual control is not disabled
+                Vector3 viewDirection = ownerTransform.forward * tangentMagnitude;
+                tangentTwo = Vector3.RotateTowards(tangentTwo, viewDirection, 0.5f * Mathf.Deg2Rad, 0f);
+            }
 
-            rb.MovePosition(Utilities.LerpBezier(startPos, tangentOnePos, (blockControl) ? tangentOnePos : ownerPos + tangentTwo, ownerPos, transition));
+            // apply position based on current bezier
+            rb.MovePosition(Utilities.LerpBezier(startPos, tangentOnePos, (disableControl) ? tangentOnePos : ownerPos + tangentTwo, ownerPos, transition));
         }
         else
         {
+            // Full duration reached. Return knife.
+            // return transition not needed as knife should be at owner position already
             this.PostNotification(ReturnKnifeNotification);
         }
     }
@@ -92,12 +104,19 @@ public class BoomerangKnifeController : KnifeController
         }
     }
 
+    /*
+     * returns the derivative of the bezier at the current time.
+     * Needed as rigidbody velocity should be zero (as movement is handled by bezier lerping)
+     */
     public Vector3 GetEffectiveVelocity()
     {
         Vector3 ownerPos = ownerTransform.position;
         return Utilities.BezierDerivative(startPos, tangentOnePos, ownerPos + tangentTwo, ownerPos, transition);
     }
 
+    /*
+     * Recalculates the bezier if knife is boosted
+     */
     public override void OnBoostNotification(object sender, object args)
     {
         Info<GameObject, Vector3> info = (Info<GameObject, Vector3>)args;
@@ -108,6 +127,12 @@ public class BoomerangKnifeController : KnifeController
         ResetBezier(info.arg1);
     }
 
+    /*
+     * Recalculates the bezier to start from the current position and new given direction.
+     * Used when knife is boosted or bounces off a surface
+     * 
+     * _useNewMagnitude determines if velocity/duration is inherited or reset
+     */
     private void ResetBezier(Vector3 _newVelocity, bool _useNewMagnitude = false)
     {
         Vector3 newVel = (_useNewMagnitude) ? _newVelocity * throwStrengthMod : _newVelocity.normalized * initialVelMagnitude;
@@ -115,12 +140,14 @@ public class BoomerangKnifeController : KnifeController
 
         if (_useNewMagnitude)
         {
+            // resets duration according to time left in original duration
             boomerangDuration -= warpTimer;
         }
 
         tangentOnePos = startPos + newVel * (boomerangDuration * 0.5f);
         warpTimer = 0f;
 
-        blockControl = true;
+        // Disables manual control after a reset
+        disableControl = true;
     }
 }
