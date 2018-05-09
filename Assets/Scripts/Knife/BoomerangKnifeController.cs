@@ -17,6 +17,8 @@ public class BoomerangKnifeController : KnifeController
      * Sticks into surfaces and waits for player input to warp
      */
 
+    // Defines the duration of the entire loop./
+    // Altering this and ThrowStrengthMod will change the distance and speed of the throw
     [SerializeField] private float boomerangDuration = 2f;
 
     private Vector3 startPos;
@@ -26,14 +28,17 @@ public class BoomerangKnifeController : KnifeController
     private float transition;
     private float initialVelMagnitude;
 
-    //private float dist;
+    // True if the knife has been boosted or bounced etc. 
+    // Disables manual control of knife
+    private bool blockControl;
 
     public override void Throw(Vector3 _velocity)
     {
-        //base.Throw(_velocity);
-        initialVelMagnitude = _velocity.magnitude;
+        // record velocity magnitude (used when realigning after boosts etc)
+        initialVelMagnitude = _velocity.magnitude * throwStrengthMod;
         this.PostNotification(AttachLookAheadColliderNotification, this);
 
+        // Setup initial bezier points
         startPos = transform.position;
         tangentTwo = _velocity * throwStrengthMod * (boomerangDuration * 0.5f);
         tangentOnePos = startPos + tangentTwo;
@@ -53,19 +58,16 @@ public class BoomerangKnifeController : KnifeController
         // calculate transition variables, bezier points etc
         transition = warpTimer / boomerangDuration;
 
-        //dist = Mathf.Max(dist, Vector3.Distance(transform.position, ownerTransform.position));
-
         if (transition <= 1f)
         {
             Vector3 ownerPos = ownerTransform.position;
             Vector3 viewDirection = ownerTransform.forward * tangentMagnitude;
             tangentTwo = Vector3.RotateTowards(tangentTwo, viewDirection, 0.5f * Mathf.Deg2Rad, 0f);
 
-            rb.MovePosition(Utilities.LerpBezier(startPos, tangentOnePos, ownerPos + tangentTwo, ownerPos, transition));
+            rb.MovePosition(Utilities.LerpBezier(startPos, tangentOnePos, (blockControl) ? tangentOnePos : ownerPos + tangentTwo, ownerPos, transition));
         }
         else
         {
-            //Debug.Log(dist);
             this.PostNotification(ReturnKnifeNotification);
         }
     }
@@ -81,6 +83,13 @@ public class BoomerangKnifeController : KnifeController
         // If collided surface is not a HardSurface, stick knife into it
         if (other.GetComponent<HardSurface>() == null)
             StickToSurface(collide.point, collide.normal, other);
+        else
+        {
+            // Reflect knife off surface
+            Vector3 newVel = Vector3.Reflect(GetEffectiveVelocity(), collide.normal);
+            transform.position = collide.point;
+            ResetBezier(newVel, true);
+        }
     }
 
     public Vector3 GetEffectiveVelocity()
@@ -96,13 +105,22 @@ public class BoomerangKnifeController : KnifeController
             return;
 
         // boosted object is this knife
-        ResetBezier(info.arg1.normalized * initialVelMagnitude);
+        ResetBezier(info.arg1);
     }
 
-    private void ResetBezier(Vector3 _newVelocity)
+    private void ResetBezier(Vector3 _newVelocity, bool _useNewMagnitude = false)
     {
+        Vector3 newVel = (_useNewMagnitude) ? _newVelocity * throwStrengthMod : _newVelocity.normalized * initialVelMagnitude;
         startPos = transform.position;
-        tangentOnePos = startPos + _newVelocity * throwStrengthMod * (boomerangDuration * 0.5f);
+
+        if (_useNewMagnitude)
+        {
+            boomerangDuration -= warpTimer;
+        }
+
+        tangentOnePos = startPos + newVel * (boomerangDuration * 0.5f);
         warpTimer = 0f;
+
+        blockControl = true;
     }
 }

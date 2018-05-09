@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class KnifeController : MonoBehaviour
 {
+    // Transform of player's view model knife/hand object
+    // used to target return animation
     [HideInInspector]
     public Transform ownerTransform;
 
@@ -121,12 +123,25 @@ public class KnifeController : MonoBehaviour
         this.PostNotification(ShowKnifeMarkerNotification, info);
     }
 
+    /*
+     * Triggers animation of knife returning to player
+     */
     public void ReturnKnifeTransition()
     {
+        // this is a lot of return :O
+        if (returning)
+            return;
+
         returning = true;
         StartCoroutine("ReturnKnifeAnimation");
     }
 
+    /*
+     * Animates knife returning to player.
+     * 
+     * knife 'hangs' for an instant before travelling straight back to the player.
+     * collisions etc are ignored
+     */
     private IEnumerator ReturnKnifeAnimation()
     {
         // freeze knife and disable collisions
@@ -172,11 +187,6 @@ public class KnifeController : MonoBehaviour
     {
         return transform.position;
     }
-
-    //public virtual Vector3 GetCollisionPosition()
-    //{
-    //    return transform.position + collisionPositionOffset;
-    //}
 
     public virtual Vector3 GetCollisionNormal()
     {

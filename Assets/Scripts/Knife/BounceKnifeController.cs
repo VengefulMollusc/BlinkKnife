@@ -18,11 +18,11 @@ public class BounceKnifeController : KnifeController
 
     [SerializeField]
     private bool mustBounceToWarp = true;
-    private bool hasCollided;
 
     [SerializeField]
     private float bounceWarpWaitTime = 0.2f;
 
+    private bool hasCollided;
     private Vector3 warpVelocity;
 
     public override void OnEnable()
@@ -37,6 +37,10 @@ public class BounceKnifeController : KnifeController
         this.RemoveObserver(OnWarpNotification, PlayerMotor.WarpNotification);
     }
 
+    /*
+     * Record variables and zero velocity in preparation for warp.
+     * Zero velocity probably needed to stop occasional warping into walls
+     */
     void OnWarpNotification(object sender, object args)
     {
         warpVelocity = rb.velocity;
@@ -56,11 +60,18 @@ public class BounceKnifeController : KnifeController
             ReturnKnifeTransition();
     }
 
+    /*
+     * Can warp if the timer has expired, and if knife has bounced (if must bounce)
+     * Or - has stuck into a surface
+     */
     public override bool CanWarp()
     {
-        return warpTimer > bounceWarpWaitTime && (hasCollided || !mustBounceToWarp);
+        return warpTimer > bounceWarpWaitTime && (hasCollided || !mustBounceToWarp) || HasStuck();
     }
 
+    /*
+     * Reset warp timer on bounce. Allow successive bounces to extend throw length
+     */
     void OnCollisionEnter(Collision _col)
     {
         if (HasStuck())
@@ -69,15 +80,19 @@ public class BounceKnifeController : KnifeController
         ContactPoint collide = _col.contacts[0];
         GameObject other = collide.otherCollider.gameObject;
 
-        // If collided surface is not a HardSurface, stick knife into it
+        // If collided surface is soft, stick knife into it
         if (other.GetComponent<SoftSurface>() != null || other.GetComponent<FibreOpticController>() != null)
             StickToSurface(collide.point, collide.normal, other);
         else
+            // reset timer
             warpTimer = 0f;
 
         hasCollided = true;
     }
 
+    /*
+     * BounceKnife should warp as soon as CanWarp conditions are met
+     */
     public override bool AutoWarp()
     {
         return true;
@@ -88,6 +103,9 @@ public class BounceKnifeController : KnifeController
         return warpVelocity;
     }
 
+    /*
+     * Treat boosts as bounces (count as collision and reset timer)
+     */
     public override void OnBoostNotification(object sender, object args)
     {
         Info<GameObject, Vector3> info = (Info<GameObject, Vector3>)args;
