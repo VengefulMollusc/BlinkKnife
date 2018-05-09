@@ -21,10 +21,10 @@ GameObject:
   - component: {fileID: 4677071720512346}
   - component: {fileID: 135882564489976058}
   - component: {fileID: 54694238066598660}
-  - component: {fileID: 114959101962075814}
+  - component: {fileID: 114968147039411874}
   - component: {fileID: 114848270002936760}
   m_Layer: 8
-  m_Name: BlinkKnife
+  m_Name: BoomerangKnife
   m_TagString: Knife
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -518,7 +518,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 17409
   skinWidth: 0.1
---- !u!114 &114959101962075814
+--- !u!114 &114968147039411874
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -526,14 +526,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1278214883471884}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2d29c01c37235449b5e78f5042a2390, type: 3}
+  m_Script: {fileID: 11500000, guid: 1629ea8fe7853bb4e9f14ebf9140d607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ownerTransform: {fileID: 0}
+  throwStrengthMod: 1
   rb: {fileID: 0}
   warpTimer: 0
   returning: 0
-  throwStrengthMod: 1
-  timeToAutoRecall: 1.5
+  boomerangDuration: 1
 --- !u!123 &123041678788244074
 LensFlare:
   m_ObjectHideFlags: 1

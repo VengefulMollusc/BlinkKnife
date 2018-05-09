@@ -399,20 +399,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysGravShift: 0
-  timeToAutoRecall: 1.5
   maxWarps: 3
   warpRechargeTime: 1
   warpWaitTime: 0.1
-  bounceWarpWaitTime: 0.2
   primaryKnifeBtn: Fire1
   altKnifeBtn: Fire2
   abilityButton: Fire3
   throwStrength: 80
   throwAngleModifier: 0
   throwHeightModifier: 0
-  blinkKnifePrefab: {fileID: 1278214883471884, guid: aeeeac3d9b392074786d74d2bd631263,
+  primaryKnifePrefab: {fileID: 1278214883471884, guid: 3a4716a2adce628488642f987b346dde,
     type: 2}
-  bounceKnifePrefab: {fileID: 1252273106319224, guid: e2fb8d09f06779f478b9ba9b003f7626,
+  secondaryKnifePrefab: {fileID: 1252273106319224, guid: e2fb8d09f06779f478b9ba9b003f7626,
     type: 2}
   knifeInHand: {fileID: 1000014104647230}
 --- !u!114 &114000010722407420

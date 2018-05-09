@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class KnifeController : MonoBehaviour
 {
-    private Transform playerTransform;
+    [HideInInspector]
+    public Transform ownerTransform;
+
+    public float throwStrengthMod = 1f;
 
     [HideInInspector]
     public Rigidbody rb;
@@ -34,9 +37,9 @@ public class KnifeController : MonoBehaviour
     /*
      * Passes the knifecontroller and parameter spin speed to the knife
      */
-    public virtual void Setup(Transform _playerTransform, WarpLookAheadCollider _lookAhead)
+    public virtual void Setup(Transform _ownerTransform, WarpLookAheadCollider _lookAhead)
     {
-        playerTransform = _playerTransform;
+        ownerTransform = _ownerTransform;
         warpLookAheadCollider = _lookAhead;
         rb = GetComponent<Rigidbody>();
 
@@ -55,7 +58,9 @@ public class KnifeController : MonoBehaviour
      */
     public virtual void Throw(Vector3 _velocity)
     {
-        Debug.LogError("Throw method must be overridden");
+        // throw the knife in the given direction with a certain force
+        rb.AddForce(_velocity * throwStrengthMod, ForceMode.VelocityChange);
+        this.PostNotification(AttachLookAheadColliderNotification, this);
     }
 
     /*
@@ -132,7 +137,7 @@ public class KnifeController : MonoBehaviour
         t = 0f;
         while (t <= 1f)
         {
-            transform.position = Vector3.Lerp(startPos, playerTransform.position, t);
+            transform.position = Vector3.Lerp(startPos, ownerTransform.position, t);
             t += Time.deltaTime / 0.5f; // 0.5f here defines length of transition
             yield return 0;
         }
@@ -213,8 +218,7 @@ public class KnifeController : MonoBehaviour
 
     public virtual bool CanWarp()
     {
-        Debug.LogError("CanWarp method must be overridden");
-        return false;
+        return HasStuck();
     }
 
     /*

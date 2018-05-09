@@ -5,8 +5,8 @@ using System.Collections;
 public class BounceKnifeController : KnifeController
 {
 
-    [SerializeField]
-    private float throwStrengthMod = 1f;
+    //[SerializeField]
+    //private float throwStrengthMod = 1f;
 
     [SerializeField]
     private bool mustBounceToWarp = true;
@@ -62,16 +62,9 @@ public class BounceKnifeController : KnifeController
         rb.isKinematic = true;
     }
 
-    public override void Throw(Vector3 _velocity)
-    {
-        // throw the knife in the given direction with a certain force
-        rb.AddForce(_velocity * throwStrengthMod, ForceMode.VelocityChange);
-        this.PostNotification(AttachLookAheadColliderNotification, this);
-    }
-
     void OnCollisionEnter(Collision _col)
     {
-        if (HasStuck() || rb == null)
+        if (HasStuck())
             return;
 
         ContactPoint collide = _col.contacts[0];

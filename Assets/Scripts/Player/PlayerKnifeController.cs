@@ -48,10 +48,10 @@ public class PlayerKnifeController : MonoBehaviour
 
     [Header("Prefabs")]
     [SerializeField]
-    private GameObject blinkKnifePrefab;
+    private GameObject primaryKnifePrefab;
 
     [SerializeField]
-    private GameObject bounceKnifePrefab;
+    private GameObject secondaryKnifePrefab;
 
     private bool lockKnife = false;
 
@@ -136,13 +136,13 @@ public class PlayerKnifeController : MonoBehaviour
     {
         uiControllerObject = GameObject.FindGameObjectWithTag("UIParent");
         // check for missing prefabs
-        if (blinkKnifePrefab == null)
+        if (primaryKnifePrefab == null)
         {
-            throw new MissingReferenceException("No blinkKnifePrefab object given.");
+            throw new MissingReferenceException("No primaryKnifePrefab object given.");
         }
-        if (bounceKnifePrefab == null)
+        if (secondaryKnifePrefab == null)
         {
-            throw new MissingReferenceException("No bounceKnifePrefab object given.");
+            throw new MissingReferenceException("No secondaryKnifePrefab object given.");
         }
         if (knifeInHand == null)
         {
@@ -208,7 +208,7 @@ public class PlayerKnifeController : MonoBehaviour
             }
             else/* if (!bounceWarp)*/
             {
-                // return thrown blink knife
+                // return thrown knife
                 knifeController.ReturnKnifeTransition();
                 //knifeRenderer.enabled = true;
             }
@@ -359,14 +359,14 @@ public class PlayerKnifeController : MonoBehaviour
         if (bounceWarp)
         {
             // throw bounce knife
-            //knife = (GameObject)Instantiate (bounceKnifePrefab, throwPosition, transform.rotation);
-            knife = Instantiate(bounceKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
+            //knife = (GameObject)Instantiate (secondaryKnifePrefab, throwPosition, transform.rotation);
+            knife = Instantiate(secondaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
         }
         else
         {
             // throw regular (blink) knife
-            //knife = (GameObject)Instantiate (blinkKnifePrefab, throwPosition, transform.rotation * throwDirectionQuaternion);
-            knife = Instantiate(blinkKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
+            //knife = (GameObject)Instantiate (primaryKnifePrefab, throwPosition, transform.rotation * throwDirectionQuaternion);
+            knife = Instantiate(primaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
         }
         knifeController = knife.GetComponent<KnifeController>();
 
@@ -380,7 +380,7 @@ public class PlayerKnifeController : MonoBehaviour
         }
 
         // set up and throw knife object
-        knifeController.Setup(player.transform, warpLookAheadCollider);
+        knifeController.Setup(knifeInHand.transform, warpLookAheadCollider);
         //		knifeController.Throw ((transform.forward * throwStrength) 
         //			+ (playerRb.velocity * 0.5f), this);
         knifeController.Throw(throwDirection * _strength);

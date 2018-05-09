@@ -4,8 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class BlinkKnifeController : KnifeController {
 
-    [SerializeField]
-    private float throwStrengthMod = 1f;
+    //[SerializeField]
+    //private float throwStrengthMod = 1f;
 
     [SerializeField]
     private float timeToAutoRecall = 1.5f;
@@ -46,25 +46,9 @@ public class BlinkKnifeController : KnifeController {
             ReturnKnifeTransition();
     }
 
-    public override bool CanWarp()
-    {
-        return HasStuck();
-    }
-
-    public override void Throw (Vector3 _velocity)
-    {
-        // throw the knife in the given direction with a certain force
-        rb.AddForce(_velocity * throwStrengthMod, ForceMode.VelocityChange);
-
-        // disable gravity for a moment to allow more accurate throws at close range
-        //GetComponent<UtiliseGravity>().TempDisableGravity(0.1f);
-
-        this.PostNotification(AttachLookAheadColliderNotification, this);
-    }
-
 	void OnCollisionEnter (Collision _col)
 	{
-	    if (HasStuck() || rb == null)
+	    if (HasStuck())
 	        return;
 
         ContactPoint collide = _col.contacts [0];
@@ -72,9 +56,9 @@ public class BlinkKnifeController : KnifeController {
 
         // If collided surface is not a HardSurface, stick knife into it
         // else post bounce notification
-        if (other.GetComponent<HardSurface>() == null)
-            StickToSurface (collide.point, collide.normal, other);
-        //else
-        //    this.PostNotification(KnifeBounceNotification);
-    }
+	    if (other.GetComponent<HardSurface>() == null)
+	        StickToSurface(collide.point, collide.normal, other);
+	    else
+	        warpTimer = 0f;
+	}
 }
