@@ -530,11 +530,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownerTransform: {fileID: 0}
-  throwStrengthMod: 0.5
+  throwStrengthMod: 0.6
   rb: {fileID: 0}
   warpTimer: 0
   returning: 0
-  maxDistToPlayer: 0
   boomerangDuration: 1.5
 --- !u!123 &123041678788244074
 LensFlare:

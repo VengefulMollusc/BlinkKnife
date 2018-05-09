@@ -26,6 +26,8 @@ public class BoomerangKnifeController : KnifeController
     private float transition;
     private float initialVelMagnitude;
 
+    //private float dist;
+
     public override void Throw(Vector3 _velocity)
     {
         //base.Throw(_velocity);
@@ -51,6 +53,8 @@ public class BoomerangKnifeController : KnifeController
         // calculate transition variables, bezier points etc
         transition = warpTimer / boomerangDuration;
 
+        //dist = Mathf.Max(dist, Vector3.Distance(transform.position, ownerTransform.position));
+
         if (transition <= 1f)
         {
             Vector3 ownerPos = ownerTransform.position;
@@ -61,6 +65,7 @@ public class BoomerangKnifeController : KnifeController
         }
         else
         {
+            //Debug.Log(dist);
             this.PostNotification(ReturnKnifeNotification);
         }
     }
