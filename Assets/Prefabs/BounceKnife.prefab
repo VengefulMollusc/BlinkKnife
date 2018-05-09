@@ -259,7 +259,7 @@ Rigidbody:
   m_GameObject: {fileID: 1252273106319224}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.1
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -499,10 +499,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 487992d5893634c448c968138fd69dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ownerTransform: {fileID: 0}
+  throwStrengthMod: 1
   rb: {fileID: 0}
   warpTimer: 0
   returning: 0
-  throwStrengthMod: 1
   mustBounceToWarp: 1
   bounceWarpWaitTime: 0.2
 --- !u!114 &114256750203955046

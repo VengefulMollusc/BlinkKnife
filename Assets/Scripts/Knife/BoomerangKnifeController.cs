@@ -64,9 +64,19 @@ public class BoomerangKnifeController : KnifeController
             StickToSurface(collide.point, collide.normal, other);
     }
 
-    public void Boost(Vector3 _velocity)
+    public Vector3 GetEffectiveVelocity()
     {
-        ResetBezier(_velocity.normalized * initialVelMagnitude);
+        return Utilities.BezierDerivative(startPos, tangentPoint, tangentPoint, ownerTransform.position, transition);
+    }
+
+    public override void OnBoostNotification(object sender, object args)
+    {
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>)args;
+        if (info.arg0 != gameObject)
+            return;
+
+        // boosted object is this knife
+        ResetBezier(info.arg1.normalized * initialVelMagnitude);
     }
 
     private void ResetBezier(Vector3 _newVelocity)
@@ -74,10 +84,5 @@ public class BoomerangKnifeController : KnifeController
         startPos = transform.position;
         tangentPoint = startPos + (_newVelocity * throwStrengthMod * (boomerangDuration * 0.5f));
         warpTimer = 0f;
-    }
-
-    public Vector3 GetEffectiveVelocity()
-    {
-        return Utilities.BezierDerivative(startPos, tangentPoint, tangentPoint, ownerTransform.position, transition);
     }
 }

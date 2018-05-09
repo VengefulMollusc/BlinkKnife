@@ -204,7 +204,7 @@ public class PlayerKnifeController : MonoBehaviour
             // throw bounce knife
             if (knife == null)
             {
-                BounceWarp();
+                ThrowKnife(throwStrength, true);
             }
             else/* if (!bounceWarp)*/
             {
@@ -346,9 +346,10 @@ public class PlayerKnifeController : MonoBehaviour
     /*
      * Throw knife at given strength
      */
-    void ThrowKnife(float _strength)
+    void ThrowKnife(float _strength, bool _secondary = false)
     {
-
+        if (currentWarps < 1)
+            return;
         // unfreeze player if hanging on wall
         // playerMotor.UnFreeze ();
 
@@ -356,7 +357,7 @@ public class PlayerKnifeController : MonoBehaviour
         Vector3 throwDirection = throwDirectionQuaternion * transform.forward;
         Vector3 throwPosition = transform.position + (transform.up * throwHeightModifier);
 
-        if (bounceWarp)
+        if (_secondary)
         {
             // throw bounce knife
             //knife = (GameObject)Instantiate (secondaryKnifePrefab, throwPosition, transform.rotation);
@@ -369,6 +370,7 @@ public class PlayerKnifeController : MonoBehaviour
             knife = Instantiate(primaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
         }
         knifeController = knife.GetComponent<KnifeController>();
+        bounceWarp = knifeController.IsBounceKnife();
 
         // ignore collisions between knife and this player
         //Utilities.IgnoreCollisions(knife.GetComponent<Collider>(), playerColliders, true);
@@ -390,17 +392,6 @@ public class PlayerKnifeController : MonoBehaviour
 
         //autoRecallTimer = timeToAutoRecall;
 
-    }
-
-    /*
-     * Activate the warp countdown and throw knife
-     *  - Warps as soon as countdown is over
-     */
-    void BounceWarp()
-    {
-        if (currentWarps < 1) return;
-        bounceWarp = true;
-        ThrowKnife(throwStrength);
     }
 
     /*

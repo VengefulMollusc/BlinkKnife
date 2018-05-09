@@ -92,14 +92,16 @@ public class BoostRing : MonoBehaviour
             }
         }
 
-        // TODO: replace this with notification handler
-        if (boom != null)
-            boom.Boost(boostDirection * magnitude);
-        else
-            rb.velocity = boostDirection * magnitude;
+        //// TODO: replace this with notification handler
+        //if (boom != null)
+        //    boom.Boost(boostDirection * magnitude);
+        //else
+        //    rb.velocity = boostDirection * magnitude;
+
+        Info<GameObject, Vector3> info = new Info<GameObject, Vector3>(col.gameObject, boostDirection * magnitude);
 
         // TODO: refactor this to post velocity and object in Info object.
         // Individual objects can handle different logic
-        this.PostNotification(BoostNotification, col.gameObject);
+        this.PostNotification(BoostNotification, info);
     }
 }

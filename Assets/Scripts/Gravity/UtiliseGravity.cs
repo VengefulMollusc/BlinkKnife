@@ -89,8 +89,8 @@ public class UtiliseGravity : MonoBehaviour {
     // Handles BoostNotifications from BoostRing
     void OnBoostNotification(object sender, object args)
     {
-        GameObject obj = args as GameObject;
-        if (obj != gameObject)
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>) args;
+        if (info.arg0 != gameObject)
             return;
 
         TempDisableGravity(0.2f);

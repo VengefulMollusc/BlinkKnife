@@ -34,6 +34,16 @@ public class KnifeController : MonoBehaviour
 
     public const string FibreOpticWarpNotification = "KnifeController.FibreOpticWarpNotification";
 
+    void OnEnable()
+    {
+        this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
+    }
+
+    void OnDisable()
+    {
+        this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
+    }
+
     /*
      * Passes the knifecontroller and parameter spin speed to the knife
      */
@@ -144,6 +154,16 @@ public class KnifeController : MonoBehaviour
 
         // tell playerKnifeController to destroy knife
         this.PostNotification(ReturnKnifeNotification);
+    }
+
+    public virtual void OnBoostNotification(object sender, object args)
+    {
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>)args;
+        if (info.arg0 != gameObject)
+            return;
+
+        // boosted object is this knife
+        rb.velocity = info.arg1;
     }
 
     public virtual Vector3 GetPosition()

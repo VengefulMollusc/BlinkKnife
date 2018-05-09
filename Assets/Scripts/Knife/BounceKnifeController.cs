@@ -89,6 +89,20 @@ public class BounceKnifeController : KnifeController
         return warpVelocity;
     }
 
+    public override void OnBoostNotification(object sender, object args)
+    {
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>)args;
+        if (info.arg0 != gameObject)
+            return;
+
+        // boosted object is this knife
+        rb.velocity = info.arg1;
+
+        Debug.Log("Boosting Knife");
+
+        hasCollided = true;
+    }
+
     //public override void Setup (PlayerKnifeController _controller)
     //{
     //    base.Setup(_controller);

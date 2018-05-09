@@ -267,11 +267,12 @@ public class PlayerMotor : MonoBehaviour
      */
     void OnBoostNotification(object sender, object args)
     {
-        GameObject boosted = (GameObject)args;
-        if (boosted != gameObject)
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>) args;
+        if (info.arg0 != gameObject)
             return;
 
         // boosted object is the player
+        rb.velocity = info.arg1;
         jumpTimer = jumpTimerDefault;
 
         if (hoverCoroutine != null)
