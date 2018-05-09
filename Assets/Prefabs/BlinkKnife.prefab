@@ -516,7 +516,7 @@ MonoBehaviour:
   sendTriggerMessage: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 17409
+    m_Bits: 148481
   skinWidth: 0.1
 --- !u!114 &114959101962075814
 MonoBehaviour:
@@ -529,10 +529,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d29c01c37235449b5e78f5042a2390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ownerTransform: {fileID: 0}
+  throwStrengthMod: 1
   rb: {fileID: 0}
   warpTimer: 0
   returning: 0
-  throwStrengthMod: 1
   timeToAutoRecall: 1.5
 --- !u!123 &123041678788244074
 LensFlare:

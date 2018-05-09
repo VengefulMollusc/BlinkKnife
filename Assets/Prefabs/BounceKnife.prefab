@@ -534,7 +534,7 @@ MonoBehaviour:
   sendTriggerMessage: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 17409
+    m_Bits: 148481
   skinWidth: 0.1
 --- !u!123 &123851809478215228
 LensFlare:

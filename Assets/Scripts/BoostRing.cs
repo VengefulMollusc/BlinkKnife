@@ -98,6 +98,8 @@ public class BoostRing : MonoBehaviour
         //else
         //    rb.velocity = boostDirection * magnitude;
 
+        Debug.Log("Boosting: " + col.gameObject.name);
+
         Info<GameObject, Vector3> info = new Info<GameObject, Vector3>(col.gameObject, boostDirection * magnitude);
 
         // TODO: refactor this to post velocity and object in Info object.

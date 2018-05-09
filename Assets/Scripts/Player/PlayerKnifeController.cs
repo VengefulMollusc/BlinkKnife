@@ -359,10 +359,6 @@ public class PlayerKnifeController : MonoBehaviour
 
         knife = Instantiate((_secondary) ? secondaryKnifePrefab : primaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
         knifeController = knife.GetComponent<KnifeController>();
-        autoWarp = knifeController.AutoWarp();
-
-        // ignore collisions between knife and this player
-        //Utilities.IgnoreCollisions(knife.GetComponent<Collider>(), playerColliders, true);
 
         if (knifeController == null)
         {
@@ -370,17 +366,14 @@ public class PlayerKnifeController : MonoBehaviour
             return;
         }
 
+        autoWarp = knifeController.AutoWarp();
+
         // set up and throw knife object
         knifeController.Setup(knifeInHand.transform, warpLookAheadCollider);
-        //		knifeController.Throw ((transform.forward * throwStrength) 
-        //			+ (playerRb.velocity * 0.5f), this);
         knifeController.Throw(throwDirection * _strength);
 
         // hide knife view object
         knifeRenderer.enabled = false;
-
-        //autoRecallTimer = timeToAutoRecall;
-
     }
 
     /*
