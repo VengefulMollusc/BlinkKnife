@@ -6,18 +6,15 @@ public class BoomerangKnifeController : KnifeController
 {
     [SerializeField] private float boomerangDuration = 2f;
 
-    private float recallRange = 1f;
-
     private Vector3 startPos;
     private Vector3 tangentPoint;
-
-    void Start()
-    {
-        recallRange = recallRange * recallRange;
-    }
+    private float transition;
+    private float initialVelMagnitude;
 
     public override void Throw(Vector3 _velocity)
     {
+        //base.Throw(_velocity);
+        initialVelMagnitude = _velocity.magnitude;
         this.PostNotification(AttachLookAheadColliderNotification, this);
 
         startPos = transform.position;
@@ -29,30 +26,29 @@ public class BoomerangKnifeController : KnifeController
         if (returning)
             return;
 
+        //if (rb.velocity != Vector3.zero)
+        //{
+        //    // something has affected velocity - boostRing etc.
+        //    Vector3 tempVel = rb.velocity;
+        //    rb.velocity = Vector3.zero;
+        //    ResetBezier(tempVel);
+        //}
+
         warpTimer += Time.fixedDeltaTime;
 
         if (HasStuck())
             return;
 
-        float t = warpTimer / boomerangDuration;
-        if (t <= 1f)
+        transition = warpTimer / boomerangDuration;
+        if (transition <= 1f)
         {
-            rb.MovePosition(Utilities.LerpBezier(startPos, tangentPoint, tangentPoint, ownerTransform.position, t));
+            //rb.velocity = Utilities.BezierDerivative(startPos, tangentPoint, tangentPoint, ownerTransform.position, t);
+            rb.MovePosition(Utilities.LerpBezier(startPos, tangentPoint, tangentPoint, ownerTransform.position, transition));
         }
         else
         {
             this.PostNotification(ReturnKnifeNotification);
         }
-
-        //// update boomerang physics
-        //if (warpTimer > 0.5f)
-        //{
-        //    Vector3 dir = ownerTransform.position - transform.position;
-        //    rb.AddForce(dir.normalized * boomerangForce, ForceMode.Acceleration);
-
-        //    if (dir.sqrMagnitude < recallRange)
-        //        this.PostNotification(ReturnKnifeNotification);
-        //}
     }
 
     void OnCollisionEnter(Collision _col)
@@ -66,5 +62,22 @@ public class BoomerangKnifeController : KnifeController
         // If collided surface is not a HardSurface, stick knife into it
         if (other.GetComponent<HardSurface>() == null)
             StickToSurface(collide.point, collide.normal, other);
+    }
+
+    public void Boost(Vector3 _velocity)
+    {
+        ResetBezier(_velocity.normalized * initialVelMagnitude);
+    }
+
+    private void ResetBezier(Vector3 _newVelocity)
+    {
+        startPos = transform.position;
+        tangentPoint = startPos + (_newVelocity * throwStrengthMod * (boomerangDuration * 0.5f));
+        warpTimer = 0f;
+    }
+
+    public Vector3 GetEffectiveVelocity()
+    {
+        return Utilities.BezierDerivative(startPos, tangentPoint, tangentPoint, ownerTransform.position, transition);
     }
 }

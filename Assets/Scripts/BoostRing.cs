@@ -59,11 +59,13 @@ public class BoostRing : MonoBehaviour
             return;
 
         //col.transform.position = transform.position + (transform.up * 0.5f); // Added 0.5 up here as position zero currently sits at one edge
+        BoomerangKnifeController boom = col.GetComponent<BoomerangKnifeController>();
+        Vector3 vel = (boom != null) ? boom.GetEffectiveVelocity() : rb.velocity;
 
         Vector3 boostDirection;
-        float magnitude = Mathf.Max(rb.velocity.magnitude + boostStrength, minMagnitude);
+        float magnitude = Mathf.Max(vel.magnitude + boostStrength, minMagnitude);
 
-        if (Vector3.Dot(transform.up, rb.velocity) > 0f)
+        if (Vector3.Dot(transform.up, vel) > 0f)
         {
             if (nextTarget != Vector3.zero)
             {
@@ -90,8 +92,14 @@ public class BoostRing : MonoBehaviour
             }
         }
 
-        rb.velocity = boostDirection * magnitude;
+        // TODO: replace this with notification handler
+        if (boom != null)
+            boom.Boost(boostDirection * magnitude);
+        else
+            rb.velocity = boostDirection * magnitude;
 
+        // TODO: refactor this to post velocity and object in Info object.
+        // Individual objects can handle different logic
         this.PostNotification(BoostNotification, col.gameObject);
     }
 }
