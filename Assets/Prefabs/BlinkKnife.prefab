@@ -534,7 +534,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   warpTimer: 0
   returning: 0
-  timeToAutoRecall: 1.5
+  timeToAutoRecall: 1
 --- !u!123 &123041678788244074
 LensFlare:
   m_ObjectHideFlags: 1

@@ -59,13 +59,10 @@ public class TransitionCameraController : MonoBehaviour
             Debug.LogError("No BlackoutCamera assigned");
 
         cam = GetComponent<Camera>();
-        //cam.enabled = false;
-        //blackoutCamera.enabled = false;
         chromAberration = GetComponent<VignetteAndChromaticAberration>();
         chromDiff = chromaticAberrationMaxValue - chromAberration.chromaticAberration;
 
         rb = GetComponent<Rigidbody>();
-        //rb.detectCollisions = false;
 
         Disable();
     }

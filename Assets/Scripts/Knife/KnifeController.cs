@@ -134,6 +134,8 @@ public class KnifeController : MonoBehaviour
         rb.isKinematic = true;
         rb.detectCollisions = false;
         Vector3 startPos = transform.position;
+        float dist = (ownerTransform.position - startPos).magnitude;
+        float duration = dist * 0.01f;
 
         // hold knife in position for a short time
         float t = 0f;
@@ -148,7 +150,7 @@ public class KnifeController : MonoBehaviour
         while (t <= 1f)
         {
             transform.position = Vector3.Lerp(startPos, ownerTransform.position, t);
-            t += Time.deltaTime / 0.5f; // 0.5f here defines length of transition
+            t += Time.deltaTime / duration; // 0.5f here defines length of transition
             yield return 0;
         }
 
