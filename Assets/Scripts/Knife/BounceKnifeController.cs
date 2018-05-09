@@ -46,13 +46,15 @@ public class BounceKnifeController : KnifeController
         return warpTimer > bounceWarpWaitTime && (hasCollided || !mustBounceToWarp);
     }
 
-    void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
         this.AddObserver(OnWarpNotification, PlayerMotor.WarpNotification);
     }
 
-    void OnDisable()
+    public override void OnDisable()
     {
+        base.OnDisable();
         this.RemoveObserver(OnWarpNotification, PlayerMotor.WarpNotification);
     }
 
@@ -98,9 +100,8 @@ public class BounceKnifeController : KnifeController
         // boosted object is this knife
         rb.velocity = info.arg1;
 
-        Debug.Log("Boosting Knife");
-
         hasCollided = true;
+        warpTimer = 0f;
     }
 
     //public override void Setup (PlayerKnifeController _controller)

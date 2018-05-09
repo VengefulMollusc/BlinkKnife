@@ -34,12 +34,12 @@ public class KnifeController : MonoBehaviour
 
     public const string FibreOpticWarpNotification = "KnifeController.FibreOpticWarpNotification";
 
-    void OnEnable()
+    public virtual void OnEnable()
     {
         this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
     }
 
-    void OnDisable()
+    public virtual void OnDisable()
     {
         this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
     }
