@@ -400,7 +400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysGravShift: 0
   maxWarps: 3
-  warpRechargeTime: 1
+  warpRechargeTime: 0.5
   warpWaitTime: 0.1
   primaryKnifeBtn: Fire1
   altKnifeBtn: Fire2

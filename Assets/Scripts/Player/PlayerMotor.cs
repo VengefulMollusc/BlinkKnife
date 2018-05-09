@@ -650,7 +650,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         // TODO: parenting may be obsolete
-        transform.SetParent(null);
+        //transform.SetParent(null);
 
         // Unsure if this needs to happen before or after the moveposition
 

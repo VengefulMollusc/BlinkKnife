@@ -25,23 +25,6 @@ public class BounceKnifeController : KnifeController
 
     private Vector3 warpVelocity;
 
-    void Update()
-    {
-        if (returning)
-            return;
-
-        warpTimer += Time.deltaTime;
-
-        if (mustBounceToWarp && !hasCollided && warpTimer > bounceWarpWaitTime)
-            // return knife
-            ReturnKnifeTransition();
-    }
-
-    public override bool CanWarp()
-    {
-        return warpTimer > bounceWarpWaitTime && (hasCollided || !mustBounceToWarp);
-    }
-
     public override void OnEnable()
     {
         base.OnEnable();
@@ -57,7 +40,25 @@ public class BounceKnifeController : KnifeController
     void OnWarpNotification(object sender, object args)
     {
         warpVelocity = rb.velocity;
+        rb.velocity = Vector3.zero;
         rb.isKinematic = true;
+    }
+
+    void Update()
+    {
+        if (returning)
+            return;
+
+        warpTimer += Time.deltaTime;
+
+        if (mustBounceToWarp && !hasCollided && warpTimer > bounceWarpWaitTime)
+            // return knife
+            ReturnKnifeTransition();
+    }
+
+    public override bool CanWarp()
+    {
+        return warpTimer > bounceWarpWaitTime && (hasCollided || !mustBounceToWarp);
     }
 
     void OnCollisionEnter(Collision _col)
@@ -99,43 +100,4 @@ public class BounceKnifeController : KnifeController
         hasCollided = true;
         warpTimer = 0f;
     }
-
-    //public override void Setup (PlayerKnifeController _controller)
-    //{
-    //    base.Setup(_controller);
-
-    //    // add random throw angle
-    //    // could raycast throw angle to match surface hit?
-    //    // WITH BOTH KNIVES?
-    //    //visuals.transform.Rotate (0f, 0f, ((Random.value * 2f) - 1f) * 90f);
-
-    //    //SetThrowRotation();
-    //}
-
-    /*
-     * Unsure how useful this is, if knife too fast then you probably cant even see it
-     */
-    //private void SetThrowRotation(){
-    //    RaycastHit hit;
-
-    //    if (Physics.Raycast(transform.position, transform.forward, out hit, 100f))
-    //    {
-    //        Vector3 hitNormal = hit.normal;
-    //        Vector3 projected = Vector3.ProjectOnPlane(hitNormal, transform.forward).normalized;
-
-    //        float angle = Vector3.Angle(transform.up, projected);
-    //        bool positive = (Vector3.Dot(projected, transform.right) >= 0f);
-    //        if (positive)
-    //        {
-    //            visuals.transform.Rotate(0f, 0f, angle);
-    //        } else
-    //        {
-    //            visuals.transform.Rotate(0f, 0f, -angle);
-    //        }
-    //    } else
-    //    {
-    //        //visuals.transform.Rotate(0f, 0f, ((Random.value * 2f) - 1f) * 90f);
-    //        visuals.transform.Rotate(0f, 0f, 90f);
-    //    }
-    //}
 }
