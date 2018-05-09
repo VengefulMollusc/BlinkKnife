@@ -62,6 +62,7 @@ public class TransitionCameraController : MonoBehaviour
         //cam.enabled = false;
         //blackoutCamera.enabled = false;
         chromAberration = GetComponent<VignetteAndChromaticAberration>();
+        chromDiff = chromaticAberrationMaxValue - chromAberration.chromaticAberration;
 
         rb = GetComponent<Rigidbody>();
         //rb.detectCollisions = false;
@@ -80,8 +81,6 @@ public class TransitionCameraController : MonoBehaviour
         endRot = _endRot;
         camRelativePos = endRot * _camRelativePos;
         gravityShift = _gravityShift;
-
-        chromDiff = chromaticAberrationMaxValue - chromAberration.chromaticAberration;
         
         cam.fieldOfView = _fov;
         rb.detectCollisions = true;
