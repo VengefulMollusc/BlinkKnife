@@ -12,13 +12,18 @@ public class BoomerangKnifeController : KnifeController
      * Travels for a while before turning back and returning to the player
      * Note: this is NOT a recall as it can still collide with objects on the return journey
      * 
+     * Can be 'aimed' mid-flight by turning player camera
+     * 
      * Sticks into surfaces and waits for player input to warp
      */
 
     [SerializeField] private float boomerangDuration = 2f;
 
     private Vector3 startPos;
-    private Vector3 tangentPoint;
+    private float tangentMagnitude;
+    private Vector3 tangentOne;
+    private Vector3 tangentOnePos;
+    private Vector3 tangentTwo;
     private float transition;
     private float initialVelMagnitude;
 
@@ -29,7 +34,10 @@ public class BoomerangKnifeController : KnifeController
         this.PostNotification(AttachLookAheadColliderNotification, this);
 
         startPos = transform.position;
-        tangentPoint = startPos + (_velocity * throwStrengthMod * (boomerangDuration * 0.5f));
+        tangentOne = _velocity * throwStrengthMod * (boomerangDuration * 0.5f);
+        tangentOnePos = startPos + tangentOne;
+        tangentTwo = tangentOne;
+        tangentMagnitude = tangentOne.magnitude;
     }
 
     void FixedUpdate()
@@ -42,14 +50,16 @@ public class BoomerangKnifeController : KnifeController
         if (HasStuck())
             return;
 
+        // calculate transition variables, bezier points etc
         transition = warpTimer / boomerangDuration;
-        Vector3 ownerPos = ownerTransform.position;
-        Vector3 secondTangent = ownerPos +
-                                (ownerTransform.forward * initialVelMagnitude * (boomerangDuration * 0.5f));
+
         if (transition <= 1f)
         {
-            //rb.velocity = Utilities.BezierDerivative(startPos, tangentPoint, tangentPoint, ownerTransform.position, t);
-            rb.MovePosition(Utilities.LerpBezier(startPos, tangentPoint, secondTangent, ownerPos, transition));
+            Vector3 ownerPos = ownerTransform.position;
+            Vector3 viewDirection = ownerTransform.forward * tangentMagnitude;
+            tangentTwo = Vector3.RotateTowards(tangentTwo, viewDirection, 0.5f * Mathf.Deg2Rad, 0f);
+
+            rb.MovePosition(Utilities.LerpBezier(startPos, tangentOnePos, ownerPos + tangentTwo, ownerPos, transition));
         }
         else
         {
@@ -72,7 +82,7 @@ public class BoomerangKnifeController : KnifeController
 
     public Vector3 GetEffectiveVelocity()
     {
-        return Utilities.BezierDerivative(startPos, tangentPoint, tangentPoint, ownerTransform.position, transition);
+        return Utilities.BezierDerivative(startPos, tangentOne, tangentOne, ownerTransform.position, transition);
     }
 
     public override void OnBoostNotification(object sender, object args)
@@ -88,7 +98,7 @@ public class BoomerangKnifeController : KnifeController
     private void ResetBezier(Vector3 _newVelocity)
     {
         startPos = transform.position;
-        tangentPoint = startPos + (_newVelocity * throwStrengthMod * (boomerangDuration * 0.5f));
+        tangentOne = startPos + (_newVelocity * throwStrengthMod * (boomerangDuration * 0.5f));
         warpTimer = 0f;
     }
 }
