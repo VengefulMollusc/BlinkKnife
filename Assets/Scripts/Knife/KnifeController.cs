@@ -114,11 +114,13 @@ public class KnifeController : MonoBehaviour
 
     private IEnumerator ReturnKnifeAnimation()
     {
+        // freeze knife and disable collisions
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
         rb.detectCollisions = false;
         Vector3 startPos = transform.position;
 
+        // hold knife in position for a short time
         float t = 0f;
         while (t < 0.2f)
         {
@@ -126,6 +128,7 @@ public class KnifeController : MonoBehaviour
             yield return 0;
         }
 
+        // animate knife returning to player
         t = 0f;
         while (t <= 1f)
         {
@@ -134,6 +137,7 @@ public class KnifeController : MonoBehaviour
             yield return 0;
         }
 
+        // tell playerKnifeController to destroy knife
         this.PostNotification(ReturnKnifeNotification);
     }
 

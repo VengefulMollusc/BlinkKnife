@@ -204,9 +204,9 @@ public class PlayerKnifeController : MonoBehaviour
             // throw bounce knife
             if (knife == null)
             {
-                ThrowWarp();
+                BounceWarp();
             }
-            else if (knife != null && !bounceWarp)
+            else/* if (!bounceWarp)*/
             {
                 // return thrown blink knife
                 knifeController.ReturnKnifeTransition();
@@ -396,7 +396,7 @@ public class PlayerKnifeController : MonoBehaviour
      * Activate the warp countdown and throw knife
      *  - Warps as soon as countdown is over
      */
-    void ThrowWarp()
+    void BounceWarp()
     {
         if (currentWarps < 1) return;
         bounceWarp = true;
