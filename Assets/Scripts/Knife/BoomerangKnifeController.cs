@@ -4,6 +4,17 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class BoomerangKnifeController : KnifeController
 {
+    /*
+     * 'Boomerang' knife option.
+     * Useful for shorter-range (compared to BlinkKnife) accurate traversal,
+     * or navigation to hard-to-reach areas through collisions on the return journey
+     * 
+     * Travels for a while before turning back and returning to the player
+     * Note: this is NOT a recall as it can still collide with objects on the return journey
+     * 
+     * Sticks into surfaces and waits for player input to warp
+     */
+
     [SerializeField] private float boomerangDuration = 2f;
 
     private Vector3 startPos;
@@ -26,24 +37,19 @@ public class BoomerangKnifeController : KnifeController
         if (returning)
             return;
 
-        //if (rb.velocity != Vector3.zero)
-        //{
-        //    // something has affected velocity - boostRing etc.
-        //    Vector3 tempVel = rb.velocity;
-        //    rb.velocity = Vector3.zero;
-        //    ResetBezier(tempVel);
-        //}
-
         warpTimer += Time.fixedDeltaTime;
 
         if (HasStuck())
             return;
 
         transition = warpTimer / boomerangDuration;
+        Vector3 ownerPos = ownerTransform.position;
+        Vector3 secondTangent = ownerPos +
+                                (ownerTransform.forward * initialVelMagnitude * (boomerangDuration * 0.5f));
         if (transition <= 1f)
         {
             //rb.velocity = Utilities.BezierDerivative(startPos, tangentPoint, tangentPoint, ownerTransform.position, t);
-            rb.MovePosition(Utilities.LerpBezier(startPos, tangentPoint, tangentPoint, ownerTransform.position, transition));
+            rb.MovePosition(Utilities.LerpBezier(startPos, tangentPoint, secondTangent, ownerPos, transition));
         }
         else
         {

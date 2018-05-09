@@ -4,9 +4,17 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class BounceKnifeController : KnifeController
 {
-
-    //[SerializeField]
-    //private float throwStrengthMod = 1f;
+    /*
+     * 'Bouncy' knife option.
+     * Useful for navigating spaces too small for the player, 
+     * or for rapid movement due to speed boost and ability to bounce round corners
+     * 
+     * travels for a short distance before recalling
+     * If it hits something, the life timer resets and it bounces.
+     * 
+     * auto-warps when the timer has run out if it has bounced off any surface.
+     * player recieved a speed boost in the direction the knife was travelling when warp occurs
+     */
 
     [SerializeField]
     private bool mustBounceToWarp = true;
@@ -16,18 +24,6 @@ public class BounceKnifeController : KnifeController
     private float bounceWarpWaitTime = 0.2f;
 
     private Vector3 warpVelocity;
-
-    //[SerializeField]
-    //private GameObject visuals;
-
-    //void FixedUpdate()
-    //{
-    //    if (HasStuck() || rb == null)
-    //        return;
-
-    //    if (rb.velocity != Vector3.zero)
-    //        transform.forward = rb.velocity;
-    //}
 
     void Update()
     {
