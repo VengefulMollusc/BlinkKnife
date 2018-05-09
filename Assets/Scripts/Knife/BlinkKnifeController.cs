@@ -4,7 +4,6 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class BlinkKnifeController : KnifeController
 {
-
     /*
      * 'Default' knife option.
      * Useful for accurate traversal of longer distances
@@ -38,7 +37,7 @@ public class BlinkKnifeController : KnifeController
         GameObject other = collide.otherCollider.gameObject;
 
         // If collided surface is not a HardSurface, stick knife into it
-        // else post bounce notification
+        // else bounce and reset timer
         if (other.GetComponent<HardSurface>() == null)
             StickToSurface(collide.point, collide.normal, other);
         else

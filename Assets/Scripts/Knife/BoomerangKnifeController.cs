@@ -98,7 +98,7 @@ public class BoomerangKnifeController : KnifeController
         else
         {
             // Reflect knife off surface
-            Vector3 newVel = Vector3.Reflect(GetEffectiveVelocity(), collide.normal);
+            Vector3 newVel = Vector3.Reflect(GetVelocity(), collide.normal);
             transform.position = collide.point;
             ResetBezier(newVel, true);
         }
@@ -108,7 +108,7 @@ public class BoomerangKnifeController : KnifeController
      * returns the derivative of the bezier at the current time.
      * Needed as rigidbody velocity should be zero (as movement is handled by bezier lerping)
      */
-    public Vector3 GetEffectiveVelocity()
+    public override Vector3 GetVelocity()
     {
         Vector3 ownerPos = ownerTransform.position;
         return Utilities.BezierDerivative(startPos, tangentOnePos, ownerPos + tangentTwo, ownerPos, transition);

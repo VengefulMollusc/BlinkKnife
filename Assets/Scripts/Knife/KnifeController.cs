@@ -217,8 +217,6 @@ public class KnifeController : MonoBehaviour
 
     /*
      * Gets the current velocity of the knife
-     * 
-     * bool determines whether to return the velocity at point of throw
      */
     public virtual Vector3 GetVelocity()
     {
