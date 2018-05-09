@@ -25,7 +25,7 @@ public class PlayerKnifeController : MonoBehaviour
     //private float bounceWarpWaitTime = 0.2f;
     private float warpCountDown = 0;
 
-    private bool bounceWarp = false;
+    private bool autoWarp = false;
 
     [Header("Weapon Settings")]
     [SerializeField]
@@ -206,7 +206,7 @@ public class PlayerKnifeController : MonoBehaviour
             {
                 ThrowKnife(throwStrength, true);
             }
-            else/* if (!bounceWarp)*/
+            else/* if (!autoWarp)*/
             {
                 // return thrown knife
                 knifeController.ReturnKnifeTransition();
@@ -266,9 +266,9 @@ public class PlayerKnifeController : MonoBehaviour
     {
         if (!lockKnife && knife != null && knifeController.CanWarp() && currentWarps >= 1)
         { // Require mouse click to warp
-          //if (!lockKnife && knife != null && (knifeController.HasStuck() || bounceWarp)) { // warps instantly without mouse click
+          //if (!lockKnife && knife != null && (knifeController.HasStuck() || autoWarp)) { // warps instantly without mouse click
           // we are trying to warp
-            if (bounceWarp)
+            if (autoWarp)
             {
                 Warp();
                 return;
@@ -357,20 +357,9 @@ public class PlayerKnifeController : MonoBehaviour
         Vector3 throwDirection = throwDirectionQuaternion * transform.forward;
         Vector3 throwPosition = transform.position + (transform.up * throwHeightModifier);
 
-        if (_secondary)
-        {
-            // throw bounce knife
-            //knife = (GameObject)Instantiate (secondaryKnifePrefab, throwPosition, transform.rotation);
-            knife = Instantiate(secondaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
-        }
-        else
-        {
-            // throw regular (blink) knife
-            //knife = (GameObject)Instantiate (primaryKnifePrefab, throwPosition, transform.rotation * throwDirectionQuaternion);
-            knife = Instantiate(primaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
-        }
+        knife = Instantiate((_secondary) ? secondaryKnifePrefab : primaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
         knifeController = knife.GetComponent<KnifeController>();
-        bounceWarp = knifeController.IsBounceKnife();
+        autoWarp = knifeController.AutoWarp();
 
         // ignore collisions between knife and this player
         //Utilities.IgnoreCollisions(knife.GetComponent<Collider>(), playerColliders, true);
@@ -402,7 +391,7 @@ public class PlayerKnifeController : MonoBehaviour
         Destroy(knife);
         knife = null;
         knifeController = null;
-        bounceWarp = false;
+        autoWarp = false;
         UnHideKnife();
         //knifeRenderer.enabled = true;
     }
@@ -427,7 +416,7 @@ public class PlayerKnifeController : MonoBehaviour
 
             playerMotor.WarpToKnife(false, knifeController, false, fibreOpticController);
 
-            bounceWarp = false;
+            autoWarp = false;
         }
         else
         {
@@ -451,9 +440,9 @@ public class PlayerKnifeController : MonoBehaviour
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
         //Vector3 _velocity = knifeController.GetVelocity().normalized;
         //playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetStuckObject(), knifeController.GetSurfaceNormal());
-        playerMotor.WarpToKnife(shiftGravity, knifeController, bounceWarp);
+        playerMotor.WarpToKnife(shiftGravity, knifeController, autoWarp);
 
-        bounceWarp = false;
+        autoWarp = false;
     }
 
     void EndWarp(object sender, object args)
@@ -501,7 +490,7 @@ public class PlayerKnifeController : MonoBehaviour
 
     public float GetWarpCountdownNormalised()
     {
-        //if (bounceWarp)
+        //if (autoWarp)
         //    return warpCountDown / bounceWarpWaitTime;
         return warpCountDown / warpWaitTime;
     }

@@ -79,7 +79,7 @@ public class BounceKnifeController : KnifeController
         hasCollided = true;
     }
 
-    public override bool IsBounceKnife()
+    public override bool AutoWarp()
     {
         return true;
     }

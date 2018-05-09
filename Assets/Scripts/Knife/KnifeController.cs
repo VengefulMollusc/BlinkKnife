@@ -231,7 +231,10 @@ public class KnifeController : MonoBehaviour
         return stuckInSurface;
     }
 
-    public virtual bool IsBounceKnife()
+    /*
+     * Tells the playerKnifeController to warp as soon as the CanWarp conditions are met
+     */
+    public virtual bool AutoWarp()
     {
         return false;
     }
