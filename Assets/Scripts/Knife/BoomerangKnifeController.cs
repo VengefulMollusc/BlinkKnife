@@ -21,7 +21,6 @@ public class BoomerangKnifeController : KnifeController
 
     private Vector3 startPos;
     private float tangentMagnitude;
-    private Vector3 tangentOne;
     private Vector3 tangentOnePos;
     private Vector3 tangentTwo;
     private float transition;
@@ -34,10 +33,9 @@ public class BoomerangKnifeController : KnifeController
         this.PostNotification(AttachLookAheadColliderNotification, this);
 
         startPos = transform.position;
-        tangentOne = _velocity * throwStrengthMod * (boomerangDuration * 0.5f);
-        tangentOnePos = startPos + tangentOne;
-        tangentTwo = tangentOne;
-        tangentMagnitude = tangentOne.magnitude;
+        tangentTwo = _velocity * throwStrengthMod * (boomerangDuration * 0.5f);
+        tangentOnePos = startPos + tangentTwo;
+        tangentMagnitude = tangentTwo.magnitude;
     }
 
     void FixedUpdate()
@@ -82,7 +80,8 @@ public class BoomerangKnifeController : KnifeController
 
     public Vector3 GetEffectiveVelocity()
     {
-        return Utilities.BezierDerivative(startPos, tangentOne, tangentOne, ownerTransform.position, transition);
+        Vector3 ownerPos = ownerTransform.position;
+        return Utilities.BezierDerivative(startPos, tangentOnePos, ownerPos + tangentTwo, ownerPos, transition);
     }
 
     public override void OnBoostNotification(object sender, object args)
@@ -98,7 +97,7 @@ public class BoomerangKnifeController : KnifeController
     private void ResetBezier(Vector3 _newVelocity)
     {
         startPos = transform.position;
-        tangentOne = startPos + (_newVelocity * throwStrengthMod * (boomerangDuration * 0.5f));
+        tangentOnePos = startPos + _newVelocity * throwStrengthMod * (boomerangDuration * 0.5f);
         warpTimer = 0f;
     }
 }
