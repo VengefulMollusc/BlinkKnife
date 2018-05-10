@@ -286,6 +286,11 @@ public class PlayerKnifeController : MonoBehaviour
         HideKnife(true);
     }
 
+    public KnifeController GetActiveKnifeController()
+    {
+        return knifeController;
+    }
+
     /*
      * Returns a thrown knife and nullifies knife variables
      */
