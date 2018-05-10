@@ -560,10 +560,15 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
+    public bool CanJump()
+    {
+        return IsOnGround() && !vaulting && !frozen;
+    }
+
     // perform jump when triggered by PlayerController
     public void Jump(float _jumpStrength)
     {
-        if (!IsOnGround() || frozen || vaulting)
+        if (!CanJump())
             return;
 
         // if already moving up, keeps current vertical momentum

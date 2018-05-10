@@ -5,6 +5,12 @@ using UnityEngine;
 public class MissileRedirectAbility : Ability
 {
     private string displayName = "Missile Retarget";
+    private PlayerKnifeController knifeController;
+
+    void Start()
+    {
+        knifeController = GetComponentInChildren<PlayerKnifeController>();
+    }
 
     public override void Activate()
     {

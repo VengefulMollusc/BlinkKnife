@@ -12,7 +12,7 @@ public class Ability : MonoBehaviour
 
     public virtual void EndActivation()
     {
-        // do the thing here
+        // stop doing the thing here
     }
 
     public virtual string GetDisplayName()

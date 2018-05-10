@@ -13,7 +13,7 @@ public class SuperJumpAbility : Ability
 
     void Start()
     {
-        playerMotor = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMotor>();
+        playerMotor = transform.parent.GetComponent<PlayerMotor>();
     }
 
     void Update()
@@ -24,7 +24,7 @@ public class SuperJumpAbility : Ability
 
     public override void Activate()
     {
-        if (cooldown <= 0f)
+        if (cooldown <= 0f && playerMotor.CanJump())
         {
             playerMotor.Jump(superJumpStrength);
             cooldown = cooldownTime;
