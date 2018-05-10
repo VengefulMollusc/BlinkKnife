@@ -18,13 +18,13 @@ public class CubeLauncher : MonoBehaviour, WeaponController {
         }
     } 
 
-    public bool ClickMouse(Transform _target, Transform _camera, Collider[] _playerCol)
+    public void ClickMouse(Transform _target, Transform _camera, Collider[] _playerCol)
     {
         // deactivate cube if exists
         if (cube != null)
         {
             cube.Toggle();
-            return false;
+            return;
         }
 
         if (_target != null)
@@ -39,7 +39,6 @@ public class CubeLauncher : MonoBehaviour, WeaponController {
             cube = cubeObject.GetComponent<CubeController>();
             cube.Setup(_camera, _playerCol, _target);
         }
-        return false;
     }
 
     public bool ReleaseMouse()

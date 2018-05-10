@@ -4,7 +4,7 @@ using System.Collections;
 public interface WeaponController
 {
 
-	bool ClickMouse(Transform _target, Transform _camera, Collider[] _playerCols);
+	void ClickMouse(Transform _target, Transform _camera, Collider[] _playerCols);
     
     bool ReleaseMouse();
 

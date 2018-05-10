@@ -45,8 +45,6 @@ public class PlayerKnifeController : MonoBehaviour
     [SerializeField]
     private GameObject secondaryKnifePrefab;
 
-    private bool lockKnife;
-
     private WeaponController weapon;
 
     [SerializeField]
@@ -126,7 +124,7 @@ public class PlayerKnifeController : MonoBehaviour
         // Don't allow input if player is frozen
         if (playerMotor.IsFrozen()) return;
 
-        if (Input.GetButtonDown(leftMouse) && !lockKnife)
+        if (Input.GetButtonDown(leftMouse))
         {
             // Throw primary knife
             if (knife == null)
@@ -134,7 +132,7 @@ public class PlayerKnifeController : MonoBehaviour
                 ThrowKnife(throwStrength);
             }
         }
-        else if (Input.GetButtonDown(rightMouse) && !lockKnife)
+        else if (Input.GetButtonDown(rightMouse))
         {
             // secondary knife throw
             if (knife == null)
@@ -151,20 +149,12 @@ public class PlayerKnifeController : MonoBehaviour
         {
             // weapon button
             //if (weapon.ClickMouse((knife != null) ? knife.transform : null, transform, playerColliders))
-            if (weapon.ClickMouse(null, transform, playerColliders))
-            {
-                // if weapon activates, lock knife
-                lockKnife = true;
-            }
+            weapon.ClickMouse(null, transform, playerColliders);
         }
         else if (Input.GetButtonUp(middleMouse))
         {
             // release weapon button
-            if (weapon.ReleaseMouse())
-            {
-                // unlock knife if weapon released
-                lockKnife = false;
-            }
+            weapon.ReleaseMouse();
         }
 
         // check warp progress
@@ -179,7 +169,7 @@ public class PlayerKnifeController : MonoBehaviour
      */
     void CheckIfWarp()
     {
-        if (!lockKnife && knife != null && knifeController.CanWarp() && currentWarps >= 1)
+        if (knife != null && knifeController.CanWarp() && currentWarps >= 1)
         { // Require mouse click to warp
             if (autoWarp)
             {
@@ -374,15 +364,6 @@ public class PlayerKnifeController : MonoBehaviour
     public void HideKnife(bool _hideKnife)
     {
         knifeViewModelRenderer.enabled = !_hideKnife;
-    }
-
-    /*
-     * Set the knife lock status
-     *  - used by weapons
-     */
-    public void SetKnifeLock(bool _locked)
-    {
-        lockKnife = _locked;
     }
 
     /*
