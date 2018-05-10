@@ -9,7 +9,7 @@ public class MissileRedirectAbility : Ability
 
     void Start()
     {
-        playerKnifeController = GetComponentInChildren<PlayerKnifeController>();
+        playerKnifeController = GetComponent<PlayerKnifeController>();
     }
 
     public override void Activate()
