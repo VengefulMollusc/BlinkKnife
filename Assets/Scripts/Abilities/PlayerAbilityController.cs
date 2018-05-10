@@ -16,9 +16,11 @@ public class PlayerAbilityController : MonoBehaviour
     private AbilityType startingAbility;
 
     private AbilityType currentType;
+    private List<Ability> playerAbilities;
+
     private Ability currentAbility;
 
-    private int numberOfAbilities;
+    //private int numberOfAbilities;
 
     enum AbilityType
     {
@@ -29,23 +31,23 @@ public class PlayerAbilityController : MonoBehaviour
 
     void Start()
     {
+        SetupAbilities();
         SetAbility(startingAbility);
-        numberOfAbilities = System.Enum.GetValues(typeof(AbilityType)).Length;
     }
 
     void Update()
     {
-        if (currentAbility != null)
+        if (currentType != AbilityType.None)
         {
             if (Input.GetKeyDown(useAbility))
             {
                 // Do the thing
-                currentAbility.Activate();
+                playerAbilities[(int)currentType].Activate();
             }
             if (Input.GetKeyUp(useAbility))
             {
                 // Stop doing the thing
-                currentAbility.EndActivation();
+                playerAbilities[(int)currentType].EndActivation();
             }
         }
 
@@ -59,25 +61,30 @@ public class PlayerAbilityController : MonoBehaviour
         }
     }
 
+    private void SetupAbilities()
+    {
+        playerAbilities = new List<Ability>();
+
+        foreach (AbilityType type in System.Enum.GetValues(typeof(AbilityType)))
+        {
+            switch (type)
+            {
+                case AbilityType.MissileRedirect:
+                    playerAbilities.Add(gameObject.AddComponent<MissileRedirectAbility>());
+                    break;
+                case AbilityType.SuperJump:
+                    playerAbilities.Add(gameObject.AddComponent<SuperJumpAbility>());
+                    break;
+                default: // Case for None
+                    playerAbilities.Add(null);
+                    break;
+            }
+        }
+    }
+
     private void SetAbility(AbilityType type)
     {
-        if (type == currentType)
-            return;
-
-        Destroy(currentAbility);
         currentType = type;
-        switch (type)
-        {
-            case AbilityType.MissileRedirect:
-                currentAbility = gameObject.AddComponent<MissileRedirectAbility>();
-                break;
-            case AbilityType.SuperJump:
-                currentAbility = gameObject.AddComponent<SuperJumpAbility>();
-                break;
-            default: // Case for None
-                currentAbility = null;
-                break;
-        }
 
         Debug.Log("Switched to " + ((currentAbility != null) ? currentAbility.GetDisplayName() : type.ToString()));
     }
@@ -85,7 +92,7 @@ public class PlayerAbilityController : MonoBehaviour
     private void NextAbility()
     {
         AbilityType newType = currentType + 1;
-        if ((int)newType >= numberOfAbilities)
+        if ((int)newType >= playerAbilities.Count)
             newType = 0;
         SetAbility(newType);
     }
@@ -94,7 +101,7 @@ public class PlayerAbilityController : MonoBehaviour
     {
         AbilityType newType = currentType - 1;
         if ((int)newType < 0)
-            newType = (AbilityType)(numberOfAbilities - 1);
+            newType = (AbilityType)(playerAbilities.Count - 1);
         SetAbility(newType);
     }
 }

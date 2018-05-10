@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SuperJumpAbility : Ability
+public class SuperJumpAbility : MonoBehaviour, Ability
 {
     private string displayName = "Rocket Jump";
     private float superJumpStrength = 30f;
@@ -22,7 +22,7 @@ public class SuperJumpAbility : Ability
             cooldown -= Time.deltaTime;
     }
 
-    public override void Activate()
+    public void Activate()
     {
         if (cooldown <= 0f && playerMotor.CanJump())
         {
@@ -31,7 +31,12 @@ public class SuperJumpAbility : Ability
         }
     }
 
-    public override string GetDisplayName()
+    public void EndActivation()
+    {
+        
+    }
+
+    public string GetDisplayName()
     {
         return displayName;
     }

@@ -112,12 +112,6 @@ public class PlayerController : MonoBehaviour {
             motor.SetCrouching(false);
         }
 
-        // Middle Mouse ability use
-        if (Input.GetButtonDown("Fire3"))
-        {
-            Debug.Log("Middle mouse");
-        }
-
 
         // Test controls for health/energy
         //if (Input.GetKeyDown(KeyCode.K))

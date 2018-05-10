@@ -2,22 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ability : MonoBehaviour
+public interface Ability
 {
-    public virtual void Activate()
-    {
-        // Perform ability logic here
-        Debug.LogError("Activate must be overridden");
-    }
+    void Activate();
 
-    public virtual void EndActivation()
-    {
-        // stop doing the thing here
-    }
+    void EndActivation();
 
-    public virtual string GetDisplayName()
-    {
-        Debug.LogError("GetDisplayName needs to be overridden");
-        return "No display name given";
-    }
+    string GetDisplayName();
 }
