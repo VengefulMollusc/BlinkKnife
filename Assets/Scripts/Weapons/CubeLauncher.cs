@@ -32,7 +32,6 @@ public class CubeLauncher : MonoBehaviour, WeaponController {
             GameObject cubeObject = GameObject.Instantiate(cubePrefab, _target.transform.position, Quaternion.Euler(0f, 0f, 0f)) as GameObject;
             cube = cubeObject.GetComponent<CubeController>();
             knifeController.ReturnKnife();
-            knifeController.UnHideKnife();
             cube.Setup(_camera, _playerCol, _target);
         } else
         {

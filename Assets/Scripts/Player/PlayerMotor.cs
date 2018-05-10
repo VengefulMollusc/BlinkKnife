@@ -859,14 +859,14 @@ public class PlayerMotor : MonoBehaviour
     {
         GetComponent<Renderer>().enabled = false;
         GetComponent<CapsuleCollider>().enabled = false;
-        cam.GetComponent<PlayerKnifeController>().HideKnife();
+        cam.GetComponent<PlayerKnifeController>().HideKnife(true);
     }
 
     private void UnHide()
     {
         GetComponent<Renderer>().enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
-        cam.GetComponent<PlayerKnifeController>().UnHideKnife();
+        cam.GetComponent<PlayerKnifeController>().HideKnife(false);
     }
 
     public bool IsFrozen()

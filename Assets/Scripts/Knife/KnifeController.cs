@@ -5,6 +5,47 @@ using UnityEngine;
 
 public class KnifeController : MonoBehaviour
 {
+    /*
+     * Active Feature Additions:
+     *  Missile Redirect
+     *      Becomes the target of all active (launched?) missiles when thrown
+     *  
+     *  Create Geometry
+     *      Similar to cube weapon functionality.
+     *      Spawn geometry when knife lands?
+     *      raise shield while knife is grounded?
+     *      
+     *  EMP
+     *      Disable enemies/tech within radius of landing
+     *      
+     *  Movement alteration?
+     *      Launch player at surface normal when warp?
+     *      Temporary speed boost on warp?
+     *      Allow midair warp?
+     *      
+     *  Gravity shift
+     *      Surface knife collided with becomes 'down'
+     *      temporary?
+     *      
+     *  Multi-warp
+     *      throw multiple knifes up to a limit, then warp to all of them in sequence
+     *      
+     *  Infinite warp
+     *      temporary infinite warps
+     *      
+     *      
+     * Passive/Behaviour Change:
+     *  Instant Travel (Longbow - borderlands)
+     *      Raycast target then warp knife instantly
+     *      Through transparent surfaces?
+     *      Pinpoint accurate
+     *      Potential instant warp, no wait time?
+     *      
+     *  Homing
+     *      lock on to enemies?
+     *      act like missile?
+     */
+
     // Transform of player's view model knife/hand object
     // used to target return animation
     [HideInInspector]
@@ -198,9 +239,7 @@ public class KnifeController : MonoBehaviour
 
     /*
      * Returns position player will warp to
-     * 
-     * this eventually needs to be converted to the closest place
-     * for the player collider to move
+     * Determined by WarpLookahead colliders
      */
     public virtual Vector3 GetWarpPosition()
     {
@@ -212,7 +251,7 @@ public class KnifeController : MonoBehaviour
      */
     public virtual Vector3 GetWarpTestPosition()
     {
-        return transform.position + (transform.up * 0.5f); // need to change this depending on gravity angle to match distance to edge of collider
+        return transform.position + (transform.up * 0.5f);
     }
 
     /*
@@ -249,6 +288,9 @@ public class KnifeController : MonoBehaviour
         return false;
     }
 
+    /*
+     * Conditions determining whether the player can warp to the knife currently
+     */
     public virtual bool CanWarp()
     {
         return HasStuck();

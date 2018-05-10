@@ -8,10 +8,6 @@ public class PlayerKnifeController : MonoBehaviour
     [SerializeField]
     private bool alwaysGravShift = false;
 
-    //[SerializeField]
-    //private float timeToAutoRecall = 1.5f;
-    //private float autoRecallTimer;
-
     [SerializeField]
     private int maxWarps = 3;
     private int currentWarps;
@@ -21,30 +17,28 @@ public class PlayerKnifeController : MonoBehaviour
 
     [SerializeField]
     private float warpWaitTime = 0.1f;
-    //[SerializeField]
-    //private float bounceWarpWaitTime = 0.2f;
-    private float warpCountDown = 0;
+    private float warpCountDown;
 
-    private bool autoWarp = false;
+    private bool autoWarp;
 
     [Header("Weapon Settings")]
     [SerializeField]
-    private string primaryKnifeBtn = "Fire1";
+    private string leftMouse = "Fire1";
 
     [SerializeField]
-    private string altKnifeBtn = "Fire2";
+    private string rightMouse = "Fire2";
 
     [SerializeField]
-    private string abilityButton = "Fire3";
+    private string middleMouse = "Fire3";
 
     [SerializeField]
     private float throwStrength = 5f;
 
-    [SerializeField]
-    private float throwAngleModifier = 2f;
+    //[SerializeField]
+    //private float throwAngleModifier = 2f;
 
-    [SerializeField]
-    private float throwHeightModifier = -0.2f;
+    //[SerializeField]
+    //private float throwHeightModifier = -0.2f;
 
     [Header("Prefabs")]
     [SerializeField]
@@ -53,19 +47,20 @@ public class PlayerKnifeController : MonoBehaviour
     [SerializeField]
     private GameObject secondaryKnifePrefab;
 
-    private bool lockKnife = false;
+    private bool lockKnife;
 
     private WeaponController weapon;
 
     [SerializeField]
     private GameObject knifeInHand;
-    private Renderer knifeRenderer;
+    private Renderer knifeViewModelRenderer;
 
-    private GameObject uiControllerObject;
-    private UIController uiController;
+    // TODO: replace with notification system to handle UI variables
+    //private GameObject uiControllerObject;
+    //private UIController uiController;
 
     private GameObject player;
-    private Collider[] playerColliders;
+    private Collider[] playerColliders; // TODO: this should be removed - weapon shouldn't collide through collision matrix instead
     private PlayerMotor playerMotor;
 
     private GameObject knife;
@@ -74,56 +69,6 @@ public class PlayerKnifeController : MonoBehaviour
     private WarpLookAheadCollider warpLookAheadCollider;
 
     private bool playerIsLit;
-
-    //[SerializeField]
-    //[Range(-100f, 0f)]
-    //private float warpCost = -30f;
-
-    /*
-     * Need to restructure to allow for knife 'mods'
-     * Mods work around or change knife functionality
-     * 
-     * Allow multiple mods?
-     * 
-     * Active Feature Additions:
-     *  Missile Redirect
-     *      Becomes the target of all active (launched?) missiles when thrown
-     *  
-     *  Create Geometry
-     *      Similar to cube weapon functionality.
-     *      Spawn geometry when knife lands?
-     *      raise shield while knife is grounded?
-     *      
-     *  EMP
-     *      Disable enemies/tech within radius of landing
-     *      
-     *  Movement alteration?
-     *      Launch player at surface normal when warp?
-     *      Temporary speed boost on warp?
-     *      Allow midair warp?
-     *      
-     *  Gravity shift
-     *      Surface knife collided with becomes 'down'
-     *      temporary?
-     *      
-     *  Multi-warp
-     *      throw multiple knifes up to a limit, then warp to all of them in sequence
-     *      
-     *  Infinite warp
-     *      temporary infinite warps
-     *      
-     *      
-     * Passive/Behaviour Change:
-     *  Instant Travel (Longbow - borderlands)
-     *      Raycast target then warp knife instantly
-     *      Through transparent surfaces?
-     *      Pinpoint accurate
-     *      Potential instant warp, no wait time?
-     *      
-     *  Homing
-     *      lock on to enemies?
-     *      act like missile?
-     */
 
     /*
      * Could change ui to single bar?
@@ -134,26 +79,20 @@ public class PlayerKnifeController : MonoBehaviour
 
     void OnEnable()
     {
-        uiControllerObject = GameObject.FindGameObjectWithTag("UIParent");
+        //uiControllerObject = GameObject.FindGameObjectWithTag("UIParent");
         // check for missing prefabs
         if (primaryKnifePrefab == null)
-        {
             throw new MissingReferenceException("No primaryKnifePrefab object given.");
-        }
         if (secondaryKnifePrefab == null)
-        {
             throw new MissingReferenceException("No secondaryKnifePrefab object given.");
-        }
         if (knifeInHand == null)
-        {
             throw new MissingReferenceException("No knifeInHand object given.");
-        }
-        if (uiControllerObject == null)
-        {
-            throw new MissingReferenceException("No uiController object given.");
-        }
+        //if (uiControllerObject == null)
+        //{
+        //    throw new MissingReferenceException("No uiController object given.");
+        //}
 
-        knifeRenderer = knifeInHand.GetComponent<Renderer>();
+        knifeViewModelRenderer = knifeInHand.GetComponent<Renderer>();
 
         player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
@@ -161,7 +100,7 @@ public class PlayerKnifeController : MonoBehaviour
         playerColliders = player.GetComponentsInChildren<Collider>();
         playerMotor = player.GetComponent<PlayerMotor>();
 
-        uiController = uiControllerObject.GetComponent<UIController>();
+        //uiController = uiControllerObject.GetComponent<UIController>();
 
         weapon = GetComponent<WeaponController>();
         weapon.Setup(this);
@@ -189,31 +128,28 @@ public class PlayerKnifeController : MonoBehaviour
         // Don't allow input if player is frozen
         if (playerMotor.IsFrozen()) return;
 
-        if (Input.GetButtonDown(primaryKnifeBtn) && !lockKnife)
+        if (Input.GetButtonDown(leftMouse) && !lockKnife)
         {
-            // knife primary throw
-            // throw blinkknife
+            // Throw primary knife
             if (knife == null)
             {
                 ThrowKnife(throwStrength);
             }
         }
-        else if (Input.GetButtonDown(altKnifeBtn) && !lockKnife)
+        else if (Input.GetButtonDown(rightMouse) && !lockKnife)
         {
             // secondary knife throw
-            // throw bounce knife
             if (knife == null)
             {
                 ThrowKnife(throwStrength, true);
             }
-            else/* if (!autoWarp)*/
+            else
             {
                 // return thrown knife
                 knifeController.ReturnKnifeTransition();
-                //knifeRenderer.enabled = true;
             }
         }
-        else if (Input.GetButtonDown(abilityButton))
+        else if (Input.GetButtonDown(middleMouse))
         {
             // weapon button
             if (weapon.ClickMouse(knife, transform, playerColliders))
@@ -222,7 +158,7 @@ public class PlayerKnifeController : MonoBehaviour
                 lockKnife = true;
             }
         }
-        else if (Input.GetButtonUp(abilityButton))
+        else if (Input.GetButtonUp(middleMouse))
         {
             // release weapon button
             if (weapon.ReleaseMouse())
@@ -235,46 +171,25 @@ public class PlayerKnifeController : MonoBehaviour
         // check warp progress
         CheckIfWarp();
 
-        // check if recall
-        //CheckIfRecall();
-
-        // recharge warp counters
+        // recharge warp variables
         RechargeWarps();
     }
 
     /*
-     * Checks if the auto recall timer has run out, if so, returns the thrown knife
-     */
-    //void CheckIfRecall()
-    //{
-    //    if (autoRecallTimer <= 0 || knife == null || knifeController.HasStuck())
-    //        return;
-
-    //    autoRecallTimer -= Time.deltaTime;
-
-    //    if (autoRecallTimer <= 0)
-    //    {
-    //        ReturnKnife();
-    //        //knifeRenderer.enabled = true;
-    //    }
-    //}
-
-    /*
-     * Checks the current warp countdown and whether we need to warp now
+     * Checks the current knife and whether we need to warp now
      */
     void CheckIfWarp()
     {
         if (!lockKnife && knife != null && knifeController.CanWarp() && currentWarps >= 1)
         { // Require mouse click to warp
-          //if (!lockKnife && knife != null && (knifeController.HasStuck() || autoWarp)) { // warps instantly without mouse click
-          // we are trying to warp
             if (autoWarp)
             {
                 Warp();
                 return;
             }
-            if (Input.GetButton(primaryKnifeBtn))
+            if (Input.GetButton(leftMouse))
             {
+                // require manual hold click to warp
                 if (warpCountDown >= warpWaitTime)
                     Warp();
                 else
@@ -286,17 +201,11 @@ public class PlayerKnifeController : MonoBehaviour
             // reset countdown
             warpCountDown = 0f;
         }
-
-        // activate warp ui
-        //warpUIFill.rectTransform.localScale = new Vector3 (warpCountDown/warpWaitTime, warpCountDown/warpWaitTime, 1f);
     }
 
-    //void OnKnifeBounce(object sender, object args)
-    //{
-    //    warpCountDown = 0f;
-    //    autoRecallTimer = timeToAutoRecall;
-    //}
-
+    /*
+     * Update lit status based on notification from player
+     */
     void OnLightStatusNotification(object sender, object args)
     {
         Info<GameObject, float> info = (Info<GameObject, float>)args;
@@ -304,11 +213,15 @@ public class PlayerKnifeController : MonoBehaviour
             playerIsLit = info.arg1 > 0f;
     }
 
-    // recharge warps based on time (if player is lit)
+    /*
+     * recharge warps based on whether the player is grounded and/or lit
+     */
     void RechargeWarps()
     {
+        // charge up to max warps if lit, or just one if not
         if (currentWarps < ((playerIsLit) ? maxWarps : 1))
         {
+            // Modify recharge rate if not lit or not grounded
             float rechargeSpeedMod = 1f;
             if (!playerIsLit)
                 rechargeSpeedMod *= 0.5f;
@@ -317,12 +230,7 @@ public class PlayerKnifeController : MonoBehaviour
 
             warpRecharge -= (Time.deltaTime * rechargeSpeedMod);
 
-            //// recharge warps
-            //if (playerMotor.IsOnGround() && playerIsLit)
-            //    warpRecharge -= Time.deltaTime;
-            //else
-            //    warpRecharge -= (Time.deltaTime * 0.2f); // recharge at slower rate when airborne
-
+            // up warp count if recharge is complete
             if (warpRecharge <= 0)
             {
                 currentWarps++;
@@ -334,7 +242,7 @@ public class PlayerKnifeController : MonoBehaviour
 
         if (!playerIsLit && currentWarps > 0)
         {
-            // decay partial recharges
+            // decay partial recharges if not lit
             if (warpRecharge < warpRechargeTime)
                 warpRecharge += (Time.deltaTime * 0.1f);
 
@@ -353,13 +261,17 @@ public class PlayerKnifeController : MonoBehaviour
         // unfreeze player if hanging on wall
         // playerMotor.UnFreeze ();
 
-        Quaternion throwDirectionQuaternion = Quaternion.AngleAxis(-throwAngleModifier, transform.right);
-        Vector3 throwDirection = throwDirectionQuaternion * transform.forward;
-        Vector3 throwPosition = transform.position + (transform.up * throwHeightModifier);
+        // TODO: remove these. are from when knife was affected by gravity
+        //Quaternion throwDirectionQuaternion = Quaternion.AngleAxis(-throwAngleModifier, transform.right);
+        //Vector3 throwDirection = throwDirectionQuaternion * transform.forward;
+        //Vector3 throwPosition = transform.position + (transform.up * throwHeightModifier);
 
-        knife = Instantiate((_secondary) ? secondaryKnifePrefab : primaryKnifePrefab, throwPosition, GlobalGravityControl.GetGravityRotation());
+        // TODO: replace with consistent knife instances. one for each type
+        // instantiate knife prefab
+        knife = Instantiate((_secondary) ? secondaryKnifePrefab : primaryKnifePrefab, transform.position, GlobalGravityControl.GetGravityRotation());
         knifeController = knife.GetComponent<KnifeController>();
 
+        // check that we have actually got a knife
         if (knifeController == null)
         {
             Debug.LogError("No KnifeController found on knife prefab");
@@ -370,32 +282,31 @@ public class PlayerKnifeController : MonoBehaviour
 
         // set up and throw knife object
         knifeController.Setup(knifeInHand.transform, warpLookAheadCollider);
-        knifeController.Throw(throwDirection * _strength);
+        knifeController.Throw(transform.forward * _strength);
 
         // hide knife view object
-        knifeRenderer.enabled = false;
+        HideKnife(true);
     }
 
     /*
-     * Returns a thrown knife
+     * Returns a thrown knife and nullifies knife variables
      */
+    void OnReturnKnifeNotification(object sender, object args)
+    {
+        ReturnKnife();
+    }
+
     public void ReturnKnife()
     {
         Destroy(knife);
         knife = null;
         knifeController = null;
         autoWarp = false;
-        UnHideKnife();
-        //knifeRenderer.enabled = true;
-    }
-
-    void OnReturnKnifeNotification(object sender, object args)
-    {
-        ReturnKnife();
+        HideKnife(false);
     }
 
     /*
-     * Triggers FibreOptic warp in playerMotor
+     * Triggers FibreOptic warp
      */
     void OnFibreOpticWarp(object sender, object args)
     {
@@ -413,13 +324,14 @@ public class PlayerKnifeController : MonoBehaviour
         }
         else
         {
+            // shouldn't trigger, should always have warps available if knife has been thrown
             // return knife
             ReturnKnife();
         }
     }
 
     /*
-     * Perform warp to current knife position
+     * Trigger warp transition
      */
     public void Warp()
     {
@@ -427,12 +339,12 @@ public class PlayerKnifeController : MonoBehaviour
             return;
 
         // Remove this line to have countdown ui stay filled while warping
-        warpCountDown = 0f;
+        //warpCountDown = 0f;
 
-        // move player to knife position and inherit velocity
+        // Check whether gravity is changing for this warp
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
-        //Vector3 _velocity = knifeController.GetVelocity().normalized;
-        //playerMotor.WarpToKnife(knifeController.GetWarpPosition(), _velocity, knifeController.GetStuckObject(), knifeController.GetSurfaceNormal());
+
+        // Trigger warp transition from playerMotor
         playerMotor.WarpToKnife(shiftGravity, knifeController, autoWarp);
 
         autoWarp = false;
@@ -446,28 +358,22 @@ public class PlayerKnifeController : MonoBehaviour
         // remove a warp from warp counters and begin recharge
         currentWarps -= 1;
 
-        //if (warpRecharge <= 0)
-        //{
+        warpCountDown = 0f;
+        
+        // reset warp recharges
         warpRecharge = warpRechargeTime;
-        //}
     }
 
     /*
      * Hide and show the knife view model
-     * TODO: merge methods
      */
-    public void HideKnife()
+    public void HideKnife(bool _hide)
     {
-        knifeRenderer.enabled = false;
-    }
-
-    public void UnHideKnife()
-    {
-        knifeRenderer.enabled = true;
+        knifeViewModelRenderer.enabled = _hide;
     }
 
     /*
-     * Set the knife lock
+     * Set the knife lock status
      *  - used by weapons
      */
     public void SetKnifeLock(bool _locked)
@@ -475,16 +381,16 @@ public class PlayerKnifeController : MonoBehaviour
         lockKnife = _locked;
     }
 
-    // Methods to return info for UI
+    /*
+     * Methods to return info for UI
+     */
     public float GetWarpsNormalised()
     {
-        return (float)currentWarps / (float)maxWarps;
+        return (float)currentWarps / maxWarps;
     }
 
     public float GetWarpCountdownNormalised()
     {
-        //if (autoWarp)
-        //    return warpCountDown / bounceWarpWaitTime;
         return warpCountDown / warpWaitTime;
     }
 
