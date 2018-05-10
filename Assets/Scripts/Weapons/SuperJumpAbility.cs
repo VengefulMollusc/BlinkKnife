@@ -4,16 +4,35 @@ using UnityEngine;
 
 public class SuperJumpAbility : Ability
 {
+    private string displayName = "Rocket Jump";
     private float superJumpStrength = 30f;
+    private float cooldownTime = 1f;
+
     private PlayerMotor playerMotor;
+    private float cooldown;
 
     void Start()
     {
         playerMotor = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMotor>();
     }
 
+    void Update()
+    {
+        if (cooldown > 0f)
+            cooldown -= Time.deltaTime;
+    }
+
     public override void Activate()
     {
-        playerMotor.Jump(superJumpStrength);
+        if (cooldown <= 0f)
+        {
+            playerMotor.Jump(superJumpStrength);
+            cooldown = cooldownTime;
+        }
+    }
+
+    public override string GetDisplayName()
+    {
+        return displayName;
     }
 }

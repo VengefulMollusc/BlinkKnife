@@ -8,11 +8,9 @@ public class PlayerAbilityController : MonoBehaviour
     [SerializeField]
     private KeyCode useAbility = KeyCode.E;
 
-    [SerializeField]
-    private KeyCode nextAbility = KeyCode.Tab;
-
-    [SerializeField]
-    private KeyCode prevAbility = KeyCode.Q;
+    // TODO: Next/prev just for testing. switch to scroll wheel if can be bothered
+    [SerializeField] private KeyCode nextAbility = KeyCode.Tab;
+    [SerializeField] private KeyCode prevAbility = KeyCode.Q;
 
     [SerializeField]
     private AbilityType startingAbility;
@@ -55,16 +53,14 @@ public class PlayerAbilityController : MonoBehaviour
                 break;
         }
 
-        Debug.Log("Switched to " + type);
+        Debug.Log("Switched to " + ((currentAbility != null) ? currentAbility.GetDisplayName() : type.ToString()));
     }
 
     private void NextAbility()
     {
         AbilityType newType = currentType + 1;
         if ((int)newType >= numberOfAbilities)
-        {
             newType = 0;
-        }
         SetAbility(newType);
     }
 
@@ -72,9 +68,7 @@ public class PlayerAbilityController : MonoBehaviour
     {
         AbilityType newType = currentType - 1;
         if ((int)newType < 0)
-        {
             newType = (AbilityType)(numberOfAbilities - 1);
-        }
         SetAbility(newType);
     }
 
