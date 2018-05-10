@@ -34,6 +34,7 @@ public class MissileRedirectAbility : Ability
         foreach (MissileController missile in missiles)
         {
             // set target here!
+            missile.SetTarget(knife.transform);
         }
     }
 
