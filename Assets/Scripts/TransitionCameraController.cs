@@ -35,7 +35,6 @@ public class TransitionCameraController : MonoBehaviour
     private float chromDiff;
 
     private Camera cam;
-    [SerializeField]
     private float fovMaxValue = 120f;
     [SerializeField]
     private float fovSpeedModMax = 50f;
@@ -51,7 +50,7 @@ public class TransitionCameraController : MonoBehaviour
     private bool fibreOpticWarp;
 
     private Rigidbody rb;
-    
+
 
     void Awake()
     {
@@ -78,7 +77,7 @@ public class TransitionCameraController : MonoBehaviour
         endRot = _endRot;
         camRelativePos = endRot * _camRelativePos;
         gravityShift = _gravityShift;
-        
+
         cam.fieldOfView = _fov;
         rb.detectCollisions = true;
         Blackout(false);
@@ -89,10 +88,6 @@ public class TransitionCameraController : MonoBehaviour
             fibreOpticWarp = true;
 
             fibreOpticController.WarpKnife(knifeController);
-
-            float speed = fibreOpticController.GetLengthEstimate() / fibreOpticController.GetDuration();
-            fovMaxValue = Utilities.MapValues(speed, 0f, fovSpeedModMax, cam.fieldOfView, fovMaxValue, true) * 1.2f;
-            fovDiff = fovMaxValue - cam.fieldOfView;
         }
 
         CalculateDuration();
@@ -118,8 +113,13 @@ public class TransitionCameraController : MonoBehaviour
         duration = _baseDuration + distModifier;
 
         // modify fovMax by speed
-        float speed = _dist / duration;
-        fovMaxValue = Utilities.MapValues(speed, 0f, fovSpeedModMax, cam.fieldOfView, fovMaxValue, true);
+        float speed = (fibreOpticWarp)
+            ? fibreOpticController.GetLengthEstimate() / fibreOpticController.GetDuration()
+            : _dist / duration;
+
+        fovMaxValue = Utilities.MapValues(speed, 0f, fovSpeedModMax, cam.fieldOfView, 120f, true);
+        if (fibreOpticWarp)
+            fovMaxValue *= 1.2f;
         fovDiff = fovMaxValue - cam.fieldOfView;
     }
 
@@ -194,7 +194,7 @@ public class TransitionCameraController : MonoBehaviour
 
             yield return 0;
         }
-        
+
         Info<Vector3, Vector3, bool, FibreOpticController> info = new Info<Vector3, Vector3, bool, FibreOpticController>(knifeController.GetWarpPosition(),
             knifeController.transform.up,
             knifeController.AutoWarp(), fibreOpticController);
@@ -229,7 +229,7 @@ public class TransitionCameraController : MonoBehaviour
 
             yield return 0;
         }
-        
+
         Info<Vector3, Vector3, bool, FibreOpticController> info = new Info<Vector3, Vector3, bool, FibreOpticController>(knifeController.GetWarpPosition(),
             knifeController.GetVelocity(),
             knifeController.AutoWarp(), null);
@@ -295,7 +295,7 @@ public class TransitionCameraController : MonoBehaviour
     {
         if (col.isTrigger)
             return;
-        
+
         Blackout(true);
     }
 
@@ -303,7 +303,7 @@ public class TransitionCameraController : MonoBehaviour
     {
         if (col.isTrigger)
             return;
-        
+
         BlackoutCheckFromOrigin();
     }
 }
