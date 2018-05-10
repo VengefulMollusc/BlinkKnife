@@ -23,7 +23,7 @@ public class MissileLauncher : MonoBehaviour, WeaponController {
     private IEnumerator loadingCoroutine;
     private IEnumerator launchCoroutine;
 
-    private int missileCount = 0;
+    private int missileCount;
 
     [SerializeField]
     private GameObject missilePrefab;

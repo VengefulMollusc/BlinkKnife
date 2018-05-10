@@ -2,8 +2,6 @@
 
 public class PlayerKnifeController : MonoBehaviour
 {
-
-
     [Header("General Settings")]
     [SerializeField]
     private bool alwaysGravShift = false;
@@ -21,7 +19,7 @@ public class PlayerKnifeController : MonoBehaviour
 
     private bool autoWarp;
 
-    [Header("Weapon Settings")]
+    [Header("Knife Settings")]
     [SerializeField]
     private string leftMouse = "Fire1";
 
