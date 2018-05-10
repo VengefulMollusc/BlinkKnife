@@ -60,6 +60,7 @@ public class BoostRing : MonoBehaviour
         
         BoomerangKnifeController boom = col.GetComponent<BoomerangKnifeController>();
         Vector3 vel = (boom != null) ? boom.GetVelocity() : rb.velocity;
+        vel = Vector3.Project(vel, transform.up);
 
         Vector3 boostDirection;
         float magnitude = Mathf.Max(vel.magnitude + boostStrength, minMagnitude);
