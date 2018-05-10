@@ -367,9 +367,9 @@ public class PlayerKnifeController : MonoBehaviour
     /*
      * Hide and show the knife view model
      */
-    public void HideKnife(bool _hide)
+    public void HideKnife(bool _hideKnife)
     {
-        knifeViewModelRenderer.enabled = _hide;
+        knifeViewModelRenderer.enabled = !_hideKnife;
     }
 
     /*
