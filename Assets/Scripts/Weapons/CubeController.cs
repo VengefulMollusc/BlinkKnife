@@ -20,7 +20,7 @@ public class CubeController : MonoBehaviour {
  //       rb = GetComponent<Rigidbody>();
 	//}
 
-    public void Setup(Transform _camera, Collider[] _playerCol, GameObject _target)
+    public void Setup(Transform _camera, Collider[] _playerCol, Transform _target)
     {
         rb = GetComponent<Rigidbody>();
         rb.velocity = _camera.forward * speed;
@@ -43,13 +43,13 @@ public class CubeController : MonoBehaviour {
         else Deactivate();
     }
 
-    private void Activate(GameObject _target)
+    private void Activate(Transform _target)
     {
         // align with face normal and push all the way out of surface?
 
         if (_target != null)
         {
-            transform.SetParent(_target.transform.parent);
+            transform.SetParent(_target.parent);
         }
         Utilities.IgnoreCollisions(GetComponent<Collider>(), playerColliders, false);
         activated = true;

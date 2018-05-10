@@ -35,13 +35,13 @@ public class MissileLauncher : MonoBehaviour, WeaponController {
         knifeController = _knifeController;
     }
 
-	public bool ClickMouse(GameObject _target, Transform _camera, Collider[] _playerCols)
+	public bool ClickMouse(Transform _target, Transform _camera, Collider[] _playerCols)
     {
-		if (_target == null || missiles != null) return false;
+		if (missiles != null) return false;
         missiles = new MissileController[maxMissiles];
         missileCount = 0;
 
-		loadingCoroutine = LoadMissiles(_target.transform, _camera, _playerCols);
+		loadingCoroutine = LoadMissiles(_target, _camera, _playerCols);
 
         StartCoroutine(loadingCoroutine);
 		return true;
@@ -62,8 +62,10 @@ public class MissileLauncher : MonoBehaviour, WeaponController {
 
             GameObject missile = GameObject.Instantiate(missilePrefab, pos + _camera.forward, _camera.rotation) as GameObject;
             missiles[missileCount] = missile.GetComponent<MissileController>();
-            missiles[missileCount].Setup(_camera, _target, _playerCols);
-			missile.layer = 8;
+            missiles[missileCount].Setup(_camera, _playerCols);
+            if (_target != null)
+                missiles[missileCount].SetTarget(_target);
+            missile.layer = 8;
             missileCount++;
         }
     }

@@ -18,7 +18,7 @@ public class CubeLauncher : MonoBehaviour, WeaponController {
         }
     } 
 
-    public bool ClickMouse(GameObject _target, Transform _camera, Collider[] _playerCol)
+    public bool ClickMouse(Transform _target, Transform _camera, Collider[] _playerCol)
     {
         // deactivate cube if exists
         if (cube != null)

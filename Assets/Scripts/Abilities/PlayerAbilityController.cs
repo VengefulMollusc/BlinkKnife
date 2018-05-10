@@ -33,6 +33,32 @@ public class PlayerAbilityController : MonoBehaviour
         numberOfAbilities = System.Enum.GetValues(typeof(AbilityType)).Length;
     }
 
+    void Update()
+    {
+        if (currentAbility != null)
+        {
+            if (Input.GetKeyDown(useAbility))
+            {
+                // Do the thing
+                currentAbility.Activate();
+            }
+            if (Input.GetKeyUp(useAbility))
+            {
+                // Stop doing the thing
+                currentAbility.EndActivation();
+            }
+        }
+
+        if (Input.GetKeyDown(nextAbility))
+        {
+            NextAbility();
+        }
+        if (Input.GetKeyDown(prevAbility))
+        {
+            PreviousAbility();
+        }
+    }
+
     private void SetAbility(AbilityType type)
     {
         if (type == currentType)
@@ -70,31 +96,5 @@ public class PlayerAbilityController : MonoBehaviour
         if ((int)newType < 0)
             newType = (AbilityType)(numberOfAbilities - 1);
         SetAbility(newType);
-    }
-
-    void Update()
-    {
-        if (currentAbility != null)
-        {
-            if (Input.GetKeyDown(useAbility))
-            {
-                // Do the thing
-                currentAbility.Activate();
-            }
-            if (Input.GetKeyUp(useAbility))
-            {
-                // Stop doing the thing
-                currentAbility.EndActivation();
-            }
-        }
-
-        if (Input.GetKeyDown(nextAbility))
-        {
-            NextAbility();
-        }
-        if (Input.GetKeyDown(prevAbility))
-        {
-            PreviousAbility();
-        }
     }
 }

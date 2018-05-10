@@ -39,7 +39,6 @@ public class MissileController : MonoBehaviour {
     private float zSpin;
 
     private Transform target;
-    private Transform targetBackup;
 
 	private bool collided = false;
 
@@ -81,17 +80,10 @@ public class MissileController : MonoBehaviour {
         spinVector = new Vector3(Random.Range(-randomXYRot, randomXYRot), Random.Range(-randomXYRot, randomXYRot), zSpin);
 	}
 
-    public void Setup(Transform _parent, Transform _target, Collider[] _collider)
+    public void Setup(Transform _parent, Collider[] _collider)
     {
         transform.SetParent(_parent);
-        target = _target;
-        targetBackup = target;
         Utilities.IgnoreCollisions(GetComponent<Collider>(), _collider, true);
-
-        float distToTarget = Vector3.Distance(transform.position, target.position);
-        accuracyIncreaseThreshold = distToTarget * 0.8f; // this could be a set value? stop massive spread at distance
-        // or clamp maximum value? 50? 100?
-        // this would do even weirder things to long distance, much higher multiplier - need to clamp that as well
     }
 
     public void Fire()
@@ -116,27 +108,23 @@ public class MissileController : MonoBehaviour {
         rocketTrail.Play ();
     }
 
-    void UpdateUIMarker()
-    {
-        if (!useUiMarker)
-            return;
+    //void UpdateUIMarker()
+    //{
+    //    if (!useUiMarker)
+    //        return;
 
-        float distToCamera = Vector3.Distance(transform.position, Camera.main.transform.position);
-        // update ui marker
-        float uiTransitionNormalised = Mathf.Clamp(distToCamera, 0f, 50f) / 50f;
-        uiMarker.GetOnScreenImage().rectTransform.sizeDelta = Vector2.Lerp(markerOnScreenSize, markerOnScreenSize * 0.2f, uiTransitionNormalised);
-        //if (uiTransitionNormalised > 0.8f)
-        //    uiTransitionNormalised = 0.8f;
-        //uiMarker.FadeGB(uiTransitionNormalised);
-        //uiMarker.GetOnScreenImage().rectTransform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z * 2f);
-    }
+    //    float distToCamera = Vector3.Distance(transform.position, Camera.main.transform.position);
+    //    // update ui marker
+    //    float uiTransitionNormalised = Mathf.Clamp(distToCamera, 0f, 50f) / 50f;
+    //    uiMarker.GetOnScreenImage().rectTransform.sizeDelta = Vector2.Lerp(markerOnScreenSize, markerOnScreenSize * 0.2f, uiTransitionNormalised);
+    //    //if (uiTransitionNormalised > 0.8f)
+    //    //    uiTransitionNormalised = 0.8f;
+    //    //uiMarker.FadeGB(uiTransitionNormalised);
+    //    //uiMarker.GetOnScreenImage().rectTransform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z * 2f);
+    //}
 
     // Update is called once per frame
     void FixedUpdate () {
-        // check target - switch to knife
-        // this will need to be reworked
-        CheckTarget();
-
 		if (!launched || collided) return;
 
         if (target != null) {
@@ -148,7 +136,6 @@ public class MissileController : MonoBehaviour {
                 // remove target when inside minimum range
                 // and passed target
                 target = null;
-                targetBackup = null;
             }
 
             // spin
@@ -171,19 +158,14 @@ public class MissileController : MonoBehaviour {
 			Explode();
     }
 
-    private void CheckTarget()
+    public void SetTarget(Transform newTarget)
     {
-        //if (target == null)
-        //    return;
+        target = newTarget;
 
-        GameObject knife = GameObject.FindGameObjectWithTag("TargetOverride");
-        if (knife != null)
-        {
-            target = knife.transform;
-        } else
-        {
-            target = targetBackup;
-        }
+        float distToTarget = Vector3.Distance(transform.position, target.position);
+        accuracyIncreaseThreshold = distToTarget * 0.8f; // this could be a set value? stop massive spread at distance
+        // or clamp maximum value? 50? 100?
+        // this would do even weirder things to long distance, much higher multiplier - need to clamp that as well
     }
 
     private void RotateToTarget()

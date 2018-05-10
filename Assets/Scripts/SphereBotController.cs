@@ -163,9 +163,14 @@ public class SphereBotController : MonoBehaviour {
             GameObject leftMissile = GameObject.Instantiate(missilePrefab, leftPos.position, leftPos.rotation) as GameObject;
 			GameObject rightMissile = GameObject.Instantiate(missilePrefab, rightPos.position, rightPos.rotation) as GameObject;
 			missiles[i] = leftMissile.GetComponent<MissileController>();
-			missiles[i].Setup(leftPanel.transform, target, sphereColliders);
+			missiles[i].Setup(leftPanel.transform, sphereColliders);
 			missiles[i + missileCount] = rightMissile.GetComponent<MissileController>();
-			missiles[i + missileCount].Setup(rightPanel.transform, target, sphereColliders);
+			missiles[i + missileCount].Setup(rightPanel.transform, sphereColliders);
+            if (target != null)
+            {
+                missiles[i].SetTarget(target);
+                missiles[i + missileCount].SetTarget(target);
+            }
         }
 
 		loaded = true;

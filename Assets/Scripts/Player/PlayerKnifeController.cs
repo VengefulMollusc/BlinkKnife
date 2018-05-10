@@ -150,7 +150,7 @@ public class PlayerKnifeController : MonoBehaviour
         else if (Input.GetButtonDown(middleMouse))
         {
             // weapon button
-            if (weapon.ClickMouse(knife, transform, playerColliders))
+            if (weapon.ClickMouse((knife != null) ? knife.transform : null, transform, playerColliders))
             {
                 // if weapon activates, lock knife
                 lockKnife = true;
