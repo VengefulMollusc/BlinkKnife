@@ -82,7 +82,7 @@ public class PlayerMotor : MonoBehaviour
     //private const float gravViewAlignSpeed = 4f;
 
     //private HealthController healthEnergy;
-    
+
 
     private float groundSpeedThreshold;
     private float airSpeedThreshold;
@@ -544,7 +544,8 @@ public class PlayerMotor : MonoBehaviour
 
         JumpCollider.Jump();
 
-        jumpTimer = jumpTimerDefault;
+        if (!_midAirJump)
+            jumpTimer = jumpTimerDefault;
         SetCrouching(false);
     }
 

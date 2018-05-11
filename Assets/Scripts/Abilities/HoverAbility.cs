@@ -8,7 +8,7 @@ public class HoverAbility : Ability
      * Allows the player to hover in midair for a short time
      */
     private const string displayName = "Hover";
-    private const KeyCode hoverKey = KeyCode.Space;
+    private const KeyCode hoverKey = KeyCode.LeftControl;
     private const float hoverTime = 1.5f;
     private const float forceMod = 15f;
 
