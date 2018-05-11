@@ -4,23 +4,16 @@ using UnityEngine;
 
 public class PlayerAbilityController : MonoBehaviour
 {
+    // TODO: just for testing. switch to scroll wheel if can be bothered
+    private KeyCode nextAbility = KeyCode.Tab;
+    private KeyCode ability1 = KeyCode.Alpha1;
+    private KeyCode ability2 = KeyCode.Alpha2;
 
-    [SerializeField]
-    private KeyCode useAbility = KeyCode.E;
-
-    // TODO: Next/prev just for testing. switch to scroll wheel if can be bothered
-    [SerializeField] private KeyCode nextAbility = KeyCode.Tab;
-    [SerializeField] private KeyCode prevAbility = KeyCode.Q;
-
-    [SerializeField]
-    private AbilityType startingAbility;
+    //[SerializeField]
+    //private AbilityType startingAbility;
 
     private AbilityType currentType;
     private List<Ability> playerAbilities;
-
-    private Ability currentAbility;
-
-    //private int numberOfAbilities;
 
     enum AbilityType
     {
@@ -32,33 +25,42 @@ public class PlayerAbilityController : MonoBehaviour
     void Start()
     {
         SetupAbilities();
-        SetAbility(startingAbility);
+        //SetAbility(startingAbility);
     }
 
     void Update()
     {
-        if (currentType != AbilityType.None)
+        if (Input.GetKeyDown(ability1))
         {
-            if (Input.GetKeyDown(useAbility))
-            {
-                // Do the thing
-                playerAbilities[(int)currentType].Activate();
-            }
-            if (Input.GetKeyUp(useAbility))
-            {
-                // Stop doing the thing
-                playerAbilities[(int)currentType].EndActivation();
-            }
+            ToggleAbility(AbilityType.SuperJump);
         }
 
-        if (Input.GetKeyDown(nextAbility))
+        if (Input.GetKeyDown(ability2))
         {
-            NextAbility();
+            ToggleAbility(AbilityType.MissileRedirect);
         }
-        if (Input.GetKeyDown(prevAbility))
-        {
-            PreviousAbility();
-        }
+        //if (currentType != AbilityType.None)
+        //{
+        //    if (Input.GetKeyDown(useAbility))
+        //    {
+        //        // Do the thing
+        //        playerAbilities[(int)currentType].Activate();
+        //    }
+        //    if (Input.GetKeyUp(useAbility))
+        //    {
+        //        // Stop doing the thing
+        //        playerAbilities[(int)currentType].EndActivation();
+        //    }
+        //}
+
+        //if (Input.GetKeyDown(nextAbility))
+        //{
+        //    NextAbility();
+        //}
+        //if (Input.GetKeyDown(prevAbility))
+        //{
+        //    PreviousAbility();
+        //}
     }
 
     private void SetupAbilities()
@@ -82,26 +84,38 @@ public class PlayerAbilityController : MonoBehaviour
         }
     }
 
-    private void SetAbility(AbilityType type)
+    private void ToggleAbility(AbilityType type)
     {
-        currentType = type;
+        Ability ability = playerAbilities[(int) type];
+        if (ability.IsActive())
+            ability.Deactivate();
+        else
+            ability.Activate();
 
-        Debug.Log("Switched to " + ((currentAbility != null) ? currentAbility.GetDisplayName() : type.ToString()));
     }
 
-    private void NextAbility()
-    {
-        AbilityType newType = currentType + 1;
-        if ((int)newType >= playerAbilities.Count)
-            newType = 0;
-        SetAbility(newType);
-    }
+    //private void SetAbility(AbilityType type)
+    //{
+    //    playerAbilities[(int)currentType].Deactivate();
+    //    currentType = type;
+    //    playerAbilities[(int)currentType].Activate();
 
-    private void PreviousAbility()
-    {
-        AbilityType newType = currentType - 1;
-        if ((int)newType < 0)
-            newType = (AbilityType)(playerAbilities.Count - 1);
-        SetAbility(newType);
-    }
+    //    Debug.Log("Switched to " + ((currentType != AbilityType.None) ? playerAbilities[(int)currentType].GetDisplayName() : type.ToString()));
+    //}
+
+    //private void NextAbility()
+    //{
+    //    AbilityType newType = currentType + 1;
+    //    if ((int)newType >= playerAbilities.Count)
+    //        newType = 0;
+    //    SetAbility(newType);
+    //}
+
+    //private void PreviousAbility()
+    //{
+    //    AbilityType newType = currentType - 1;
+    //    if ((int)newType < 0)
+    //        newType = (AbilityType)(playerAbilities.Count - 1);
+    //    SetAbility(newType);
+    //}
 }

@@ -2,11 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Ability
+public class Ability : MonoBehaviour
 {
-    void Activate();
+    public virtual void Activate()
+    {
+        enabled = true;
+        Debug.Log(GetDisplayName() + " Activated");
+    }
 
-    void EndActivation();
+    public virtual void Deactivate()
+    {
+        enabled = false;
+        Debug.Log(GetDisplayName() + " Deactivated");
+    }
 
-    string GetDisplayName();
+    public bool IsActive()
+    {
+        return enabled;
+    }
+
+    public virtual string GetDisplayName()
+    {
+        Debug.LogError("GetDisplayName must be overridden");
+        return "undefined display name";
+    }
 }

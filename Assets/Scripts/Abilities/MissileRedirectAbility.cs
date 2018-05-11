@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MissileRedirectAbility : MonoBehaviour, Ability
+public class MissileRedirectAbility : Ability
 {
+    private KeyCode useAbility = KeyCode.Q;
     private string displayName = "Missile Retarget";
+
     private PlayerKnifeController playerKnifeController;
 
     void Start()
@@ -12,7 +14,15 @@ public class MissileRedirectAbility : MonoBehaviour, Ability
         playerKnifeController = GetComponent<PlayerKnifeController>();
     }
 
-    public void Activate()
+    void Update()
+    {
+        if (Input.GetKeyDown(useAbility))
+        {
+            RedirectMissiles();
+        }
+    }
+
+    void RedirectMissiles()
     {
         KnifeController knife = playerKnifeController.GetActiveKnifeController();
         if (knife == null)
@@ -38,12 +48,7 @@ public class MissileRedirectAbility : MonoBehaviour, Ability
         }
     }
 
-    public void EndActivation()
-    {
-        
-    }
-
-    public string GetDisplayName()
+    public override string GetDisplayName()
     {
         return displayName;
     }
