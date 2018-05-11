@@ -7,12 +7,10 @@ public class PlayerAbilityController : MonoBehaviour
      * Sets up and controls which player abilities are active
      */
     // TODO: just for testing. switch to scroll wheel if can be bothered
-    private KeyCode nextAbility = KeyCode.Tab;
     private KeyCode ability1 = KeyCode.Alpha1;
     private KeyCode ability2 = KeyCode.Alpha2;
     private KeyCode ability3 = KeyCode.Alpha3;
-
-    private AbilityType currentType;
+    
     private List<Ability> playerAbilities;
 
     public enum AbilityType
