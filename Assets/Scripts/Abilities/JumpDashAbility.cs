@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class JumpDashAbility : Ability
 {
     /*
-     * Allows the player to perform a dash while in midair.
-     * Uses boostRing notification to apply dash
+     * Allows the player to perform an omni-directional horizontal dash while in midair.
+     * 
+     * Uses boostRing notification to apply dash physics.
+     * Could use this notification for redirecting knife etc as well
      */
     private const string displayName = "Jump Dash";
     private const KeyCode jumpKey = KeyCode.Space;
