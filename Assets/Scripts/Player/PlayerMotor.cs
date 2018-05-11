@@ -267,7 +267,7 @@ public class PlayerMotor : MonoBehaviour
      */
     void OnBoostNotification(object sender, object args)
     {
-        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>) args;
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>)args;
         if (info.arg0 != gameObject)
             return;
 
@@ -560,15 +560,15 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-    public bool CanJump()
+    public bool CanJump(bool _midAir = false)
     {
-        return IsOnGround() && !vaulting && !frozen;
+        return ((_midAir && !JumpCollider.IsColliding() && jumpTimer <= 0f) || (!_midAir && IsOnGround())) && !vaulting && !frozen;
     }
 
-    // perform jump when triggered by PlayerController
-    public void Jump(float _jumpStrength)
+    // perform jump when triggered
+    public void Jump(float _jumpStrength, bool _midAirJump = false)
     {
-        if (!CanJump())
+        if (!CanJump(_midAirJump))
             return;
 
         // if already moving up, keeps current vertical momentum

@@ -8,15 +8,16 @@ public class PlayerAbilityController : MonoBehaviour
     private KeyCode nextAbility = KeyCode.Tab;
     private KeyCode ability1 = KeyCode.Alpha1;
     private KeyCode ability2 = KeyCode.Alpha2;
+    private KeyCode ability3 = KeyCode.Alpha3;
 
     private AbilityType currentType;
     private List<Ability> playerAbilities;
 
     enum AbilityType
     {
-        None,
-        MissileRedirect,
-        SuperJump
+        DoubleJump,
+        SuperJump,
+        MissileRedirect
     };
 
     void Start()
@@ -28,10 +29,15 @@ public class PlayerAbilityController : MonoBehaviour
     {
         if (Input.GetKeyDown(ability1))
         {
-            ToggleAbility(AbilityType.SuperJump);
+            ToggleAbility(AbilityType.DoubleJump);
         }
 
         if (Input.GetKeyDown(ability2))
+        {
+            ToggleAbility(AbilityType.SuperJump);
+        }
+
+        if (Input.GetKeyDown(ability3))
         {
             ToggleAbility(AbilityType.MissileRedirect);
         }
@@ -46,8 +52,8 @@ public class PlayerAbilityController : MonoBehaviour
         {
             switch (type)
             {
-                case AbilityType.MissileRedirect:
-                    ability = gameObject.AddComponent<MissileRedirectAbility>();
+                case AbilityType.DoubleJump:
+                    ability = gameObject.AddComponent<DoubleJumpAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
@@ -56,8 +62,10 @@ public class PlayerAbilityController : MonoBehaviour
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
-                default: // Case for None
-                    playerAbilities.Add(null);
+                case AbilityType.MissileRedirect:
+                    ability = gameObject.AddComponent<MissileRedirectAbility>();
+                    ability.enabled = false;
+                    playerAbilities.Add(ability);
                     break;
             }
         }
@@ -66,9 +74,6 @@ public class PlayerAbilityController : MonoBehaviour
     private void ToggleAbility(AbilityType type)
     {
         Ability ability = playerAbilities[(int) type];
-        if (ability == null)
-            return;
-
         if (ability.IsActive())
             ability.Deactivate();
         else

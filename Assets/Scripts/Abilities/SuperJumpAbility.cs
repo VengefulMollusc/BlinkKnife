@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SuperJumpAbility : Ability
 {
-    private KeyCode jumpKey = KeyCode.E;
+    private KeyCode useAbilityKey = KeyCode.E;
     private string displayName = "Rocket Jump";
     private float superJumpStrength = 30f;
     private float cooldownTime = 1f;
@@ -25,7 +25,7 @@ public class SuperJumpAbility : Ability
 
     void Update()
     {
-        if (Input.GetKeyDown(jumpKey) && cooldown <= 0f)
+        if (Input.GetKeyDown(useAbilityKey) && cooldown <= 0f)
         {
             PerformJump();
         }
