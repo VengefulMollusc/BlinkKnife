@@ -59,7 +59,6 @@ public class PlayerMotor : MonoBehaviour
 
     private bool crouching;
     private float crouchVelFactor = 1f;
-    private bool canHover;
 
     private Vector3 velocity = Vector3.zero;
     private Vector3 rotation = Vector3.zero;
@@ -83,8 +82,7 @@ public class PlayerMotor : MonoBehaviour
     //private const float gravViewAlignSpeed = 4f;
 
     //private HealthController healthEnergy;
-
-    private Coroutine hoverCoroutine;
+    
 
     private float groundSpeedThreshold;
     private float airSpeedThreshold;
@@ -124,7 +122,6 @@ public class PlayerMotor : MonoBehaviour
         transCamController = GameObject.Find("TransitionCamera").GetComponent<TransitionCameraController>();
 
         cameraRelativePos = cam.transform.position - transform.position;
-        canHover = true;
 
         groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
         airSpeedThreshold = PlayerController.Speed() * airVelMod * PlayerController.SprintModifier();
@@ -211,9 +208,6 @@ public class PlayerMotor : MonoBehaviour
 
             if (jumpTimer > 0)
                 jumpTimer -= Time.fixedDeltaTime;
-
-            if (IsOnGround())
-                canHover = true;
         }
 
         // Freezing needs to stop rotation too
@@ -274,9 +268,6 @@ public class PlayerMotor : MonoBehaviour
         // boosted object is the player
         rb.velocity = info.arg1;
         jumpTimer = jumpTimerDefault;
-
-        if (hoverCoroutine != null)
-            StopCoroutine(hoverCoroutine);
     }
 
     /*
@@ -496,12 +487,6 @@ public class PlayerMotor : MonoBehaviour
         {
             HandleMidairInput(flatVel);
         }
-
-        if (crouching && canHover)
-        {
-            canHover = false;
-            hoverCoroutine = StartCoroutine(HoverCoroutine());
-        }
     }
 
     /*
@@ -532,32 +517,6 @@ public class PlayerMotor : MonoBehaviour
 
         // use impulse force to allow gradual speed/direction changes when midair
         rb.AddForce(velocityTemp, ForceMode.Impulse);
-    }
-
-    /*
-     * Currently cancels almost all air movement and holds height for a few seconds.
-     * 
-     * Due to momentum/sliding changes, hovering while at high speed feels jarring.
-     * Perhaps only dampen vertical movement? or downward movement?
-     * Or decelerate horizontal movement over a short period.
-     */
-    IEnumerator HoverCoroutine()
-    {
-        crouchVelFactor = 0.5f;
-        while (crouchVelFactor < 1f && !IsOnGround())
-        {
-            float factor = (1 - crouchVelFactor) * 0.5f;
-
-            Vector3 yComponent = Vector3.Project(rb.velocity, currentGravVector);
-            Vector3 xzComponent = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
-            Vector3 dampVector = (yComponent * factor) + (xzComponent * factor * 0.2f);
-
-            //rb.velocity *= crouchVelFactor;
-            rb.velocity -= dampVector;
-
-            crouchVelFactor *= 1.01f;
-            yield return new WaitForFixedUpdate();
-        }
     }
 
     public bool CanJump(bool _midAir = false)
@@ -725,8 +684,6 @@ public class PlayerMotor : MonoBehaviour
     {
         Info<Vector3, Vector3, bool, FibreOpticController> info = (Info<Vector3, Vector3, bool, FibreOpticController>)args;
         transform.position = info.arg0;
-
-        canHover = true;
 
         // make sure camera is properly angled before reenabling
         cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);

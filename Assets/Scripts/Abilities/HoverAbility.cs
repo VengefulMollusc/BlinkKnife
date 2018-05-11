@@ -9,7 +9,7 @@ public class HoverAbility : Ability
      */
     private const string displayName = "Hover";
     private const KeyCode hoverKey = KeyCode.Space;
-    private const float hoverTime = 2f;
+    private const float hoverTime = 1.5f;
     private const float forceMod = 15f;
 
     private bool hasGrounded;
@@ -41,6 +41,8 @@ public class HoverAbility : Ability
             hasGrounded = false;
         }
     }
+
+    // TODO: STOP HOVER ON BOOST??
 
     private IEnumerator HoverCoroutine()
     {
