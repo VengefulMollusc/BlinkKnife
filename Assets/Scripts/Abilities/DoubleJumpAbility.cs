@@ -7,7 +7,7 @@ public class DoubleJumpAbility : Ability
      */
     private const string displayName = "Double Jump";
     private const KeyCode jumpKey = KeyCode.Space;
-    private const float doubleJumpStrength = 10f;
+    private const float doubleJumpStrength = 12f;
 
     private bool hasGrounded;
     private PlayerMotor playerMotor;
