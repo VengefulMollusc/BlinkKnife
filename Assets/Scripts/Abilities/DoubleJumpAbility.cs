@@ -1,31 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DoubleJumpAbility : Ability
 {
-    private KeyCode jumpKey = KeyCode.Space;
-    private string displayName = "Double Jump";
-    private float doubleJumpStrength = 10f;
+    /*
+     * Allows the player to perform a second jump in midair
+     */
+    private const string displayName = "Double Jump";
+    private const KeyCode jumpKey = KeyCode.Space;
+    private const float doubleJumpStrength = 10f;
 
+    private bool hasGrounded;
     private PlayerMotor playerMotor;
 
     void Start()
     {
         playerMotor = transform.parent.GetComponent<PlayerMotor>();
     }
-
     
     void Update()
     {
         if (playerMotor.IsOnGround())
         {
+            hasGrounded = true;
             return;
         }
 
-        if (Input.GetKeyDown(jumpKey))
+        // attempt double jump
+        if (hasGrounded && Input.GetKeyDown(jumpKey) && playerMotor.CanJump(true))
         {
             playerMotor.Jump(doubleJumpStrength, true);
+            hasGrounded = false;
         }
     }
 

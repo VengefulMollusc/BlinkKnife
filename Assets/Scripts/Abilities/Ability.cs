@@ -1,16 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Ability : MonoBehaviour
 {
-    public virtual void Activate()
+    /*
+     * Base class for Abilities.
+     * Controls activating and deactivating of the ability
+     */
+    public virtual void Enable()
     {
         enabled = true;
         Debug.Log(GetDisplayName() + " Activated");
     }
 
-    public virtual void Deactivate()
+    public virtual void Disable()
     {
         enabled = false;
         Debug.Log(GetDisplayName() + " Deactivated");

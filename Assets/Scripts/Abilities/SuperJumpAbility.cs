@@ -1,13 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SuperJumpAbility : Ability
 {
-    private KeyCode useAbilityKey = KeyCode.E;
-    private string displayName = "Rocket Jump";
-    private float superJumpStrength = 30f;
-    private float cooldownTime = 1f;
+    /*
+     * Allows the player to perform an extra-high jump
+     */
+    private const string displayName = "Rocket Jump";
+    private const KeyCode useAbilityKey = KeyCode.E;
+    private const float superJumpStrength = 30f;
+    private const float cooldownTime = 1f;
 
     private PlayerMotor playerMotor;
     private float cooldown;
@@ -17,30 +18,22 @@ public class SuperJumpAbility : Ability
         playerMotor = transform.parent.GetComponent<PlayerMotor>();
     }
 
-    public override void Activate()
+    public override void Enable()
     {
-        base.Activate();
+        base.Enable();
         cooldown = 0f;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(useAbilityKey) && cooldown <= 0f)
-        {
-            PerformJump();
-        }
-
-        if (cooldown > 0f)
-            cooldown -= Time.deltaTime;
-    }
-
-    void PerformJump()
-    {
-        if (playerMotor.CanJump())
+        if (Input.GetKeyDown(useAbilityKey) && cooldown <= 0f && playerMotor.CanJump())
         {
             playerMotor.Jump(superJumpStrength);
             cooldown = cooldownTime;
         }
+
+        if (cooldown > 0f)
+            cooldown -= Time.deltaTime;
     }
 
     public override string GetDisplayName()

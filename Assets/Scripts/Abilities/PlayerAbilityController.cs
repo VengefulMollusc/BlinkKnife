@@ -1,9 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAbilityController : MonoBehaviour
 {
+    /*
+     * Sets up and controls which player abilities are active
+     */
     // TODO: just for testing. switch to scroll wheel if can be bothered
     private KeyCode nextAbility = KeyCode.Tab;
     private KeyCode ability1 = KeyCode.Alpha1;
@@ -13,7 +15,7 @@ public class PlayerAbilityController : MonoBehaviour
     private AbilityType currentType;
     private List<Ability> playerAbilities;
 
-    enum AbilityType
+    public enum AbilityType
     {
         DoubleJump,
         SuperJump,
@@ -71,12 +73,22 @@ public class PlayerAbilityController : MonoBehaviour
         }
     }
 
+    public void EnableAbility(AbilityType type)
+    {
+        playerAbilities[(int)type].Enable();
+    }
+
+    public void DisableAbility(AbilityType type)
+    {
+        playerAbilities[(int)type].Disable();
+    }
+
     private void ToggleAbility(AbilityType type)
     {
         Ability ability = playerAbilities[(int) type];
         if (ability.IsActive())
-            ability.Deactivate();
+            ability.Disable();
         else
-            ability.Activate();
+            ability.Enable();
     }
 }

@@ -1,11 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class MissileRedirectAbility : Ability
 {
-    private KeyCode useAbility = KeyCode.Q;
-    private string displayName = "Missile Retarget";
+    /*
+     * retargets all currently active missiles to the current knife object in the scene
+     */
+    private const string displayName = "Missile Retarget";
+    private const KeyCode useAbility = KeyCode.Q;
 
     private PlayerKnifeController playerKnifeController;
 
