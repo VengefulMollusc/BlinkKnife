@@ -32,6 +32,16 @@ public class PlayerAbilityController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            string abilityInfo = "";
+            foreach (AbilityType type in System.Enum.GetValues(typeof(AbilityType)))
+            {
+                abilityInfo += ((int)type + 1) + ": " + type + "  ";
+            }
+            Debug.Log(abilityInfo);
+        }
+
         if (Input.GetKeyDown(ability1))
         {
             ToggleAbility(AbilityType.DoubleJump);

@@ -20,6 +20,7 @@ public class HoverAbility : Ability
     {
         playerMotor = transform.parent.GetComponent<PlayerMotor>();
         playerRb = playerMotor.GetComponent<Rigidbody>();
+        hasGrounded = true;
     }
 
     void Update()
