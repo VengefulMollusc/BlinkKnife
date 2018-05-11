@@ -10,17 +10,22 @@ public class PlayerAbilityController : MonoBehaviour
     private KeyCode ability1 = KeyCode.Alpha1;
     private KeyCode ability2 = KeyCode.Alpha2;
     private KeyCode ability3 = KeyCode.Alpha3;
-    
+    private KeyCode ability4 = KeyCode.Alpha4;
+
     private List<Ability> playerAbilities;
 
+    /*
+     * An Enum that catalogues all available abilities for use by the player
+     */
     public enum AbilityType
     {
         DoubleJump,
         SuperJump,
+        Hover,
         MissileRedirect
     };
 
-    void Start()
+    void Awake()
     {
         SetupAbilities();
     }
@@ -39,10 +44,18 @@ public class PlayerAbilityController : MonoBehaviour
 
         if (Input.GetKeyDown(ability3))
         {
+            ToggleAbility(AbilityType.Hover);
+        }
+
+        if (Input.GetKeyDown(ability4))
+        {
             ToggleAbility(AbilityType.MissileRedirect);
         }
     }
 
+    /*
+     * Creates a set of ability components and attaches them to the player object
+     */
     private void SetupAbilities()
     {
         playerAbilities = new List<Ability>();
@@ -62,6 +75,11 @@ public class PlayerAbilityController : MonoBehaviour
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
+                case AbilityType.Hover:
+                    ability = gameObject.AddComponent<HoverAbility>();
+                    ability.enabled = false;
+                    playerAbilities.Add(ability);
+                    break;
                 case AbilityType.MissileRedirect:
                     ability = gameObject.AddComponent<MissileRedirectAbility>();
                     ability.enabled = false;
@@ -71,16 +89,25 @@ public class PlayerAbilityController : MonoBehaviour
         }
     }
 
+    /*
+     * Enables the given ability
+     */
     public void EnableAbility(AbilityType type)
     {
         playerAbilities[(int)type].Enable();
     }
 
+    /*
+     * Disables the given ability
+     */
     public void DisableAbility(AbilityType type)
     {
         playerAbilities[(int)type].Disable();
     }
 
+    /*
+     * Toggles an ability between enabled/disabled
+     */
     private void ToggleAbility(AbilityType type)
     {
         Ability ability = playerAbilities[(int) type];

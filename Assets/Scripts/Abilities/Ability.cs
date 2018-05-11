@@ -4,7 +4,7 @@ public class Ability : MonoBehaviour
 {
     /*
      * Base class for Abilities.
-     * Controls activating and deactivating of the ability
+     * Abilities are small pieces of optional functionality that can be toggled on/off and aren't part of the default player code/features
      */
     public virtual void Enable()
     {
