@@ -11,6 +11,7 @@ public class PlayerAbilityController : MonoBehaviour
     private KeyCode ability2 = KeyCode.Alpha2;
     private KeyCode ability3 = KeyCode.Alpha3;
     private KeyCode ability4 = KeyCode.Alpha4;
+    private KeyCode ability5 = KeyCode.Alpha5;
 
     private List<Ability> playerAbilities;
 
@@ -22,6 +23,7 @@ public class PlayerAbilityController : MonoBehaviour
         DoubleJump,
         SuperJump,
         Hover,
+        JumpDash,
         MissileRedirect
     };
 
@@ -59,6 +61,11 @@ public class PlayerAbilityController : MonoBehaviour
 
         if (Input.GetKeyDown(ability4))
         {
+            ToggleAbility(AbilityType.JumpDash);
+        }
+
+        if (Input.GetKeyDown(ability5))
+        {
             ToggleAbility(AbilityType.MissileRedirect);
         }
     }
@@ -87,6 +94,11 @@ public class PlayerAbilityController : MonoBehaviour
                     break;
                 case AbilityType.Hover:
                     ability = gameObject.AddComponent<HoverAbility>();
+                    ability.enabled = false;
+                    playerAbilities.Add(ability);
+                    break;
+                case AbilityType.JumpDash:
+                    ability = gameObject.AddComponent<JumpDashAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;

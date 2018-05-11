@@ -847,6 +847,11 @@ public class PlayerMotor : MonoBehaviour
         return velMod;
     }
 
+    public Vector3 GetInputVelocity()
+    {
+        return velocity;
+    }
+
     /*
      * Changes the player's current health
      * Positive numbers increase, negative decrease
