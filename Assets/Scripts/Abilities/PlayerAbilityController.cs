@@ -9,9 +9,6 @@ public class PlayerAbilityController : MonoBehaviour
     private KeyCode ability1 = KeyCode.Alpha1;
     private KeyCode ability2 = KeyCode.Alpha2;
 
-    //[SerializeField]
-    //private AbilityType startingAbility;
-
     private AbilityType currentType;
     private List<Ability> playerAbilities;
 
@@ -25,7 +22,6 @@ public class PlayerAbilityController : MonoBehaviour
     void Start()
     {
         SetupAbilities();
-        //SetAbility(startingAbility);
     }
 
     void Update()
@@ -39,43 +35,26 @@ public class PlayerAbilityController : MonoBehaviour
         {
             ToggleAbility(AbilityType.MissileRedirect);
         }
-        //if (currentType != AbilityType.None)
-        //{
-        //    if (Input.GetKeyDown(useAbility))
-        //    {
-        //        // Do the thing
-        //        playerAbilities[(int)currentType].Activate();
-        //    }
-        //    if (Input.GetKeyUp(useAbility))
-        //    {
-        //        // Stop doing the thing
-        //        playerAbilities[(int)currentType].EndActivation();
-        //    }
-        //}
-
-        //if (Input.GetKeyDown(nextAbility))
-        //{
-        //    NextAbility();
-        //}
-        //if (Input.GetKeyDown(prevAbility))
-        //{
-        //    PreviousAbility();
-        //}
     }
 
     private void SetupAbilities()
     {
         playerAbilities = new List<Ability>();
+        Ability ability;
 
         foreach (AbilityType type in System.Enum.GetValues(typeof(AbilityType)))
         {
             switch (type)
             {
                 case AbilityType.MissileRedirect:
-                    playerAbilities.Add(gameObject.AddComponent<MissileRedirectAbility>());
+                    ability = gameObject.AddComponent<MissileRedirectAbility>();
+                    ability.enabled = false;
+                    playerAbilities.Add(ability);
                     break;
                 case AbilityType.SuperJump:
-                    playerAbilities.Add(gameObject.AddComponent<SuperJumpAbility>());
+                    ability = gameObject.AddComponent<SuperJumpAbility>();
+                    ability.enabled = false;
+                    playerAbilities.Add(ability);
                     break;
                 default: // Case for None
                     playerAbilities.Add(null);
@@ -87,35 +66,12 @@ public class PlayerAbilityController : MonoBehaviour
     private void ToggleAbility(AbilityType type)
     {
         Ability ability = playerAbilities[(int) type];
+        if (ability == null)
+            return;
+
         if (ability.IsActive())
             ability.Deactivate();
         else
             ability.Activate();
-
     }
-
-    //private void SetAbility(AbilityType type)
-    //{
-    //    playerAbilities[(int)currentType].Deactivate();
-    //    currentType = type;
-    //    playerAbilities[(int)currentType].Activate();
-
-    //    Debug.Log("Switched to " + ((currentType != AbilityType.None) ? playerAbilities[(int)currentType].GetDisplayName() : type.ToString()));
-    //}
-
-    //private void NextAbility()
-    //{
-    //    AbilityType newType = currentType + 1;
-    //    if ((int)newType >= playerAbilities.Count)
-    //        newType = 0;
-    //    SetAbility(newType);
-    //}
-
-    //private void PreviousAbility()
-    //{
-    //    AbilityType newType = currentType - 1;
-    //    if ((int)newType < 0)
-    //        newType = (AbilityType)(playerAbilities.Count - 1);
-    //    SetAbility(newType);
-    //}
 }
