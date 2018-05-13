@@ -6,7 +6,7 @@ public class PlayerAbilityController : MonoBehaviour
     /*
      * Sets up and controls which player abilities are active
      */
-    // TODO: just for testing. switch to scroll wheel if can be bothered
+    // TODO: just for testing
     private KeyCode ability1 = KeyCode.Alpha1;
     private KeyCode ability2 = KeyCode.Alpha2;
     private KeyCode ability3 = KeyCode.Alpha3;
@@ -76,10 +76,10 @@ public class PlayerAbilityController : MonoBehaviour
     private void SetupAbilities()
     {
         playerAbilities = new List<Ability>();
-        Ability ability;
 
         foreach (AbilityType type in System.Enum.GetValues(typeof(AbilityType)))
         {
+            Ability ability;
             switch (type)
             {
                 case AbilityType.DoubleJump:
