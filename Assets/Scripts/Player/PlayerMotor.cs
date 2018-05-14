@@ -11,15 +11,6 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField]
     private float cameraRotLimit = 90f;
 
-    //[SerializeField]
-    //private GameObject transitionCameraPrefab;
-
-    //[SerializeField]
-    //private float gravity = 0.3f;
-
-    //[SerializeField]
-    //private float sprintDeceleration = 0.9f;
-
     private static float velMod = 1.5f;
     private static float airVelMod = 1.2f;
 
@@ -28,32 +19,20 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField]
     private float warpGravShiftAngle = 1f;
 
-    //[SerializeField]
     private float gravShiftTimeLimit = 2f;
 
     private Coroutine gravShiftTimerCoroutine;
-
-    //[SerializeField]
-    //[Range(0f, 20f)]
-    //private float airVelThreshold = 10f;
 
     [SerializeField]
     [Range(0.0f, 50.0f)]
     private float warpVelocityModifier = 20f;
 
-
-    //[SerializeField]
-    //[Range(0f, 45f)]
-    //private float gravityShiftAngleMax = 15f;
-
     public const string WarpNotification = "PlayerMotor.WarpNotification";
     public const string GravityWarpNotification = "PlayerMotor.GravityWarpNotification";
 
     private bool frozen;
-    //private Vector3 frozenPos = Vector3.zero;
     private Vector3 frozenVel = Vector3.zero;
 
-    //private bool onGround;
     private bool sliding;
     private bool colliding;
 
@@ -68,18 +47,12 @@ public class PlayerMotor : MonoBehaviour
 
     private float jumpTimer;
     private float jumpTimerDefault = 0.2f; // was 0.6f
-    //private bool momentumFlight;
 
     private Rigidbody rb;
-
-    //private UtiliseGravity grav;
 
     private Vector3 cameraRelativePos;
 
     private Vector3 currentGravVector;
-    //private float currentGravStrength;
-
-    //private const float gravViewAlignSpeed = 4f;
 
     //private HealthController healthEnergy;
 
@@ -97,7 +70,7 @@ public class PlayerMotor : MonoBehaviour
     {
         //healthEnergy = GetComponent<HealthController>();
 
-        UpdateGravityValues();
+        OnGravityChange(null, null);
         this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
         this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
@@ -113,67 +86,37 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        //grav = GetComponent<UtiliseGravity>();
-        //if (transitionCameraPrefab == null)
-        //{
-        //    throw new MissingReferenceException("No transitionCameraPrefab in PlayerMotor");
-        //}
 
+        // Find the TransitionCamera object in the scene
         transCamController = GameObject.Find("TransitionCamera").GetComponent<TransitionCameraController>();
 
+        // Gets the position of the camera relative to the main player position
         cameraRelativePos = cam.transform.position - transform.position;
 
+        // Calculate thresholds for momentum 
         groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
         airSpeedThreshold = PlayerController.Speed() * airVelMod * PlayerController.SprintModifier();
     }
 
-    // gets movement vector from PlayerController
+    /*
+     * Store movement input variables from PlayerController
+     */
     public void Move(Vector3 _velocity, bool _sprinting)
     {
         if (frozen)
-        {
-            velocity = Vector3.zero;
-            sprinting = false;
             return;
-        }
 
         velocity = _velocity;
         sprinting = _sprinting;
     }
 
-    // gets rotation vector 
-    //public void Rotate(Vector3 _rotation)
-    //{
-    //    if (frozen)
-    //    {
-    //        rotation = Vector3.zero;
-    //        return;
-    //    }
-
-    //    rotation = _rotation;
-    //}
-
-    //// gets camera rotation vector 
-    //public void RotateCamera(float _cameraRotationX)
-    //{
-    //    if (frozen)
-    //    {
-    //        cameraRotationX = 0f;
-    //        return;
-    //    }
-
-    //    cameraRotationX = _cameraRotationX;
-    //}
-
-    // Recieves rotation values from PlayerController and applies rotation
+    /*
+     * Apply player and camera rotation based on input
+     */
     public void LookRotation(Vector3 _rotation, float _cameraRotationX)
     {
         if (frozen)
-        {
-            rotation = Vector3.zero;
-            cameraRotationX = 0f;
             return;
-        }
 
         rotation = _rotation;
         cameraRotationX = _cameraRotationX;
@@ -189,32 +132,26 @@ public class PlayerMotor : MonoBehaviour
         cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
     }
 
-    //void Update()
-    //{
-    //    // Move rotation code to here
-    //    PerformRotation();
-    //}
-
     // Run every physics iteration
     void FixedUpdate()
     {
         // if frozen, dont perform any movement
-        if (!frozen)
-        {
-            CheckPlayerGravityAlignment();
+        if (frozen)
+            return;
 
-            PerformMovement();
-            //onGround = false;
+        // Check that player orientation aligns with gravity, if not then transition player to gravity direction
+        CheckPlayerGravityAlignment();
 
-            if (jumpTimer > 0)
-                jumpTimer -= Time.fixedDeltaTime;
-        }
+        // Handle player movement
+        PerformMovement();
 
-        // Freezing needs to stop rotation too
-        //PerformRotation();
+        if (jumpTimer > 0)
+            jumpTimer -= Time.fixedDeltaTime;
     }
 
     /*
+     * TODO: move or remove
+     * 
      * Try locking skybox and scene lighting to XZ orientation of the player
      * 
      *  - Could take this one step further
@@ -229,35 +166,18 @@ public class PlayerMotor : MonoBehaviour
      *  paths that can only be accessed when gravity is in a particular direction?
      */
 
-    //perform rotation based on rotation variable
-    //private void PerformRotation()
-    //{
-    //    //rb.MoveRotation(transform.rotation * Quaternion.Euler(rotation)); // switched off this as update to 2017 seems to have bugged it
-    //    //transform.rotation *= Quaternion.Euler(rotation);
-    //    rb.rotation *= Quaternion.Euler(rotation);
-
-    //    // rotation calculation - clamps to limit values
-    //    currentCamRotX -= cameraRotationX;
-    //    currentCamRotX = Mathf.Clamp(currentCamRotX, -cameraRotLimit, cameraRotLimit);
-
-    //    // apply rotation to transform of camera
-    //    cam.transform.localEulerAngles = new Vector3(currentCamRotX, 0f, 0f);
-    //}
-
+    /*
+     * Handles GravityChangeNotification, updates local current gravity variable
+     */
     void OnGravityChange(object sender, object args)
     {
-        UpdateGravityValues();
-    }
-
-    void UpdateGravityValues()
-    {
-        // update gravity vector and strength from GlobalGravityControl
         currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
-        //currentGravStrength = GlobalGravityControl.GetGravityStrength();
     }
 
     /*
      * Handler for BoostNotification from BoostRing objects
+     * 
+     * If the player is boosted, apply the boost velocity
      */
     void OnBoostNotification(object sender, object args)
     {
@@ -276,18 +196,16 @@ public class PlayerMotor : MonoBehaviour
      */
     void CheckPlayerGravityAlignment()
     {
-        // transition player orientation if not aligned to gravity
         if (currentGravVector == -transform.up)
             return;
 
-        //Vector3 transitionUp = Vector3.RotateTowards(transform.up, -currentGravVector, gravViewAlignSpeed * Mathf.Deg2Rad, 0f);
-
-        //UpdateGravityDirection(-transitionUp);
-
+        // transition player orientation if not aligned to gravity
         UpdateGravityDirection(currentGravVector);
     }
 
-    // Updates player rotation to gravity
+    /*
+     * Updates player rotation to align to gravity
+     */
     public void UpdateGravityDirection(Vector3 _newGrav)
     {
         float angle = Vector3.Angle(-transform.up, _newGrav);
@@ -299,44 +217,51 @@ public class PlayerMotor : MonoBehaviour
             axis = transform.forward;
 
         transform.Rotate(axis, angle, Space.World);
-
-        //transform.LookAt(transform.position + transform.forward, -_newGrav);
     }
 
-    // perform movement based on velocity variable
+    /*
+     * Perform movement based on input variables
+     */
     private void PerformMovement()
     {
-
-        // Apply the current gravity
-        //if (useGravity)
-        //    rb.AddForce(currentGravVector * currentGravStrength, ForceMode.Acceleration); // changed from -transform.up to stop grav transitions from changing velocity
-
         if (UseGroundMovement() && jumpTimer <= 0f)
         {
-            // Grounded
-            //momentumFlight = false;
+            // Use grounded movement physics
             GroundMovement();
             return;
-            //Debug.Log("Ground: " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
         }
         if (colliding) // TODO: double-check that jumpTimer <= 0f check is not needed here
         {
-            // Sliding
+            // Use sliding movement physics
             SlideMovement();
             return;
-            //Debug.Log("Slide:  " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
         }
-        // Airborne
+        // Use airborne movement physics
         AirMovement();
-        //Debug.Log("Air:    " + Vector3.ProjectOnPlane(rb.velocity, transform.up).magnitude);
     }
 
+    /*
+     * Checks if the player should use ground movement physics
+     */
     private bool UseGroundMovement()
     {
+        /*
+         * return true if:
+         * 
+         * the sliding variable is false (set by PlayerCollisionController)
+         * 
+         * OR
+         * 
+         * IsOnGround() - defined by jumpCollider and if jumpTimer is <= 0
+         * And
+         * The slope angle below the player is below the slide threshold 
+         */
         return (IsOnGround() && GetSlopeAngle() < PlayerCollisionController.slideThreshold) || !sliding;
     }
 
-    // returns the angle of the slope directly below the player
+    /*
+     * Gets the angle of the slope directly below the player
+     */
     private float GetSlopeAngle()
     {
         float rayDistance = 0.5f;
@@ -372,10 +297,15 @@ public class PlayerMotor : MonoBehaviour
      * 
      * NOTE: this may need to be applied to air movement as well re physics against walls
      */
+
+    /*
+     * Perform ground movement
+     */
     void GroundMovement()
     {
         Vector3 newVel = rb.velocity;
 
+        // Check if player has input
         if (velocity != Vector3.zero)
         {
             newVel = velocity * velMod;
@@ -388,40 +318,41 @@ public class PlayerMotor : MonoBehaviour
             newVel = rot * newVel;
 
             if (crouching)
-            {
                 newVel *= 0.5f;
-            }
 
         }
         else
         {
+            // dampen velocity but allow for free vertical movement
             newVel = rb.velocity - (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
-            // may not be nessecary, friction already does a bit of this
-
-            //rb.velocity = Vector3.zero;
         }
 
         // MomentumSlide here
         newVel = MomentumSlide(newVel);
 
+        // TODO: Wall slide logic here
+
         rb.velocity = newVel;
     }
 
     /*
-     * while moving above sprint speed, retain gained speed
+     * Allows retaining speed for a while above the sprint speed threshold
+     * 
+     * TODO: restrict momentum retained through tight turns
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
         float surfaceMagnitude = Vector3.Project(rb.velocity, _newVel).magnitude;
-        //bool aboveSpeedThreshold = rb.velocity.magnitude > groundSpeedThreshold;
         bool aboveSpeedThreshold = surfaceMagnitude > groundSpeedThreshold;
-        bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0f;
-        bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
 
+        // if not above the speed threshold
         if (!aboveSpeedThreshold)
         {
             return _newVel;
         }
+
+        bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0f;
+        bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
 
         if (sprinting && inputInMovementDir && facingMovementDir)
         {
@@ -804,6 +735,10 @@ public class PlayerMotor : MonoBehaviour
         frozenVel = rb.velocity;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
+
+        velocity = Vector3.zero;
+        sprinting = false;
+
         Hide();
     }
 
