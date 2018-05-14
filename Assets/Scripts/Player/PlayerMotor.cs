@@ -231,16 +231,19 @@ public class PlayerMotor : MonoBehaviour
         if (UseGroundMovement() && jumpTimer <= 0f)
         {
             // Use grounded movement physics
+            Debug.Log("Ground");
             GroundMovement();
             return;
         }
         if (colliding) // TODO: double-check that jumpTimer <= 0f check is not needed here
         {
             // Use sliding movement physics
+            Debug.Log("Slide");
             SlideMovement();
             return;
         }
         // Use airborne movement physics
+        Debug.Log("Air");
         AirMovement();
     }
 
@@ -321,18 +324,13 @@ public class PlayerMotor : MonoBehaviour
                 newVel *= PlayerController.SprintModifier();
 
             // rotate input vector to align with surface normal
-            //Debug.Log(slopeAngle);
-            //if (slopeAngle < PlayerCollisionController.slideThreshold)
-            //{
             Vector3 up = transform.up;
             Vector3 rotatedNormal = Vector3.RotateTowards(up, slopeNormal, PlayerCollisionController.slideThreshold * Mathf.Deg2Rad, 0);
             Quaternion rot = Quaternion.FromToRotation(up, rotatedNormal);
             newVel = rot * newVel;
-            //}
 
             if (crouching)
                 newVel *= crouchVelFactor;
-
         }
         else
         {
@@ -392,20 +390,26 @@ public class PlayerMotor : MonoBehaviour
      */
     void SlideMovement()
     {
-        Vector3 velocityTemp = velocity * airVelMod;
-        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
+        if (velocity == Vector3.zero)
+            return;
 
-        float threshold = (sprinting) ? airSprintSpeedThreshold : airSpeedThreshold;
+        Vector3 newVel = velocity * airVelMod;
+        //Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
+
+        //float threshold = (sprinting) ? airSprintSpeedThreshold : airSpeedThreshold;
 
         // if input velocity in direction of movement and velocity above threshold
-        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
-        {
-            // cancel positive movement in direction of flight
-            velocityTemp -= Vector3.Project(velocityTemp, flatVel);
-        }
+        //if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
+        //{
+        //    // cancel positive movement in direction of flight
+        //    velocityTemp -= Vector3.Project(velocityTemp, flatVel);
+        //}
+
+        // cancel positive movement in direction of flight
+        newVel -= Vector3.Project(newVel, rb.velocity);
 
         // use impulse force to allow slower changes to direction/speed when at high midair speed
-        rb.AddForce(velocityTemp, ForceMode.Impulse);
+        rb.AddForce(newVel, ForceMode.Impulse);
     }
 
 
