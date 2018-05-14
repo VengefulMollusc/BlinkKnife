@@ -63,6 +63,9 @@ public class PlayerMotor : MonoBehaviour
 
     private TransitionCameraController transCamController;
 
+    private PlayerKnifeController playerKnifeController;
+    private Renderer playerRenderer;
+
     void OnEnable()
     {
         // Initial check of gravity vector
@@ -83,6 +86,8 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        playerRenderer = GetComponent<Renderer>();
+        playerKnifeController = cam.GetComponent<PlayerKnifeController>();
 
         // Find the TransitionCamera object in the scene
         transCamController = GameObject.Find("TransitionCamera").GetComponent<TransitionCameraController>();
@@ -460,10 +465,15 @@ public class PlayerMotor : MonoBehaviour
 
         if (!_midAirJump)
             jumpTimer = jumpTimerDefault;
+
         SetCrouching(false);
     }
 
-    // handle jump button being held
+    /*
+     * Called when the jump button is held down
+     * 
+     * Triggers a ledge vault if a suitable ledge is in front of the player
+     */
     public void JumpHold()
     {
         if (!vaulting && PlayerCollisionController.GetVaultHeight() > 0f)
@@ -472,27 +482,39 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
+    /*
+     * Performs a vault to the height of the ledge in front of the player
+     */
     private IEnumerator PerformVault()
     {
         vaulting = true;
+
         while (PlayerCollisionController.GetVaultHeight() > 0f)
         {
+            // Get the force required to move the player up to the level of the ledge
             float force = Mathf.Sqrt(PlayerCollisionController.GetVaultHeight() * -2 *
                                      -GlobalGravityControl.GetGravityStrength());
 
             rb.velocity = transform.up * force;
-            //jumpTimer = jumpTimerDefault;
             yield return 0;
         }
+
         vaulting = false;
     }
 
-    // either begin or end crouching
+    /*
+     * Sets the crouching variable
+     */
     public void SetCrouching(bool _crouching)
     {
         crouching = _crouching;
     }
 
+    /*
+     * Sets the collision state of the player
+     * 
+     * Called from PlayerCollisionController
+     */
     public void SetCollisionState(bool _sliding, bool _colliding)
     {
         sliding = _sliding;
@@ -502,14 +524,15 @@ public class PlayerMotor : MonoBehaviour
     /*
      * Warps the player to the current knife position, inheriting velocity and moving gravity vectors if required
      */
-    public void WarpToKnife(bool _shiftGravity, KnifeController _knifeController, bool _bounceWarp, FibreOpticController _fibreOpticController = null)
+    public void WarpToKnife(bool _shiftGravity, KnifeController _knifeController, FibreOpticController _fibreOpticController = null)
     {
         if (frozen) return;
+
+        // record starting position and rotation for transitionCamera
         Vector3 camStartPos = cam.transform.position;
         Quaternion camStartRot = cam.transform.rotation;
         Vector3 relativeFacing = cam.transform.forward;
-
-        //Vector3 newPos = _knifeController.GetWarpPosition();
+        
         Vector3 newGravDirection = _knifeController.GetGravVector();
 
         bool fibreOpticWarp = _fibreOpticController != null;
@@ -520,48 +543,27 @@ public class PlayerMotor : MonoBehaviour
         bool gravityShift = (_shiftGravity && surfaceDiffAngle > warpGravShiftAngle && newGravDirection != Vector3.zero);
 
         if (gravityShift)
-        {
             this.PostNotification(GravityWarpNotification, _knifeController.GetStuckObject());
-        }
         else
-        {
             this.PostNotification(WarpNotification);
-        }
 
-        // TODO: parenting may be obsolete
-        //transform.SetParent(null);
-
-        // Unsure if this needs to happen before or after the moveposition
-
-        // rotate to surface normal
+        // rotate to face new direction at end of warp.
+        // needed for gravity and fibreoptic warps
         if (gravityShift)
             RotateToDirection(newGravDirection, relativeFacing);
         else if (fibreOpticWarp)
             RotateToDirection(currentGravVector, _fibreOpticController.GetExitDirection(), true);
 
-        // move to knife position
-        // NOTE: this needs to be double-checked, moving rb by itself doesnt update position properly for grav warp
-        //rb.MovePosition(newPos);
-        //rb.position = newPos;
-        //transform.position = newPos;
-
-        //Vector3 camEndPos = newPos + (transform.rotation * cameraRelativePos); //Needs to get position camera will be in after move
-        Quaternion camEndRot = camStartRot;
-        if (gravityShift)
-        {
-            camEndRot = transform.rotation;
-        }
-
-        // fixes horizontal momentum lock when warping
-        //onGround = false;
-
-        //GameObject transCamera = (GameObject)Instantiate(transitionCameraPrefab, camStartPos, cam.transform.rotation);
-        //TransitionCameraController transCamController = transCamera.GetComponent<TransitionCameraController>();
+        // Determine transitionCamera end rotation
+        Quaternion camEndRot = (gravityShift) ? transform.rotation : camStartRot;
+        
+        // Setup transitionCamera
         transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift, _fibreOpticController);
 
         cam.enabled = false;
         Freeze();
 
+        // Begin warp transition
         transCamController.StartTransition();
 
         if (gravityShift)
@@ -570,20 +572,24 @@ public class PlayerMotor : MonoBehaviour
 
             // Begin gravity shift countdown coroutine
             if (gravShiftTimerCoroutine != null)
-            {
                 StopCoroutine(gravShiftTimerCoroutine);
-            }
+
             gravShiftTimerCoroutine = StartCoroutine("GravShiftCountdown");
         }
     }
 
-    // counts for the given gravity shift duration then triggers a transition back to default gravity
+    /*
+     * Triggers a transition back to default gravity after a certain time.
+     * 
+     * Used to apply time limit to player gravity shifting
+     */
     IEnumerator GravShiftCountdown()
     {
         float t = 0.0f;
         while (t < 1f)
         {
             // Don't count down if frozen (stops countdown from running while warp transition is happening)
+            // TODO: MAY WANT TO REMOVE THIS CONDITION
             if (!frozen)
                 t += Time.deltaTime * (Time.timeScale / gravShiftTimeLimit);
 
@@ -594,7 +600,9 @@ public class PlayerMotor : MonoBehaviour
         GlobalGravityControl.TransitionToDefault();
     }
 
-    // Resets/reenables player once warp transition has completed
+    /*
+     * Reenables player camera/control etc when warp ends
+     */
     void EndWarp(object sender, object args)
     {
         Info<Vector3, Vector3, bool, FibreOpticController> info = (Info<Vector3, Vector3, bool, FibreOpticController>)args;
@@ -607,7 +615,7 @@ public class PlayerMotor : MonoBehaviour
 
         GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.2f);
 
-        // Inherit knife velocity at end of warp
+        // Check if knife velocity should be inherited
         Vector3 knifeVel = info.arg1.normalized;
         if ((info.arg2 || info.arg3) && knifeVel != Vector3.zero)
         {
@@ -620,16 +628,8 @@ public class PlayerMotor : MonoBehaviour
             float relativeSpeed = Mathf.Max(projectedVelMagnitude - warpVelocityModifier, 0f);
             // adds component of current velocity along axis of knife movement
 
-            //rb.velocity = (_velocity * warpVelocityModifier) + (_velocity.normalized * projectedVelMagnitude);
-
             // inherit player velocity
-            rb.velocity = (knifeVel * (warpVelocityModifier + relativeSpeed));
-            //if (rb.velocity.magnitude > airSprintSpeedThreshold)
-            //    momentumFlight = true;
-
-            // fixes horizontal momentum lock when warping
-            //onGround = false;
-
+            rb.velocity = knifeVel * (warpVelocityModifier + relativeSpeed);
         }
         else
         {
@@ -641,7 +641,7 @@ public class PlayerMotor : MonoBehaviour
     }
 
     /*
-     * Rotates the player to align with a new surface normal.
+     * Rotates the player to align with a new surface normal/facing direction.
      * 
      * Also aims the view as close as possible to the pre-warp view direction.
      *  - this should prevent the player from rotating wildly when changing gravity.
@@ -677,120 +677,84 @@ public class PlayerMotor : MonoBehaviour
         rb.velocity = transform.TransformDirection(localVelocity);
     }
 
-    //  public bool WallHang()
-    //  {
-    //      if (onGround)
-    //          return false;
-    //      //if (velocity.magnitude <= 0.1f) // if not moving or crouching?
-    //      if (crouching) // crouching?
-    //      {
-    //          StartCoroutine(WallHangCoroutine());
-    //          return true;
-    //      }
-    //      return false;
-    //  }
-
-    //  // hangs on wall while crouching through warp
-    //  IEnumerator WallHangCoroutine()
-    //  {
-    //crouchVelFactor = 0.5f;
-    //      // do not inherit player velocity if wall hanging
-    //      frozenVel = Vector3.zero;
-    //      yield return new WaitWhile(() => velocity.magnitude == 0f);
-    //      transform.SetParent(null);
-    //      UnFreeze();
-    //  }
-
     /*
-     * Returns the current position of the feet of the player, relative to the current gravity direction
+     * Freezes player RigidBody physics and movement and hides player mesh etc
      */
-    //Vector3 GetFootPosition()
-    //{
-    //    return transform.position + GlobalGravityControl.GetCurrentGravityVector();
-    //}
-
     public void Freeze()
     {
         if (frozen)
             return;
         frozen = true;
-        //        frozenPos = rb.position;
         frozenVel = rb.velocity;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
-
+        rb.detectCollisions = false;
         velocity = Vector3.zero;
         sprinting = false;
-
         Hide();
     }
 
+    /*
+     * Unfreezes RigidBody and reenables movment and visuals 
+     */
     public void UnFreeze()
     {
         if (!frozen)
             return;
         frozen = false;
         rb.isKinematic = false;
-        //        rb.position = frozenPos;
+        rb.detectCollisions = true;
         rb.velocity = frozenVel;
         UnHide();
     }
 
+    /*
+     * Hides the player visuals and viewmodel
+     */
     private void Hide()
     {
-        GetComponent<Renderer>().enabled = false;
-        GetComponent<CapsuleCollider>().enabled = false;
-        cam.GetComponent<PlayerKnifeController>().HideKnife(true);
+        playerRenderer.enabled = false;
+        playerKnifeController.HideKnife(true);
     }
 
+    /*
+     * Shows the player visuals and viewmodel
+     */
     private void UnHide()
     {
-        GetComponent<Renderer>().enabled = true;
-        GetComponent<CapsuleCollider>().enabled = true;
-        cam.GetComponent<PlayerKnifeController>().HideKnife(false);
+        playerRenderer.enabled = true;
+        playerKnifeController.HideKnife(false);
     }
 
+    /*
+     * Checks if the player if frozen
+     */
     public bool IsFrozen()
     {
         return frozen;
     }
 
+    /*
+     * Checks if the player is on the ground and not jumping
+     */
     public bool IsOnGround()
     {
         return JumpCollider.IsColliding() && jumpTimer <= 0;
     }
 
+    /*
+     * Returns the ground velocity modifier
+     */
     public static float VelMod()
     {
         return velMod;
     }
 
+    /*
+     * Returns the last input velocity value
+     */
     public Vector3 GetInputVelocity()
     {
         return velocity;
     }
-
-    /*
-     * Changes the player's current health
-     * Positive numbers increase, negative decrease
-     */
-    //public void ModifyHealth(float _changeAmt)
-    //{
-    //    healthEnergy.ModifyHealth(_changeAmt);
-    //}
-
-    //public void ModifyEnergy(float _changeAmt)
-    //{
-    //    healthEnergy.ModifyEnergy(_changeAmt);
-    //}
-
-    //public float GetHealthNormalised()
-    //{
-    //    return healthEnergy.GetHealthNormalised();
-    //}
-
-    //public float GetEnergyNormalised()
-    //{
-    //    return healthEnergy.GetEnergyNormalised();
-    //}
 }

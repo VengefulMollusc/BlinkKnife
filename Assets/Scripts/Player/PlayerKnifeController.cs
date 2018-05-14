@@ -312,7 +312,7 @@ public class PlayerKnifeController : MonoBehaviour
             // perform forced fibreoptic warp
             FibreOpticController fibreOpticController = (FibreOpticController)args;
 
-            playerMotor.WarpToKnife(false, knifeController, false, fibreOpticController);
+            playerMotor.WarpToKnife(false, knifeController, fibreOpticController);
 
             autoWarp = false;
         }
@@ -339,7 +339,7 @@ public class PlayerKnifeController : MonoBehaviour
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
 
         // Trigger warp transition from playerMotor
-        playerMotor.WarpToKnife(shiftGravity, knifeController, autoWarp);
+        playerMotor.WarpToKnife(shiftGravity, knifeController);
 
         autoWarp = false;
     }
