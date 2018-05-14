@@ -187,6 +187,7 @@ public class KnifeController : MonoBehaviour
         if (returning)
             return;
 
+        // reset knife collision variables (in case it was stuck to something)
         returning = true;
         objectStuck = null;
         stuckInSurface = false;

@@ -26,7 +26,7 @@ public class KnifeInteractionTrigger : InteractionTrigger
     {
         this.RemoveObserver(OnKnifeReturnTransition, KnifeController.ReturnKnifeTransitionNotification);
     }
-
+    
     void OnKnifeReturnTransition(object sender, object args)
     {
         if (knifeAttached)

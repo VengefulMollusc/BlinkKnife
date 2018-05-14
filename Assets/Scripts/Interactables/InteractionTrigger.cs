@@ -1,11 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InteractionTrigger : MonoBehaviour
 {
+    /*
+     * Handles interaction with triggerable objects etc.
+     * 
+     * Extended to handle different triggers: player presence, knife stuck to object etc.
+     */
     private bool active;
 
+    // Used to set the initial state to active.
     [SerializeField]
     private bool initialActiveState;
 
