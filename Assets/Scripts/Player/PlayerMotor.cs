@@ -268,10 +268,10 @@ public class PlayerMotor : MonoBehaviour
     private float GetSlopeAngle()
     {
         Vector3 up = transform.up;
-        float rayDistance = 0.5f;
+        float rayDistance = 0.1f;
         RaycastHit hitInfo;
 
-        Ray ray = new Ray(transform.position - (up * 0.9f), -up);
+        Ray ray = new Ray(transform.position - (up * 0.95f), -up);
         if (Physics.Raycast(ray, out hitInfo, rayDistance))
         {
             if (hitInfo.normal != transform.up)
