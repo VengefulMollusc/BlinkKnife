@@ -270,11 +270,10 @@ public class PlayerMotor : MonoBehaviour
     private void CheckSlopeAngle()
     {
         Vector3 up = transform.up;
-        float rayDistance = 0.2f;
         RaycastHit hitInfo;
 
         Ray ray = new Ray(transform.position - (up * 0.95f), -up);
-        if (Physics.Raycast(ray, out hitInfo, rayDistance))
+        if (Physics.Raycast(ray, out hitInfo, 0.4f))
         {
             if (hitInfo.normal != transform.up)
             {
@@ -322,11 +321,14 @@ public class PlayerMotor : MonoBehaviour
                 newVel *= PlayerController.SprintModifier();
 
             // rotate input vector to align with surface normal
-            if (slopeAngle < PlayerCollisionController.slideThreshold)
-            {
-                Quaternion rot = Quaternion.FromToRotation(transform.up, slopeNormal);
-                newVel = rot * newVel;
-            }
+            //Debug.Log(slopeAngle);
+            //if (slopeAngle < PlayerCollisionController.slideThreshold)
+            //{
+            Vector3 up = transform.up;
+            Vector3 rotatedNormal = Vector3.RotateTowards(up, slopeNormal, PlayerCollisionController.slideThreshold * Mathf.Deg2Rad, 0);
+            Quaternion rot = Quaternion.FromToRotation(up, rotatedNormal);
+            newVel = rot * newVel;
+            //}
 
             if (crouching)
                 newVel *= crouchVelFactor;
@@ -541,7 +543,7 @@ public class PlayerMotor : MonoBehaviour
         Vector3 camStartPos = cam.transform.position;
         Quaternion camStartRot = cam.transform.rotation;
         Vector3 relativeFacing = cam.transform.forward;
-        
+
         Vector3 newGravDirection = _knifeController.GetGravVector();
 
         bool fibreOpticWarp = _fibreOpticController != null;
@@ -565,7 +567,7 @@ public class PlayerMotor : MonoBehaviour
 
         // Determine transitionCamera end rotation
         Quaternion camEndRot = (gravityShift) ? transform.rotation : camStartRot;
-        
+
         // Setup transitionCamera
         transCamController.Setup(cam.fieldOfView, camStartPos, _knifeController, cameraRelativePos, camStartRot, camEndRot, gravityShift, _fibreOpticController);
 
