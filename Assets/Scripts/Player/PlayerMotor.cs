@@ -46,7 +46,7 @@ public class PlayerMotor : MonoBehaviour
     private float currentCamRotX;
 
     private float jumpTimer;
-    private const float jumpTimerDefault = 0.2f; // was 0.6f
+    private const float jumpTimerDefault = 0.2f;
 
     private Rigidbody rb;
 
@@ -54,6 +54,7 @@ public class PlayerMotor : MonoBehaviour
 
     private Vector3 currentGravVector;
     private float groundSpeedThreshold;
+    private float airSprintSpeedThreshold;
     private float airSpeedThreshold;
 
     private Vector3 slopeNormal;
@@ -91,7 +92,8 @@ public class PlayerMotor : MonoBehaviour
 
         // Calculate thresholds for momentum 
         groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
-        airSpeedThreshold = PlayerController.Speed() * airVelMod * PlayerController.SprintModifier();
+        airSpeedThreshold = PlayerController.Speed() * airVelMod;
+        airSprintSpeedThreshold = airSpeedThreshold * PlayerController.SprintModifier();
     }
 
     /*
@@ -260,18 +262,19 @@ public class PlayerMotor : MonoBehaviour
      */
     private float GetSlopeAngle()
     {
+        Vector3 up = transform.up;
         float rayDistance = 0.5f;
         RaycastHit hitInfo;
 
-        Ray ray = new Ray(transform.position - (transform.up * 0.9f), -transform.up);
+        Ray ray = new Ray(transform.position - (up * 0.9f), -up);
         if (Physics.Raycast(ray, out hitInfo, rayDistance))
         {
             if (hitInfo.normal != transform.up)
             {
                 slopeNormal = hitInfo.normal;
-                return Vector3.Angle(hitInfo.normal, transform.up);
+                return Vector3.Angle(hitInfo.normal, up);
             }
-            slopeNormal = transform.up;
+            slopeNormal = up;
             return 0f;
         }
 
@@ -320,7 +323,7 @@ public class PlayerMotor : MonoBehaviour
         else
         {
             // dampen velocity but allow for free vertical movement
-            newVel = rb.velocity - (Vector3.ProjectOnPlane(rb.velocity, transform.up) * 0.1f);
+            newVel -= (Vector3.ProjectOnPlane(newVel, transform.up) * 0.1f);
         }
 
         // MomentumSlide here
@@ -338,31 +341,30 @@ public class PlayerMotor : MonoBehaviour
      */
     private Vector3 MomentumSlide(Vector3 _newVel)
     {
-        float surfaceMagnitude = Vector3.Project(rb.velocity, _newVel).magnitude;
+        Vector3 vel = rb.velocity;
+        float surfaceMagnitude = Vector3.Project(vel, _newVel).magnitude;
         bool aboveSpeedThreshold = surfaceMagnitude > groundSpeedThreshold;
 
         // if not above the speed threshold
         if (!aboveSpeedThreshold)
-        {
             return _newVel;
-        }
 
-        bool inputInMovementDir = Vector3.Dot(_newVel, rb.velocity) > 0f;
-        bool facingMovementDir = Vector3.Dot(transform.forward, rb.velocity) > 0.5f;
+        bool inputInMovementDir = Vector3.Dot(_newVel, vel) > 0f;
+        bool facingMovementDir = Vector3.Dot(transform.forward, vel) > 0.5f;
 
         if (sprinting && inputInMovementDir && facingMovementDir)
         {
-            // maintain velocity for a while
+            // Maintain higher velocity
             float newMagnitude = surfaceMagnitude * (1f - (Time.fixedDeltaTime * 0.1f));
-            _newVel = (rb.velocity + _newVel).normalized * newMagnitude;
+            _newVel = (vel + _newVel).normalized * newMagnitude;
         }
         else
         {
-            // decelerate
+            // Decelerate
             if (inputInMovementDir)
-                _newVel -= Vector3.Project(_newVel, rb.velocity);
+                _newVel -= Vector3.Project(_newVel, vel);
 
-            Vector3 brakeVelocity = rb.velocity * 0.96f;
+            Vector3 brakeVelocity = vel * 0.96f;
 
             _newVel = brakeVelocity + (_newVel * 0.2f);
 
@@ -377,14 +379,9 @@ public class PlayerMotor : MonoBehaviour
     void SlideMovement()
     {
         Vector3 velocityTemp = velocity * airVelMod;
-        //rb.AddForce(velocityTemp, ForceMode.Impulse);
-
-        // THE FOLLOWING CODE LIFTED FROM AIR MOVEMENT - TESTING
         Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
 
-        float threshold = PlayerController.Speed() * airVelMod;
-        if (sprinting)
-            threshold *= PlayerController.SprintModifier();
+        float threshold = (sprinting) ? airSprintSpeedThreshold : airSpeedThreshold;
 
         // if input velocity in direction of movement and velocity above threshold
         if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
@@ -400,24 +397,6 @@ public class PlayerMotor : MonoBehaviour
 
     /*
      * Handle movement physics while midair
-     */
-    void AirMovement()
-    {
-        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
-
-        if (flatVel.magnitude > airSpeedThreshold)
-        {
-            //momentumFlight = true;
-        }
-
-        if (velocity != Vector3.zero)
-        {
-            HandleMidairInput(flatVel);
-        }
-    }
-
-    /*
-     * Handles midair movement with an input vector
      * 
      * If current speed is above the threshold defined by the run/sprint speed 
      * then removes component of input vector in direction of movement
@@ -426,32 +405,40 @@ public class PlayerMotor : MonoBehaviour
      * Applies modified input vector to RigidBody depending on whether 
      * we are above the momentumFlight threshold
      */
-    private void HandleMidairInput(Vector3 _flatVel)
+    void AirMovement()
     {
+        if (velocity == Vector3.zero)
+            return;
 
+        Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
         Vector3 velocityTemp = velocity * airVelMod;
 
-        float threshold = PlayerController.Speed() * airVelMod;
-        if (sprinting)
-            threshold *= PlayerController.SprintModifier();
+        float threshold = (sprinting) ? airSprintSpeedThreshold : airSpeedThreshold;
 
         // if input velocity in direction of flight and velocity above threshold
-        if (Vector3.Dot(velocityTemp, _flatVel) > 0 && _flatVel.magnitude > threshold)
+        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
         {
             // cancel positive movement in direction of flight
-            velocityTemp -= Vector3.Project(velocityTemp, _flatVel);
+            velocityTemp -= Vector3.Project(velocityTemp, flatVel);
         }
 
         // use impulse force to allow gradual speed/direction changes when midair
         rb.AddForce(velocityTemp, ForceMode.Impulse);
     }
 
+    /*
+     * Determines if the player can jump.
+     * 
+     * Different conditions determine this if the player is in midair.
+     */
     public bool CanJump(bool _midAir = false)
     {
         return ((_midAir && !JumpCollider.IsColliding() && jumpTimer <= 0f) || (!_midAir && IsOnGround())) && !vaulting && !frozen;
     }
 
-    // perform jump when triggered
+    /*
+     * Perform jump
+     */
     public void Jump(float _jumpStrength, bool _midAirJump = false)
     {
         if (!CanJump(_midAirJump))
@@ -637,7 +624,7 @@ public class PlayerMotor : MonoBehaviour
 
             // inherit player velocity
             rb.velocity = (knifeVel * (warpVelocityModifier + relativeSpeed));
-            //if (rb.velocity.magnitude > airSpeedThreshold)
+            //if (rb.velocity.magnitude > airSprintSpeedThreshold)
             //    momentumFlight = true;
 
             // fixes horizontal momentum lock when warping
