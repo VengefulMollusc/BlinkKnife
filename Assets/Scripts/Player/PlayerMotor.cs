@@ -58,6 +58,7 @@ public class PlayerMotor : MonoBehaviour
     private float airSpeedThreshold;
 
     private Vector3 slopeNormal;
+    private float slopeAngle;
 
     private bool vaulting;
 
@@ -259,16 +260,17 @@ public class PlayerMotor : MonoBehaviour
          * 
          * the sliding variable is false (set by PlayerCollisionController)
          */
-        return (IsOnGround() && GetSlopeAngle() < PlayerCollisionController.slideThreshold) || !sliding;
+        CheckSlopeAngle();
+        return (IsOnGround() && slopeAngle < PlayerCollisionController.slideThreshold) || !sliding;
     }
 
     /*
      * Gets the angle of the slope directly below the player
      */
-    private float GetSlopeAngle()
+    private void CheckSlopeAngle()
     {
         Vector3 up = transform.up;
-        float rayDistance = 0.1f;
+        float rayDistance = 0.2f;
         RaycastHit hitInfo;
 
         Ray ray = new Ray(transform.position - (up * 0.95f), -up);
@@ -277,13 +279,15 @@ public class PlayerMotor : MonoBehaviour
             if (hitInfo.normal != transform.up)
             {
                 slopeNormal = hitInfo.normal;
-                return Vector3.Angle(hitInfo.normal, up);
+                slopeAngle = Vector3.Angle(hitInfo.normal, up);
+                return;
             }
             slopeNormal = up;
-            return 0f;
+            slopeAngle = 0f;
+            return;
         }
 
-        return float.MaxValue;
+        slopeAngle = float.MaxValue;
     }
 
 
@@ -318,8 +322,11 @@ public class PlayerMotor : MonoBehaviour
                 newVel *= PlayerController.SprintModifier();
 
             // rotate input vector to align with surface normal
-            Quaternion rot = Quaternion.FromToRotation(transform.up, slopeNormal);
-            newVel = rot * newVel;
+            if (slopeAngle < PlayerCollisionController.slideThreshold)
+            {
+                Quaternion rot = Quaternion.FromToRotation(transform.up, slopeNormal);
+                newVel = rot * newVel;
+            }
 
             if (crouching)
                 newVel *= crouchVelFactor;
