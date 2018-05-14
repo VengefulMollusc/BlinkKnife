@@ -9,7 +9,7 @@ public class PlayerMotor : MonoBehaviour
     private Camera cam;
 
     [SerializeField]
-    private float cameraRotLimit = 90f;
+    private const float cameraRotLimit = 90f;
 
     private static float velMod = 1.5f;
     private static float airVelMod = 1.2f;
@@ -17,15 +17,15 @@ public class PlayerMotor : MonoBehaviour
     // Shift gravity if the difference between current gravity and surface normal is
     // above the threshold defined by warpGravShiftAngle
     [SerializeField]
-    private float warpGravShiftAngle = 1f;
+    private const float warpGravShiftAngle = 1f;
 
-    private float gravShiftTimeLimit = 2f;
+    private const float gravShiftTimeLimit = 2f;
 
     private Coroutine gravShiftTimerCoroutine;
 
     [SerializeField]
     [Range(0.0f, 50.0f)]
-    private float warpVelocityModifier = 20f;
+    private const float warpVelocityModifier = 20f;
 
     public const string WarpNotification = "PlayerMotor.WarpNotification";
     public const string GravityWarpNotification = "PlayerMotor.GravityWarpNotification";
@@ -37,7 +37,7 @@ public class PlayerMotor : MonoBehaviour
     private bool colliding;
 
     private bool crouching;
-    private float crouchVelFactor = 1f;
+    private const float crouchVelFactor = 0.5f;
 
     private Vector3 velocity = Vector3.zero;
     private Vector3 rotation = Vector3.zero;
@@ -46,17 +46,13 @@ public class PlayerMotor : MonoBehaviour
     private float currentCamRotX;
 
     private float jumpTimer;
-    private float jumpTimerDefault = 0.2f; // was 0.6f
+    private const float jumpTimerDefault = 0.2f; // was 0.6f
 
     private Rigidbody rb;
 
     private Vector3 cameraRelativePos;
 
     private Vector3 currentGravVector;
-
-    //private HealthController healthEnergy;
-
-
     private float groundSpeedThreshold;
     private float airSpeedThreshold;
 
@@ -68,9 +64,9 @@ public class PlayerMotor : MonoBehaviour
 
     void OnEnable()
     {
-        //healthEnergy = GetComponent<HealthController>();
-
+        // Initial check of gravity vector
         OnGravityChange(null, null);
+
         this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
         this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
         this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
@@ -248,13 +244,13 @@ public class PlayerMotor : MonoBehaviour
         /*
          * return true if:
          * 
-         * the sliding variable is false (set by PlayerCollisionController)
-         * 
-         * OR
-         * 
          * IsOnGround() - defined by jumpCollider and if jumpTimer is <= 0
          * And
          * The slope angle below the player is below the slide threshold 
+         * 
+         * OR
+         * 
+         * the sliding variable is false (set by PlayerCollisionController)
          */
         return (IsOnGround() && GetSlopeAngle() < PlayerCollisionController.slideThreshold) || !sliding;
     }
@@ -318,7 +314,7 @@ public class PlayerMotor : MonoBehaviour
             newVel = rot * newVel;
 
             if (crouching)
-                newVel *= 0.5f;
+                newVel *= crouchVelFactor;
 
         }
         else
