@@ -231,19 +231,16 @@ public class PlayerMotor : MonoBehaviour
         if (UseGroundMovement() && jumpTimer <= 0f)
         {
             // Use grounded movement physics
-            Debug.Log("Ground");
             GroundMovement();
             return;
         }
         if (colliding) // TODO: double-check that jumpTimer <= 0f check is not needed here
         {
             // Use sliding movement physics
-            Debug.Log("Slide");
             SlideMovement();
             return;
         }
         // Use airborne movement physics
-        Debug.Log("Air");
         AirMovement();
     }
 
