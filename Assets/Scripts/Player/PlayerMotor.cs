@@ -449,17 +449,19 @@ public class PlayerMotor : MonoBehaviour
         if (!CanJump(_midAirJump))
             return;
 
+        Vector3 up = transform.up;
+
         // if already moving up, keeps current vertical momentum
         // allows higher jumps when moving up slopes
-        if (Vector3.Dot(rb.velocity, transform.up) < 0)
+        if (Vector3.Dot(rb.velocity, up) < 0)
         {
             // moving down slope while jumping
             // cancel downward momentum when jump
-            Vector3 yComponent = Vector3.Project(rb.velocity, transform.up);
+            Vector3 yComponent = Vector3.Project(rb.velocity, up);
             rb.velocity -= yComponent;
         }
 
-        rb.AddForce(transform.up * _jumpStrength, ForceMode.VelocityChange);
+        rb.AddForce(up * _jumpStrength, ForceMode.VelocityChange);
 
         JumpCollider.Jump();
 
