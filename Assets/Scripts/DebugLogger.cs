@@ -12,6 +12,7 @@ public class DebugLogger : MonoBehaviour
     private string lastDebugString;
     private GameObject player;
     private Rigidbody playerRb;
+    private PlayerMotor motor;
 
 	// Use this for initialization
 	void Start ()
@@ -21,10 +22,11 @@ public class DebugLogger : MonoBehaviour
         if (player == null)
             Debug.LogError("no player object found");
 	    playerRb = player.GetComponent<Rigidbody>();
+	    motor = player.GetComponent<PlayerMotor>();
 
-        // print logger control instructions
+	    // print logger control instructions
 	    //Debug.Log("P : Log player stats at current frame - P+L : Turn on continuous player logging");
-    } 
+	} 
 	
 	// Update is called once per frame
     void Update()
@@ -69,11 +71,13 @@ public class DebugLogger : MonoBehaviour
         playerDebugString += "lclXZ " + localXZSpeed.ToString("F2") + " ";
         playerDebugString += "lclY " + localYSpeed.ToString("F2") + " ";
 
-        // dont print new line if identical to last line
-        if (playerDebugString == lastDebugString)
-            return;
+        playerDebugString += "Input: " + motor.GetInputVelocity();
+
+        //// dont print new line if identical to last line
+        //if (playerDebugString == lastDebugString)
+        //    return;
 
         Debug.Log(playerDebugString);
-        lastDebugString = playerDebugString;
+        //lastDebugString = playerDebugString;
     }
 }
