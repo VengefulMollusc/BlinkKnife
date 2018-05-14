@@ -72,6 +72,7 @@ public class KnifeController : MonoBehaviour
 
     public const string ShowKnifeMarkerNotification = "KnifeController.ShowKnifeMarkerNotification";
     public const string ReturnKnifeNotification = "KnifeController.ReturnKnifeNotification";
+    public const string ReturnKnifeTransitionNotification = "KnifeController.ReturnKnifeTransitionNotification";
 
     public const string AttachLookAheadColliderNotification = "KnifeController.AttachLookAheadColliderNotification";
 
@@ -80,11 +81,13 @@ public class KnifeController : MonoBehaviour
     public virtual void OnEnable()
     {
         this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
+        this.AddObserver(OnReturnTransitionNotification, ReturnKnifeTransitionNotification);
     }
 
     public virtual void OnDisable()
     {
         this.RemoveObserver(OnBoostNotification, BoostRing.BoostNotification);
+        this.RemoveObserver(OnReturnTransitionNotification, ReturnKnifeTransitionNotification);
     }
 
     /*
@@ -143,7 +146,13 @@ public class KnifeController : MonoBehaviour
             return;
         }
 
-        if (objectStuck.GetComponent<GravityPanel>() != null)
+        KnifeInteractionTrigger knifeTrigger = objectStuck.GetComponent<KnifeInteractionTrigger>();
+        if (knifeTrigger != null)
+        {
+            // attach knife to interactable object
+            knifeTrigger.AttachKnife();
+        }
+        else if (objectStuck.GetComponent<GravityPanel>() != null)
         {
             // Prepare to shift gravity if warping to GravityPanel
             gravPanel = objectStuck.GetComponent<GravityPanel>();
@@ -164,6 +173,11 @@ public class KnifeController : MonoBehaviour
         this.PostNotification(ShowKnifeMarkerNotification, info);
     }
 
+    void OnReturnTransitionNotification(object sender, object args)
+    {
+        ReturnKnifeTransition();
+    }
+
     /*
      * Triggers animation of knife returning to player
      */
@@ -174,6 +188,12 @@ public class KnifeController : MonoBehaviour
             return;
 
         returning = true;
+        objectStuck = null;
+        stuckInSurface = false;
+        gravPanel = null;
+        transform.SetParent(null);
+        this.PostNotification(ShowKnifeMarkerNotification, null);
+
         StartCoroutine("ReturnKnifeAnimation");
     }
 

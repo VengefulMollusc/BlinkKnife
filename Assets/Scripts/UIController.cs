@@ -76,7 +76,8 @@ public class UIController : MonoBehaviour {
 
 
     // Use this for initialization
-    void OnEnable () {
+    void Start()
+    {
         playerCamera = GameObject.Find("MainCamera");
 
         if (uiKnifeMarker == null)
@@ -114,7 +115,9 @@ public class UIController : MonoBehaviour {
         currentWarps = playerKnifeController.GetWarpsNormalised();
         currentWarpRecharge = playerKnifeController.GetWarpRechargeNormalised();
         currentWarpCountdown = playerKnifeController.GetWarpCountdownNormalised();
+    }
 
+    void OnEnable () {
         this.AddObserver(HandleKnifeMarkerNotification, KnifeController.ShowKnifeMarkerNotification);
     }
 

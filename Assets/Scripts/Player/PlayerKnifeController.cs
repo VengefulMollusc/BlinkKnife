@@ -142,7 +142,9 @@ public class PlayerKnifeController : MonoBehaviour
             else
             {
                 // return thrown knife
-                knifeController.ReturnKnifeTransition();
+                // TODO: figure out if more efficient than posting notification
+                //knifeController.ReturnKnifeTransition();
+                this.PostNotification(KnifeController.ReturnKnifeTransitionNotification);
             }
         }
         else if (Input.GetButtonDown(middleMouse))
