@@ -35,6 +35,7 @@ public class PlayerMotor : MonoBehaviour
 
     private bool sliding;
     private bool colliding;
+    private Vector3 slideSurfaceVector;
 
     private bool crouching;
     private const float crouchVelFactor = 0.5f;
@@ -231,17 +232,12 @@ public class PlayerMotor : MonoBehaviour
         if (UseGroundMovement() && jumpTimer <= 0f)
         {
             // Use grounded movement physics
+            //Debug.Log("Ground");
             GroundMovement();
             return;
         }
-        if (colliding) // TODO: double-check that jumpTimer <= 0f check is not needed here
-        {
-            // Use sliding movement physics
-            SlideMovement();
-            return;
-        }
-        // Use airborne movement physics
-        AirMovement();
+        // Use air/slide movement physics
+        AirSlideMovement();
     }
 
     /*
@@ -383,62 +379,32 @@ public class PlayerMotor : MonoBehaviour
     }
 
     /*
-     * Handle movement physics while sliding
+     * Combined logic for sliding and airborne movement
      */
-    void SlideMovement()
+    void AirSlideMovement()
     {
         if (velocity == Vector3.zero)
             return;
 
         Vector3 newVel = velocity * airVelMod;
-        //Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
-
-        //float threshold = (sprinting) ? airSprintSpeedThreshold : airSpeedThreshold;
-
-        // if input velocity in direction of movement and velocity above threshold
-        //if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
-        //{
-        //    // cancel positive movement in direction of flight
-        //    velocityTemp -= Vector3.Project(velocityTemp, flatVel);
-        //}
-
-        // cancel positive movement in direction of flight
-        newVel -= Vector3.Project(newVel, rb.velocity);
-
-        // use impulse force to allow slower changes to direction/speed when at high midair speed
-        rb.AddForce(newVel, ForceMode.Impulse);
-    }
-
-
-    /*
-     * Handle movement physics while midair
-     * 
-     * If current speed is above the threshold defined by the run/sprint speed 
-     * then removes component of input vector in direction of movement
-     * (disallows increase of speed)
-     * 
-     * Applies modified input vector to RigidBody depending on whether 
-     * we are above the momentumFlight threshold
-     */
-    void AirMovement()
-    {
-        if (velocity == Vector3.zero)
-            return;
-
         Vector3 flatVel = Vector3.ProjectOnPlane(rb.velocity, currentGravVector);
-        Vector3 velocityTemp = velocity * airVelMod;
-
-        float threshold = (sprinting) ? airSprintSpeedThreshold : airSpeedThreshold;
 
         // if input velocity in direction of flight and velocity above threshold
-        if (Vector3.Dot(velocityTemp, flatVel) > 0 && flatVel.magnitude > threshold)
+        if (Vector3.Dot(newVel, flatVel) > 0 && flatVel.magnitude > airSpeedThreshold)
         {
-            // cancel positive movement in direction of flight
-            velocityTemp -= Vector3.Project(velocityTemp, flatVel);
+            // cancel positive movement in direction of movement
+            newVel -= Vector3.Project(newVel, flatVel);
+        }
+
+        if (colliding && Vector3.Dot(newVel, slideSurfaceVector) > 0)
+        {
+            // SLIDING
+            // cancel positive movement in direction of slide normal
+            newVel -= Vector3.Project(newVel, slideSurfaceVector);
         }
 
         // use impulse force to allow gradual speed/direction changes when midair
-        rb.AddForce(velocityTemp, ForceMode.Impulse);
+        rb.AddForce(newVel, ForceMode.Impulse);
     }
 
     /*
@@ -527,10 +493,11 @@ public class PlayerMotor : MonoBehaviour
      * 
      * Called from PlayerCollisionController
      */
-    public void SetCollisionState(bool _sliding, bool _colliding)
+    public void SetCollisionState(bool _sliding, bool _colliding, Vector3 _slideNormal)
     {
         sliding = _sliding;
         colliding = _colliding;
+        slideSurfaceVector = -Vector3.ProjectOnPlane(_slideNormal, currentGravVector);
     }
 
     /*

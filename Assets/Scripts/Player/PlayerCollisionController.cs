@@ -24,6 +24,8 @@ public class PlayerCollisionController : MonoBehaviour
 
     private float speedThreshold;
 
+    private Vector3 slideSurfaceNormal;
+
     // Use this for initialization
     void OnEnable ()
     {
@@ -61,9 +63,10 @@ public class PlayerCollisionController : MonoBehaviour
             if (!colliding && point.thisCollider == sphereCol)
                 colliding = true;
 
-            float angle = Vector3.Angle(point.normal, transform.up);
+            Vector3 normal = point.normal;
+            float angle = Vector3.Angle(normal, transform.up);
 
-            if (Vector3.Dot(-transform.forward, point.normal) > 0.5f)
+            if (Vector3.Dot(-transform.forward, normal) > 0.5f)
             {
                 // check for ledges
                 jumpHeightToLedge = CheckCanVault();
@@ -74,6 +77,8 @@ public class PlayerCollisionController : MonoBehaviour
                 frictionless = false;
                 return;
             }
+
+            slideSurfaceNormal = normal;
         }
 
         frictionless = true;
@@ -83,6 +88,7 @@ public class PlayerCollisionController : MonoBehaviour
     {
         frictionless = true;
         colliding = false;
+        //slideSurfaceNormal = Vector3.zero;
         jumpHeightToLedge = 0f;
     }
 
@@ -156,6 +162,6 @@ public class PlayerCollisionController : MonoBehaviour
             colMaterial.frictionCombine = PhysicMaterialCombine.Average;
         }
 
-        playerMotor.SetCollisionState(_frictionless, _colliding);
+        playerMotor.SetCollisionState(_frictionless, _colliding, slideSurfaceNormal);
     }
 }
