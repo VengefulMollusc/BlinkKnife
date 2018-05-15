@@ -18,7 +18,7 @@ public class PlayerCollisionInteractionTrigger : InteractionTrigger
             if (activeWhileInContact)
                 ActivateTriggers(true);
             else 
-                ActivateTriggers();
+                ToggleTriggers();
         }
     }
 

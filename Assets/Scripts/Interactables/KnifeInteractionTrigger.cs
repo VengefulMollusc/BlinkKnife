@@ -49,7 +49,7 @@ public class KnifeInteractionTrigger : InteractionTrigger
         if (activeWhileKnifeAttached)
             ActivateTriggers(true);
         else
-            ActivateTriggers();
+            ToggleTriggers();
 
         // if autoReturn, return knife
         if (autoReturnKnife)

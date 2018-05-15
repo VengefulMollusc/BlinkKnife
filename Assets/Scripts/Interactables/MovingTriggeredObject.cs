@@ -35,7 +35,7 @@ public class MovingTriggeredObject : TriggeredObject
         rb = GetComponent<Rigidbody>();
     }
 
-    public override void Trigger()
+    public override void ToggleTrigger()
     {
         Trigger(!transitionToEnd);
     }

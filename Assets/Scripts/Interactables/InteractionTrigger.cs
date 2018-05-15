@@ -20,11 +20,11 @@ public abstract class InteractionTrigger : MonoBehaviour
     /*
      * Activates each attached TriggeredObject
      */
-    public void ActivateTriggers()
+    public void ToggleTriggers()
     {
         foreach (TriggeredObject obj in triggeredObjects)
         {
-            obj.Trigger();
+            obj.ToggleTrigger();
         }
     }
 

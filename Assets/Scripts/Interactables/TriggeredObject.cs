@@ -4,9 +4,9 @@ public abstract class TriggeredObject : MonoBehaviour
 {
     /*
      * Abstract trigger method.
-     * Activates script behaviour
+     * Toggles active script behaviour
      */
-    public abstract void Trigger();
+    public abstract void ToggleTrigger();
 
     /*
      * Activates behaviour with a specific state
