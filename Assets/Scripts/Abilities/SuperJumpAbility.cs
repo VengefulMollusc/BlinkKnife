@@ -24,6 +24,9 @@ public class SuperJumpAbility : Ability
         cooldown = 0f;
     }
 
+    /*
+     * Check if can super jump
+     */
     void Update()
     {
         if (Input.GetKeyDown(useAbilityKey) && cooldown <= 0f && playerMotor.CanJump())

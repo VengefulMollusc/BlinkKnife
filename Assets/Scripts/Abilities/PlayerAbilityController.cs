@@ -6,17 +6,18 @@ public class PlayerAbilityController : MonoBehaviour
     /*
      * Sets up and controls which player abilities are active
      */
-    // TODO: just for testing
+    // TODO: Make ingame method for switching
     private KeyCode ability1 = KeyCode.Alpha1;
     private KeyCode ability2 = KeyCode.Alpha2;
     private KeyCode ability3 = KeyCode.Alpha3;
     private KeyCode ability4 = KeyCode.Alpha4;
     private KeyCode ability5 = KeyCode.Alpha5;
 
+    // list of available abilities
     private List<Ability> playerAbilities;
 
     /*
-     * An Enum that catalogues all available abilities for use by the player
+     * An Enum that catalogues all possible abilities for use by the player
      */
     public enum AbilityType
     {
@@ -32,6 +33,11 @@ public class PlayerAbilityController : MonoBehaviour
         SetupAbilities();
     }
 
+    /*
+     * TODO: For testing
+     * 
+     * Allows easy toggling of abilities for testing
+     */
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
