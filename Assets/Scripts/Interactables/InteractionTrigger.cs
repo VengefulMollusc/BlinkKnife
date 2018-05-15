@@ -7,37 +7,17 @@ public class InteractionTrigger : MonoBehaviour
      * 
      * Extended to handle different triggers: player presence, knife stuck to object etc.
      */
-    private bool active;
-
-    // Used to set the initial state to active.
     [SerializeField]
-    private bool initialActiveState;
+    private TriggeredObject triggeredObject;
 
     public virtual void Start()
     {
-        active = initialActiveState;
+        if (triggeredObject == null)
+            Debug.LogError("No TriggeredObject given");
     }
 
-    public virtual void ToggleActivation()
+    public void TriggerActivation()
     {
-        if (Active())
-            Deactivate();
-        else
-            Activate();
-    }
-
-    public virtual void Activate()
-    {
-        active = true;
-    }
-
-    public virtual void Deactivate()
-    {
-        active = false;
-    }
-
-    public bool Active()
-    {
-        return active;
+        triggeredObject.Trigger();
     }
 }

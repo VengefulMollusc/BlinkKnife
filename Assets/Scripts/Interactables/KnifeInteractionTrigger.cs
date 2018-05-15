@@ -32,7 +32,7 @@ public class KnifeInteractionTrigger : InteractionTrigger
         if (knifeAttached)
         {
             if (activeWhileKnifeAttached)
-                ToggleActivation();
+                TriggerActivation();
 
             knifeAttached = false;
         }
@@ -41,7 +41,7 @@ public class KnifeInteractionTrigger : InteractionTrigger
     public void AttachKnife()
     {
         knifeAttached = true;
-        ToggleActivation();
+        TriggerActivation();
 
         if (autoReturnKnife)
             this.PostNotification(KnifeController.ReturnKnifeTransitionNotification);
