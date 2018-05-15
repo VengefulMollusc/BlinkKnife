@@ -60,9 +60,23 @@ public class MovingObjectTriggeredObject : TriggeredObject
             t += (active ? Time.deltaTime : -Time.deltaTime) / transitionDuration;
 
             if (transitionPosition)
-                rb.MovePosition(Vector3.Lerp(startPosition, endPosition, t));
+            {
+                Vector3 newPos = Vector3.Lerp(startPosition, endPosition, t);
+                Vector3 posDiff = newPos - transform.position;
+                rb.MovePosition(newPos);
+                Info<Transform, Vector3> info = new Info<Transform, Vector3>(transform, posDiff);
+                // post relative movement notification
+                this.PostNotification(RelativeMovementController.RelativeMovementNotification, info);
+            }
             if (transitionRotation)
-                rb.MoveRotation(Quaternion.Lerp(startRotation, endRotation, t));
+            {
+                Quaternion newRot = Quaternion.Lerp(startRotation, endRotation, t);
+                Quaternion rotDiff = Quaternion.Inverse(transform.rotation) * newRot;
+                rb.MoveRotation(newRot);
+                Info<Transform, Quaternion> info = new Info<Transform, Quaternion>(transform, rotDiff);
+                // post relative rotation notification
+                this.PostNotification(RelativeMovementController.RelativeRotationNotification, info);
+            }
 
             yield return 0;
         }
