@@ -17,12 +17,17 @@ public class DoubleJumpAbility : Ability
         playerMotor = transform.parent.GetComponent<PlayerMotor>();
         hasGrounded = true;
     }
-    
+
+    /*
+     * Allows Double Jump if player has grounded since the last jump
+     */
     void Update()
     {
         if (playerMotor.IsOnGround())
         {
-            hasGrounded = true;
+            if (!hasGrounded)
+                hasGrounded = true;
+
             return;
         }
 

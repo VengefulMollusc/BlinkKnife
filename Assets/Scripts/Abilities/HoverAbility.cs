@@ -38,6 +38,7 @@ public class HoverAbility : Ability
         // attempt hover
         if (hasGrounded && Input.GetKeyDown(hoverKey) && playerMotor.CanJump(true))
         {
+            // Start hover coroutine
             StartCoroutine("HoverCoroutine");
             hasGrounded = false;
         }
@@ -45,6 +46,11 @@ public class HoverAbility : Ability
 
     // TODO: STOP HOVER ON BOOST??
 
+    /*
+     * Performs hover.
+     * 
+     * Adds acceleration force to cancel out downward player movement
+     */
     private IEnumerator HoverCoroutine()
     {
         float t = hoverTime;
