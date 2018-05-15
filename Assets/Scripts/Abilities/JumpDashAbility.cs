@@ -14,10 +14,12 @@ public class JumpDashAbility : Ability
 
     private bool hasGrounded;
     private PlayerMotor playerMotor;
+    private GameObject player;
 
     void Start()
     {
-        playerMotor = transform.parent.GetComponent<PlayerMotor>();
+        player = transform.parent.gameObject;
+        playerMotor = player.GetComponent<PlayerMotor>();
         hasGrounded = true;
     }
 
@@ -37,7 +39,9 @@ public class JumpDashAbility : Ability
             if (inputVel == Vector3.zero)
                 return;
 
-            Info<GameObject, Vector3> info = new Info<GameObject, Vector3>(playerMotor.gameObject, inputVel * dashStrength);
+            // Post boost notification
+            // this will also cancel gravity for a short time
+            Info<GameObject, Vector3> info = new Info<GameObject, Vector3>(player, inputVel * dashStrength);
             this.PostNotification(BoostRing.BoostNotification, info);
 
             hasGrounded = false;

@@ -3,7 +3,10 @@ using System.Collections;
 
 public class RotateToGravity : MonoBehaviour
 {
-
+    /*
+     * Keeps an object aligned to gravity changes.
+     * Rotates objects based on gravity direction
+     */
     [SerializeField]
     private bool followGravityDirection = true;
     [SerializeField]
@@ -52,7 +55,6 @@ public class RotateToGravity : MonoBehaviour
     }
 
     public void StartRotation(Vector3 _newGravDir, float _duration)
-        //public void StartRotation(Quaternion _endRot, float _duration)
     {
         // cancel if not following gravity changes
         if (!followGravityDirection) return;
@@ -97,8 +99,7 @@ public class RotateToGravity : MonoBehaviour
             this.PostNotification(RelativeMovementController.RelativeRotationNotification, info);
         }
 
-        // TODO: Not sure why this is here....
-        // Might be for skybox...
+        // TODO: Figure out if this is necessary - for Skybox atm
         if (followPlayerPosition)
             transform.position = Camera.main.transform.position;
     }
@@ -109,17 +110,14 @@ public class RotateToGravity : MonoBehaviour
     {
         Vector3 eulerAngles = endRot.eulerAngles;
         if (xMod != 1f)
-        {
             eulerAngles.x = eulerAngles.x * xMod;
-        }
+
         if (yMod != 1f)
-        {
             eulerAngles.y = eulerAngles.y * yMod;
-        }
+
         if (zMod != 1f)
-        {
             eulerAngles.z = eulerAngles.z * zMod;
-        }
+
         endRot = Quaternion.Euler(eulerAngles);
     }
 
@@ -148,28 +146,6 @@ public class RotateToGravity : MonoBehaviour
      * Keeps local y rotation consistent regardless of which direction
      * the player is facing
      */
-    //private Quaternion CalculateEndRotation(Vector3 _up)
-    //{
-
-    //    float angleToUp = Vector3.Angle(_up, Vector3.up);
-    //    Vector3 projectedForward;
-    //    if (angleToUp < 45f || angleToUp > 135f)
-    //    {
-    //        // if new up direction is within 45 degrees of world up (or down)
-    //        // use world forward
-    //        projectedForward = Vector3.ProjectOnPlane(Vector3.forward, _up);
-    //    } else
-    //    {
-    //        // use world up
-    //        projectedForward = Vector3.ProjectOnPlane(Vector3.up, _up);
-    //    }
-
-    //    // end rotation based on player up vector and new forward direction
-    //    Quaternion newRot = Quaternion.LookRotation(projectedForward, _up);
-
-    //    return newRot;
-    //}
-
     private Quaternion CalculateEndRotation(Vector3 _newGravDir)
     {
         Vector3 _up = -_newGravDir;

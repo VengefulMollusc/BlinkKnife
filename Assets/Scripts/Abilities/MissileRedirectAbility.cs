@@ -24,6 +24,9 @@ public class MissileRedirectAbility : Ability
         }
     }
 
+    /*
+     * Retarget active missiles to the knife
+     */
     void RedirectMissiles()
     {
         KnifeController knife = playerKnifeController.GetActiveKnifeController();

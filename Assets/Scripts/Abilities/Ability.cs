@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Ability : MonoBehaviour
+public abstract class Ability : MonoBehaviour
 {
     /*
      * Base class for Abilities.
@@ -26,9 +26,5 @@ public class Ability : MonoBehaviour
         return enabled;
     }
 
-    public virtual string GetDisplayName()
-    {
-        Debug.LogError("GetDisplayName must be overridden");
-        return "undefined display name";
-    }
+    public abstract string GetDisplayName();
 }

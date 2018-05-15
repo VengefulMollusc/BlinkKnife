@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using TriangleNet.Tools;
-
 
 /**
  * May need modifications to allow 'planetary' gravity
@@ -35,7 +33,7 @@ public class GlobalGravityControl : MonoBehaviour {
 
     public const string GravityChangeNotification = "GlobalGravityControl.GravityChangeNotification";
 
-    void OnEnable()
+    void Awake()
     {
         rotationObjects = (RotateToGravity[])FindObjectsOfType(typeof(RotateToGravity));
 
@@ -53,36 +51,43 @@ public class GlobalGravityControl : MonoBehaviour {
         instance = this;
     }
 
+    // Returns current gravity strength
     public static float GetGravityStrength()
     {
         return currentGravStrength;
     }
 
+    // Returns current gravity direction
     public static Vector3 GetCurrentGravityVector()
     {
         return currentGravDirection;
     }
 
+    // Returns target gravity direction (for transitions)
     public static Vector3 GetGravityTarget()
     {
         return targetGravDirection;
     }
 
+    // Returns the rotation from the default down direction to the current grav vector
     public static Quaternion GetGravityRotation()
     {
         return Quaternion.FromToRotation(Vector3.down, currentGravDirection);
     }
 
+    // Returns the rotation from the current grav vector to the default axis
     public static Quaternion GetRotationToDefaultAxis()
     {
         return Quaternion.FromToRotation(currentGravDirection, Vector3.down);
     }
 
+    // Returns the rotation from a given up vector to the gravity vector
     public static Quaternion GetRotationToGravity(Vector3 _up)
     {
         return Quaternion.FromToRotation(-_up, currentGravDirection);
     }
 
+    // Returns a rotation looking in the given direction relative to the current gravity vector
     public static Quaternion GetRotationToDir(Vector3 _direction)
     {
         return Quaternion.LookRotation(_direction, -currentGravDirection);
@@ -95,6 +100,9 @@ public class GlobalGravityControl : MonoBehaviour {
         TransitionGravity(Vector3.down, _duration);
     }
 
+    /*
+     * Triggers a gravity transition over the given duration
+     */
     public static void TransitionGravity(Vector3 _newGravDirection, float _duration)
     {
         duration = _duration;
@@ -115,7 +123,10 @@ public class GlobalGravityControl : MonoBehaviour {
         shiftingCoroutine = instance.StartCoroutine("TimedGravShift");
     }
 
-    // should allow targetUpDirection to be updated mid-execution and it will continue to new target
+    /*
+     * Performs a gravity transition to a new direction over a given duration
+     * Updates scene objects that respond to gravity
+     */
     IEnumerator TimedGravShift()
     {
         float t = 0.0f;
@@ -160,11 +171,7 @@ public class GlobalGravityControl : MonoBehaviour {
         if (shiftingCoroutine != null)
             return;
         
-        // interpolate for large differences in rotation
-        //Vector3 transitionUp = Vector3.RotateTowards(currentGravDirection, _newGravDir, gravShiftSpeed * Mathf.Deg2Rad, 0f);
-
-        //targetUpDirection = transitionUp;
-        //currentGravDirection = targetUpDirection;
+        // Apply new gravity direction
         currentGravDirection = _newGravDir;
 
         if (_dontAllowSmoothing)
@@ -183,19 +190,10 @@ public class GlobalGravityControl : MonoBehaviour {
         instance.StartCoroutine("SendGravityChangeNotification");
     }
 
+    // Sends notification for scene objects to update current gravity direction
     private IEnumerator SendGravityChangeNotification()
     {
         this.PostNotification(GravityChangeNotification);
         yield return null;
     }
-
-    //private static float CalculateDuration(Vector3 _currUp, Vector3 _newGravDir, float _speedMod)
-    //{
-    //    float angle = Vector3.Angle(_currUp, _newGravDir);
-    //    float dur = angle / _speedMod;
-
-    //    return dur;
-    //}
-
-    
 }

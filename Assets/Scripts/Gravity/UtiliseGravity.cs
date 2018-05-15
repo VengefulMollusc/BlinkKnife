@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UtiliseGravity : MonoBehaviour {
+public class UtiliseGravity : MonoBehaviour
+{
+    /*
+     * Used to apply gravity to GameObjects
+     */
 
+    // Modifies gravity strength
     [SerializeField] private float gravityModifier = 1f;
 
     private Rigidbody rb;
@@ -35,7 +40,8 @@ public class UtiliseGravity : MonoBehaviour {
      * Shouldn't need dynamic collisions as won't be moving too fast (so far)
      */
 
-	void OnEnable () {
+    void Start()
+    {
         rb = GetComponent<Rigidbody>();
 
         if (rb == null)
@@ -43,12 +49,15 @@ public class UtiliseGravity : MonoBehaviour {
 
         // Just in case
         rb.useGravity = false;
-	    useGravity = true;
+        useGravity = true;
 
-	    UpdateGravityValues();
+        UpdateGravityValues();
+    }
 
-	    this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
-	    this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
+    void OnEnable()
+    {
+        this.AddObserver(OnBoostNotification, BoostRing.BoostNotification);
+        this.AddObserver(OnGravityChange, GlobalGravityControl.GravityChangeNotification);
     }
 
     void OnDisable()
@@ -62,13 +71,14 @@ public class UtiliseGravity : MonoBehaviour {
         UpdateGravityValues();
     }
 
+    // Update current gravity direction and strength
     void UpdateGravityValues()
     {
         currentGravityStrength = GlobalGravityControl.GetGravityStrength() * gravityModifier;
         currentGravityVector = GlobalGravityControl.GetCurrentGravityVector();
     }
 
-    void FixedUpdate ()
+    void FixedUpdate()
     {
         if (!useGravity)
             return;
@@ -89,13 +99,16 @@ public class UtiliseGravity : MonoBehaviour {
     // Handles BoostNotifications from BoostRing
     void OnBoostNotification(object sender, object args)
     {
-        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>) args;
+        Info<GameObject, Vector3> info = (Info<GameObject, Vector3>)args;
         if (info.arg0 != gameObject)
             return;
 
         TempDisableGravity(0.2f);
     }
 
+    /*
+     * Disables gravity on the object for a short time
+     */
     public void TempDisableGravity(float _time, float _fadeTime = 0f)
     {
         if (tempGravityDisableCoroutine != null)
@@ -105,6 +118,9 @@ public class UtiliseGravity : MonoBehaviour {
         StartCoroutine(tempGravityDisableCoroutine);
     }
 
+    /*
+     * Coroutine to handle temp gravity disable and fadein
+     */
     private IEnumerator TempDisableGravityCoroutine(float _time, float _fadeTime)
     {
         useGravity = false;
@@ -114,16 +130,6 @@ public class UtiliseGravity : MonoBehaviour {
             yield return 0;
         }
         useGravity = true;
-
-        // Fade gravity back in
-        //float fade = _fadeTime;
-        //while (fade > 0f)
-        //{
-        //    gravStrengthModifier = Utilities.MapValues(fade, _fadeTime, 0f, 0f, 1f);
-        //    fade -= Time.deltaTime;
-        //    yield return 0;
-        //}
-        //gravStrengthModifier = 1f;
 
         // Fade gravity back in
         float fade = 0f;
