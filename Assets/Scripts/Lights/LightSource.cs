@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class LightSource : MonoBehaviour {
+public abstract class LightSource : MonoBehaviour {
 
     private float updateFrequency = 0.1f;
 
@@ -24,11 +24,7 @@ public class LightSource : MonoBehaviour {
     /*
      * Check light range for LightSensors that should be lit
      */
-    public virtual void LightSensorCheck()
-    {
-        Debug.LogError("LightSensorCheck must be overridden");
-        CancelInvoke("LightSensorCheck");
-    }
+    public abstract void LightSensorCheck();
 
     /*
      * Gets the intensity of the light at a given point.
