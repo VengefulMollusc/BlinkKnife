@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingObjectTriggeredObject : TriggeredObject
+public class MovingTriggeredObject : TriggeredObject
 {
 
     [SerializeField] private const float transitionDuration = 1f;
