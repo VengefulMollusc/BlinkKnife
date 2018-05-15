@@ -13,7 +13,7 @@ public abstract class InteractionTrigger : MonoBehaviour
 
     public void Start()
     {
-        if (triggeredObjects == null)
+        if (triggeredObjects == null || triggeredObjects.Count == 0)
             Debug.LogError("No TriggeredObjects given");
     }
 

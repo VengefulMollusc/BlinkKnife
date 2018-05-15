@@ -1,24 +1,27 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class MovingTriggeredObject : TriggeredObject
 {
 
     [SerializeField] private const float transitionDuration = 1f;
 
     // determines if position should be moved during transition
-    [SerializeField] private const bool transitionPosition = true;
+    [SerializeField] private bool transitionPosition = true;
 
     [SerializeField]
     private Vector3 endPosition;
     private Vector3 startPosition;
 
     // determines if rotation should be changed during transition
-    [SerializeField] private const bool transitionRotation = true;
+    [SerializeField] private bool transitionRotation = true;
 
     [SerializeField]
     private Quaternion endRotation;
     private Quaternion startRotation;
+
+    [SerializeField] private bool useRelativeMotion = false;
 
     private Rigidbody rb;
     private bool transitionToEnd;
@@ -53,7 +56,7 @@ public class MovingTriggeredObject : TriggeredObject
      */
     private IEnumerator MoveObjectTransition()
     {
-        // loop variables determined by state of transitionToEnd variable.
+        // loop direction determined by state of transitionToEnd variable.
         // if true, t = 0->1, false t = 1->0 
         // Should allow simple reversing if state changes mid-transition
         float t = transitionToEnd ? 0f : 1f;
@@ -61,6 +64,35 @@ public class MovingTriggeredObject : TriggeredObject
         {
             t += (transitionToEnd ? Time.deltaTime : -Time.deltaTime) / transitionDuration;
 
+            Transition(t);
+
+            yield return 0;
+        }
+
+        moveObjectCoroutine = null;
+    }
+
+    /*
+     * Perform transition on position/rotation 
+     */
+    private void Transition(float t)
+    {
+        if (!useRelativeMotion)
+        {
+            // position transition logic
+            if (transitionPosition)
+            {
+                rb.MovePosition(Vector3.Lerp(startPosition, endPosition, t));
+            }
+
+            // rotation transition logic
+            if (transitionRotation)
+            {
+                rb.MoveRotation(Quaternion.Lerp(startRotation, endRotation, t));
+            }
+        }
+        else
+        {
             // position transition logic
             if (transitionPosition)
             {
@@ -82,10 +114,6 @@ public class MovingTriggeredObject : TriggeredObject
                 // post relative rotation notification
                 this.PostNotification(RelativeMovementController.RelativeRotationNotification, info);
             }
-
-            yield return 0;
         }
-
-        moveObjectCoroutine = null;
     }
 }
