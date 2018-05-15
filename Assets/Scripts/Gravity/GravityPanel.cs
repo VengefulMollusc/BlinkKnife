@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class GravityPanel : MonoBehaviour {
+public class GravityPanel : MonoBehaviour
+{
+    /*
+     * Attached to GameObjects that trigger gravity shifts when hit by knife
+     */
 
     [SerializeField]
     private bool customGravity = false;
@@ -12,9 +15,9 @@ public class GravityPanel : MonoBehaviour {
     private bool useSurfaceNormal = false;
 
     /*
-     * return the gravity vector this panel will shift to
+     * Return the gravity vector this panel will shift to
      */
-	public Vector3 GetGravityVector()
+    public Vector3 GetGravityVector()
     {
         if (useSurfaceNormal) return Vector3.zero;
         if (customGravity) return customGravVector;
