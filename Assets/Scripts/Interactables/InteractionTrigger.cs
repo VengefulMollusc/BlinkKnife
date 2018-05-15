@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class InteractionTrigger : MonoBehaviour
+public abstract class InteractionTrigger : MonoBehaviour
 {
     /*
      * Handles interaction with triggerable objects etc.
@@ -10,7 +10,7 @@ public class InteractionTrigger : MonoBehaviour
     [SerializeField]
     private TriggeredObject triggeredObject;
 
-    public virtual void Start()
+    public void Start()
     {
         if (triggeredObject == null)
             Debug.LogError("No TriggeredObject given");

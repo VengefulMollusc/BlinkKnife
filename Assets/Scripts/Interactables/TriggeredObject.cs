@@ -1,12 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TriggeredObject : MonoBehaviour
+public abstract class TriggeredObject : MonoBehaviour
 {
-    public virtual void Trigger()
-    {
-        // logic here
-        Debug.Log("Triggered");
-    }
+    public abstract void Trigger();
 }

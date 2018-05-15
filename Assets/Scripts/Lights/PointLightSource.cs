@@ -8,6 +8,9 @@ public class PointLightSource : LightSource
      */
     public override void LightSensorCheck()
     {
+        if (!light.enabled)
+            return;
+
         Vector3 position = transform.position;
         float range = light.range;
         Collider[] cols = Physics.OverlapSphere(position, range, layerMask,

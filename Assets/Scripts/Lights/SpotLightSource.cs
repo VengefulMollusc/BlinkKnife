@@ -9,6 +9,9 @@ public class SpotLightSource : LightSource
      */
     public override void LightSensorCheck()
     {
+        if (!light.enabled)
+            return;
+
         Vector3 position = transform.position;
         Vector3 forward = transform.forward;
         float lightAngle = light.spotAngle * 0.5f;
