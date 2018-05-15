@@ -27,22 +27,27 @@ public class KnifeInteractionTrigger : InteractionTrigger
         this.RemoveObserver(OnKnifeReturnTransition, KnifeController.ReturnKnifeTransitionNotification);
     }
     
+    // De-attaches knife on return and Triggers objects again if active only while knife attached
     void OnKnifeReturnTransition(object sender, object args)
     {
         if (knifeAttached)
         {
             if (activeWhileKnifeAttached)
-                TriggerActivation();
+                ActivateTriggers();
 
             knifeAttached = false;
         }
     }
 
+    /*
+     * Attaches knife and triggers objects
+     */
     public void AttachKnife()
     {
         knifeAttached = true;
-        TriggerActivation();
+        ActivateTriggers();
 
+        // if autoReturn, return knife
         if (autoReturnKnife)
             this.PostNotification(KnifeController.ReturnKnifeTransitionNotification);
     }

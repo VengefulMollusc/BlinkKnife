@@ -13,6 +13,9 @@ public class LightToggleTriggeredObject : TriggeredObject
         lightComponent = GetComponent<Light>();
     }
 
+    /*
+     * Toggles light on/off
+     */
     public override void Trigger()
     {
         lightComponent.enabled = !lightComponent.enabled;

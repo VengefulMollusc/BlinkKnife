@@ -9,17 +9,20 @@ public abstract class InteractionTrigger : MonoBehaviour
      * Extended to handle different triggers: player presence, knife stuck to object etc.
      */
     [SerializeField]
-    private List<TriggeredObject> triggeredObject;
+    private List<TriggeredObject> triggeredObjects;
 
     public void Start()
     {
-        if (triggeredObject == null)
-            Debug.LogError("No TriggeredObject given");
+        if (triggeredObjects == null)
+            Debug.LogError("No TriggeredObjects given");
     }
 
-    public void TriggerActivation()
+    /*
+     * Activates each attached TriggeredObject
+     */
+    public void ActivateTriggers()
     {
-        foreach (TriggeredObject obj in triggeredObject)
+        foreach (TriggeredObject obj in triggeredObjects)
         {
             obj.Trigger();
         }

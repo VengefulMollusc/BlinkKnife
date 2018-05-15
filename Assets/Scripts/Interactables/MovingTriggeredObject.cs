@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MovingTriggeredObject : TriggeredObject
@@ -7,21 +6,22 @@ public class MovingTriggeredObject : TriggeredObject
 
     [SerializeField] private const float transitionDuration = 1f;
 
-    [SerializeField] private bool transitionPosition = true;
+    // determines if position should be moved during transition
+    [SerializeField] private const bool transitionPosition = true;
 
     [SerializeField]
     private Vector3 endPosition;
     private Vector3 startPosition;
 
-    [SerializeField] private bool transitionRotation = true;
+    // determines if rotation should be changed during transition
+    [SerializeField] private const bool transitionRotation = true;
 
     [SerializeField]
     private Quaternion endRotation;
     private Quaternion startRotation;
 
     private Rigidbody rb;
-
-    private bool active;
+    private bool transitionToEnd;
 
     private Coroutine moveObjectCoroutine;
 
@@ -34,7 +34,7 @@ public class MovingTriggeredObject : TriggeredObject
 
     public override void Trigger()
     {
-        active = !active;
+        transitionToEnd = !transitionToEnd;
         StartMoveObject();
     }
 
@@ -49,16 +49,19 @@ public class MovingTriggeredObject : TriggeredObject
     /*
      * Transitions between start and end positions/rotations
      * 
-     * Triggering while running will change active boolean and reverse direction of transition
+     * Triggering while running will change transitionToEnd boolean and reverse direction of transition
      */
     private IEnumerator MoveObjectTransition()
     {
-        float t = active ? 0f : 1f;
-
-        while (active ? t < 1f : t > 0f)
+        // loop variables determined by state of transitionToEnd variable.
+        // if true, t = 0->1, false t = 1->0 
+        // Should allow simple reversing if state changes mid-transition
+        float t = transitionToEnd ? 0f : 1f;
+        while (transitionToEnd ? t < 1f : t > 0f)
         {
-            t += (active ? Time.deltaTime : -Time.deltaTime) / transitionDuration;
+            t += (transitionToEnd ? Time.deltaTime : -Time.deltaTime) / transitionDuration;
 
+            // position transition logic
             if (transitionPosition)
             {
                 Vector3 newPos = Vector3.Lerp(startPosition, endPosition, t);
@@ -68,6 +71,8 @@ public class MovingTriggeredObject : TriggeredObject
                 // post relative movement notification
                 this.PostNotification(RelativeMovementController.RelativeMovementNotification, info);
             }
+
+            // rotation transition logic
             if (transitionRotation)
             {
                 Quaternion newRot = Quaternion.Lerp(startRotation, endRotation, t);
