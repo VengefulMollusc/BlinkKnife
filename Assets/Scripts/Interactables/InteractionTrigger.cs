@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class InteractionTrigger : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public abstract class InteractionTrigger : MonoBehaviour
      * Extended to handle different triggers: player presence, knife stuck to object etc.
      */
     [SerializeField]
-    private TriggeredObject triggeredObject;
+    private List<TriggeredObject> triggeredObject;
 
     public void Start()
     {
@@ -18,6 +19,9 @@ public abstract class InteractionTrigger : MonoBehaviour
 
     public void TriggerActivation()
     {
-        triggeredObject.Trigger();
+        foreach (TriggeredObject obj in triggeredObject)
+        {
+            obj.Trigger();
+        }
     }
 }
