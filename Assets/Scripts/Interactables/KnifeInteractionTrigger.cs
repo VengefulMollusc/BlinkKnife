@@ -10,10 +10,10 @@ public class KnifeInteractionTrigger : InteractionTrigger
      */
 
     // only active while knife is attached. deactivate when knife is removed
-    [SerializeField] private bool activeWhileKnifeAttached;
+    [SerializeField] private bool triggerOnKnifeReturn;
 
     // automatically return knife when triggered.
-    // unsure if this will ever be useful in conjunction with activeWhileKnifeAttached
+    // unsure if this will ever be useful in conjunction with triggerOnKnifeReturn
     [SerializeField] private bool autoReturnKnife;
     private bool knifeAttached;
 
@@ -32,7 +32,7 @@ public class KnifeInteractionTrigger : InteractionTrigger
     {
         if (knifeAttached)
         {
-            if (activeWhileKnifeAttached)
+            if (triggerOnKnifeReturn)
                 ActivateTriggers();
 
             knifeAttached = false;
