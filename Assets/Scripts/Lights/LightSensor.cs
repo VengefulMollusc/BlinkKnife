@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class LightSensor : MonoBehaviour
 {
+    /*
+     * Should be attached to objects that need to know whether they are lit or not.
+     * 
+     * Handles logic for checking sunlight, and contains a list of points to be used for checking scene lights
+     */
     private static float updateFrequency = 0.1f;
     private static float sunCheckRaycastLength = 200f;
 
@@ -26,7 +31,7 @@ public class LightSensor : MonoBehaviour
 
     [SerializeField] private LayerMask raycastMask;
 
-    void OnEnable()
+    void Start()
     {
         sunlightObject = GameObject.FindGameObjectWithTag("Sunlight");
 

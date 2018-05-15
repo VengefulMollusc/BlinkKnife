@@ -5,8 +5,6 @@ public class JumpCollider : MonoBehaviour
 {
     private static bool colliding;
 
-    //public const string MovementObjectNotification = "JumpCollider.MovementObjectNotification";
-
     private float colExitDelay = 0.1f; 
     private Coroutine colExitCoroutine;
 
@@ -14,6 +12,7 @@ public class JumpCollider : MonoBehaviour
     {
         colliding = false;
 
+        // TODO: replace with collision layers
         Utilities.IgnoreCollisions(GetComponent<Collider>(), GameObject.FindGameObjectWithTag("Player").GetComponents<Collider>(), true);
     }
 
