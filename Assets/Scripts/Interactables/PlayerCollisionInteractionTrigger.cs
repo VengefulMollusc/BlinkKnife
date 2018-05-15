@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerCollisionInteractionTrigger : InteractionTrigger
 {
@@ -9,15 +7,18 @@ public class PlayerCollisionInteractionTrigger : InteractionTrigger
      * 
      * Eg: pressure plate - player must stand on switch to open door etc
      */
-    [SerializeField] private bool triggerOnExit;
+    [SerializeField] private bool activeWhileInContact;
     private bool active;
 
     void OnCollisionStay(Collision col)
     {
         if (col.transform.CompareTag("Player") && !active)
         {
-            ActivateTriggers();
             active = true;
+            if (activeWhileInContact)
+                ActivateTriggers(true);
+            else 
+                ActivateTriggers();
         }
     }
 
@@ -25,10 +26,9 @@ public class PlayerCollisionInteractionTrigger : InteractionTrigger
     {
         if (col.transform.CompareTag("Player") && active)
         {
-            if (triggerOnExit)
-                ActivateTriggers();
-
             active = false;
+            if (activeWhileInContact)
+                ActivateTriggers(false);
         }
     }
 }

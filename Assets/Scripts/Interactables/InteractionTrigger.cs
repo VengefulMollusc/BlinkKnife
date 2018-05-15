@@ -27,4 +27,15 @@ public abstract class InteractionTrigger : MonoBehaviour
             obj.Trigger();
         }
     }
+
+    /*
+     * Activates each attached TriggeredObject with a specific active state
+     */
+    public void ActivateTriggers(bool active)
+    {
+        foreach (TriggeredObject obj in triggeredObjects)
+        {
+            obj.Trigger(active);
+        }
+    }
 }

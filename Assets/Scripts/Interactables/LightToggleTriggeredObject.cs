@@ -20,4 +20,9 @@ public class LightToggleTriggeredObject : TriggeredObject
     {
         lightComponent.enabled = !lightComponent.enabled;
     }
+
+    public override void Trigger(bool active)
+    {
+        lightComponent.enabled = active;
+    }
 }

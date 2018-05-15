@@ -37,7 +37,12 @@ public class MovingTriggeredObject : TriggeredObject
 
     public override void Trigger()
     {
-        transitionToEnd = !transitionToEnd;
+        Trigger(!transitionToEnd);
+    }
+
+    public override void Trigger(bool active)
+    {
+        transitionToEnd = active;
         StartMoveObject();
     }
 
