@@ -37,10 +37,10 @@ public class MovingTriggeredObject : TriggeredObject
 
     public override void ToggleTrigger()
     {
-        Trigger(!transitionToEnd);
+        SetTriggerState(!transitionToEnd);
     }
 
-    public override void Trigger(bool active)
+    protected override void SetTriggerState(bool active)
     {
         transitionToEnd = active;
         StartMoveObject();
