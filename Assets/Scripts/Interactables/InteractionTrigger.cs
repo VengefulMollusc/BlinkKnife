@@ -8,8 +8,13 @@ public abstract class InteractionTrigger : MonoBehaviour
      * 
      * Extended to handle different triggers: player presence, knife stuck to object etc.
      */
+
     [SerializeField]
     private List<TriggeredObject> triggeredObjects;
+
+    // controls which boolean state is triggered as the 'active' state.
+    // setting to false will invert the effects of this trigger on triggered objects
+    [SerializeField] private bool invertStates;
 
     public void Start()
     {
@@ -33,9 +38,10 @@ public abstract class InteractionTrigger : MonoBehaviour
      */
     public void ActivateTriggers(bool active)
     {
+        bool state = invertStates ? !active : active;
         foreach (TriggeredObject obj in triggeredObjects)
         {
-            obj.Trigger(active);
+            obj.Trigger(state);
         }
     }
 }

@@ -86,15 +86,11 @@ public class MovingTriggeredObject : TriggeredObject
         {
             // position transition logic
             if (transitionPosition)
-            {
                 rb.MovePosition(Vector3.Lerp(startPosition, endPosition, t));
-            }
 
             // rotation transition logic
             if (transitionRotation)
-            {
                 rb.MoveRotation(Quaternion.Lerp(startRotation, endRotation, t));
-            }
         }
         else
         {
