@@ -12,9 +12,6 @@ public class KnifeInteractionTrigger : InteractionTrigger
     // only active while knife is attached. deactivate when knife is removed
     [SerializeField] private bool activeWhileKnifeAttached;
 
-    // automatically return knife when triggered.
-    // unsure if this will ever be useful in conjunction with activeWhileKnifeAttached
-    [SerializeField] private bool autoReturnKnife;
     private bool knifeAttached;
 
     void OnEnable()
@@ -52,7 +49,7 @@ public class KnifeInteractionTrigger : InteractionTrigger
             ToggleTriggers();
 
         // if autoReturn, return knife
-        if (autoReturnKnife)
+        if (!activeWhileKnifeAttached)
             this.PostNotification(KnifeController.ReturnKnifeTransitionNotification);
     }
 }
