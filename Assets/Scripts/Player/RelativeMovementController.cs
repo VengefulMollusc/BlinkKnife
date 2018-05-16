@@ -18,6 +18,8 @@ public class RelativeMovementController : MonoBehaviour
 
     [SerializeField] private LayerMask relativeMotionLayers;
 
+    //TODO: find a solution for relativemovement on something with a velocity. currently friction ends up adding to relativemovement
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();

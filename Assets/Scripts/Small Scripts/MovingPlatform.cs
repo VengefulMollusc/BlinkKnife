@@ -1,43 +1,40 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 20f;
+    [SerializeField] private float moveDuration = 10f;
 
-    [SerializeField] private Vector3 startPos = Vector3.zero;
-    [SerializeField] private Vector3 endPos = Vector3.zero;
-
-    private Vector3 targetPos = Vector3.zero;
+    private Vector3 startPos;
+    [SerializeField] private Vector3 endPos;
 
     private Rigidbody rb;
 
-    void OnEnable()
-    {
-        if (startPos == endPos)
-            Debug.LogError("Start and end positions are the same");
+    private bool transitionToEnd = true;
+    private float t;
 
-        transform.position = startPos;
-        targetPos = endPos;
+    void Start()
+    {
+        startPos = transform.position;
 
         rb = GetComponent<Rigidbody>();
     }
     
-	void FixedUpdate () {
-        Vector3 newPos = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * moveSpeed);
+	void FixedUpdate ()
+	{
+	    t += (transitionToEnd ? Time.fixedDeltaTime : -Time.fixedDeltaTime) / moveDuration;
+
+	    Vector3 newPos = Vector3.Lerp(startPos, endPos, t);
+        
         Info<Transform, Vector3> info = new Info<Transform, Vector3>(transform, newPos - rb.position);
+        //rb.MovePosition(newPos); // this calculates velocity as well, so friction adds to relative movement. TODO: find a solution for relativemovement on something with a velocity
         rb.position = newPos;
 
         // Send notification with movementVector here
         this.PostNotification(RelativeMovementController.RelativeMovementNotification, info);
 
-        if (transform.position == targetPos)
+        if (transitionToEnd ? t > 1f : t < 0f)
 	    {
-	        if (targetPos == startPos)
-	            targetPos = endPos;
-	        else
-	            targetPos = startPos;
+	        transitionToEnd = !transitionToEnd;
 	    }
-	}
+    }
 }
