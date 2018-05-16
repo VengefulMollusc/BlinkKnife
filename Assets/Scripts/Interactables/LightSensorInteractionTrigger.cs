@@ -7,6 +7,8 @@ public class LightSensorInteractionTrigger : InteractionTrigger
      * InteractionTrigger that triggers object based on object lit status.
      */
     private bool isLit;
+
+    [SerializeField] private const float lightThreshold = 0.2f;
     
     void OnEnable()
     {
@@ -27,9 +29,10 @@ public class LightSensorInteractionTrigger : InteractionTrigger
         if (info.arg0 != gameObject)
             return;
 
-        bool newLightState = info.arg1 > 0f;
+        bool newLightState = info.arg1 > lightThreshold;
         if (newLightState != isLit)
         {
+            // Updates TriggeredObjects if light status changes
             isLit = newLightState;
             ActivateTriggers(isLit);
         }
