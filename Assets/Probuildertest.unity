@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 132101893}
   - component: {fileID: 132101892}
   - component: {fileID: 132101891}
+  - component: {fileID: 132101895}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -341,6 +342,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 132101889}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &132101895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 132101889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &154509703
 Prefab:
   m_ObjectHideFlags: 0
@@ -930,6 +942,7 @@ GameObject:
   - component: {fileID: 382593698}
   - component: {fileID: 382593697}
   - component: {fileID: 382593696}
+  - component: {fileID: 382593701}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -1018,6 +1031,17 @@ Transform:
   m_Father: {fileID: 430250617}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &382593701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 382593695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &397478949
 Mesh:
   m_ObjectHideFlags: 0
@@ -5483,6 +5507,7 @@ GameObject:
   - component: {fileID: 635322567}
   - component: {fileID: 635322566}
   - component: {fileID: 635322565}
+  - component: {fileID: 635322569}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -5570,6 +5595,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 635322563}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &635322569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 635322563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &687799468
 GameObject:
   m_ObjectHideFlags: 0
@@ -5613,6 +5649,7 @@ GameObject:
   - component: {fileID: 714524625}
   - component: {fileID: 714524624}
   - component: {fileID: 714524623}
+  - component: {fileID: 714524628}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -5700,6 +5737,17 @@ Transform:
   m_Father: {fileID: 942383679}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &714524628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 714524622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &715238445
 Mesh:
   m_ObjectHideFlags: 0
@@ -13284,106 +13332,17 @@ Transform:
   m_PrefabParentObject: {fileID: 4949740984471798, guid: 4072c14d97934e640b6c179f9e4a0fd7,
     type: 2}
   m_PrefabInternal: {fileID: 908544490}
---- !u!1 &925179819
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 925179820}
-  - component: {fileID: 925179824}
-  - component: {fileID: 925179823}
-  - component: {fileID: 925179822}
-  - component: {fileID: 925179821}
-  m_Layer: 10
-  m_Name: FibreOpticEnd
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &925179820
+--- !u!4 &925179820 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 925179819}
-  m_LocalRotation: {x: -0, y: 0.14294784, z: -0, w: 0.9897303}
-  m_LocalPosition: {x: 41.67, y: 3.53, z: -36.9}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1118406260}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 16.437, z: 0}
---- !u!114 &925179821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 925179819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e885924e6e9be347aae5d30f4217508, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  otherEndFibreOpticController: {fileID: 2058045907}
-  bezierTargetPosition: {x: 91.14539, y: 32.153454, z: 30.366138}
-  bezierMeshPrefab: {fileID: 1142700280047862, guid: dd811e4ea86d4af48b622da9e3175585,
+  m_PrefabParentObject: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b,
     type: 2}
---- !u!23 &925179822
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 925179819}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!135 &925179823
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 925179819}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &925179824
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 925179819}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_PrefabInternal: {fileID: 944535468}
+--- !u!114 &925179821 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114988060590652948, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b,
+    type: 2}
+  m_PrefabInternal: {fileID: 944535468}
+  m_Script: {fileID: 11500000, guid: 3e885924e6e9be347aae5d30f4217508, type: 3}
 --- !u!1 &942383678
 GameObject:
   m_ObjectHideFlags: 0
@@ -13415,6 +13374,53 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &944535468
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1118406260}
+    m_Modifications:
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 41.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 3.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -36.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0.14294784
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.9897303
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521758723199396, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114988060590652948, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b,
+        type: 2}
+      propertyPath: otherEndFibreOpticController
+      value: 
+      objectReference: {fileID: 2058045907}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: dc2ae765e02989c4d8ceeeb3c83d1a0b, type: 2}
+  m_IsPrefabParent: 0
 --- !u!43 &967767019
 Mesh:
   m_ObjectHideFlags: 0
@@ -19059,6 +19065,7 @@ GameObject:
   - component: {fileID: 1259609395}
   - component: {fileID: 1259609394}
   - component: {fileID: 1259609393}
+  - component: {fileID: 1259609397}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -19147,6 +19154,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1259609391}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1259609397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1259609391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1262273701
 GameObject:
   m_ObjectHideFlags: 0
@@ -19802,6 +19820,7 @@ GameObject:
   - component: {fileID: 1338615391}
   - component: {fileID: 1338615390}
   - component: {fileID: 1338615389}
+  - component: {fileID: 1338615393}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -19889,6 +19908,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1338615387}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1338615393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1338615387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1370243286
 Prefab:
   m_ObjectHideFlags: 0
@@ -27644,6 +27674,7 @@ GameObject:
   - component: {fileID: 1932056414}
   - component: {fileID: 1932056413}
   - component: {fileID: 1932056412}
+  - component: {fileID: 1932056417}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -27731,6 +27762,17 @@ Transform:
   m_Father: {fileID: 1195366692}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 16.437, z: 0}
+--- !u!114 &1932056417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1932056411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1951696767
 Prefab:
   m_ObjectHideFlags: 0
@@ -28937,6 +28979,7 @@ GameObject:
   - component: {fileID: 2058045909}
   - component: {fileID: 2058045908}
   - component: {fileID: 2058045907}
+  - component: {fileID: 2058045911}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -29024,6 +29067,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2058045905}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2058045911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2058045905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2062015400
 GameObject:
   m_ObjectHideFlags: 0
@@ -29036,6 +29090,7 @@ GameObject:
   - component: {fileID: 2062015403}
   - component: {fileID: 2062015402}
   - component: {fileID: 2062015401}
+  - component: {fileID: 2062015406}
   m_Layer: 10
   m_Name: FibreOpticEnd
   m_TagString: Untagged
@@ -29123,6 +29178,17 @@ Transform:
   m_Father: {fileID: 687799469}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 16.437, z: 0}
+--- !u!114 &2062015406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2062015400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2084962161
 Prefab:
   m_ObjectHideFlags: 0

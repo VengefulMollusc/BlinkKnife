@@ -86,7 +86,7 @@ public class BounceKnifeController : KnifeController
         GameObject other = collide.otherCollider.gameObject;
 
         // If collided surface is soft, stick knife into it
-        if (other.GetComponent<SoftSurface>() != null || other.GetComponent<FibreOpticController>() != null)
+        if (other.GetComponent<SoftSurface>() != null)
             StickToSurface(collide.point, collide.normal, other);
         else
             // reset timer
