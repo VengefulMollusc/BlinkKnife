@@ -64,6 +64,7 @@ public class KnifeController : MonoBehaviour
     public bool autoWarp = false;
 
     private DontGoThroughThings dontGoThroughThings;
+    private TrailRenderer trailRenderer;
 
     private bool stuckInSurface;
     private GameObject objectStuck;
@@ -108,6 +109,7 @@ public class KnifeController : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         dontGoThroughThings = GetComponent<DontGoThroughThings>();
+        trailRenderer = GetComponent<TrailRenderer>();
 
         // Attach the WarpLookAheadCollider to this knife
         this.PostNotification(AttachLookAheadColliderNotification, this);
@@ -148,7 +150,7 @@ public class KnifeController : MonoBehaviour
 
         if (_cancelNotifications)
         {
-            GetComponentInChildren<TrailRenderer>().enabled = false;
+            trailRenderer.enabled = false;
             return;
         }
 
