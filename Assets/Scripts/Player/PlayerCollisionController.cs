@@ -9,7 +9,6 @@ public class PlayerCollisionController : MonoBehaviour
     public static float slideThreshold = 50f;
 
     [SerializeField] private LayerMask raycastMask;
-    //[SerializeField] private GameObject ledgeCheckObject;
 
     private static float jumpHeightToLedge;
 
@@ -26,16 +25,16 @@ public class PlayerCollisionController : MonoBehaviour
 
     private Vector3 slideSurfaceNormal;
 
-    // Use this for initialization
-    void OnEnable ()
+    private Rigidbody rb;
+
+    void Start()
     {
         playerMotor = GetComponent<PlayerMotor>();
         sphereCol = GetComponent<SphereCollider>();
+        rb = GetComponent<Rigidbody>();
         colMaterial = sphereCol.material;
         staticFriction = colMaterial.staticFriction;
         dynamicFriction = colMaterial.dynamicFriction;
-
-        Physics.IgnoreCollision(GetComponent<SphereCollider>(), GetComponentInChildren<CapsuleCollider>());
 
         frictionless = true;
         colliding = false;
@@ -46,7 +45,7 @@ public class PlayerCollisionController : MonoBehaviour
     void FixedUpdate()
     {
         // also disable friction while moving above speed threshold
-        bool frictionOverride = (GetComponent<Rigidbody>().velocity.magnitude > speedThreshold);
+        bool frictionOverride = (rb.velocity.magnitude > speedThreshold);
         UpdateCollisionState(frictionless, colliding, frictionOverride);
     }
 
@@ -88,7 +87,6 @@ public class PlayerCollisionController : MonoBehaviour
     {
         frictionless = true;
         colliding = false;
-        //slideSurfaceNormal = Vector3.zero;
         jumpHeightToLedge = 0f;
     }
 
@@ -127,15 +125,6 @@ public class PlayerCollisionController : MonoBehaviour
                 return 0f;
             }
 
-            //ledgeCheckObject.transform.position = ledgeDetectionCastOrigin - ((ledgeHeightDiff - 1.01f) * transform.up);
-            //RaycastHit sweepHitInfo;
-            //if (ledgeCheckObject.GetComponent<Rigidbody>().SweepTest(transform.forward, out sweepHitInfo, 0.6f))
-            //{
-            //    //Debug.Log("-- Sweep hit edge");
-            //    // No room
-            //    return 0f;
-            //}
-
             return 2.5f - ledgeHeightDiff;
         }
 
@@ -147,6 +136,9 @@ public class PlayerCollisionController : MonoBehaviour
         return jumpHeightToLedge;
     }
 
+    /*
+     * Sets physics material properties depending on current collision state
+     */
     void UpdateCollisionState(bool _frictionless, bool _colliding, bool _frictionOverride)
     {
         if (_frictionless || _frictionOverride)

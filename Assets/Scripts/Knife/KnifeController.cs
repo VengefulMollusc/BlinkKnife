@@ -109,7 +109,7 @@ public class KnifeController : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         dontGoThroughThings = GetComponent<DontGoThroughThings>();
-        trailRenderer = GetComponent<TrailRenderer>();
+        trailRenderer = GetComponentInChildren<TrailRenderer>();
 
         // Attach the WarpLookAheadCollider to this knife
         this.PostNotification(AttachLookAheadColliderNotification, this);
