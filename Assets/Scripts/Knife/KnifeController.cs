@@ -63,6 +63,8 @@ public class KnifeController : MonoBehaviour
 
     public bool autoWarp = false;
 
+    private DontGoThroughThings dontGoThroughThings;
+
     private bool stuckInSurface;
     private GameObject objectStuck;
 
@@ -99,11 +101,13 @@ public class KnifeController : MonoBehaviour
     {
         ownerTransform = _ownerTransform;
         warpLookAheadCollider = _lookAhead;
-        rb = GetComponent<Rigidbody>();
 
         stuckInSurface = false;
 
         gravShiftVector = Vector3.zero;
+
+        rb = GetComponent<Rigidbody>();
+        dontGoThroughThings = GetComponent<DontGoThroughThings>();
 
         // Attach the WarpLookAheadCollider to this knife
         this.PostNotification(AttachLookAheadColliderNotification, this);
@@ -128,7 +132,7 @@ public class KnifeController : MonoBehaviour
     {
         // disable rigidbody
         rb.isKinematic = true;
-        GetComponent<DontGoThroughThings>().enabled = false;
+        dontGoThroughThings.enabled = false;
         stuckInSurface = true;
 
         // align knife position with collision position
@@ -156,19 +160,23 @@ public class KnifeController : MonoBehaviour
             // attach knife to interactable object
             knifeTrigger.AttachKnife();
         }
-        else if (objectStuck.GetComponent<GravityPanel>() != null)
+
+        GravityPanel tempGravPanel = objectStuck.GetComponent<GravityPanel>();
+        if (tempGravPanel != null)
         {
             // Prepare to shift gravity if warping to GravityPanel
-            gravPanel = objectStuck.GetComponent<GravityPanel>();
+            gravPanel = tempGravPanel;
             gravShiftVector = gravPanel.GetGravityVector();
 
             if (gravShiftVector == Vector3.zero)
                 gravShiftVector = -_normal;
         }
-        else if (objectStuck.GetComponent<FibreOpticController>() != null)
+
+        FibreOpticController fibreController = objectStuck.GetComponent<FibreOpticController>();
+        if (fibreController != null)
         {
             // Activate fibre optic warp
-            this.PostNotification(FibreOpticWarpNotification, objectStuck.GetComponent<FibreOpticController>());
+            this.PostNotification(FibreOpticWarpNotification, fibreController);
             return;
         }
 
