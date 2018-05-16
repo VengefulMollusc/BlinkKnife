@@ -17,19 +17,20 @@ public class RelativeMovementController : MonoBehaviour
     private bool landing = false;
 
     [SerializeField] private LayerMask relativeMotionLayers;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
     
     void OnEnable()
     {
-        rb = GetComponent<Rigidbody>();
-
-        //this.AddObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
         this.AddObserver(OnRelativeMovementNotification, RelativeMovementNotification);
         this.AddObserver(OnRelativeRotationNotification, RelativeRotationNotification);
     }
 
     void OnDisable()
     {
-        //this.RemoveObserver(OnMovementObjectNotification, JumpCollider.MovementObjectNotification);
         this.RemoveObserver(OnRelativeMovementNotification, RelativeMovementNotification);
         this.RemoveObserver(OnRelativeRotationNotification, RelativeRotationNotification);
     }

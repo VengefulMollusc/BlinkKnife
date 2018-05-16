@@ -140,15 +140,12 @@ public class PlayerKnifeController : MonoBehaviour
             else
             {
                 // return thrown knife
-                // TODO: figure out if more efficient than posting notification
-                //knifeController.ReturnKnifeTransition();
                 this.PostNotification(KnifeController.ReturnKnifeTransitionNotification);
             }
         }
         else if (Input.GetButtonDown(middleMouse))
         {
             // weapon button
-            //if (weapon.ClickMouse((knife != null) ? knife.transform : null, transform, playerColliders))
             weapon.ClickMouse(null, transform, playerColliders);
         }
         else if (Input.GetButtonUp(middleMouse))
@@ -247,13 +244,6 @@ public class PlayerKnifeController : MonoBehaviour
     {
         if (currentWarps < 1)
             return;
-        // unfreeze player if hanging on wall
-        // playerMotor.UnFreeze ();
-
-        // TODO: remove these. are from when knife was affected by gravity
-        //Quaternion throwDirectionQuaternion = Quaternion.AngleAxis(-throwAngleModifier, transform.right);
-        //Vector3 throwDirection = throwDirectionQuaternion * transform.forward;
-        //Vector3 throwPosition = transform.position + (transform.up * throwHeightModifier);
 
         // TODO: replace with consistent knife instances. one for each type
         // instantiate knife prefab
@@ -326,9 +316,6 @@ public class PlayerKnifeController : MonoBehaviour
     {
         if (knife == null)
             return;
-
-        // Remove this line to have countdown ui stay filled while warping
-        //warpCountDown = 0f;
 
         // Check whether gravity is changing for this warp
         bool shiftGravity = (knifeController.ShiftGravity() || alwaysGravShift);
