@@ -11,7 +11,7 @@ public abstract class TriggeredObject : MonoBehaviour
     public abstract void ToggleTrigger();
 
     /*
-     * Activates behaviour with a specific state
+     * Activates behaviour with a specific state. Inverting if required
      */
     public void Trigger(bool active)
     {
