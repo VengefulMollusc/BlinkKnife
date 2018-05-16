@@ -17,8 +17,6 @@ public class PlayerKnifeController : MonoBehaviour
     private float warpWaitTime = 0.1f;
     private float warpCountDown;
 
-    private bool autoWarp;
-
     [Header("Knife Settings")]
     [SerializeField]
     private string leftMouse = "Fire1";
@@ -173,7 +171,7 @@ public class PlayerKnifeController : MonoBehaviour
     {
         if (knife != null && knifeController.CanWarp() && currentWarps >= 1)
         { // Require mouse click to warp
-            if (autoWarp)
+            if (knifeController.AutoWarp())
             {
                 Warp();
                 return;
@@ -269,8 +267,6 @@ public class PlayerKnifeController : MonoBehaviour
             return;
         }
 
-        autoWarp = knifeController.AutoWarp();
-
         // set up and throw knife object
         knifeController.Setup(knifeInHand.transform, warpLookAheadCollider);
         knifeController.Throw(transform.forward * _strength);
@@ -297,7 +293,6 @@ public class PlayerKnifeController : MonoBehaviour
         Destroy(knife);
         knife = null;
         knifeController = null;
-        autoWarp = false;
         HideKnife(false);
     }
 
@@ -315,8 +310,6 @@ public class PlayerKnifeController : MonoBehaviour
             FibreOpticController fibreOpticController = (FibreOpticController)args;
 
             playerMotor.WarpToKnife(false, knifeController, fibreOpticController);
-
-            autoWarp = false;
         }
         else
         {
@@ -342,8 +335,6 @@ public class PlayerKnifeController : MonoBehaviour
 
         // Trigger warp transition from playerMotor
         playerMotor.WarpToKnife(shiftGravity, knifeController);
-
-        autoWarp = false;
     }
 
     void EndWarp(object sender, object args)

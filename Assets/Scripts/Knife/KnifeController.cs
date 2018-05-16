@@ -61,6 +61,8 @@ public class KnifeController : MonoBehaviour
 
     private WarpLookAheadCollider warpLookAheadCollider;
 
+    public bool autoWarp = false;
+
     private bool stuckInSurface;
     private GameObject objectStuck;
 
@@ -122,7 +124,7 @@ public class KnifeController : MonoBehaviour
     /*
     * Sticks knife into surface when colliding with an object
     */
-    public void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other, bool _cancelNotifications = false)
+    public virtual void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other, bool _cancelNotifications = false)
     {
         // disable rigidbody
         rb.isKinematic = true;
@@ -149,6 +151,8 @@ public class KnifeController : MonoBehaviour
         KnifeInteractionTrigger knifeTrigger = objectStuck.GetComponent<KnifeInteractionTrigger>();
         if (knifeTrigger != null)
         {
+            // disable autoWarp
+            autoWarp = false;
             // attach knife to interactable object
             knifeTrigger.AttachKnife();
         }
@@ -306,7 +310,7 @@ public class KnifeController : MonoBehaviour
      */
     public virtual bool AutoWarp()
     {
-        return false;
+        return autoWarp;
     }
 
     /*

@@ -37,6 +37,11 @@ public class BounceKnifeController : KnifeController
         this.RemoveObserver(OnWarpNotification, PlayerMotor.WarpNotification);
     }
 
+    void Start()
+    {
+        autoWarp = true;
+    }
+
     /*
      * Record variables and zero velocity in preparation for warp.
      * Zero velocity probably needed to stop occasional warping into walls
@@ -88,14 +93,6 @@ public class BounceKnifeController : KnifeController
             warpTimer = 0f;
 
         hasCollided = true;
-    }
-
-    /*
-     * BounceKnife should warp as soon as CanWarp conditions are met
-     */
-    public override bool AutoWarp()
-    {
-        return true;
     }
 
     public override Vector3 GetVelocity()
