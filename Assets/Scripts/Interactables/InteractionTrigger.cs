@@ -16,7 +16,7 @@ public abstract class InteractionTrigger : MonoBehaviour
     // setting to false will invert the effects of this trigger on triggered objects
     [SerializeField] private bool invertStates;
 
-    public void Start()
+    void Start()
     {
         if (triggeredObjects == null || triggeredObjects.Count == 0)
             Debug.LogError("No TriggeredObjects given");
@@ -25,7 +25,7 @@ public abstract class InteractionTrigger : MonoBehaviour
     /*
      * Activates each attached TriggeredObject
      */
-    public void ToggleTriggers()
+    protected void ToggleTriggers()
     {
         foreach (TriggeredObject obj in triggeredObjects)
         {
@@ -36,12 +36,12 @@ public abstract class InteractionTrigger : MonoBehaviour
     /*
      * Activates each attached TriggeredObject with a specific active state
      */
-    public void ActivateTriggers(bool active)
+    protected void ActivateTriggers(bool active)
     {
         bool state = invertStates ? !active : active;
         foreach (TriggeredObject obj in triggeredObjects)
         {
-            obj.Trigger(state);
+            obj.TriggerState(state);
         }
     }
 }

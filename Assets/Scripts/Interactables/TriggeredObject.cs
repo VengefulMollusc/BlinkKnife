@@ -13,7 +13,7 @@ public abstract class TriggeredObject : MonoBehaviour
     /*
      * Activates behaviour with a specific state. Inverting if required
      */
-    public void Trigger(bool active)
+    public void TriggerState(bool active)
     {
         SetTriggerState(invertActiveState ? !active : active);
     }
