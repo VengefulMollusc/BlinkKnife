@@ -75,7 +75,7 @@ public class SpotLightSource : LightSource
         }
     }
 
-    // TODO: remove
+    // TODO: remove - collects raycast info for testing
     //public override void LightSensorCheck()
     //{
     //    List<Vector3> testPoints = new List<Vector3>();

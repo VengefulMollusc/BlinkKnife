@@ -10,7 +10,7 @@ public abstract class LightSource : MonoBehaviour {
     
     public LayerMask layerMask;
 
-    // TODO: remove
+    // TODO: remove - testing
     [HideInInspector]
     public Info<List<Vector3>, List<Vector3>, List<bool>> testRaycasts;
 
@@ -41,8 +41,6 @@ public abstract class LightSource : MonoBehaviour {
         float attenuatedIntensity = 1f / (1f + (25f * normalised * normalised));
 
         return attenuatedIntensity * light.intensity;
-
-        //return light.intensity * distance / light.range;
     }
 
     // TODO: remove - test method

@@ -8,14 +8,6 @@ public class JumpCollider : MonoBehaviour
     private float colExitDelay = 0.1f; 
     private Coroutine colExitCoroutine;
 
-    void Start()
-    {
-        colliding = false;
-
-        // TODO: replace with collision layers
-        Utilities.IgnoreCollisions(GetComponent<Collider>(), GameObject.FindGameObjectWithTag("Player").GetComponents<Collider>(), true);
-    }
-
     // Static method to check if player is 'grounded'
     public static bool IsColliding()
     {

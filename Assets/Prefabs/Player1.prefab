@@ -464,9 +464,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 20000013540887572}
-  cameraRotLimit: 89
-  warpGravShiftAngle: 1
-  warpVelocityModifier: 20
 --- !u!114 &114000012321050414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -573,8 +570,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f7855cbe2b9844696d8f595d584805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useAbility: 101
-  startingAbility: 2
 --- !u!114 &114871685062296912
 MonoBehaviour:
   m_ObjectHideFlags: 1

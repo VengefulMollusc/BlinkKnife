@@ -103,7 +103,7 @@ public class LightSensor : MonoBehaviour
         return 0f;
 
 
-        // TODO: REMOVE
+        // TODO: REMOVE - testing logic that collects raycast info
         // Same logic as above, but returns scene view test variables based on all performed raycasts
         //List<Vector3> testPoints = new List<Vector3>();
         //List<Vector3> rays = new List<Vector3>();

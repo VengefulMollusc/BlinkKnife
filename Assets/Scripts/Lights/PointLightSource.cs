@@ -59,6 +59,7 @@ public class PointLightSource : LightSource
         }
     }
 
+    // TODO: remove - collects raycast info for testing
     //public override void LightSensorCheck()
     //{
     //    List<Vector3> testPoints = new List<Vector3>();

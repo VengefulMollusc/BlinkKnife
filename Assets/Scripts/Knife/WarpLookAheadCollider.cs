@@ -42,7 +42,6 @@ public class WarpLookAheadCollider : MonoBehaviour
         
         if (collidersEnabled && knifeObject == null)
         {
-            //transform.position = lastUsablePos; // TODO: remove - this is for debugging. Shows warp position once warped
             Enabled(false);
         }
     }
