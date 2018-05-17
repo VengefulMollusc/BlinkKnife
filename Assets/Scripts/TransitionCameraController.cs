@@ -4,6 +4,9 @@ using UnityStandardAssets.ImageEffects;
 
 public class TransitionCameraController : MonoBehaviour
 {
+    /*
+     * Controls the camera used for warp transitions
+     */
     public const string WarpEndNotification = "TransitionCameraController.WarpEndNotification";
 
     private Vector3 startPos;
@@ -63,9 +66,13 @@ public class TransitionCameraController : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
+        // disable by default
         Disable();
     }
 
+    /*
+     * Called by PlayerKnifeController prior to beginning the warp to set up variables
+     */
     public void Setup(float _fov, Vector3 _startPos, KnifeController _knifeController, Vector3 _camRelativePos, Quaternion _startRot, Quaternion _endRot, bool _gravityShift, FibreOpticController _fibreController)
     {
         startPos = _startPos;
@@ -93,6 +100,9 @@ public class TransitionCameraController : MonoBehaviour
         CalculateDuration();
     }
 
+    /*
+     * Calculates the duration for the transition based on distance
+     */
     private void CalculateDuration()
     {
         float dist = Vector3.Distance(startPos, knifeController.GetWarpPosition() + camRelativePos);
@@ -128,7 +138,9 @@ public class TransitionCameraController : MonoBehaviour
         return duration;
     }
 
-    // Triggers the transition animation, unsure if this is needed, could put in setup
+    /*
+     * Begins the transition
+     */
     public void StartTransition()
     {
         if (fibreOpticWarp)
@@ -137,6 +149,11 @@ public class TransitionCameraController : MonoBehaviour
             StartCoroutine(TransitionCamera());
     }
 
+    /*
+     * Handles transition logic for fibreoptic warps.
+     * 
+     * Transitions to the start of the fibre, then along it
+     */
     IEnumerator FibreTransitionCamera()
     {
         float fibreOpticDuration = fibreOpticController.GetDuration();
@@ -204,6 +221,9 @@ public class TransitionCameraController : MonoBehaviour
         Disable();
     }
 
+    /*
+     * Handles logic for non-fibreoptic warps (including gravity shifts)
+     */
     IEnumerator TransitionCamera()
     {
         bool transitionFov = gravityShift || duration > 0.4f;
@@ -239,6 +259,9 @@ public class TransitionCameraController : MonoBehaviour
         Disable();
     }
 
+    /*
+     * Disables the camera and collisions etc
+     */
     private void Disable()
     {
         blackoutCamera.enabled = false;
@@ -262,8 +285,10 @@ public class TransitionCameraController : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(fovMaxValue, fovMaxValue - (fovDiff * lerpPercent), lerpPercent);
     }
 
-    // Performs a raycast check from the start position (guaranteed to be outside mesh)
-    // to the current one to activate blackout camera accordingly
+    /*
+     * Performs a raycast check from the start position (guaranteed to be outside mesh)
+     * to the current one to activate blackout camera accordingly
+     */
     void BlackoutCheckFromOrigin()
     {
         float dist = Vector3.Distance(startPos, transform.position);
@@ -284,13 +309,16 @@ public class TransitionCameraController : MonoBehaviour
         Blackout(hitCount % 2 == 1);
     }
 
+    /*
+     * Triggers whether blackout camera replaces transition camera
+     */
     void Blackout(bool blackout)
     {
         cam.enabled = !blackout;
         blackoutCamera.enabled = blackout;
     }
 
-    // These alone are unreliable with large meshes (possibly something to do with Probuilder)
+    // These alone are unreliable with large meshes (possibly something to do with Probuilder and/or complex meshes in general)
     void OnTriggerStay(Collider col)
     {
         if (col.isTrigger)
