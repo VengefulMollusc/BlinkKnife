@@ -6,21 +6,21 @@ public class Utilities : MonoBehaviour {
     /*
      * Ignores or allows collisions between multiple colliders at once
      */
-    public static void IgnoreCollisions(Collider[] _this, Collider[] _other, bool _ignore)
-    {
-        foreach (Collider col1 in _this)
-        {
-            IgnoreCollisions(col1, _other, _ignore);
-        }
-    }
+    //public static void IgnoreCollisions(Collider[] _this, Collider[] _other, bool _ignore)
+    //{
+    //    foreach (Collider col1 in _this)
+    //    {
+    //        IgnoreCollisions(col1, _other, _ignore);
+    //    }
+    //}
 
-    public static void IgnoreCollisions(Collider _this, Collider[] _other, bool _ignore)
-    {
-        foreach (Collider col in _other)
-        {
-            Physics.IgnoreCollision(_this, col, _ignore);
-        }
-    }
+    //public static void IgnoreCollisions(Collider _this, Collider[] _other, bool _ignore)
+    //{
+    //    foreach (Collider col in _other)
+    //    {
+    //        Physics.IgnoreCollision(_this, col, _ignore);
+    //    }
+    //}
 
 	/*
      * Returns true if the second transform is in front of the first
@@ -69,9 +69,10 @@ public class Utilities : MonoBehaviour {
         {
             RaycastHit hit;
             bool exposed = false;
+            Vector3 colPos = col.transform.position;
 
             // check if col is behind cover
-            if (Physics.Raycast(_position, (col.transform.position - _position), out hit))
+            if (Physics.Raycast(_position, (colPos - _position), out hit))
             {
                 exposed = (hit.collider == col);
             }
@@ -89,7 +90,7 @@ public class Utilities : MonoBehaviour {
                 HealthController hc = col.GetComponent<HealthController>();
                 if (hc != null)
                 {
-                    float dist = Vector3.Distance(_position, col.transform.position);
+                    float dist = Vector3.Distance(_position, colPos);
                     float i = MapValues(dist, 0f, _radius, 1f, 0.2f);
                     hc.Damage(_damage * i);
                 }
@@ -228,8 +229,9 @@ public class Utilities : MonoBehaviour {
         if (determinant > 0f) 
         { 
             // two intercept paths
-            float t1 = (-b + Mathf.Sqrt(determinant)) / (2f * a);
-            float t2 = (-b - Mathf.Sqrt(determinant)) / (2f * a);
+            float sqrtDeterminant = Mathf.Sqrt(determinant);
+            float t1 = (-b + sqrtDeterminant) / (2f * a);
+            float t2 = (-b - sqrtDeterminant) / (2f * a);
 
             if (t1 > 0f)
             {

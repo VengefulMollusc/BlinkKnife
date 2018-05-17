@@ -25,7 +25,7 @@ public class CubeController : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         rb.velocity = _camera.forward * speed;
         playerColliders = _playerCol;
-        Utilities.IgnoreCollisions(GetComponent<Collider>(), playerColliders, true);
+        //Utilities.IgnoreCollisions(GetComponent<Collider>(), playerColliders, true);
 
         if (_target != null)
         {
@@ -51,7 +51,7 @@ public class CubeController : MonoBehaviour {
         {
             transform.SetParent(_target.parent);
         }
-        Utilities.IgnoreCollisions(GetComponent<Collider>(), playerColliders, false);
+        //Utilities.IgnoreCollisions(GetComponent<Collider>(), playerColliders, false);
         activated = true;
         rb.isKinematic = true;
         transform.up = Vector3.up;

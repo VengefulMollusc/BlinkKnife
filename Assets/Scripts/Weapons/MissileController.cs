@@ -83,7 +83,7 @@ public class MissileController : MonoBehaviour {
     public void Setup(Transform _parent, Collider[] _collider)
     {
         transform.SetParent(_parent);
-        Utilities.IgnoreCollisions(GetComponent<Collider>(), _collider, true);
+        //Utilities.IgnoreCollisions(GetComponent<Collider>(), _collider, true);
     }
 
     public void Fire()
