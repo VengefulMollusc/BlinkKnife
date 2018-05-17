@@ -19294,7 +19294,6 @@ GameObject:
   - component: {fileID: 1280100415}
   - component: {fileID: 1280100414}
   - component: {fileID: 1280100413}
-  - component: {fileID: 1280100420}
   m_Layer: 14
   m_Name: MovingPlatform1
   m_TagString: Untagged
@@ -19341,7 +19340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a03caffb228bf844b701a1c02e0a568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveDuration: 10
+  moveDuration: 5
   endPos: {x: -40, y: 0.5, z: 18}
 --- !u!64 &1280100415
 MeshCollider:
@@ -19696,26 +19695,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1280100411}
   m_Mesh: {fileID: 1598515993}
---- !u!114 &1280100420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1280100411}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cb5d7a03f5b6ae4e965b1a20856b7ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  followGravityDirection: 0
-  followPlayerPosition: 0
-  ambientRot: 1
-  ambientRotAxis: {x: 0, y: 1, z: 0}
-  ambientRotSpeed: 20
-  modifyRotation: 0
-  xMod: 1
-  yMod: 1
-  zMod: 1
 --- !u!1001 &1291744467
 Prefab:
   m_ObjectHideFlags: 0
@@ -21775,7 +21754,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh13688
+  m_Name: pb_Mesh35690
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2

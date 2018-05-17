@@ -26,7 +26,7 @@ public class MovingPlatform : MonoBehaviour
 	    Vector3 newPos = Vector3.Lerp(startPos, endPos, t);
         
         Info<Transform, Vector3> info = new Info<Transform, Vector3>(transform, newPos - rb.position);
-        //rb.MovePosition(newPos); // this calculates velocity as well, so friction adds to relative movement. TODO: find a solution for relativemovement on something with a velocity
+        //rb.MovePosition(newPos); // this calculates velocity as well, so friction(?) adds to relative movement. TODO: find a solution for relativemovement on something with a velocity
         rb.position = newPos;
 
         // Send notification with movementVector here

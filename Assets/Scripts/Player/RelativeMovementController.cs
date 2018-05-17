@@ -206,7 +206,6 @@ public class RelativeMovementController : MonoBehaviour
                 if (!suitablePoint)
                 {
                     ExitRelativeMotion();
-                    //relativeMotionTransform = null;
                 }
             }
         }
