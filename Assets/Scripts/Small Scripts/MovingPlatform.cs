@@ -7,16 +7,12 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 startPos;
     [SerializeField] private Vector3 endPos;
 
-    private Rigidbody rb;
-
     private bool transitionToEnd = true;
     private float t;
 
     void Start()
     {
         startPos = transform.position;
-
-        rb = GetComponent<Rigidbody>();
     }
     
 	void FixedUpdate ()
@@ -25,9 +21,9 @@ public class MovingPlatform : MonoBehaviour
 
 	    Vector3 newPos = Vector3.Lerp(startPos, endPos, t);
         
-        Info<Transform, Vector3> info = new Info<Transform, Vector3>(transform, newPos - rb.position);
+        Info<Transform, Vector3> info = new Info<Transform, Vector3>(transform, newPos - transform.position);
         //rb.MovePosition(newPos); // this calculates velocity as well, so friction(?) adds to relative movement. TODO: find a solution for relativemovement on something with a velocity
-        rb.position = newPos;
+        transform.position = newPos;
 
         // Send notification with movementVector here
         this.PostNotification(RelativeMovementController.RelativeMovementNotification, info);
