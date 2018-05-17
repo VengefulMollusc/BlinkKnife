@@ -10,11 +10,15 @@ public class FibreOpticController : MonoBehaviour
     [SerializeField]
     private GameObject bezierMeshPrefab;
 
-    // Use this for initialization
-    void OnEnable () {
+    void Start()
+    {
         if (IsConnected() && !otherEndFibreOpticController.IsConnected())
             otherEndFibreOpticController.SetOtherEndController(this);
+    }
 
+    // Use this for initialization
+    void OnEnable()
+    {
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
         this.AddObserver(OnWarpEnd, TransitionCameraController.WarpEndNotification);
     }
@@ -39,26 +43,16 @@ public class FibreOpticController : MonoBehaviour
             Debug.LogError("Not connected to other FibreOpticController");
             return;
         }
-
-        //Debug.Log("Fibre Optic warp effect here");
-
-
-        //Info<GameObject, KnifeController> info = (Info<GameObject, KnifeController>)args;
-        //KnifeController knifeController = info.arg1;
-
-        // stick knife into other end. Should allow lookahead colliders to do their thing
-        //knifeController.StickToSurface(otherEndFibreOpticController.transform.position, -otherEndFibreOpticController.transform.forward, otherEndFibreOpticController.gameObject, true);
-
-
-        //StartCoroutine(TransitionKnife(knifeTransform));
     }
 
+    // detach knife on warp end
     void OnWarpEnd(object sender, object args)
     {
         if (attachedKnife)
             attachedKnife = null;
     }
 
+    // attaches knife to other end of fibreoptic
     public void WarpKnife(KnifeController _knifeController)
     {
         if (!IsConnected())
@@ -70,19 +64,10 @@ public class FibreOpticController : MonoBehaviour
         otherEndFibreOpticController.AttachKnife(_knifeController);
     }
 
-    // Transitions the knife along the bezier
-    //private IEnumerator TransitionKnife(Transform _knifeTransform)
-    //{
-    //    float t = 1f;
-    //    while (t > 0)
-    //    {
-    //        t -= Time.deltaTime * (Time.timeScale / transitionTime);
-    //        _knifeTransform.position = GetBezierPosition(t);
-
-    //        yield return 0;
-    //    }
-    //}
-
+    /*
+     * Sticks knife to this fibreoptic end.
+     * Positions to allow easy warp transition
+     */
     public void AttachKnife(KnifeController _knifeController)
     {
         attachedKnife = _knifeController;
@@ -95,15 +80,14 @@ public class FibreOpticController : MonoBehaviour
     }
 
     /*
-     * Lerps along the bezier defined by both FibreOpticControllers and the bezier targets
-     * 
+     * Lerps along the bezier defined by both FibreOpticControllers and the bezier targets.
      * allows bezier control point movement during transition
      */
     public Vector3 GetBezierPosition(float _t)
     {
-        return Utilities.LerpBezier(GetPosition(), 
+        return Utilities.LerpBezier(GetPosition(),
             GetBezierTargetPosition(),
-            otherEndFibreOpticController.GetBezierTargetPosition(), 
+            otherEndFibreOpticController.GetBezierTargetPosition(),
             otherEndFibreOpticController.GetPosition(),
             _t);
     }
@@ -133,15 +117,7 @@ public class FibreOpticController : MonoBehaviour
         Debug.Log("Done Creating Mesh");
     }
 
-    //public Quaternion GetInitialRotation()
-    //{
-    //    Vector3 forwardRelToGravity =
-    //        Vector3.ProjectOnPlane(transform.forward, GlobalGravityControl.GetCurrentGravityVector());
-
-    //    return Quaternion.LookRotation(forwardRelToGravity.normalized, -GlobalGravityControl.GetCurrentGravityVector());
-    //}
-
-    // used so player can warp at the right speed
+    // returns warp duration based on estimated length of bezier
     public float GetDuration()
     {
         return Mathf.Max(GetLengthEstimate() * 0.008f, 1f);
@@ -152,6 +128,7 @@ public class FibreOpticController : MonoBehaviour
         return Utilities.BezierLengthEstimate(GetBezierPoints());
     }
 
+    // returns tangent/derivative of bezier at the given point
     public Vector3 GetBezierTangent(float _t)
     {
         return Utilities.BezierDerivative(GetBezierPoints(), _t);
@@ -165,7 +142,6 @@ public class FibreOpticController : MonoBehaviour
 
     public Vector3 GetPosition()
     {
-        //return transform.position;
         return (attachedKnife) ? attachedKnife.GetPosition() : transform.position;
     }
 
@@ -175,16 +151,13 @@ public class FibreOpticController : MonoBehaviour
         otherEndFibreOpticController = _other;
     }
 
-    //public Vector3 GetEndPosition()
-    //{
-    //    return otherEndFibreOpticController.transform.position;
-    //}
-
+    // returns the 'out' direction of this bezier end
     public Vector3 GetDirection()
     {
         return (transform.rotation * -bezierTargetPosition).normalized;
     }
 
+    // returns the 'out' direction of the other bezier end
     public Vector3 GetExitDirection()
     {
         return otherEndFibreOpticController.GetDirection();
@@ -195,7 +168,7 @@ public class FibreOpticController : MonoBehaviour
     {
         return GlobalGravityControl.GetRotationToDir(-GetDirection());
     }
-    
+
     public Quaternion GetEndRotation()
     {
         //return Quaternion.AngleAxis(180, otherEndFibreOpticController.transform.up) * otherEndFibreOpticController.transform.rotation;
@@ -214,7 +187,7 @@ public class FibreOpticController : MonoBehaviour
     {
         return (otherEndFibreOpticController != null) ? new Info<Vector3, Vector3, Vector3, Vector3>(transform.position,
             GetBezierTargetPosition(),
-            otherEndFibreOpticController.GetBezierTargetPosition(), 
+            otherEndFibreOpticController.GetBezierTargetPosition(),
             otherEndFibreOpticController.GetPosition()) : null;
     }
 }
