@@ -14,7 +14,11 @@ public class RelativeMovementController : MonoBehaviour
 
     private Rigidbody rb;
 
-    private bool landing = false;
+    private bool landing;
+    private float slideThreshold;
+
+    private Vector3 currentGravVector;
+    private Quaternion currentGravRotation;
 
     [SerializeField] private LayerMask relativeMotionLayers;
 
@@ -23,18 +27,22 @@ public class RelativeMovementController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        slideThreshold = PlayerCollisionController.slideThreshold;
+        OnGravityChangeNotification(null, null);
     }
     
     void OnEnable()
     {
         this.AddObserver(OnRelativeMovementNotification, RelativeMovementNotification);
         this.AddObserver(OnRelativeRotationNotification, RelativeRotationNotification);
+        this.AddObserver(OnGravityChangeNotification, GlobalGravityControl.GravityChangeNotification);
     }
 
     void OnDisable()
     {
         this.RemoveObserver(OnRelativeMovementNotification, RelativeMovementNotification);
         this.RemoveObserver(OnRelativeRotationNotification, RelativeRotationNotification);
+        this.RemoveObserver(OnGravityChangeNotification, GlobalGravityControl.GravityChangeNotification);
     }
 
     void FixedUpdate()
@@ -81,6 +89,12 @@ public class RelativeMovementController : MonoBehaviour
         }
     }
 
+    void OnGravityChangeNotification(object sender, object args)
+    {
+        currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
+        currentGravRotation = GlobalGravityControl.GetGravityRotation();
+    }
+
     /*
      * Handles notifications of moving objects and moves the object to match.
      */
@@ -120,7 +134,6 @@ public class RelativeMovementController : MonoBehaviour
     void ApplyRelativeRotation(Transform _transform, Quaternion _rotation)
     {
         // Gravity rotation and rotation from relative motion object axis to global
-        Quaternion gravRotation = GlobalGravityControl.GetGravityRotation();
         Quaternion rotateToGlobalAxis = Quaternion.FromToRotation(_transform.up, Vector3.up);
 
         // rotate relative position vector of contact point to global axis
@@ -149,8 +162,8 @@ public class RelativeMovementController : MonoBehaviour
         if (Mathf.Abs(Vector3.Dot(rotateToGlobalAxis * rotationAxis, transform.up)) > 0.01f)
         {
             // project position vectors onto plane defined by player up direction and rotate to match gravity
-            centerToContact = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(centerToContact, transform.up);
-            newContactPoint = Quaternion.Inverse(gravRotation) * Vector3.ProjectOnPlane(newContactPoint, transform.up);
+            centerToContact = Quaternion.Inverse(currentGravRotation) * Vector3.ProjectOnPlane(centerToContact, transform.up);
+            newContactPoint = Quaternion.Inverse(currentGravRotation) * Vector3.ProjectOnPlane(newContactPoint, transform.up);
 
             // get angle of view rotation from projected vectors
             Quaternion lookRotation = Quaternion.FromToRotation(centerToContact, newContactPoint);
@@ -190,12 +203,11 @@ public class RelativeMovementController : MonoBehaviour
             if (relativeMotionTransform != null)
             {
                 bool suitablePoint = false;
-                Vector3 gravVector = GlobalGravityControl.GetCurrentGravityVector();
 
                 foreach (ContactPoint point in col.contacts)
                 {
-                    float angle = Vector3.Angle(-gravVector, point.normal);
-                    if (angle < PlayerCollisionController.slideThreshold) // TODO: work on this to solve bug when being pushed by moving object
+                    float angle = Vector3.Angle(-currentGravVector, point.normal);
+                    if (angle < slideThreshold) // TODO: work on this to solve bug when being pushed by moving object
                     {
                         contactPoint = point;
                         suitablePoint = true;
