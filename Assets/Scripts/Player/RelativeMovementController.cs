@@ -143,8 +143,9 @@ public class RelativeMovementController : MonoBehaviour
         Vector3 newContactPoint = _rotation * centerToContact;
 
         // rotate both old and new position vectors back to relative motion object axis
-        centerToContact = Quaternion.Inverse(rotateToGlobalAxis) * centerToContact;
-        newContactPoint = Quaternion.Inverse(rotateToGlobalAxis) * newContactPoint;
+        Quaternion inverseToGlobal = Quaternion.Inverse(rotateToGlobalAxis);
+        centerToContact = inverseToGlobal * centerToContact;
+        newContactPoint = inverseToGlobal * newContactPoint;
 
         // calculate movement vector due to rotation
         Vector3 rotationMovement = newContactPoint - centerToContact;
@@ -162,8 +163,10 @@ public class RelativeMovementController : MonoBehaviour
         if (Mathf.Abs(Vector3.Dot(rotateToGlobalAxis * rotationAxis, transform.up)) > 0.01f)
         {
             // project position vectors onto plane defined by player up direction and rotate to match gravity
-            centerToContact = Quaternion.Inverse(currentGravRotation) * Vector3.ProjectOnPlane(centerToContact, transform.up);
-            newContactPoint = Quaternion.Inverse(currentGravRotation) * Vector3.ProjectOnPlane(newContactPoint, transform.up);
+            Vector3 up = transform.up;
+            Quaternion inverseGrav = Quaternion.Inverse(currentGravRotation);
+            centerToContact = inverseGrav * Vector3.ProjectOnPlane(centerToContact, up);
+            newContactPoint = inverseGrav * Vector3.ProjectOnPlane(newContactPoint, up);
 
             // get angle of view rotation from projected vectors
             Quaternion lookRotation = Quaternion.FromToRotation(centerToContact, newContactPoint);
