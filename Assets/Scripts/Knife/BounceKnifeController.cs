@@ -102,7 +102,7 @@ public class BounceKnifeController : KnifeController
 
     public override Vector3 GetPosition()
     {
-        return transform.position + (transform.up * 0.5f);
+        return HasStuck() ? transform.position : transform.position + (transform.up * 0.5f);
     }
 
     /*
