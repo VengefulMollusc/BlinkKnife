@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(SoftSurface))]
 public class GravityPanel : MonoBehaviour
 {
     /*
