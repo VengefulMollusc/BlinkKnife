@@ -7,21 +7,32 @@ public class SafeWarpCollider : MonoBehaviour
 
     private KnifeController knifeController;
 
+    private Collider collider;
+
     private bool safeToWarp;
 
     private Vector3 lastKnifePosition;
 
     private bool fibreOpticWarp;
 
+    private Vector3 currentGravVector;
+    private Quaternion currentGravRotation;
+
     public const string UpdateLookAheadColliderNotification = "SafeWarpCollider.UpdateLookAheadColliderNotification";
+
+    void Start()
+    {
+        knifeController = transform.parent.GetComponent<KnifeController>();
+        collider = GetComponent<Collider>();
+        safeToWarp = true;
+        lastKnifePosition = knifeController.GetPosition();
+    }
 
     // Use this for initialization
     void OnEnable ()
 	{
-	    knifeController = transform.parent.GetComponent<KnifeController>();
-	    safeToWarp = true;
-	    lastKnifePosition = knifeController.GetPosition();
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
+        OnGravityChangeNotification(null, null);
     }
 
     void OnDisable()
@@ -45,8 +56,8 @@ public class SafeWarpCollider : MonoBehaviour
         lastKnifePosition = knifeController.GetPosition();
 
         // reset to knife position and gravity rotation
-        if (transform.position != knifeController.transform.position)
-            transform.position = knifeController.transform.position;
+        if (transform.position != lastKnifePosition)
+            transform.position = lastKnifePosition;
 
         // if knife has stuck, get position offset from wall
         if (knifeController.HasStuck())
@@ -59,9 +70,9 @@ public class SafeWarpCollider : MonoBehaviour
                     transform.rotation = Quaternion.FromToRotation(Vector3.down, knifeController.GetGravVector());
                 }
             }
-            else if (transform.up != -GlobalGravityControl.GetCurrentGravityVector())
+            else if (transform.up != -currentGravVector)
             {
-                transform.rotation = GlobalGravityControl.GetGravityRotation();
+                transform.rotation = currentGravRotation;
             }
 
             Vector3 newPosition = CollisionOffset();
@@ -70,7 +81,7 @@ public class SafeWarpCollider : MonoBehaviour
         }
         else if (!safeToWarp)
         {
-            transform.position = knifeController.transform.position + OmniRaycastOffset(knifeController.transform.position);
+            transform.position = lastKnifePosition + OmniRaycastOffset(knifeController.transform.position);
         }
 
         this.PostNotification(UpdateLookAheadColliderNotification, transform);
@@ -86,20 +97,21 @@ public class SafeWarpCollider : MonoBehaviour
         {
             return transform.position;
         }
-        
-        Vector3 closestPointBase = transform.position;
-        float dot = Vector3.Dot(transform.up, collisionNormal);
+
+        Vector3 position = transform.position;
+        Vector3 up = transform.up;
+        Vector3 closestPointBase = position;
+        float dot = Vector3.Dot(up, collisionNormal);
 
         // offset base position to use upper/lower hemispheres of collider
         if (dot >= -0.001) // was > 0.001
-            closestPointBase -= (transform.up * 0.5f);
+            closestPointBase -= (up * 0.5f);
         else if (dot < -0.001)
-            closestPointBase += (transform.up * 0.5f);
+            closestPointBase += (up * 0.5f);
 
-        Vector3 closestPointOnCollider = GetComponent<Collider>()
-            .ClosestPoint(closestPointBase - collisionNormal);
+        Vector3 closestPointOnCollider = collider.ClosestPoint(closestPointBase - collisionNormal);
 
-        Vector3 pointDiff = closestPointOnCollider - transform.position;
+        Vector3 pointDiff = closestPointOnCollider - position;
 
         return knifeController.GetPosition() - pointDiff;
     }
@@ -108,6 +120,7 @@ public class SafeWarpCollider : MonoBehaviour
     // shifts the collider along the surface according to the raycast result
     private Vector3 SurfaceRaycastOffset(Vector3 basePosition)
     {
+        Vector3 position = transform.position;
         Vector3 collisionNormal = knifeController.GetCollisionNormal();
 
         if (collisionNormal == Vector3.zero)
@@ -119,10 +132,9 @@ public class SafeWarpCollider : MonoBehaviour
         Quaternion rotateToNormal = Quaternion.FromToRotation(Vector3.up, collisionNormal);
         Vector3 forward = rotateToNormal * Vector3.forward;
         Vector3 right = rotateToNormal * Vector3.right;
-
-        Collider col = GetComponent<Collider>();
-        float forwardDist = Vector3.Distance(transform.position, col.ClosestPoint(transform.position + forward));
-        float rightDist = Vector3.Distance(transform.position, col.ClosestPoint(transform.position + right));
+        
+        float forwardDist = Vector3.Distance(position, collider.ClosestPoint(position + forward));
+        float rightDist = Vector3.Distance(position, collider.ClosestPoint(position + right));
 
         RaycastHit hitInfo;
 
@@ -137,8 +149,6 @@ public class SafeWarpCollider : MonoBehaviour
 
         if (Physics.Raycast(basePosition, -right, out hitInfo, rightDist))
             offset += right * (rightDist - hitInfo.distance);
-
-        //Debug.DrawLine(basePosition, basePosition + offset, Color.cyan, 5f);
 
         return offset;
     }
@@ -188,6 +198,12 @@ public class SafeWarpCollider : MonoBehaviour
     private void OnFibreOpticWarp(object sender, object args)
     {
         fibreOpticWarp = true;
+    }
+
+    private void OnGravityChangeNotification(object sender, object args)
+    {
+        currentGravVector = GlobalGravityControl.GetCurrentGravityVector();
+        currentGravRotation = GlobalGravityControl.GetGravityRotation();
     }
 
     public bool IsSafeToWarp()
