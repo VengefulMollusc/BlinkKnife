@@ -100,6 +100,11 @@ public class BounceKnifeController : KnifeController
         return warpVelocity;
     }
 
+    public override Vector3 GetPosition()
+    {
+        return transform.position + (transform.up * 0.5f);
+    }
+
     /*
      * Treat boosts as bounces (count as collision and reset timer)
      */
