@@ -1,6 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * An Enum that catalogues all possible abilities for use by the player
+ */
+public enum AbilityType
+{
+    DoubleJump,
+    SuperJump,
+    Hover,
+    JumpDash,
+    MissileRedirect
+};
+
 public class PlayerAbilityController : MonoBehaviour
 {
     /*
@@ -15,18 +27,6 @@ public class PlayerAbilityController : MonoBehaviour
 
     // list of available abilities
     private List<Ability> playerAbilities;
-
-    /*
-     * An Enum that catalogues all possible abilities for use by the player
-     */
-    public enum AbilityType
-    {
-        DoubleJump,
-        SuperJump,
-        Hover,
-        JumpDash,
-        MissileRedirect
-    };
 
     void Awake()
     {
