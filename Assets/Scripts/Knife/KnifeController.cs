@@ -229,15 +229,10 @@ public class KnifeController : MonoBehaviour
         float duration = dist * 0.01f;
 
         // hold knife in position for a short time
-        float t = 0f;
-        while (t < 0.2f)
-        {
-            t += Time.deltaTime;
-            yield return 0;
-        }
+        yield return new WaitForSeconds(0.2f);
 
         // animate knife returning to player
-        t = 0f;
+        float t = 0f;
         while (t <= 1f)
         {
             transform.position = Vector3.Lerp(startPos, ownerTransform.position, t);

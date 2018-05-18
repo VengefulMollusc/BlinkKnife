@@ -11,7 +11,7 @@ public class AbilityPickup : MonoBehaviour
     private const float cooldown = 2f;
 
     private Rigidbody rb;
-    private Renderer renderer;
+    private Renderer visualRenderer;
     private bool active;
 
     /*
@@ -20,7 +20,7 @@ public class AbilityPickup : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        renderer = GetComponent<Renderer>();
+        visualRenderer = GetComponent<Renderer>();
     }
 
     void OnTriggerStay(Collider col)
@@ -38,12 +38,12 @@ public class AbilityPickup : MonoBehaviour
     private IEnumerator Cooldown()
     {
         rb.detectCollisions = false;
-        renderer.enabled = false;
+        visualRenderer.enabled = false;
 
         yield return new WaitForSeconds(cooldown);
 
         rb.detectCollisions = true;
-        renderer.enabled = true;
+        visualRenderer.enabled = true;
     }
 
 }
