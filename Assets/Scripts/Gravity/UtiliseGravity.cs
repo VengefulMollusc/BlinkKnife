@@ -124,11 +124,7 @@ public class UtiliseGravity : MonoBehaviour
     private IEnumerator TempDisableGravityCoroutine(float _time, float _fadeTime)
     {
         useGravity = false;
-        while (_time > 0f)
-        {
-            _time -= Time.deltaTime;
-            yield return 0;
-        }
+        yield return new WaitForSeconds(_time);
         useGravity = true;
 
         // Fade gravity back in

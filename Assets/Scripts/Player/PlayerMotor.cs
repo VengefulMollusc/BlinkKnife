@@ -564,16 +564,19 @@ public class PlayerMotor : MonoBehaviour
      */
     IEnumerator GravShiftCountdown()
     {
+        // TODO: MAY WANT TO REMOVE THIS
         float t = 0.0f;
         while (t < 1f)
         {
             // Don't count down if frozen (stops countdown from running while warp transition is happening)
-            // TODO: MAY WANT TO REMOVE THIS CONDITION
             if (!frozen)
                 t += Time.deltaTime * (Time.timeScale / gravShiftTimeLimit);
 
             yield return 0;
         }
+
+        // TODO: uncomment this if removing above
+        //yield return new WaitForSeconds(gravShiftTimeLimit);
 
         // trigger transition back to default gravity
         GlobalGravityControl.TransitionToDefault();

@@ -48,12 +48,7 @@ public class JumpCollider : MonoBehaviour
     // Allows the player a little more safety when jumping off a ledge etc
     IEnumerator ColExitDelay()
     {
-        float t = 0;
-        while (t < colExitDelay)
-        {
-            t += Time.deltaTime;
-            yield return 0;
-        }
+        yield return new WaitForSeconds(colExitDelay);
 
         colliding = false;
     }
