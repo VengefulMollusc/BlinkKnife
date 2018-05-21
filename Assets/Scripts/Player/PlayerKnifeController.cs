@@ -61,7 +61,7 @@ public class PlayerKnifeController : MonoBehaviour
      * warp uses percentage of bar?
      */
 
-    void OnEnable()
+    void Start()
     {
         // check for missing prefabs
         if (primaryKnifePrefab == null)
@@ -84,12 +84,15 @@ public class PlayerKnifeController : MonoBehaviour
 
         currentWarps = maxWarps;
 
+        warpLookAheadCollider = GameObject.FindGameObjectWithTag("WarpLookAheadCollider").GetComponent<WarpLookAheadCollider>();
+    }
+
+    void OnEnable()
+    {
         this.AddObserver(OnReturnKnifeNotification, KnifeController.ReturnKnifeNotification);
         this.AddObserver(EndWarp, TransitionCameraController.WarpEndNotification);
         this.AddObserver(OnLightStatusNotification, LightSensor.LightStatusNotification);
         this.AddObserver(OnFibreOpticWarp, KnifeController.FibreOpticWarpNotification);
-
-        warpLookAheadCollider = GameObject.FindGameObjectWithTag("WarpLookAheadCollider").GetComponent<WarpLookAheadCollider>();
     }
 
     void OnDisable()
