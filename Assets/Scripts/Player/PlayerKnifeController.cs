@@ -109,24 +109,18 @@ public class PlayerKnifeController : MonoBehaviour
         {
             // Throw primary knife
             if (knife == null)
-            {
                 ThrowKnife(throwStrength);
-            }
         }
         else if (Input.GetButtonDown(rightMouse))
         {
             // secondary knife throw
             if (knife == null)
-            {
                 ThrowKnife(throwStrength, true);
-            }
             else
-            {
                 // return thrown knife
                 this.PostNotification(KnifeController.ReturnKnifeTransitionNotification);
-            }
         }
-        else if (Input.GetButtonDown(middleMouse))
+        if (Input.GetButtonDown(middleMouse))
         {
             // weapon button
             weapon.ClickMouse(null, transform, playerColliders);
@@ -287,6 +281,7 @@ public class PlayerKnifeController : MonoBehaviour
         else
         {
             // shouldn't trigger, should always have warps available if knife has been thrown
+            Debug.LogError("FibreOpticWarp should not happen if no warps are available");
             // return knife
             ReturnKnife();
         }
