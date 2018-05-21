@@ -11,8 +11,8 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField]
     private const float cameraRotLimit = 90f;
 
-    private static float velMod = 1.5f;
-    private static float airVelMod = 1.2f;
+    private const float velMod = 1.5f;
+    private const float airVelMod = 1.2f;
 
     // Shift gravity if the difference between current gravity and surface normal is
     // above the threshold defined by warpGravShiftAngle
@@ -55,7 +55,6 @@ public class PlayerMotor : MonoBehaviour
 
     private Vector3 currentGravVector;
     private float groundSpeedThreshold;
-    private float airSprintSpeedThreshold;
     private float airSpeedThreshold;
 
     private Vector3 slopeNormal;
@@ -100,7 +99,6 @@ public class PlayerMotor : MonoBehaviour
         // Calculate thresholds for momentum 
         groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
         airSpeedThreshold = PlayerController.Speed() * airVelMod;
-        airSprintSpeedThreshold = airSpeedThreshold * PlayerController.SprintModifier();
     }
 
     /*

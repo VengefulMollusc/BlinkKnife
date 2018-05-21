@@ -21,7 +21,7 @@ public class LightSourceInteractionTrigger : InteractionTrigger
 
     void OnEnable()
     {
-        InvokeRepeating("CheckForObject", 0f, GlobalVariableController.LightCheckUpdateFrequency);
+        InvokeRepeating("CheckForObject", 0f, LightSensor.LightCheckFrequency);
     }
 
     void OnDisable()

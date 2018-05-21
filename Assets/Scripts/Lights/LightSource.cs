@@ -22,7 +22,7 @@ public abstract class LightSource : MonoBehaviour
 
     public virtual void OnEnable()
     {
-        InvokeRepeating("LightSensorCheck", 0f, GlobalVariableController.LightCheckUpdateFrequency);
+        InvokeRepeating("LightSensorCheck", 0f, LightSensor.LightCheckFrequency);
     }
 
     public virtual void OnDisable()
