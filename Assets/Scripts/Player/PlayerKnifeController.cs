@@ -30,12 +30,6 @@ public class PlayerKnifeController : MonoBehaviour
     [SerializeField]
     private float throwStrength = 5f;
 
-    //[SerializeField]
-    //private float throwAngleModifier = 2f;
-
-    //[SerializeField]
-    //private float throwHeightModifier = -0.2f;
-
     [Header("Prefabs")]
     [SerializeField]
     private GameObject primaryKnifePrefab;
@@ -48,10 +42,6 @@ public class PlayerKnifeController : MonoBehaviour
     [SerializeField]
     private GameObject knifeInHand;
     private Renderer knifeViewModelRenderer;
-
-    // TODO: replace with notification system to handle UI variables
-    //private GameObject uiControllerObject;
-    //private UIController uiController;
 
     private GameObject player;
     private Collider[] playerColliders; // TODO: this should be removed - weapon shouldn't collide through collision matrix instead
@@ -73,7 +63,6 @@ public class PlayerKnifeController : MonoBehaviour
 
     void OnEnable()
     {
-        //uiControllerObject = GameObject.FindGameObjectWithTag("UIParent");
         // check for missing prefabs
         if (primaryKnifePrefab == null)
             throw new MissingReferenceException("No primaryKnifePrefab object given.");
@@ -81,10 +70,6 @@ public class PlayerKnifeController : MonoBehaviour
             throw new MissingReferenceException("No secondaryKnifePrefab object given.");
         if (knifeInHand == null)
             throw new MissingReferenceException("No knifeInHand object given.");
-        //if (uiControllerObject == null)
-        //{
-        //    throw new MissingReferenceException("No uiController object given.");
-        //}
 
         knifeViewModelRenderer = knifeInHand.GetComponent<Renderer>();
 
@@ -93,8 +78,6 @@ public class PlayerKnifeController : MonoBehaviour
             throw new MissingReferenceException("No player object found.");
         playerColliders = player.GetComponentsInChildren<Collider>();
         playerMotor = player.GetComponent<PlayerMotor>();
-
-        //uiController = uiControllerObject.GetComponent<UIController>();
 
         weapon = GetComponent<WeaponController>();
         weapon.Setup(this);
