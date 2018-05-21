@@ -49,8 +49,16 @@ public class LightSensor : MonoBehaviour
         // If no custom points are defined, use non-custom logic by default
         if (customLightCheckPoints.Count == 0)
             useCustomLightCheckPoints = false;
+    }
 
+    void OnEnable()
+    {
         InvokeRepeating("CheckLights", 0f, updateFrequency);
+    }
+
+    void OnDisable()
+    {
+        CancelInvoke("CheckLights");
     }
 
     /*

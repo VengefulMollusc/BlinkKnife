@@ -5,20 +5,30 @@ public abstract class LightSource : MonoBehaviour {
 
     private float updateFrequency = 0.1f;
 
-    [HideInInspector]
-    public Light light;
+    protected List<GameObject> litObjects;
+
+    protected Light light;
     
-    public LayerMask layerMask;
+    [SerializeField]
+    protected LayerMask layerMask;
 
     // TODO: remove - testing
     [HideInInspector]
     public Info<List<Vector3>, List<Vector3>, List<bool>> testRaycasts;
 
-    public virtual void OnEnable()
+    public virtual void Start()
     {
         light = GetComponent<Light>();
-
+    }
+    
+    public virtual void OnEnable()
+    {
         InvokeRepeating("LightSensorCheck", 0f, updateFrequency);
+    }
+
+    public virtual void OnDisable()
+    {
+        CancelInvoke("LightSensorCheck");
     }
 
     /*
@@ -41,6 +51,11 @@ public abstract class LightSource : MonoBehaviour {
         float attenuatedIntensity = 1f / (1f + (25f * normalised * normalised));
 
         return attenuatedIntensity * light.intensity;
+    }
+
+    public virtual List<GameObject> GetLitObjects()
+    {
+        return litObjects;
     }
 
     // TODO: remove - test method

@@ -8,6 +8,8 @@ public class PointLightSource : LightSource
      */
     public override void LightSensorCheck()
     {
+        litObjects = new List<GameObject>();
+
         if (!light.enabled)
             return;
 
@@ -30,6 +32,7 @@ public class PointLightSource : LightSource
                 // perform initial position check
                 if (hitInfo.transform == col.transform)
                 {
+                    litObjects.Add(sensor.gameObject);
                     sensor.LightObject(GetIntensity(hitInfo.point));
                     continue;
                 }
@@ -51,6 +54,7 @@ public class PointLightSource : LightSource
                     // only trigger 'lit' status if raycast hits the sensor object
                     if (hitInfo.transform == col.transform)
                     {
+                        litObjects.Add(sensor.gameObject);
                         sensor.LightObject(GetIntensity(hitInfo.point));
                         break;
                     }
