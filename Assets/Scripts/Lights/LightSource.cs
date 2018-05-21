@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class LightSource : MonoBehaviour {
-
-    private float updateFrequency = 0.1f;
+public abstract class LightSource : MonoBehaviour
+{
 
     protected List<GameObject> litObjects;
 
     protected Light light;
-    
+
     [SerializeField]
     protected LayerMask layerMask;
 
@@ -20,10 +19,10 @@ public abstract class LightSource : MonoBehaviour {
     {
         light = GetComponent<Light>();
     }
-    
+
     public virtual void OnEnable()
     {
-        InvokeRepeating("LightSensorCheck", 0f, updateFrequency);
+        InvokeRepeating("LightSensorCheck", 0f, GlobalVariableController.LightCheckUpdateFrequency);
     }
 
     public virtual void OnDisable()

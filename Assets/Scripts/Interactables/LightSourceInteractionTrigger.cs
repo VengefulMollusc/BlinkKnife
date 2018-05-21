@@ -9,8 +9,6 @@ public class LightSourceInteractionTrigger : InteractionTrigger
 
     private GameObject targetObject;
     private bool targetIsLit;
-
-    private float checkFrequency = 0.1f;
     
     void Start()
     {
@@ -23,7 +21,7 @@ public class LightSourceInteractionTrigger : InteractionTrigger
 
     void OnEnable()
     {
-        InvokeRepeating("CheckForObject", 0f, checkFrequency);
+        InvokeRepeating("CheckForObject", 0f, GlobalVariableController.LightCheckUpdateFrequency);
     }
 
     void OnDisable()

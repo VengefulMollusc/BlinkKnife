@@ -8,8 +8,6 @@ public class LightSensor : MonoBehaviour
      * 
      * Handles logic for checking sunlight, and contains a list of points to be used for checking scene lights
      */
-    [HideInInspector]
-    public static float updateFrequency = 0.1f;
     private const float sunCheckRaycastLength = 200f;
 
     [SerializeField] private bool useCustomLightCheckPoints;
@@ -53,7 +51,7 @@ public class LightSensor : MonoBehaviour
 
     void OnEnable()
     {
-        InvokeRepeating("CheckLights", 0f, updateFrequency);
+        InvokeRepeating("CheckLights", 0f, GlobalVariableController.LightCheckUpdateFrequency);
     }
 
     void OnDisable()
