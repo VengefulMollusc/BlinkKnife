@@ -10,7 +10,8 @@ public enum AbilityType
     SuperJump,
     Hover,
     JumpDash,
-    MissileRedirect
+    MissileRedirect,
+    WallRun
 };
 
 public class PlayerAbilityController : MonoBehaviour
@@ -24,6 +25,7 @@ public class PlayerAbilityController : MonoBehaviour
     private KeyCode ability3 = KeyCode.Alpha3;
     private KeyCode ability4 = KeyCode.Alpha4;
     private KeyCode ability5 = KeyCode.Alpha5;
+    private KeyCode ability6 = KeyCode.Alpha6;
 
     // list of available abilities
     private List<Ability> playerAbilities;
@@ -74,10 +76,15 @@ public class PlayerAbilityController : MonoBehaviour
         {
             ToggleAbility(AbilityType.MissileRedirect);
         }
+
+        if (Input.GetKeyDown(ability6))
+        {
+            ToggleAbility(AbilityType.WallRun);
+        }
     }
 
     /*
-     * Creates a set of ability components and attaches them to the player object
+     * Creates a set of ability components and attaches them to the player object (if they do not already exist)
      */
     private void SetupAbilities()
     {
@@ -89,27 +96,44 @@ public class PlayerAbilityController : MonoBehaviour
             switch (type)
             {
                 case AbilityType.DoubleJump:
-                    ability = gameObject.AddComponent<DoubleJumpAbility>();
+                    ability = GetComponent<DoubleJumpAbility>();
+                    if (ability == null)
+                        ability = gameObject.AddComponent<DoubleJumpAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.SuperJump:
-                    ability = gameObject.AddComponent<SuperJumpAbility>();
+                    ability = GetComponent<SuperJumpAbility>();
+                    if (ability == null)
+                        ability = gameObject.AddComponent<SuperJumpAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.Hover:
-                    ability = gameObject.AddComponent<HoverAbility>();
+                    ability = GetComponent<HoverAbility>();
+                    if (ability == null)
+                        ability = gameObject.AddComponent<HoverAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.JumpDash:
-                    ability = gameObject.AddComponent<JumpDashAbility>();
+                    ability = GetComponent<JumpDashAbility>();
+                    if (ability == null)
+                        ability = gameObject.AddComponent<JumpDashAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.MissileRedirect:
-                    ability = gameObject.AddComponent<MissileRedirectAbility>();
+                    ability = GetComponent<MissileRedirectAbility>();
+                    if (ability == null)
+                        ability = gameObject.AddComponent<MissileRedirectAbility>();
+                    ability.enabled = false;
+                    playerAbilities.Add(ability);
+                    break;
+                case AbilityType.WallRun:
+                    ability = GetComponent<WallRunAbility>();
+                    if (ability == null)
+                        ability = gameObject.AddComponent<WallRunAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
@@ -138,7 +162,7 @@ public class PlayerAbilityController : MonoBehaviour
      */
     private void ToggleAbility(AbilityType type)
     {
-        Ability ability = playerAbilities[(int) type];
+        Ability ability = playerAbilities[(int)type];
         if (ability.IsActive())
             ability.Disable();
         else
