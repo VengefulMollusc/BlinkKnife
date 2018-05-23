@@ -5,8 +5,8 @@ using UnityEngine;
 public class DebugLogger : MonoBehaviour
 {
 
-    private KeyCode playerLogCode = KeyCode.P;
-    private KeyCode continuousLogCode = KeyCode.L;
+    private KeyCode playerLogCode = KeyCode.L;
+    private KeyCode continuousLogCode = KeyCode.K;
 
     private bool loggingPlayer;
     private string lastDebugString;
@@ -25,7 +25,7 @@ public class DebugLogger : MonoBehaviour
 	    motor = player.GetComponent<PlayerMotor>();
 
 	    // print logger control instructions
-	    //Debug.Log("P : Log player stats at current frame - P+L : Turn on continuous player logging");
+	    //Debug.Log("L : Log player stats at current frame - K+L : Turn on continuous player logging");
 	} 
 	
 	// Update is called once per frame
