@@ -8,12 +8,6 @@ public class TimeController : MonoBehaviour
      * 
      * TODO: extend to allow pausing and timer functions eg: run method when time has passed
      */
-    private static float timeScale;
-
-    void Start()
-    {
-        timeScale = Time.timeScale;
-    }
 
     public static float DeltaTime()
     {
@@ -30,13 +24,13 @@ public class TimeController : MonoBehaviour
         return Time.timeSinceLevelLoad;
     }
 
-    public static void Pause()
+    public static void Pause(bool paused = true)
     {
-        Time.timeScale = 0f;
+        Time.timeScale = (paused) ? 0f : 1f;
     }
 
     public static void UnPause()
     {
-        Time.timeScale = timeScale;
+        Time.timeScale = 1f;
     }
 }
