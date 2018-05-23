@@ -44,36 +44,25 @@ public class PlayerAbilityController : MonoBehaviour
         {
             string abilityInfo = "";
             foreach (AbilityType type in System.Enum.GetValues(typeof(AbilityType)))
-            {
                 abilityInfo += ((int)type + 1) + ": " + type + "  ";
-            }
+
             Debug.Log(abilityInfo);
         }
 
         if (Input.GetKeyDown(ability1))
-        {
             ToggleAbility(AbilityType.DoubleJump);
-        }
 
         if (Input.GetKeyDown(ability2))
-        {
             ToggleAbility(AbilityType.SuperJump);
-        }
 
         if (Input.GetKeyDown(ability3))
-        {
             ToggleAbility(AbilityType.Hover);
-        }
 
         if (Input.GetKeyDown(ability4))
-        {
             ToggleAbility(AbilityType.JumpDash);
-        }
 
         if (Input.GetKeyDown(ability5))
-        {
             ToggleAbility(AbilityType.MissileRedirect);
-        }
     }
 
     /*
