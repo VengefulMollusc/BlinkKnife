@@ -18,45 +18,49 @@ public class MenuController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(pauseKey))
-        {
             Pause(!paused);
-        }
 
         if (!paused || rootMenu == null)
             return;
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
             currentMenu.Next();
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            currentMenu.Previous();
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            MenuListItem selectedItem = currentMenu.CurrentItem();
-            if (selectedItem is SubMenuListItem)
-            {
-                currentMenu.DisplayMenu(false);
-                currentMenu = (SubMenuListItem) selectedItem;
-                currentMenu.DisplayMenu(true);
-            }
-            else
-            {
-                selectedItem.Select();
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            SubMenuListItem parentMenu = currentMenu.ParentItem();
-            if (parentMenu == null)
-                Pause(false);
 
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            currentMenu.Previous();
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            Select();
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            Back();
+
+    }
+
+    private void Select()
+    {
+        MenuListItem selectedItem = currentMenu.CurrentItem();
+        if (selectedItem is SubMenuListItem)
+        {
             currentMenu.DisplayMenu(false);
-            currentMenu = parentMenu;
+            currentMenu = (SubMenuListItem)selectedItem;
             currentMenu.DisplayMenu(true);
         }
+        else
+        {
+            selectedItem.Select();
+        }
+    }
+
+    private void Back()
+    {
+        SubMenuListItem parentMenu = currentMenu.ParentItem();
+        if (parentMenu == null)
+            Pause(false);
+
+        currentMenu.DisplayMenu(false);
+        currentMenu = parentMenu;
+        currentMenu.DisplayMenu(true);
     }
 
     private void Pause(bool _paused)
