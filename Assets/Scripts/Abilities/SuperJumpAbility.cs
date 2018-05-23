@@ -15,7 +15,7 @@ public class SuperJumpAbility : Ability
 
     void Start()
     {
-        playerMotor = transform.parent.GetComponent<PlayerMotor>();
+        playerMotor = GetComponent<PlayerMotor>();
     }
 
     public override void Enable()

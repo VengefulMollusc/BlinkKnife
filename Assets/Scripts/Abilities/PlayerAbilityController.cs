@@ -89,35 +89,35 @@ public class PlayerAbilityController : MonoBehaviour
             switch (type)
             {
                 case AbilityType.DoubleJump:
-                    ability = GetComponent<DoubleJumpAbility>();
+                    ability = GetComponentInChildren<DoubleJumpAbility>();
                     if (ability == null)
                         ability = gameObject.AddComponent<DoubleJumpAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.SuperJump:
-                    ability = GetComponent<SuperJumpAbility>();
+                    ability = GetComponentInChildren<SuperJumpAbility>();
                     if (ability == null)
                         ability = gameObject.AddComponent<SuperJumpAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.Hover:
-                    ability = GetComponent<HoverAbility>();
+                    ability = GetComponentInChildren<HoverAbility>();
                     if (ability == null)
                         ability = gameObject.AddComponent<HoverAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.JumpDash:
-                    ability = GetComponent<JumpDashAbility>();
+                    ability = GetComponentInChildren<JumpDashAbility>();
                     if (ability == null)
                         ability = gameObject.AddComponent<JumpDashAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
                 case AbilityType.MissileRedirect:
-                    ability = GetComponent<MissileRedirectAbility>();
+                    ability = GetComponentInChildren<MissileRedirectAbility>();
                     if (ability == null)
                         ability = gameObject.AddComponent<MissileRedirectAbility>();
                     ability.enabled = false;

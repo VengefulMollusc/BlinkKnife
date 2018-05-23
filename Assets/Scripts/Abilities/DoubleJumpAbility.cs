@@ -14,7 +14,7 @@ public class DoubleJumpAbility : Ability
 
     void Start()
     {
-        playerMotor = transform.parent.GetComponent<PlayerMotor>();
+        playerMotor = GetComponent<PlayerMotor>();
         hasGrounded = true;
     }
 

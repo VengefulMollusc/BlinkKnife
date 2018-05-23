@@ -18,8 +18,8 @@ public class HoverAbility : Ability
 
     void Start()
     {
-        playerMotor = transform.parent.GetComponent<PlayerMotor>();
-        playerRb = playerMotor.GetComponent<Rigidbody>();
+        playerMotor = GetComponent<PlayerMotor>();
+        playerRb = GetComponent<Rigidbody>();
         hasGrounded = true;
     }
 
