@@ -85,6 +85,7 @@ public class PlayerCollisionController : MonoBehaviour
         frictionless = true;
         colliding = false;
         jumpHeightToLedge = 0f;
+        slideSurfaceNormal = Vector3.zero;
     }
 
     /*

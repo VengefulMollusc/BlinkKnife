@@ -10,8 +10,7 @@ public enum AbilityType
     SuperJump,
     Hover,
     JumpDash,
-    MissileRedirect,
-    WallRun
+    MissileRedirect
 };
 
 public class PlayerAbilityController : MonoBehaviour
@@ -25,7 +24,6 @@ public class PlayerAbilityController : MonoBehaviour
     private KeyCode ability3 = KeyCode.Alpha3;
     private KeyCode ability4 = KeyCode.Alpha4;
     private KeyCode ability5 = KeyCode.Alpha5;
-    private KeyCode ability6 = KeyCode.Alpha6;
 
     // list of available abilities
     private List<Ability> playerAbilities;
@@ -76,11 +74,6 @@ public class PlayerAbilityController : MonoBehaviour
         {
             ToggleAbility(AbilityType.MissileRedirect);
         }
-
-        if (Input.GetKeyDown(ability6))
-        {
-            ToggleAbility(AbilityType.WallRun);
-        }
     }
 
     /*
@@ -127,13 +120,6 @@ public class PlayerAbilityController : MonoBehaviour
                     ability = GetComponent<MissileRedirectAbility>();
                     if (ability == null)
                         ability = gameObject.AddComponent<MissileRedirectAbility>();
-                    ability.enabled = false;
-                    playerAbilities.Add(ability);
-                    break;
-                case AbilityType.WallRun:
-                    ability = GetComponent<WallRunAbility>();
-                    if (ability == null)
-                        ability = gameObject.AddComponent<WallRunAbility>();
                     ability.enabled = false;
                     playerAbilities.Add(ability);
                     break;
