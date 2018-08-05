@@ -40,6 +40,7 @@ public class MenuController : MonoBehaviour
     private void Select()
     {
         MenuListItem selectedItem = currentMenu.CurrentItem();
+        Debug.Log("Select " + selectedItem.ItemText());
         if (selectedItem is SubMenuListItem)
         {
             currentMenu.DisplayMenu(false);
@@ -56,14 +57,17 @@ public class MenuController : MonoBehaviour
     {
         SubMenuListItem parentMenu = currentMenu.ParentItem();
         if (parentMenu == null)
+        {
             Pause(false);
+            return;
+        }
 
         currentMenu.DisplayMenu(false);
         currentMenu = parentMenu;
         currentMenu.DisplayMenu(true);
     }
 
-    private void Pause(bool _paused)
+    public void Pause(bool _paused)
     {
         paused = _paused;
         TimeController.Pause(paused);

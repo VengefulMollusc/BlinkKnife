@@ -12,7 +12,8 @@ public abstract class MenuListItem : MonoBehaviour
 
     public virtual void Start()
     {
-        parentItem = transform.parent.GetComponent<SubMenuListItem>();
+        if (transform.parent != null)
+            parentItem = transform.parent.GetComponent<SubMenuListItem>();
     }
 
     public string ItemText()

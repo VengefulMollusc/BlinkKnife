@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using ProBuilder2.Common;
 using UnityEngine;
 
 public class SubMenuListItem : MenuListItem
@@ -11,6 +12,7 @@ public class SubMenuListItem : MenuListItem
     {
         base.Start();
         subMenuItems = GetComponentsInChildren<MenuListItem>();
+        subMenuItems = subMenuItems.RemoveAt(0);
     }
 
     public override void Select()
@@ -26,17 +28,17 @@ public class SubMenuListItem : MenuListItem
     public void Next()
     {
         currentIndex++;
-        Mathf.Clamp(currentIndex, 0, subMenuItems.Length - 1);
+        currentIndex = Mathf.Clamp(currentIndex, 0, subMenuItems.Length - 1);
 
-        Debug.Log(CurrentItem().ItemText());
+        Debug.Log("Currently Selected: " + CurrentItem().ItemText());
     }
 
     public void Previous()
     {
         currentIndex--;
-        Mathf.Clamp(currentIndex, 0, subMenuItems.Length - 1);
+        currentIndex = Mathf.Clamp(currentIndex, 0, subMenuItems.Length - 1);
 
-        Debug.Log(CurrentItem().ItemText());
+        Debug.Log("Currently Selected: " + CurrentItem().ItemText());
     }
 
     public void DisplayMenu(bool visible)
