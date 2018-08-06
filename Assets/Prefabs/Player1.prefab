@@ -399,13 +399,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f048899c88b6df4c915e0a1d4e49dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputSettings: {fileID: 11400000, guid: 2acb98a144ccf7747889d5d870f7c403, type: 2}
   alwaysGravShift: 0
   maxWarps: 3
   warpRechargeTime: 0.5
   warpWaitTime: 0.1
-  leftMouse: Fire1
-  rightMouse: Fire2
-  middleMouse: Fire3
   throwStrength: 80
   primaryKnifePrefab: {fileID: 1278214883471884, guid: aeeeac3d9b392074786d74d2bd631263,
     type: 2}
@@ -442,16 +440,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28680b0289e90c4bbe79ea3669363ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputSettings: {fileID: 11400000, guid: 2acb98a144ccf7747889d5d870f7c403, type: 2}
   backMoveMax: 0.9
   lookSensitivity: 100
   jumpStrength: 12
-  xMovAxis: Horizontal
-  zMovAxis: Vertical
-  xLookAxis: LookX
-  yLookAxis: LookY
-  jumpButton: Jump
-  sprintButton: Sprint
-  crouchButton: Crouch
 --- !u!114 &114000012139731540
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -463,9 +455,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7f0df5c49365d418bcfc20b1d0440c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backMoveMax: 0.9
-  lookSensitivity: 100
-  jumpStrength: 12
   cam: {fileID: 20000013540887572}
 --- !u!114 &114000012321050414
 MonoBehaviour:

@@ -2,6 +2,8 @@
 
 public class PlayerKnifeController : MonoBehaviour
 {
+    public InputSettings inputSettings;
+
     [Header("General Settings")]
     [SerializeField]
     private bool alwaysGravShift = false;
@@ -16,16 +18,6 @@ public class PlayerKnifeController : MonoBehaviour
     [SerializeField]
     private float warpWaitTime = 0.1f;
     private float warpCountDown;
-
-    [Header("Knife Settings")]
-    [SerializeField]
-    private string leftMouse = "Fire1";
-
-    [SerializeField]
-    private string rightMouse = "Fire2";
-
-    [SerializeField]
-    private string middleMouse = "Fire3";
 
     [SerializeField]
     private float throwStrength = 5f;
@@ -108,13 +100,13 @@ public class PlayerKnifeController : MonoBehaviour
         // Don't allow input if player is frozen
         if (playerMotor.IsFrozen()) return;
 
-        if (Input.GetButtonDown(leftMouse))
+        if (Input.GetButtonDown(inputSettings.leftMouse))
         {
             // Throw primary knife
             if (knife == null)
                 ThrowKnife(throwStrength);
         }
-        else if (Input.GetButtonDown(rightMouse))
+        else if (Input.GetButtonDown(inputSettings.rightMouse))
         {
             // secondary knife throw
             if (knife == null)
@@ -123,12 +115,12 @@ public class PlayerKnifeController : MonoBehaviour
                 // return thrown knife
                 this.PostNotification(KnifeController.ReturnKnifeTransitionNotification);
         }
-        if (Input.GetButtonDown(middleMouse))
+        if (Input.GetButtonDown(inputSettings.middleMouse))
         {
             // weapon button
             weapon.ClickMouse(null, transform, playerColliders);
         }
-        else if (Input.GetButtonUp(middleMouse))
+        else if (Input.GetButtonUp(inputSettings.middleMouse))
         {
             // release weapon button
             weapon.ReleaseMouse();
@@ -153,7 +145,7 @@ public class PlayerKnifeController : MonoBehaviour
                 Warp();
                 return;
             }
-            if (Input.GetButton(leftMouse))
+            if (Input.GetButton(inputSettings.leftMouse))
             {
                 // require manual hold click to warp
                 if (warpCountDown >= warpWaitTime)

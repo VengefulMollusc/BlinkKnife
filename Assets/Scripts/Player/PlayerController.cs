@@ -3,11 +3,11 @@
 [RequireComponent(typeof(PlayerMotor))]
 public class PlayerController : MonoBehaviour
 {
-
-
     private static float speed = 5.0f;
     private static float sprintModifier = 1.75f;
     private static float sprintThreshold = 0.45f;
+
+    public InputSettings inputSettings;
 
     [Header("General Settings")]
     [SerializeField]
@@ -17,23 +17,6 @@ public class PlayerController : MonoBehaviour
     private float lookSensitivity = 3.0f;
     [SerializeField]
     private float jumpStrength = 100f;
-
-    // controller axis settings
-    [Header("Control Settings")]
-    [SerializeField]
-    private string xMovAxis = "Horizontal";
-    [SerializeField]
-    private string zMovAxis = "Vertical";
-    [SerializeField]
-    private string xLookAxis = "LookX";
-    [SerializeField]
-    private string yLookAxis = "LookY";
-    [SerializeField]
-    private string jumpButton = "Jump";
-    [SerializeField]
-    private string sprintButton = "Sprint";
-    [SerializeField]
-    private string crouchButton = "Crouch";
 
     private PlayerMotor motor;
 
@@ -48,8 +31,8 @@ public class PlayerController : MonoBehaviour
     {
 
         // Gets vertical and horizontal input vectors
-        float xMov = Input.GetAxisRaw(xMovAxis);
-        float zMov = Input.GetAxisRaw(zMovAxis);
+        float xMov = Input.GetAxisRaw(inputSettings.xMovAxis);
+        float zMov = Input.GetAxisRaw(inputSettings.zMovAxis);
 
         // apply backwards movement limit
         zMov = Mathf.Clamp(zMov, -backMoveMax, 1.0f);
@@ -65,40 +48,40 @@ public class PlayerController : MonoBehaviour
         velocity = velocity * speed;
 
         // get sprinting boolean
-        bool sprinting = (zMov > sprintThreshold && Input.GetButton(sprintButton));
+        bool sprinting = (zMov > sprintThreshold && Input.GetButton(inputSettings.sprintButton));
 
         // Pass movement variables to PlayerMotor
         motor.Move(velocity, sprinting);
 
         // calculate rotation as 3d vector: for turning on y axis
-        float yRot = Input.GetAxisRaw(xLookAxis) * Time.deltaTime;
+        float yRot = Input.GetAxisRaw(inputSettings.xLookAxis) * Time.deltaTime;
         Vector3 rotation = new Vector3(0.0f, yRot, 0.0f) * lookSensitivity;
 
         // calculate camera rotation as angle: for turning on x axis
-        float xRot = Input.GetAxisRaw(yLookAxis) * Time.deltaTime;
+        float xRot = Input.GetAxisRaw(inputSettings.yLookAxis) * Time.deltaTime;
         float cameraRotationX = xRot * lookSensitivity;
 
         // Pass rotation variables to PlayerMotor
         motor.LookRotation(rotation, cameraRotationX);
 
         // Check for Jump
-        if (Input.GetButtonDown(jumpButton))
+        if (Input.GetButtonDown(inputSettings.jumpButton))
         {
             // jump code here, pass to motor
             motor.Jump(jumpStrength);
         }
-        else if (Input.GetButton(jumpButton))
+        else if (Input.GetButton(inputSettings.jumpButton))
         {
             // jump button being held
             motor.JumpHold();
         }
 
         // Check for Crouch
-        if (Input.GetButtonDown(crouchButton))
+        if (Input.GetButtonDown(inputSettings.crouchButton))
         {
             motor.SetCrouching(true);
         }
-        else if (Input.GetButtonUp(crouchButton))
+        else if (Input.GetButtonUp(inputSettings.crouchButton))
         {
             motor.SetCrouching(false);
         }
