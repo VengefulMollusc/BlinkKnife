@@ -47,25 +47,13 @@ public class PlayerController : MonoBehaviour
         // Gets vertical and horizontal input vectors
         float xMov = Input.GetAxisRaw(xMovAxis);
         float zMov = Input.GetAxisRaw(zMovAxis);
-
-        // apply backwards movement limit
-        zMov = Mathf.Clamp(zMov, -backMoveMax, 1.0f);
-
-        // multiply local directions by current movement values
-        Vector3 movHorizontal = transform.right * xMov;
-        Vector3 movVertical = transform.forward * zMov;
-
-        // final movement vector
-        Vector3 velocity = movHorizontal + movVertical;
-        if (velocity.magnitude > 1.0f)
-            velocity.Normalize();
-        velocity = velocity * speed;
+        Vector2 moveInput = new Vector2(xMov, zMov);
 
         // get sprinting boolean
         bool sprinting = (zMov > sprintThreshold && Input.GetButton(sprintButton));
 
         // Pass movement variables to PlayerMotor
-        motor.Move(velocity, sprinting);
+        motor.Move(moveInput, sprinting);
 
         // calculate rotation as 3d vector: for turning on y axis
         float yRot = Input.GetAxisRaw(xLookAxis) * Time.deltaTime;
