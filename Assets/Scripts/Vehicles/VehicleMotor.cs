@@ -6,10 +6,9 @@ public abstract class VehicleMotor : MonoBehaviour
 {
     public Transform cameraTransform;
 
-    public abstract void MovementInput(Vector2 input);
+    public abstract void MovementInput(Vector2 input, bool boosting);
 
     public abstract void CameraInput(Vector2 input);
 
-    // TODO: Add methods for jump/sprint/knife inputs etc.
-    // TODO: need to revamp control system first though
+    // TODO: build controller-switcher
 }
