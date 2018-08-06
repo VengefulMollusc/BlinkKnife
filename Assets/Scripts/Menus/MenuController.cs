@@ -40,7 +40,7 @@ public class MenuController : MonoBehaviour
     private void Select()
     {
         MenuListItem selectedItem = currentMenu.CurrentItem();
-        Debug.Log("Select " + selectedItem.ItemText());
+        Debug.Log("Select " + selectedItem.itemText);
         if (selectedItem is SubMenuListItem)
         {
             currentMenu.DisplayMenu(false);

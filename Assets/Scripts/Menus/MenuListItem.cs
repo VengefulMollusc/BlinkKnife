@@ -5,8 +5,7 @@ using UnityEngine;
 
 public abstract class MenuListItem : MonoBehaviour
 {
-    [SerializeField]
-    private string itemText;
+    public string itemText;
 
     private SubMenuListItem parentItem;
 
@@ -14,11 +13,6 @@ public abstract class MenuListItem : MonoBehaviour
     {
         if (transform.parent != null)
             parentItem = transform.parent.GetComponent<SubMenuListItem>();
-    }
-
-    public string ItemText()
-    {
-        return itemText;
     }
 
     public SubMenuListItem ParentItem()

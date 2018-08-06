@@ -17,7 +17,7 @@ public class SubMenuListItem : MenuListItem
 
     public override void Select()
     {
-        Debug.Log("Open Submenu: " + ItemText());
+        Debug.Log("Open Submenu: " + itemText);
     }
 
     public MenuListItem CurrentItem()
@@ -30,7 +30,7 @@ public class SubMenuListItem : MenuListItem
         currentIndex++;
         currentIndex = Mathf.Clamp(currentIndex, 0, subMenuItems.Length - 1);
 
-        Debug.Log("Currently Selected: " + CurrentItem().ItemText());
+        Debug.Log("Currently Selected: " + CurrentItem().itemText);
     }
 
     public void Previous()
@@ -38,7 +38,7 @@ public class SubMenuListItem : MenuListItem
         currentIndex--;
         currentIndex = Mathf.Clamp(currentIndex, 0, subMenuItems.Length - 1);
 
-        Debug.Log("Currently Selected: " + CurrentItem().ItemText());
+        Debug.Log("Currently Selected: " + CurrentItem().itemText);
     }
 
     public void DisplayMenu(bool visible)
