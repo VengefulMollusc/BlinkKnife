@@ -3,8 +3,6 @@
 [RequireComponent(typeof(PlayerMotor))]
 public class PlayerController : MonoBehaviour
 {
-
-
     private static float speed = 5.0f;
     private static float sprintModifier = 1.75f;
     private static float sprintThreshold = 0.45f;
@@ -46,7 +44,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
         // Gets vertical and horizontal input vectors
         float xMov = Input.GetAxisRaw(xMovAxis);
         float zMov = Input.GetAxisRaw(zMovAxis);
