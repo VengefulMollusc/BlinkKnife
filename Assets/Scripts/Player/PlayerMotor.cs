@@ -5,22 +5,6 @@ using UnityEngine;
 public class PlayerMotor : MonoBehaviour
 {
 
-    [Header("Controller Settings")]
-    private static float speed = 5.0f;
-    private static float sprintModifier = 1.75f;
-    private static float sprintThreshold = 0.45f;
-
-    [SerializeField]
-    [Range(0f, 1f)]
-    private float backMoveMax = 0.9f;
-    [SerializeField]
-    private float lookSensitivity = 3.0f;
-    [SerializeField]
-    private float jumpStrength = 100f;
-
-
-    [Header("Motor Settings")]
-
     [SerializeField]
     private Camera cam;
 
@@ -120,26 +104,13 @@ public class PlayerMotor : MonoBehaviour
     /*
      * Store movement input variables from PlayerController
      */
-    public void Move(Vector2 moveInput, bool sprinting)
+    public void Move(Vector3 _velocity, bool _sprinting)
     {
         if (frozen)
             return;
 
-        // apply backwards movement limit
-        moveInput.y = Mathf.Clamp(moveInput.y, -backMoveMax, 1.0f);
-
-        // multiply local directions by current movement values
-        Vector3 movHorizontal = transform.right * moveInput.x;
-        Vector3 movVertical = transform.forward * moveInput.y;
-
-        // final movement vector
-        Vector3 newVelocity = movHorizontal + movVertical;
-        if (newVelocity.magnitude > 1.0f)
-            newVelocity.Normalize();
-        newVelocity = newVelocity * speed;
-
-        velocity = newVelocity;
-        this.sprinting = sprinting;
+        velocity = _velocity;
+        sprinting = _sprinting;
     }
 
     /*

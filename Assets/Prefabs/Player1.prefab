@@ -463,6 +463,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7f0df5c49365d418bcfc20b1d0440c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backMoveMax: 0.9
+  lookSensitivity: 100
+  jumpStrength: 12
   cam: {fileID: 20000013540887572}
 --- !u!114 &114000012321050414
 MonoBehaviour:
