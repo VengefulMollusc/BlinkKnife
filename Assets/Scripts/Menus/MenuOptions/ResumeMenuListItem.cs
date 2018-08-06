@@ -13,6 +13,6 @@ public class ResumeMenuListItem : MenuListItem
 
     public override void Select()
     {
-        menuController.Pause(false);
+        menuController.SetPauseState(false);
     }
 }

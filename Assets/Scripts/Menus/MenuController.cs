@@ -18,7 +18,7 @@ public class MenuController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(pauseKey))
-            Pause(!paused);
+            SetPauseState(!paused);
 
         if (!paused || rootMenu == null)
             return;
@@ -58,7 +58,7 @@ public class MenuController : MonoBehaviour
         SubMenuListItem parentMenu = currentMenu.ParentItem();
         if (parentMenu == null)
         {
-            Pause(false);
+            SetPauseState(false);
             return;
         }
 
@@ -67,7 +67,7 @@ public class MenuController : MonoBehaviour
         currentMenu.DisplayMenu(true);
     }
 
-    public void Pause(bool _paused)
+    public void SetPauseState(bool _paused)
     {
         paused = _paused;
         TimeController.Pause(paused);
