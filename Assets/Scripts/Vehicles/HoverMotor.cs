@@ -176,13 +176,19 @@ public class HoverMotor : MonoBehaviour
         if (moveInputVector == Vector2.zero)
             return;
 
+        // calculate strafe velocity dampening
+        Vector3 vel = rb.velocity;
+        Vector3 forwardVel = Vector3.Project(vel, forward);
+        Vector3 rightVel = Vector3.Project(vel, right);
+        Vector3 alignmentForce = (forwardVel - rightVel) * Time.fixedDeltaTime;
+
         // Apply force to move tank
         if (boosting)
         {
             // Apply boosting movement force
             // Uses actual forward/right vectors rather than flat vectors to allow more directional control 
-            Vector3 boostForce = (forward * moveInputVector.y) + (right * moveInputVector.x);
-            rb.AddForce(boostForce.normalized * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
+            Vector3 boostForce = (forward * moveInputVector.y) + (right * moveInputVector.x) + alignmentForce;
+            rb.AddForce(boostForce * moveForce * boostForceMultiplier * Time.fixedDeltaTime, ForceMode.Impulse);
 
             // track boost state and begin recharge if limit is hit
             boostState += Time.fixedDeltaTime;
@@ -196,8 +202,7 @@ public class HoverMotor : MonoBehaviour
         {
             // Not boosting: apply default movement force
             // TODO: look at benefits for using direct vs. flattened directions
-            Vector3 movementForce = (forward * moveInputVector.y)
-                + (right * moveInputVector.x);
+            Vector3 movementForce = (forward * moveInputVector.y) + (right * moveInputVector.x) + alignmentForce;
             rb.AddForce(movementForce * moveForce * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
