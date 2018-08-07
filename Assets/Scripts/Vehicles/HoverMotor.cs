@@ -129,8 +129,8 @@ public class HoverMotor : MonoBehaviour
     public void Turn(float x, float y)
     {
         turnInputVector = new Vector2(x, y);
-        if (turnInputVector.sqrMagnitude > 1f)
-            turnInputVector.Normalize();
+        //if (turnInputVector.sqrMagnitude > 1f)
+        //    turnInputVector.Normalize();
     }
 
     /*

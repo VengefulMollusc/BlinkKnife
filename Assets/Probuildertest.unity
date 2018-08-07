@@ -27152,7 +27152,7 @@ Rigidbody:
   m_GameObject: {fileID: 1744282211}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0.25
+  m_Drag: 0.4
   m_AngularDrag: 0.1
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -27239,9 +27239,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalDrag: 0.01
   gravityForce: 20
-  moveForce: 10
+  moveForce: 20
   leanStrength: 0.5
-  turnSpeed: 1
+  turnSpeed: 0.8
   baseAngularDrag: 4
   turningAngularDrag: 2
   boostForceMultiplier: 2
