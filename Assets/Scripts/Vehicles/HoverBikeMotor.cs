@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using ProBuilder2.Common;
 using UnityEngine;
 
 public class HoverBikeMotor : VehicleMotor
@@ -7,7 +8,7 @@ public class HoverBikeMotor : VehicleMotor
     [Header("Hover")]
     public LayerMask hoverCastMask;
     public int waveShaderLayer;
-    public float hoverheight;
+    public float hoverHeight;
     public float hoverForce;
 
     [Header("Movement")]
@@ -80,12 +81,14 @@ public class HoverBikeMotor : VehicleMotor
 
     private void Hover()
     {
-        RaycastHit[] hits = Physics.RaycastAll(position, Vector3.down, hoverheight, hoverCastMask, QueryTriggerInteraction.Collide);
+        RaycastHit[] hits = Physics.RaycastAll(position, Vector3.down, hoverHeight, hoverCastMask, QueryTriggerInteraction.Collide);
+        hits.AddRange(Physics.RaycastAll(position, forward + Vector3.down, hoverHeight, hoverCastMask,
+            QueryTriggerInteraction.Collide));
 
         if (hits.Length <= 0)
             return;
 
-        float closestHoverSurface = hoverheight;
+        float closestHoverSurface = hoverHeight;
 
         foreach (RaycastHit hit in hits)
         {
@@ -106,7 +109,8 @@ public class HoverBikeMotor : VehicleMotor
             }
         }
 
-        float hoverForceFactor = 1 - closestHoverSurface / hoverheight;
+        float hoverForceFactor = closestHoverSurface / hoverHeight;
+        hoverForceFactor = 1 - hoverForceFactor * hoverForceFactor;
 
         rb.AddForce(Vector3.up * hoverForceFactor * hoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
     }
