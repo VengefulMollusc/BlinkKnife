@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 1f)]
     private float backMoveMax = 0.9f;
     [SerializeField]
-    private float lookSensitivity = 3.0f;
-    [SerializeField]
     private float jumpStrength = 100f;
 
     private PlayerMotor motor;
@@ -55,11 +53,11 @@ public class PlayerController : MonoBehaviour
 
         // calculate rotation as 3d vector: for turning on y axis
         float yRot = Input.GetAxisRaw(inputSettings.xLookAxis) * Time.deltaTime;
-        Vector3 rotation = new Vector3(0.0f, yRot, 0.0f) * lookSensitivity;
+        Vector3 rotation = new Vector3(0.0f, yRot, 0.0f) * inputSettings.lookSensitivity;
 
         // calculate camera rotation as angle: for turning on x axis
         float xRot = Input.GetAxisRaw(inputSettings.yLookAxis) * Time.deltaTime;
-        float cameraRotationX = xRot * lookSensitivity;
+        float cameraRotationX = xRot * inputSettings.lookSensitivity;
 
         // Pass rotation variables to PlayerMotor
         motor.LookRotation(rotation, cameraRotationX);

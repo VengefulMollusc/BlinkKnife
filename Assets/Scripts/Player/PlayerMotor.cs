@@ -7,8 +7,7 @@ public class PlayerMotor : MonoBehaviour
 
     [SerializeField]
     private Camera cam;
-
-    [SerializeField]
+    
     private const float cameraRotLimit = 90f;
 
     private const float velMod = 1.5f;

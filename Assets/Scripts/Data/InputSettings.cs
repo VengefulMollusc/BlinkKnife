@@ -18,4 +18,7 @@ public class InputSettings : ScriptableObject
     public string leftMouse = "Fire1";
     public string rightMouse = "Fire2";
     public string middleMouse = "Fire3";
+
+    [Header("Constants")]
+    public float lookSensitivity = 100f;
 }
