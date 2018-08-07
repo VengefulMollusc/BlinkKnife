@@ -6,6 +6,7 @@ public class VehicleController : MonoBehaviour
 {
     public InputSettings inputSettings;
     public VehicleMotor motor;
+    public Transform cameraPositionTransform;
 
     private Transform cameraTransform;
     private const float cameraRotLimit = 90f;
@@ -13,7 +14,7 @@ public class VehicleController : MonoBehaviour
 
     void Start()
     {
-        cameraTransform = motor.cameraTransform;
+        cameraTransform = transform.GetChild(0);
     }
     
     void Update()
@@ -28,6 +29,11 @@ public class VehicleController : MonoBehaviour
         float yCam = Input.GetAxisRaw(inputSettings.yLookAxis) * inputSettings.lookSensitivity;
 
         MoveCamera(new Vector2(xCam, yCam));
+    }
+
+    void LateUpdate()
+    {
+        transform.position = cameraPositionTransform.position;
     }
 
     void MoveCamera(Vector2 input)
