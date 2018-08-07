@@ -69,13 +69,13 @@ public class HoverBikeMotor : VehicleMotor
     private void Turning()
     {
         Vector3 cameraFacing = cameraTransform.forward;
-        float yRotDiff = Vector3.Magnitude(new Vector3(cameraFacing.x, 0f, cameraFacing.z) -
-                                     new Vector3(forward.x, 0f, forward.y));
-        //float xRotDiff = Vector2.Angle(new Vector2(cameraFacing.y, cameraFacing.z), new Vector2(forward.y, forward.z));
+        Vector3 flatFacing = Vector3.ProjectOnPlane(cameraFacing, Vector3.up).normalized;
 
-        Vector3 torque = new Vector3(0f, yRotDiff, 0f);
+        cameraFacing = Vector3.RotateTowards(flatFacing, cameraFacing, maxPitchAngle * Mathf.Deg2Rad, 0f);
 
-        rb.AddTorque(torque * turnSpeed * Time.fixedDeltaTime, ForceMode.Impulse);
+        float diffAngle = Vector3.Angle(cameraFacing, forward);
+        Vector3 newFacing = Vector3.RotateTowards(forward, cameraFacing, turnSpeed * diffAngle * Time.fixedDeltaTime, 0f);
+        rb.MoveRotation(Quaternion.LookRotation(newFacing));
     }
 
     private void Hover()

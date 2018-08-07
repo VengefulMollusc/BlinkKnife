@@ -15,6 +15,9 @@ public class VehicleController : MonoBehaviour
     void Start()
     {
         cameraTransform = transform.GetChild(0);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     
     void Update()
