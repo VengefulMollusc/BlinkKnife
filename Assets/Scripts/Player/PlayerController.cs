@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(PlayerMotor))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : Controller
 {
     private static float speed = 5.0f;
     private static float sprintModifier = 1.75f;
     private static float sprintThreshold = 0.45f;
-
-    public InputSettings inputSettings;
 
     [Header("General Settings")]
     [SerializeField]
@@ -17,13 +15,21 @@ public class PlayerController : MonoBehaviour
     private float jumpStrength = 100f;
 
     private PlayerMotor motor;
+    private Rigidbody rb;
 
-    void Start()
+    public override void Start()
     {
         motor = GetComponent<PlayerMotor>();
+        rb = GetComponent<Rigidbody>();
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        base.Start();
+    }
+
+    public override void SetActiveState(bool active)
+    {
+        rb.isKinematic = !active;
+
+        base.SetActiveState(active);
     }
 
     void Update()

@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HoverBikeController : MonoBehaviour
+public class HoverBikeController : Controller
 {
-    public InputSettings inputSettings;
     public HoverMotor motor;
-
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
     
     void Update()
     {

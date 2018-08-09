@@ -189,7 +189,7 @@ Camera:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013324081810}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 3
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -441,8 +441,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputSettings: {fileID: 11400000, guid: 2acb98a144ccf7747889d5d870f7c403, type: 2}
+  activeOnStart: 1
+  relatedComponents:
+  - {fileID: 20000013540887572}
+  - {fileID: 114000010097986432}
   backMoveMax: 0.9
-  lookSensitivity: 100
   jumpStrength: 12
 --- !u!114 &114000012139731540
 MonoBehaviour:
