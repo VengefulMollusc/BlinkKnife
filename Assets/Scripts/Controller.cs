@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
+    public const string ControllerChangeNotification = "Controller.ControllerChangeNotification";
+
     public InputSettings inputSettings;
     public bool activeOnStart;
 
@@ -13,9 +15,16 @@ public class Controller : MonoBehaviour
     // Use this for initialization
     public virtual void Start()
     {
+        this.AddObserver(OnControllerChangeNotification, ControllerChangeNotification);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         SetActiveState(activeOnStart);
+    }
+
+    private void OnControllerChangeNotification(object sender, object args)
+    {
+        Controller newActiveController = (Controller) args;
+        SetActiveState(newActiveController == this);
     }
 
     public virtual void SetActiveState(bool active)

@@ -464,7 +464,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followGravityDirection: 1
-  followPlayerPosition: 0
   ambientRot: 0
   ambientRotAxis: {x: 0, y: 0, z: 0}
   ambientRotSpeed: 1
@@ -13345,7 +13344,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followGravityDirection: 0
-  followPlayerPosition: 0
   ambientRot: 1
   ambientRotAxis: {x: 0, y: 1, z: 0}
   ambientRotSpeed: 10
@@ -13828,7 +13826,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followGravityDirection: 0
-  followPlayerPosition: 0
   ambientRot: 1
   ambientRotAxis: {x: 0, y: 1, z: 0}
   ambientRotSpeed: 10
@@ -14334,11 +14331,6 @@ Prefab:
     - target: {fileID: 4406039482759990, guid: 657688e851d81a34eb1363afb0595679, type: 2}
       propertyPath: m_RootOrder
       value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 23676359206154342, guid: 657688e851d81a34eb1363afb0595679,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 657688e851d81a34eb1363afb0595679, type: 2}
@@ -27100,7 +27092,7 @@ GameObject:
   - component: {fileID: 1744282218}
   - component: {fileID: 1744282212}
   - component: {fileID: 1744282219}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: HoverBike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27373,7 +27365,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followGravityDirection: 0
-  followPlayerPosition: 0
   ambientRot: 1
   ambientRotAxis: {x: 0, y: 1, z: 0}
   ambientRotSpeed: 10

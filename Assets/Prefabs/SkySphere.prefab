@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followGravityDirection: 1
-  followPlayerPosition: 1
+  followPlayerPosition: 0
   ambientRot: 0
   ambientRotAxis: {x: 0, y: 0, z: 0}
   ambientRotSpeed: 1

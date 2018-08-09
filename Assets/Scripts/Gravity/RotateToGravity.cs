@@ -9,8 +9,6 @@ public class RotateToGravity : MonoBehaviour
      */
     [SerializeField]
     private bool followGravityDirection = true;
-    [SerializeField]
-    private bool followPlayerPosition = false;
 
     [Header("Ambient Rotation")]
     [SerializeField]
@@ -98,10 +96,6 @@ public class RotateToGravity : MonoBehaviour
             Info<Transform, Quaternion> info = new Info<Transform, Quaternion>(transform, relative);
             this.PostNotification(RelativeMovementController.RelativeRotationNotification, info);
         }
-
-        // TODO: Figure out if this is necessary - for Skybox atm
-        if (followPlayerPosition)
-            transform.position = Camera.main.transform.position;
     }
 
     // Modifies rotations in each axes by multiplying by field value

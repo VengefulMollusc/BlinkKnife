@@ -533,8 +533,8 @@ MonoBehaviour:
   throwStrengthMod: 1
   rb: {fileID: 0}
   warpTimer: 0
+  autoWarp: 0
   returning: 0
-  maxDistToPlayer: 0
   timeToAutoRecall: 0.65
 --- !u!123 &123041678788244074
 LensFlare:

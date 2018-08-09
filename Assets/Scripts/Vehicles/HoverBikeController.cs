@@ -5,7 +5,13 @@ using UnityEngine;
 public class HoverBikeController : Controller
 {
     public HoverMotor motor;
-    
+
+    public override void SetActiveState(bool active)
+    {
+        // TODO: set rigidbody stuff here 
+        base.SetActiveState(active);
+    }
+
     void Update()
     {
         float xMov = Input.GetAxisRaw(inputSettings.xMovAxis);
