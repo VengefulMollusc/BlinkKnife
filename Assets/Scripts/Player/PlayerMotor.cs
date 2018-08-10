@@ -67,6 +67,7 @@ public class PlayerMotor : MonoBehaviour
     private Renderer playerRenderer;
 
     private UtiliseGravity utiliseGravity;
+    private bool playerActive;
 
     void OnEnable()
     {
@@ -105,9 +106,9 @@ public class PlayerMotor : MonoBehaviour
 
     public void ControllerActiveState(bool active)
     {
-        //rb.isKinematic = !active;
+        playerActive = active;
 
-        if (active)
+        if (playerActive)
         {
             // fade gravity back in
             utiliseGravity.TempDisableGravity(0f, 0.5f);
@@ -117,7 +118,7 @@ public class PlayerMotor : MonoBehaviour
             utiliseGravity.SetUseGravity(false);
         }
 
-        rb.drag = active ? 0f : 1f;
+        rb.drag = playerActive ? 0f : 1f;
     }
 
     /*
@@ -164,9 +165,12 @@ public class PlayerMotor : MonoBehaviour
         // Check that player orientation aligns with gravity, if not then transition player to gravity direction
         CheckPlayerGravityAlignment();
 
-        // if posessing vehicle
-        if (!utiliseGravity.UseGravity())
+        // if posessing vehicle etc.
+        if (!playerActive)
+        {
+            // TODO: any extra physics/effects for inactive player
             return;
+        }
 
         // Handle player movement
         PerformMovement();
