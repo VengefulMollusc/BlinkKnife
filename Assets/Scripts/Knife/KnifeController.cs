@@ -174,6 +174,16 @@ public class KnifeController : MonoBehaviour
                 gravShiftVector = -_normal;
         }
 
+        Controller controller = objectStuck.GetComponent<Controller>();
+        if (controller != null)
+        {
+            //autoWarp = true;
+            // TODO: store controller for switching after warp
+            ReturnKnifeTransition();
+            this.PostNotification(Controller.ControllerChangeNotification, controller);
+            return;
+        }
+
         FibreOpticController fibreController = objectStuck.GetComponent<FibreOpticController>();
         if (fibreController != null)
         {
