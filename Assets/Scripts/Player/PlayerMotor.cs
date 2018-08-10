@@ -66,6 +66,8 @@ public class PlayerMotor : MonoBehaviour
     private PlayerKnifeController playerKnifeController;
     private Renderer playerRenderer;
 
+    private UtiliseGravity utiliseGravity;
+
     void OnEnable()
     {
         // Initial check of gravity vector
@@ -88,6 +90,7 @@ public class PlayerMotor : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerRenderer = GetComponent<Renderer>();
         playerKnifeController = cam.GetComponent<PlayerKnifeController>();
+        utiliseGravity = GetComponent<UtiliseGravity>();
 
         // Find the TransitionCamera object in the scene
         transCamController = GameObject.Find("TransitionCamera").GetComponent<TransitionCameraController>();
@@ -98,6 +101,11 @@ public class PlayerMotor : MonoBehaviour
         // Calculate thresholds for momentum 
         groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
         airSpeedThreshold = PlayerController.Speed() * airVelMod;
+    }
+
+    public void ControllerActiveState(bool active)
+    {
+        rb.isKinematic = !active;
     }
 
     /*
@@ -615,7 +623,7 @@ public class PlayerMotor : MonoBehaviour
             rb.velocity = knifeVel;
 
             // extend gravity disable slightly for blinkknife - to give time to vault if needed
-            GetComponent<UtiliseGravity>().TempDisableGravity(0f, 0.5f);
+            utiliseGravity.TempDisableGravity(0f, 0.5f);
         }
     }
 

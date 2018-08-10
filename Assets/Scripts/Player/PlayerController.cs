@@ -15,12 +15,10 @@ public class PlayerController : Controller
     private float jumpStrength = 100f;
 
     private PlayerMotor motor;
-    private Rigidbody rb;
 
     protected override void Start()
     {
         motor = GetComponent<PlayerMotor>();
-        rb = GetComponent<Rigidbody>();
 
         base.Start();
     }
@@ -33,8 +31,7 @@ public class PlayerController : Controller
 
     protected override void SetActiveState(bool active)
     {
-        rb.isKinematic = !active;
-
+        motor.ControllerActiveState(active);
         base.SetActiveState(active);
     }
 
