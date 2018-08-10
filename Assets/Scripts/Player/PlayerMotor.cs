@@ -71,7 +71,6 @@ public class PlayerMotor : MonoBehaviour
 
     public LayerMask inactiveRaycastMask;
     private bool playerActive;
-    private List<Vector3> cardinalDirections;
 
     void OnEnable()
     {
@@ -106,17 +105,6 @@ public class PlayerMotor : MonoBehaviour
         // Calculate thresholds for momentum 
         groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
         airSpeedThreshold = PlayerController.Speed() * airVelMod;
-
-        // for InactivePlayerPhysics
-        cardinalDirections = new List<Vector3>()
-        {
-            Vector3.up,
-            Vector3.down,
-            Vector3.left,
-            Vector3.right,
-            Vector3.forward,
-            Vector3.back
-        };
     }
 
     public void ControllerActiveState(bool active)
@@ -146,19 +134,16 @@ public class PlayerMotor : MonoBehaviour
     {
         Vector3 position = transform.position;
         float range = 5f;
-        Vector3 bumperForce = Vector3.down;
-        foreach (Vector3 direction in cardinalDirections)
+
+        Vector3 bumperForce = currentGravVector;
+        RaycastHit hitInfo;
+        if (Physics.Raycast(position, currentGravVector, out hitInfo, range, inactiveRaycastMask,
+            QueryTriggerInteraction.Ignore))
         {
-            RaycastHit hitInfo;
-            if (Physics.Raycast(position, direction, out hitInfo, range, inactiveRaycastMask,
-                QueryTriggerInteraction.Ignore))
-            {
-                bumperForce -= direction * (1 - hitInfo.distance / range) * 5f;
-            }
+            bumperForce -= currentGravVector * (1 - hitInfo.distance / range) * 5f;
         }
 
-        if (bumperForce != Vector3.zero)
-            rb.AddForce(bumperForce, ForceMode.Impulse);
+        rb.AddForce(bumperForce, ForceMode.Impulse);
 
         // TODO: any extra physics/effects for inactive player
     }
