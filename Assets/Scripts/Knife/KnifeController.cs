@@ -179,7 +179,7 @@ public class KnifeController : MonoBehaviour
         {
             //autoWarp = true;
             // TODO: store controller for switching after warp
-            ReturnKnifeTransition();
+            this.PostNotification(ReturnKnifeNotification);
             this.PostNotification(Controller.ControllerChangeNotification, controller);
             return;
         }

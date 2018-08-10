@@ -17,7 +17,7 @@ public class PlayerController : Controller
     private PlayerMotor motor;
     private Rigidbody rb;
 
-    public override void Start()
+    protected override void Start()
     {
         motor = GetComponent<PlayerMotor>();
         rb = GetComponent<Rigidbody>();
@@ -25,7 +25,13 @@ public class PlayerController : Controller
         base.Start();
     }
 
-    public override void SetActiveState(bool active)
+    protected override void OnControllerChangeNotification(object sender, object args)
+    {
+        Controller newActiveController = (Controller)args;
+        SetActiveState(newActiveController == this || newActiveController == null);
+    }
+
+    protected override void SetActiveState(bool active)
     {
         rb.isKinematic = !active;
 

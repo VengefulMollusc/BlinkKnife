@@ -13,7 +13,7 @@ public class Controller : MonoBehaviour
     public List<Behaviour> relatedComponents;
 
     // Use this for initialization
-    public virtual void Start()
+    protected virtual void Start()
     {
         this.AddObserver(OnControllerChangeNotification, ControllerChangeNotification);
         Cursor.lockState = CursorLockMode.Locked;
@@ -21,13 +21,13 @@ public class Controller : MonoBehaviour
         SetActiveState(activeOnStart);
     }
 
-    private void OnControllerChangeNotification(object sender, object args)
+    protected virtual void OnControllerChangeNotification(object sender, object args)
     {
         Controller newActiveController = (Controller) args;
         SetActiveState(newActiveController == this);
     }
 
-    public virtual void SetActiveState(bool active)
+    protected virtual void SetActiveState(bool active)
     {
         this.enabled = active;
 

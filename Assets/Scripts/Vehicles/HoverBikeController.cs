@@ -6,7 +6,7 @@ public class HoverBikeController : Controller
 {
     public HoverMotor motor;
 
-    public override void SetActiveState(bool active)
+    protected override void SetActiveState(bool active)
     {
         // TODO: set rigidbody stuff here 
         base.SetActiveState(active);
@@ -28,5 +28,8 @@ public class HoverBikeController : Controller
         float yCam = Input.GetAxisRaw(inputSettings.yLookAxis);
 
         motor.Turn(xCam, yCam);
+
+        if (Input.GetButtonDown(inputSettings.rightMouse))
+            this.PostNotification(ControllerChangeNotification, null);
     }
 }
