@@ -96,6 +96,11 @@ public class UtiliseGravity : MonoBehaviour
         return useGravity;
     }
 
+    public void SetUseGravity(bool useGrav)
+    {
+        useGravity = useGrav;
+    }
+
     // Handles BoostNotifications from BoostRing
     void OnBoostNotification(object sender, object args)
     {

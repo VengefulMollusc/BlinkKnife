@@ -15,7 +15,7 @@ public class HoverBikeController : Controller
 
     protected override void SetActiveState(bool active)
     {
-        rb.mass = active ? 1f : 10f;
+        rb.mass = active ? 1f : 5f;
         rb.drag = active ? 0.4f : 2f;
         rb.angularDrag = active ? 0.1f : 1f;
         base.SetActiveState(active);
