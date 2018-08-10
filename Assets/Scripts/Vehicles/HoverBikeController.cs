@@ -5,10 +5,19 @@ using UnityEngine;
 public class HoverBikeController : Controller
 {
     public HoverMotor motor;
+    private Rigidbody rb;
+
+    protected override void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        base.Start();
+    }
 
     protected override void SetActiveState(bool active)
     {
-        // TODO: set rigidbody stuff here 
+        rb.mass = active ? 1f : 10f;
+        rb.drag = active ? 0.4f : 2f;
+        rb.angularDrag = active ? 0.1f : 1f;
         base.SetActiveState(active);
     }
 
