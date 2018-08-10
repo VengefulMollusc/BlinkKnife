@@ -459,6 +459,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 20000013540887572}
+  inactiveRaycastMask:
+    serializedVersion: 2
+    m_Bits: 81921
 --- !u!114 &114000012321050414
 MonoBehaviour:
   m_ObjectHideFlags: 1

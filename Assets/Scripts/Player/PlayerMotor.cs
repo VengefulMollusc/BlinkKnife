@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -7,7 +8,7 @@ public class PlayerMotor : MonoBehaviour
 
     [SerializeField]
     private Camera cam;
-    
+
     private const float cameraRotLimit = 90f;
 
     private const float velMod = 1.5f;
@@ -67,7 +68,10 @@ public class PlayerMotor : MonoBehaviour
     private Renderer playerRenderer;
 
     private UtiliseGravity utiliseGravity;
+
+    public LayerMask inactiveRaycastMask;
     private bool playerActive;
+    private List<Vector3> cardinalDirections;
 
     void OnEnable()
     {
@@ -102,6 +106,17 @@ public class PlayerMotor : MonoBehaviour
         // Calculate thresholds for momentum 
         groundSpeedThreshold = PlayerController.Speed() * velMod * PlayerController.SprintModifier();
         airSpeedThreshold = PlayerController.Speed() * airVelMod;
+
+        // for InactivePlayerPhysics
+        cardinalDirections = new List<Vector3>()
+        {
+            Vector3.up,
+            Vector3.down,
+            Vector3.left,
+            Vector3.right,
+            Vector3.forward,
+            Vector3.back
+        };
     }
 
     public void ControllerActiveState(bool active)
@@ -111,14 +126,41 @@ public class PlayerMotor : MonoBehaviour
         if (playerActive)
         {
             // fade gravity back in
-            utiliseGravity.TempDisableGravity(0f, 0.5f);
+            if (utiliseGravity != null)
+                utiliseGravity.TempDisableGravity(0f, 0.5f);
+            CancelInvoke("InactivePlayerPhysics");
         }
         else
         {
-            utiliseGravity.SetUseGravity(false);
+
+            if (utiliseGravity != null)
+                utiliseGravity.SetUseGravity(false);
+            InvokeRepeating("InactivePlayerPhysics", 0f, 0.1f);
         }
 
-        rb.drag = playerActive ? 0f : 1f;
+        if (rb != null)
+            rb.drag = playerActive ? 0f : 1f;
+    }
+
+    private void InactivePlayerPhysics()
+    {
+        Vector3 position = transform.position;
+        float range = 5f;
+        Vector3 bumperForce = Vector3.down;
+        foreach (Vector3 direction in cardinalDirections)
+        {
+            RaycastHit hitInfo;
+            if (Physics.Raycast(position, direction, out hitInfo, range, inactiveRaycastMask,
+                QueryTriggerInteraction.Ignore))
+            {
+                bumperForce -= direction * (1 - hitInfo.distance / range) * 5f;
+            }
+        }
+
+        if (bumperForce != Vector3.zero)
+            rb.AddForce(bumperForce, ForceMode.Impulse);
+
+        // TODO: any extra physics/effects for inactive player
     }
 
     /*
@@ -167,10 +209,7 @@ public class PlayerMotor : MonoBehaviour
 
         // if posessing vehicle etc.
         if (!playerActive)
-        {
-            // TODO: any extra physics/effects for inactive player
             return;
-        }
 
         // Handle player movement
         PerformMovement();
