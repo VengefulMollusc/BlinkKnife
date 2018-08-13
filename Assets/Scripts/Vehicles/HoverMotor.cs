@@ -54,7 +54,7 @@ public class HoverMotor : MonoBehaviour
 
     private float[] raycastBaseLengths;
 
-    private bool controllerActiveState;
+    private bool controllerActive;
 
     // Cached variables
     private Vector3 position;
@@ -77,16 +77,16 @@ public class HoverMotor : MonoBehaviour
 
     public void ControllerActiveState(bool active)
     {
-        controllerActiveState = active;
+        controllerActive = active;
 
         if (rb == null)
             rb = GetComponent<Rigidbody>();
 
-        rb.mass = controllerActiveState ? 1f : 5f;
-        rb.drag = controllerActiveState ? 0.4f : 2f;
-        rb.angularDrag = controllerActiveState ? 0.1f : 1f;
+        rb.mass = controllerActive ? 1f : 5f;
+        rb.drag = controllerActive ? 0.4f : 2f;
+        rb.angularDrag = controllerActive ? 0.1f : 1f;
 
-        if (!controllerActiveState)
+        if (!controllerActive)
         {
             moveInputVector = Vector2.zero;
             turnInputVector = Vector2.zero;
@@ -293,7 +293,7 @@ public class HoverMotor : MonoBehaviour
         // raycast and apply hover force
         float maxHoverForce = 0f;
         Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
-        int raysToCheck = controllerActiveState ? raycastDirections.Count : 1;
+        int raysToCheck = controllerActive ? raycastDirections.Count : 1;
         for (int i = 0; i < raysToCheck; i++)
         {
             RaycastHit hitInfo;
@@ -311,6 +311,8 @@ public class HoverMotor : MonoBehaviour
 
         if (maxHoverForce > 0f)
         {
+            if (!controllerActive)
+                maxHoverForce *= 4f;
             rb.AddForce(Vector3.up * maxHoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
@@ -351,7 +353,7 @@ public class HoverMotor : MonoBehaviour
      */
     void ApplyBumperForce()
     {
-        if (!useBumperForce)
+        if (!useBumperForce || !controllerActive)
             return;
 
         // if trigger collider is colliding
@@ -366,6 +368,7 @@ public class HoverMotor : MonoBehaviour
             Vector3.down,
             rb.velocity.normalized + Vector3.down
         };
+
         Vector3 bumperForce = Vector3.zero;
         // raycast in relative cardinal directions and average force
         foreach (Vector3 ray in rays)
