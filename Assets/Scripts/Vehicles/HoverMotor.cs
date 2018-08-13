@@ -293,7 +293,8 @@ public class HoverMotor : MonoBehaviour
         // raycast and apply hover force
         float maxHoverForce = 0f;
         Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
-        for (int i = 0; i < raycastDirections.Count; i++)
+        int raysToCheck = controllerActiveState ? raycastDirections.Count : 1;
+        for (int i = 0; i < raysToCheck; i++)
         {
             RaycastHit hitInfo;
             float rayLength = CalculateHoverRayLengthFromIndex(i);
@@ -307,6 +308,7 @@ public class HoverMotor : MonoBehaviour
                 }
             }
         }
+
         if (maxHoverForce > 0f)
         {
             rb.AddForce(Vector3.up * maxHoverForce * Time.fixedDeltaTime, ForceMode.Impulse);
