@@ -54,6 +54,8 @@ public class HoverMotor : MonoBehaviour
 
     private float[] raycastBaseLengths;
 
+    private bool controllerActiveState;
+
     // Cached variables
     private Vector3 position;
     private Vector3 up;
@@ -71,6 +73,25 @@ public class HoverMotor : MonoBehaviour
 
         UpdateVariables();
         ProcessHoverRays();
+    }
+
+    public void ControllerActiveState(bool active)
+    {
+        controllerActiveState = active;
+
+        if (rb == null)
+            rb = GetComponent<Rigidbody>();
+
+        rb.mass = controllerActiveState ? 1f : 5f;
+        rb.drag = controllerActiveState ? 0.4f : 2f;
+        rb.angularDrag = controllerActiveState ? 0.1f : 1f;
+
+        if (!controllerActiveState)
+        {
+            moveInputVector = Vector2.zero;
+            turnInputVector = Vector2.zero;
+            boosting = false;
+        }
     }
 
     /*
@@ -264,6 +285,8 @@ public class HoverMotor : MonoBehaviour
 
     /*
      * Perform raycasts underneath and apply hover force based on the closest hit
+     *
+     * TODO: Simpify calculations when controller not active
      */
     void ApplyHoverForce()
     {
@@ -337,7 +360,7 @@ public class HoverMotor : MonoBehaviour
             right,
             -right,
             up,
-            -up, 
+            -up,
             Vector3.down,
             rb.velocity.normalized + Vector3.down
         };
