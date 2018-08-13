@@ -297,15 +297,13 @@ public class HoverMotor : MonoBehaviour
 
     /*
      * Perform raycasts underneath and apply hover force based on the closest hit
-     *
-     * TODO: Simpify calculations when controller not active
      */
     void ApplyHoverForce()
     {
         // raycast and apply hover force
         float maxHoverForce = 0f;
         Vector3 origin = position + (Vector3.up * rayCastHeightModifier);
-        int raysToCheck = controllerActive ? raycastDirections.Count : 1;
+        int raysToCheck = controllerActive ? raycastDirections.Count : 1; // only checks down ray when controller not active
         for (int i = 0; i < raysToCheck; i++)
         {
             RaycastHit hitInfo;
