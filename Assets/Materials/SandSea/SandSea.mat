@@ -66,12 +66,12 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DispMaxDepth: 0.3
-    - _DispRange: 8
+    - _DispMaxDepth: 0
+    - _DispRange: 20
     - _DispStrength: 0.25
     - _DstBlend: 0
     - _FlatRange: 8
-    - _FlatRangeExt: 5
+    - _FlatRangeExt: 10
     - _GlossMapScale: 1
     - _Glossiness: 0.7
     - _GlossyReflections: 1
@@ -79,7 +79,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _SeaDepth: 20
+    - _SeaDepth: 25
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpeedGravity: 9.8
@@ -89,7 +89,7 @@ Material:
     m_Colors:
     - _Color: {r: 0.77205884, g: 0.72507757, b: 0.60175174, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PlayerPosition: {r: -3.4060817, g: 63.134163, b: 58.313564, a: 0}
+    - _PlayerPosition: {r: 87.7, g: -74.19999, b: -100.5, a: 0}
     - _WaveA: {r: 1, g: 0, b: 0.5, a: 50}
     - _WaveB: {r: 0, g: 1, b: 0.25, a: 40}
     - _WaveC: {r: 1, g: 1, b: 0.15, a: 10}
