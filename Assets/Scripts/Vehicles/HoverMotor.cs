@@ -89,7 +89,6 @@ public class HoverMotor : MonoBehaviour
         if (!controllerActive)
         {
             moveInputVector = Vector2.zero;
-            turnInputVector = Vector2.zero;
             boosting = false;
         }
     }
@@ -177,6 +176,19 @@ public class HoverMotor : MonoBehaviour
         ApplyMovementForce();
 
         // Turning
+        if (!controllerActive)
+        {
+            float angle = Vector3.Angle(forward, forwardFlat);
+            if (angle > 2f)
+            {
+                float dot = Vector3.Dot(forward, Vector3.down);
+                turnInputVector = new Vector2(0f, dot * angle * 0.2f);
+            }
+            else
+            {
+                turnInputVector = Vector2.zero;
+            }
+        }
         ApplyTurningForce();
         DampenTurning();
 
