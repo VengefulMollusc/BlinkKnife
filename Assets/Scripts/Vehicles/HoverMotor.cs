@@ -207,7 +207,7 @@ public class HoverMotor : MonoBehaviour
 
         // lean slightly to match left/right movement
         // TODO: detach visuals slightly from camera, allow leaning forward/back as well
-        Vector3 leanTorque = forwardFlat * -moveInputVector.x * leanStrength;
+        Vector3 leanTorque = forward * -moveInputVector.x * leanStrength;
         rb.AddTorque(leanTorque * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 
