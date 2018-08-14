@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CollideWithWaveShader : MonoBehaviour
 {
+    public WaveShaderPositionTracker wavePositionTracker;
     public LayerMask rayLayerMask;
     public float skinThickness;
 
@@ -15,11 +16,11 @@ public class CollideWithWaveShader : MonoBehaviour
 	}
 	
 	void FixedUpdate () {
-		
+		// raycast in direction of velocity and apply force away from sand if within skin range
 	}
 
     void OnTriggerStay()
     {
-
+        // if below sand level at position, apply upward force to bring to surface
     }
 }
