@@ -8,6 +8,8 @@ public class WaveShaderRider : MonoBehaviour
     [Range(0, 1)] public float waveMovementStrength = 1f;
     [Range(0, 1)] public float tiltStrength = 1f;
 
+    public float waveOffsetHeight;
+
     private Transform childTransform;
 
     void Start()
@@ -25,7 +27,7 @@ public class WaveShaderRider : MonoBehaviour
         WavePositionInfo info = wave.CalculateDepthAndNormalAtPoint(transform.position);
 
         // match child to wave position, taking into account movementStrength for horizontal axes
-        childTransform.position = new Vector3(info.position.x * waveMovementStrength, info.position.y, info.position.z * waveMovementStrength);
+        childTransform.position = new Vector3(info.position.x * waveMovementStrength, info.position.y + waveOffsetHeight, info.position.z * waveMovementStrength);
         
         // apply wave normal tilt to child transform
         if (tiltStrength > 0f)
