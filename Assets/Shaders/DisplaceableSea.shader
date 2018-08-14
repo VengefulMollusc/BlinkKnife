@@ -113,15 +113,17 @@
 
 					// THIS #if SECTION: apply noise-texture based displacement to inside of displacement area
 					#if !defined(SHADER_API_OPENGL)
-					float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
-					float noiseStrength = 1 - abs(relativeHeight * 2 - 1);
+					if (_DispStrength > 0){
+						float relativeHeight = (pointDepth - (1 - depthFactor)) / depthFactor;
+						float noiseStrength = 1 - abs(relativeHeight * 2 - 1);
 
-					float2 coord = float2(texCoord.x + timeFactor * 0.1, texCoord.y);
-					fixed4 dispTexSample = tex2Dlod (_DispTex, float4(coord * _DispTex_ST, 0, 0));
+						float2 coord = float2(texCoord.x + timeFactor * 0.1, texCoord.y);
+						fixed4 dispTexSample = tex2Dlod (_DispTex, float4(coord * _DispTex_ST, 0, 0));
 
-					// remove noiseStrength here for linear increase to bottom
-					pointDepth += (dispTexSample.r - 0.5) * _DispStrength * noiseStrength * depthFactor;
-					pointDepth = saturate(pointDepth);
+						// remove noiseStrength here for linear increase to bottom
+						pointDepth += (dispTexSample.r - 0.5) * _DispStrength * noiseStrength * depthFactor;
+						pointDepth = saturate(pointDepth);
+					}
 					#endif
 
 					// Adjust normals etc to account for displacement slope

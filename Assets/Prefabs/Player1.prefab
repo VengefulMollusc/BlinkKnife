@@ -189,7 +189,7 @@ Camera:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013324081810}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 3
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -445,6 +445,7 @@ MonoBehaviour:
   relatedComponents:
   - {fileID: 20000013540887572}
   - {fileID: 114000010097986432}
+  - {fileID: 20000012371496722}
   backMoveMax: 0.9
   jumpStrength: 12
 --- !u!114 &114000012139731540
