@@ -35,7 +35,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
         flatRangeExt = waveMaterial.GetFloat("_FlatRangeExt");
         dispMaxDepth = waveMaterial.GetFloat("_DispMaxDepth");
 
-        trackedPosition = targetObjectTransform.position;
+        trackedPosition = GetRelativePosition(targetObjectTransform.position);
 
         // Set bounds to avoid early frustum culling
         float halfDepth = seaDepth * 0.5f;
@@ -56,7 +56,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
     void Update()
     {
-        Vector3 newPosition = targetObjectTransform.position;
+        Vector3 newPosition = GetRelativePosition(targetObjectTransform.position);
 
         timeFactor = Time.timeSinceLevelLoad;
         waveMaterial.SetFloat("unityTime", timeFactor);
@@ -70,6 +70,11 @@ public class WaveShaderPositionTracker : MonoBehaviour
         trackedPosition = Vector3.MoveTowards(trackedPosition, newPosition, distanceMoved * Time.deltaTime);
 
         waveMaterial.SetVector("_PlayerPosition", new Vector4(trackedPosition.x, trackedPosition.y + heightOffset, trackedPosition.z, 0));
+    }
+
+    private Vector3 GetRelativePosition(Vector3 targetPos)
+    {
+        return new Vector3(targetPos.x, targetPos.y + transform.position.y, targetPos.z);
     }
     
     /*
