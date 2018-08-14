@@ -308,11 +308,28 @@ public class HoverMotor : MonoBehaviour
         {
             RaycastHit hitInfo;
             float rayLength = CalculateHoverRayLengthFromIndex(i);
-            if (Physics.Raycast(origin, raycastDirections[i], out hitInfo, rayLength, raycastMask))
+            if (Physics.Raycast(origin, raycastDirections[i], out hitInfo, rayLength, raycastMask, QueryTriggerInteraction.Collide))
             {
-                if (hitInfo.distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
+                float distance = hitInfo.distance;
+                if (hitInfo.collider.isTrigger)
                 {
-                    float force = (1 - (hitInfo.distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) * hoverForce;
+                    WaveShaderPositionTracker waveShaderPositionTracker =
+                        hitInfo.collider.GetComponent<WaveShaderPositionTracker>();
+
+                    if (waveShaderPositionTracker != null)
+                    {
+                        WavePositionInfo waveInfo = waveShaderPositionTracker.CalculateDepthAndNormalAtPoint(hitInfo.point);
+                        distance = (waveInfo.position - origin).magnitude;
+                    }
+                    else if (Physics.Raycast(origin, raycastDirections[i], out hitInfo, rayLength, raycastMask, QueryTriggerInteraction.Ignore))
+                        distance = hitInfo.distance;
+                    else
+                        continue;
+                }
+
+                if (distance > rayCastHeightModifier) // this check to make sure raycasts ending above player collider dont trigger hover
+                {
+                    float force = (1 - (distance - rayCastHeightModifier) / (rayLength - rayCastHeightModifier)) * hoverForce;
                     if (force > maxHoverForce)
                         maxHoverForce = force;
                 }
