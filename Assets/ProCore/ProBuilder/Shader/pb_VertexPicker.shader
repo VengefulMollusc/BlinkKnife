@@ -19,7 +19,7 @@
 		Blend Off
 		Offset -1, -1
 
-		Pass 
+		Pass
 		{
 			Name "Vertices"
 			AlphaTest Greater .25
@@ -49,7 +49,7 @@
 			{
 				v2f o;
 
-				o.pos = mul(UNITY_MATRIX_MV, v.vertex);
+				o.pos = float4(UnityObjectToViewPos(v.vertex.xyz), 1);
 				o.pos.xyz *= .95;
 				o.pos = mul(UNITY_MATRIX_P, o.pos);
 
@@ -74,7 +74,7 @@
 				return o;
 			}
 
-			half4 frag (v2f i) : COLOR
+			float4 frag (v2f i) : COLOR
 			{
 				return i.color;
 			}

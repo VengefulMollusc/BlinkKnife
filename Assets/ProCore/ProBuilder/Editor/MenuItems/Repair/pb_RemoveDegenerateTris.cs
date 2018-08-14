@@ -1,4 +1,3 @@
-#define PROTOTYPE
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
@@ -25,6 +24,7 @@ namespace ProBuilder2.Actions
 				pb.RemoveDegenerateTriangles(out rm);
 				count += rm.Length;
 
+				pb.ToMesh();
 				pb.Refresh();
 				pb.Optimize();
 			}
