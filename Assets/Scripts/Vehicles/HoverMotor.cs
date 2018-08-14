@@ -210,9 +210,13 @@ public class HoverMotor : MonoBehaviour
             return;
 
         // calculate strafe velocity dampening
-        Vector3 vel = rb.velocity;
-        Vector3 rightVel = Vector3.Project(vel, right);
-        Vector3 alignmentForce = (forward * rightVel.magnitude * 2f - rightVel * 5f) * Time.fixedDeltaTime;
+        Vector3 alignmentForce = Vector3.zero;
+        if (moveInputVector.y > 0)
+        {
+            Vector3 vel = rb.velocity;
+            Vector3 rightVel = Vector3.Project(vel, right);
+            alignmentForce = (forward * rightVel.magnitude * 2f - rightVel * 5f) * Time.fixedDeltaTime;
+        }
 
         // Apply force to move tank
         if (boosting)
@@ -313,13 +317,13 @@ public class HoverMotor : MonoBehaviour
                 float distance = hitInfo.distance;
                 if (hitInfo.collider.isTrigger)
                 {
-                    WaveShaderPositionTracker waveShaderPositionTracker =
-                        hitInfo.collider.GetComponent<WaveShaderPositionTracker>();
+                    WaveShaderPositionTracker waveShaderPositionTracker = hitInfo.collider.GetComponent<WaveShaderPositionTracker>();
 
                     if (waveShaderPositionTracker != null)
                     {
                         WavePositionInfo waveInfo = waveShaderPositionTracker.CalculateDepthAndNormalAtPoint(hitInfo.point);
-                        distance = (waveInfo.position - origin).magnitude;
+                        //distance = (waveInfo.position - origin).magnitude;
+                        distance = Mathf.Abs(waveInfo.position.y - origin.y);
                     }
                     else if (Physics.Raycast(origin, raycastDirections[i], out hitInfo, rayLength, raycastMask, QueryTriggerInteraction.Ignore))
                         distance = hitInfo.distance;
