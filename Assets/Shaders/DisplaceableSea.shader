@@ -73,8 +73,8 @@
 			float f = k * (dot(d, p.xz) - c * timeFactor);
 			float a = steepness / k;
 
-			float sinF = sin(f);
-			float cosF = cos(f);
+			float sinF = sin(f) - 1;
+			float cosF = cos(f) - 1;
 			float steepSinF = steepness * sinF;
 			float steepCosF = steepness * cosF;
 

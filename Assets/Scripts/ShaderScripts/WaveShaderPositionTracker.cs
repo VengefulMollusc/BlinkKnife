@@ -110,8 +110,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
         float f = k * (Vector2.Dot(d, new Vector2(p.x, p.z)) - c * timeFactor);
         float a = steepness / k;
 
-        float sinF = Mathf.Sin(f);
-        float cosF = Mathf.Cos(f);
+        float sinF = Mathf.Sin(f) - 1f;
+        float cosF = Mathf.Cos(f) - 1f;
         float steepSinF = steepness * sinF;
         float steepCosF = steepness * cosF;
 
@@ -171,6 +171,38 @@ public class WaveShaderPositionTracker : MonoBehaviour
         }
 
         return seaDepth * (1 - pointDepth);
+    }
+
+    /*
+     * Code for colliding objects
+     */
+    void OnTriggerEnter(Collider col)
+    {
+        HandleWaveCollisions(col);
+    }
+
+    void OnTriggerStay(Collider col)
+    {
+        HandleWaveCollisions(col);
+    }
+
+    void HandleWaveCollisions(Collider col)
+    {
+        Rigidbody colRigidbody = col.GetComponent<Rigidbody>();
+
+        if (colRigidbody == null)
+            return;
+
+        Vector3 colFootPosition = colRigidbody.position + Vector3.down * col.bounds.size.y;
+        WavePositionInfo waveInfo = CalculateDepthAndNormalAtPoint(colFootPosition);
+
+        float waveOverlap = waveInfo.position.y - colFootPosition.y;
+        if (waveOverlap < 0f)
+            return;
+
+        // inside wave volume
+        colRigidbody.position += Vector3.up * waveOverlap;
+        colRigidbody.velocity *= 0.1f;
     }
 }
 

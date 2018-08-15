@@ -45,7 +45,7 @@ public class DontGoThroughThings : MonoBehaviour
                 if (!hitInfo.collider)
                     return;
 
-                if (hitInfo.collider.isTrigger)
+                if (sendTriggerMessage && hitInfo.collider.isTrigger)
                     hitInfo.collider.SendMessage("OnTriggerEnter", myCollider);
 
                 if (!hitInfo.collider.isTrigger)
