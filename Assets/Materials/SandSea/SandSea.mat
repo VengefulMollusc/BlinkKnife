@@ -62,6 +62,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SpecularTex:
+        m_Texture: {fileID: 2800000, guid: e80c3c84ea861404d8a427db8b7abf04, type: 3}
+        m_Scale: {x: 0.1, y: 0.1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -73,15 +77,17 @@ Material:
     - _FlatRange: 8
     - _FlatRangeExt: 20
     - _GlossMapScale: 1
-    - _Glossiness: 0.2
+    - _Glossiness: 0
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SeaDepth: 12.5
+    - _SmoothnessStr: 0.81
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpecularStr: 0
     - _SpeedGravity: 9.8
     - _SrcBlend: 1
     - _UVSec: 0
@@ -90,6 +96,7 @@ Material:
     - _Color: {r: 0.77205884, g: 0.72507757, b: 0.60175174, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlayerPosition: {r: 87.7, g: -100.2, b: -100.5, a: 0}
+    - _SpecularColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _WaveA: {r: 1, g: 0, b: 0.4, a: 50}
     - _WaveB: {r: 0, g: 1, b: 0.25, a: 40}
     - _WaveC: {r: 1, g: 1, b: 0.15, a: 20}
