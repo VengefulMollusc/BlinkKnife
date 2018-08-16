@@ -2,10 +2,12 @@
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_SpecularTex ("Specular", 2D) = "black" {}
 		_SpecularStr ("Specular Strength", Range(0,1)) = 0.5
 		_SmoothnessStr ("Smoothness Strength", Range(0,1)) = 0.5
-		_SpecularTex ("Specular", 2D) = "black" {}
 		_BumpMap ("Bump Map", 2D) = "bump" {}
+		_BumpMapStr ("Bump Map Strength", Range(0,1)) = 0.5
+		_TimeTexShift ("Texture Swim Strength", Range(0,1)) = 0.5
 
 		[Header(SandSea Settings)]
 		_SeaDepth ("SandSea Depth", Float) = 10
@@ -49,6 +51,9 @@
 
 		half _SpecularStr;
 		half _SmoothnessStr;
+		half _BumpMapStr;
+
+		half _TimeTexShift;
 		
 		fixed4 _Color;
 		float _SpeedGravity;
@@ -178,18 +183,21 @@
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandardSpecular o) {
+			float2 timeModifier = float2(_SinTime.w, _CosTime.w) * _TimeTexShift;
+
 			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex + timeModifier) * _Color;
 			o.Albedo = c.rgb;
+
 			// Specular
-			fixed4 specTex = tex2D (_SpecularTex, IN.uv_SpecularTex);
+			fixed4 specTex = tex2D (_SpecularTex, IN.uv_SpecularTex + timeModifier);
 			o.Specular = specTex.g * _SpecularStr;
 			// Smoothness come from slider variables
 			o.Smoothness = specTex.r * _SmoothnessStr;
 			o.Alpha = c.a;
 
 			// bump map
-			o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
+			o.Normal = UnpackScaleNormal(tex2D(_BumpMap, IN.uv_BumpMap + timeModifier), _BumpMapStr);
 		}
 		ENDCG
 	}
