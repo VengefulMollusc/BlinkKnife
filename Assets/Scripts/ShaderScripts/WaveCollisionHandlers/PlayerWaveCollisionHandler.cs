@@ -28,6 +28,8 @@ public class PlayerWaveCollisionHandler : WaveCollisionHandler
         if (waveOverlap < 0f)
             return;
 
+        // Tell jumpCollider player is grounded
+        // TODO: make reliant on lightsensor status
         jumpCollider.Grounded(true);
 
         // inside wave volume

@@ -48,11 +48,6 @@ public class JumpCollider : MonoBehaviour
             return;
 
         Grounded(true);
-
-        //if (colExitCoroutine != null)
-        //    StopCoroutine(colExitCoroutine);
-
-        //colliding = true;
     }
 
     void OnTriggerExit(Collider col)
@@ -61,12 +56,6 @@ public class JumpCollider : MonoBehaviour
             return;
 
         Grounded(false);
-
-        //if (colExitCoroutine != null)
-        //    StopCoroutine(colExitCoroutine);
-
-        //// Start delay coroutine
-        //colExitCoroutine = StartCoroutine(ColExitDelay());
     }
 
     // Delays switching colliding to false
