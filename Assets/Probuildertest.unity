@@ -85716,8 +85716,6 @@ MonoBehaviour:
   waveMaterial: {fileID: 2100000, guid: b97c950eada04a848a78b478dacb2c6e, type: 2}
   targetObjectTransform: {fileID: 420005504}
   heightOffset: -5
-  footDepth: 0.1
-  velocityDampenStrength: 50
 --- !u!43 &967767019
 Mesh:
   m_ObjectHideFlags: 0

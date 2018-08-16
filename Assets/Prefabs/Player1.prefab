@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 114553431493828040}
   - component: {fileID: 114550902150594042}
   - component: {fileID: 114871685062296912}
+  - component: {fileID: 114526906630362286}
   m_Layer: 13
   m_Name: Player1
   m_TagString: Player
@@ -532,6 +533,19 @@ MonoBehaviour:
   relativeMotionLayers:
     serializedVersion: 2
     m_Bits: 16384
+--- !u!114 &114526906630362286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013453240542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dca4086526fa8847a860fcbdf8ef89d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footDepth: 0.1
+  velocityDampenStrength: 1
 --- !u!114 &114550902150594042
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -8,10 +8,6 @@ public class WaveShaderPositionTracker : MonoBehaviour
     public Transform targetObjectTransform;
     public float heightOffset;
 
-    [Header("Physics interactions")]
-    public float footDepth;
-    public float velocityDampenStrength;
-
     private Vector3 trackedPosition;
     private MeshFilter[] childMeshes;
 
@@ -192,35 +188,50 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
     void HandleWaveCollisions(Collider col)
     {
-        Rigidbody colRigidbody = col.GetComponent<Rigidbody>();
+        WaveCollisionHandler waveCollisionHandler = col.GetComponent<WaveCollisionHandler>();
 
-        if (colRigidbody == null || col.transform == targetObjectTransform || col.transform.IsChildOf(targetObjectTransform))
+        if (waveCollisionHandler == null || col.transform == targetObjectTransform || col.transform.IsChildOf(targetObjectTransform))
             return;
 
-        Vector3 colPosition = colRigidbody.position;
-        Vector3 colFootPosition = colPosition + Vector3.down * col.bounds.size.y;
-        WavePositionInfo waveInfo = CalculateDepthAndNormalAtPoint(colFootPosition);
+        WavePositionInfo waveInfo = CalculateDepthAndNormalAtPoint(col.transform.position);
+        waveCollisionHandler.CollideWithWave(waveInfo);
 
-        float waveOverlap = waveInfo.position.y - colFootPosition.y;
-        if (waveOverlap < 0f)
-            return;
+        //Rigidbody colRigidbody = col.GetComponent<Rigidbody>();
 
-        // inside wave volume
-        if (waveOverlap > footDepth)
-        {
-            // move rigidbody to align with surface
-            colRigidbody.MovePosition(colPosition + Vector3.up * (waveOverlap - footDepth));
-        }
+        //if (colRigidbody != null)
+        //{
+        //    Vector3 colPosition = colRigidbody.position;
+        //    waveInfo = CalculateDepthAndNormalAtPoint(colPosition);
 
-        Vector3 velocity = colRigidbody.velocity;
-        if (Vector3.Dot(velocity.normalized, waveInfo.normal) < 0f)
-        {
-            Vector3 velocityAlongWaveNormal = Vector3.Project(colRigidbody.velocity, waveInfo.normal);
-            colRigidbody.velocity -= velocityAlongWaveNormal;
-        }
+        //    Vector3 colFootPosition = colPosition + Vector3.down * col.bounds.size.y;
 
-        // Dampen velocity while in contact
-        colRigidbody.velocity *= 1 - (Time.fixedDeltaTime * velocityDampenStrength);
+        //    float waveOverlap = waveInfo.position.y - colFootPosition.y;
+        //    if (waveOverlap < 0f)
+        //        return;
+
+        //    // inside wave volume
+        //    if (waveOverlap > footDepth)
+        //    {
+        //        // move rigidbody to align with surface
+        //        colRigidbody.MovePosition(colPosition + Vector3.up * (waveOverlap - footDepth));
+        //    }
+
+        //    Vector3 velocity = colRigidbody.velocity;
+        //    if (Vector3.Dot(velocity.normalized, waveInfo.normal) < 0f)
+        //    {
+        //        Vector3 velocityAlongWaveNormal = Vector3.Project(colRigidbody.velocity, waveInfo.normal);
+        //        colRigidbody.velocity -= velocityAlongWaveNormal;
+        //    }
+
+        //    // Dampen velocity while in contact
+        //    colRigidbody.velocity *= 1 - (Time.fixedDeltaTime * velocityDampenStrength);
+        //}
+        //else
+        //{
+        //    waveInfo = CalculateDepthAndNormalAtPoint(col.transform.position);
+        //}
+
+        //waveCollisionHandler.CollideWithWave(waveInfo);
     }
 }
 
