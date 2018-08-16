@@ -63,11 +63,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecularTex:
-        m_Texture: {fileID: 2800000, guid: 0b1d703036dbab74cbf369b50bf92a2b, type: 3}
-        m_Scale: {x: 0.2, y: 0.2}
+        m_Texture: {fileID: 2800000, guid: de0f96b184ce3ee48a131ab23b0b958a, type: 3}
+        m_Scale: {x: 0.1, y: 0.1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BumpMapStr: 0.58
+    - _BumpMapStr: 0.2
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -85,17 +85,17 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SeaDepth: 12.5
-    - _SmoothnessStr: 0.31
+    - _SmoothnessStr: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularStr: 0
+    - _SpecularStr: 0.3
     - _SpeedGravity: 9.8
     - _SrcBlend: 1
-    - _TimeTexShift: 0.25
+    - _TimeTexShift: 0.09
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.77205884, g: 0.72507757, b: 0.60175174, a: 1}
+    - _Color: {r: 0.6911765, g: 0.66376776, b: 0.6047794, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlayerPosition: {r: 87.7, g: -100.2, b: -100.5, a: 0}
     - _SpecularColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
