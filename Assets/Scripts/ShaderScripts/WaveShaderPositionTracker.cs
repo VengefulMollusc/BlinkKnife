@@ -10,8 +10,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
     [Header("Physics interactions")]
     public float footDepth;
-    [Range(0, 1)]
-    public float velocityDampen;
+    public float velocityDampenStrength;
 
     private Vector3 trackedPosition;
     private MeshFilter[] childMeshes;
@@ -218,6 +217,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
             Vector3 velocityAlongWaveNormal = Vector3.Project(colRigidbody.velocity, waveInfo.normal);
             colRigidbody.velocity -= velocityAlongWaveNormal;
         }
+
+        colRigidbody.velocity *= 1 - (Time.fixedDeltaTime * velocityDampenStrength);
 
         //colRigidbody.position += Vector3.up * waveOverlap;
         //colRigidbody.velocity -= colRigidbody.velocity * Time.fixedDeltaTime * velocityDampen;

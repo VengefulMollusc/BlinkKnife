@@ -85717,7 +85717,7 @@ MonoBehaviour:
   targetObjectTransform: {fileID: 420005504}
   heightOffset: -5
   footDepth: 0.1
-  velocityDampen: 1
+  velocityDampenStrength: 50
 --- !u!43 &967767019
 Mesh:
   m_ObjectHideFlags: 0
