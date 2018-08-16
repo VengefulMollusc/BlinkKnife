@@ -85716,6 +85716,8 @@ MonoBehaviour:
   waveMaterial: {fileID: 2100000, guid: b97c950eada04a848a78b478dacb2c6e, type: 2}
   targetObjectTransform: {fileID: 420005504}
   heightOffset: -5
+  footDepth: 0.1
+  velocityDampen: 1
 --- !u!43 &967767019
 Mesh:
   m_ObjectHideFlags: 0
@@ -99714,7 +99716,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh15454
+  m_Name: pb_Mesh13708
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2

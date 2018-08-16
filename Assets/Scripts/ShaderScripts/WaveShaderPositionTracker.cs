@@ -8,6 +8,11 @@ public class WaveShaderPositionTracker : MonoBehaviour
     public Transform targetObjectTransform;
     public float heightOffset;
 
+    [Header("Physics interactions")]
+    public float footDepth;
+    [Range(0, 1)]
+    public float velocityDampen;
+
     private Vector3 trackedPosition;
     private MeshFilter[] childMeshes;
 
@@ -193,7 +198,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
         if (colRigidbody == null)
             return;
 
-        Vector3 colFootPosition = colRigidbody.position + Vector3.down * col.bounds.size.y;
+        Vector3 colPosition = colRigidbody.position;
+        Vector3 colFootPosition = colPosition + Vector3.down * col.bounds.size.y;
         WavePositionInfo waveInfo = CalculateDepthAndNormalAtPoint(colFootPosition);
 
         float waveOverlap = waveInfo.position.y - colFootPosition.y;
@@ -201,8 +207,20 @@ public class WaveShaderPositionTracker : MonoBehaviour
             return;
 
         // inside wave volume
-        colRigidbody.position += Vector3.up * waveOverlap;
-        colRigidbody.velocity *= 0.1f;
+        if (waveOverlap > footDepth)
+        {
+            colRigidbody.MovePosition(colPosition + Vector3.up * (waveOverlap - footDepth));
+        }
+
+        Vector3 velocity = colRigidbody.velocity;
+        if (Vector3.Dot(velocity.normalized, waveInfo.normal) < 0f)
+        {
+            Vector3 velocityAlongWaveNormal = Vector3.Project(colRigidbody.velocity, waveInfo.normal);
+            colRigidbody.velocity -= velocityAlongWaveNormal;
+        }
+
+        //colRigidbody.position += Vector3.up * waveOverlap;
+        //colRigidbody.velocity -= colRigidbody.velocity * Time.fixedDeltaTime * velocityDampen;
     }
 }
 
