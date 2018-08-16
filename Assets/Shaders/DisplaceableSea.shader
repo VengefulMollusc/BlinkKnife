@@ -188,13 +188,13 @@
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex + timeModifier) * _Color;
 			o.Albedo = c.rgb;
+			o.Alpha = c.a;
 
 			// Specular
 			fixed4 specTex = tex2D (_SpecularTex, IN.uv_SpecularTex + timeModifier);
 			o.Specular = specTex.g * _SpecularStr;
 			// Smoothness come from slider variables
 			o.Smoothness = specTex.r * _SmoothnessStr;
-			o.Alpha = c.a;
 
 			// bump map
 			o.Normal = UnpackScaleNormal(tex2D(_BumpMap, IN.uv_BumpMap + timeModifier), _BumpMapStr);
