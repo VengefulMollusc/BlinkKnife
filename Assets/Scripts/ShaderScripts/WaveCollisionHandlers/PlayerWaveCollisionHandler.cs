@@ -9,12 +9,14 @@ public class PlayerWaveCollisionHandler : WaveCollisionHandler
     public float velocityDampenStrength;
 
     private Rigidbody rb;
+    private LightSensor lightSensor;
     private JumpCollider jumpCollider;
     private float footDist;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        lightSensor = GetComponent<LightSensor>();
         jumpCollider = GetComponentInChildren<JumpCollider>();
         footDist = GetComponent<MeshFilter>().mesh.bounds.size.y;
     }
@@ -28,9 +30,12 @@ public class PlayerWaveCollisionHandler : WaveCollisionHandler
         if (waveOverlap < 0f)
             return;
 
+        // TODO: alter logic based on lightsensor status (Sink if not lit)
+        bool isLit = lightSensor.GetCurrentIntensity() > 0f;
+
         // Tell jumpCollider player is grounded
-        // TODO: make reliant on lightsensor status
-        jumpCollider.Grounded(true);
+        if (isLit)
+            jumpCollider.Grounded(true);
 
         // inside wave volume
         if (waveOverlap > footDepth)

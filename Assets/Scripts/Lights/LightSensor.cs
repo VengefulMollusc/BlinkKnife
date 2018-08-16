@@ -79,6 +79,11 @@ public class LightSensor : MonoBehaviour
         this.PostNotification(LightStatusNotification, new Info<GameObject, float>(gameObject, overallIntensity));
     }
 
+    public float GetCurrentIntensity()
+    {
+        return overallIntensity;
+    }
+
     /*
      * Checks for sunlight on the object
      * 
