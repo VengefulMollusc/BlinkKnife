@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LandWaveCollisionHandler : WaveCollisionHandler
+public class PlayerWaveCollisionHandler : WaveCollisionHandler
 {
     [Header("Physics interactions")]
     public float footDepth;

@@ -195,43 +195,6 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         WavePositionInfo waveInfo = CalculateDepthAndNormalAtPoint(col.transform.position);
         waveCollisionHandler.CollideWithWave(waveInfo);
-
-        //Rigidbody colRigidbody = col.GetComponent<Rigidbody>();
-
-        //if (colRigidbody != null)
-        //{
-        //    Vector3 colPosition = colRigidbody.position;
-        //    waveInfo = CalculateDepthAndNormalAtPoint(colPosition);
-
-        //    Vector3 colFootPosition = colPosition + Vector3.down * col.bounds.size.y;
-
-        //    float waveOverlap = waveInfo.position.y - colFootPosition.y;
-        //    if (waveOverlap < 0f)
-        //        return;
-
-        //    // inside wave volume
-        //    if (waveOverlap > footDepth)
-        //    {
-        //        // move rigidbody to align with surface
-        //        colRigidbody.MovePosition(colPosition + Vector3.up * (waveOverlap - footDepth));
-        //    }
-
-        //    Vector3 velocity = colRigidbody.velocity;
-        //    if (Vector3.Dot(velocity.normalized, waveInfo.normal) < 0f)
-        //    {
-        //        Vector3 velocityAlongWaveNormal = Vector3.Project(colRigidbody.velocity, waveInfo.normal);
-        //        colRigidbody.velocity -= velocityAlongWaveNormal;
-        //    }
-
-        //    // Dampen velocity while in contact
-        //    colRigidbody.velocity *= 1 - (Time.fixedDeltaTime * velocityDampenStrength);
-        //}
-        //else
-        //{
-        //    waveInfo = CalculateDepthAndNormalAtPoint(col.transform.position);
-        //}
-
-        //waveCollisionHandler.CollideWithWave(waveInfo);
     }
 }
 
