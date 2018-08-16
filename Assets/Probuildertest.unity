@@ -2405,11 +2405,22 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
---- !u!4 &420005504 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4084622425935990, guid: c339e6e102667e342ae6d90d1b3de80f,
+--- !u!1 &420005496 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1823225968937884, guid: c339e6e102667e342ae6d90d1b3de80f,
     type: 2}
   m_PrefabInternal: {fileID: 993958415}
+--- !u!114 &420005497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 420005496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 931aecf721681844d9f7edabb67cbafd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &424401406
 GameObject:
   m_ObjectHideFlags: 0
@@ -85714,7 +85725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waveMaterial: {fileID: 2100000, guid: b97c950eada04a848a78b478dacb2c6e, type: 2}
-  targetObjectTransform: {fileID: 420005504}
+  targetObjectTransform: {fileID: 675032310}
   heightOffset: -5
 --- !u!43 &967767019
 Mesh:

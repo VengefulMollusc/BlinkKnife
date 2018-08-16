@@ -322,7 +322,6 @@ public class HoverMotor : MonoBehaviour
                     if (waveShaderPositionTracker != null)
                     {
                         WavePositionInfo waveInfo = waveShaderPositionTracker.CalculateDepthAndNormalAtPoint(hitInfo.point);
-                        //distance = (waveInfo.position - origin).magnitude;
                         distance = Mathf.Abs(waveInfo.position.y - origin.y);
                     }
                     else if (Physics.Raycast(origin, raycastDirections[i], out hitInfo, rayLength, raycastMask, QueryTriggerInteraction.Ignore))
