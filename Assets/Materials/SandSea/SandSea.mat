@@ -89,7 +89,7 @@ Material:
     m_Colors:
     - _Color: {r: 0.77205884, g: 0.72507757, b: 0.60175174, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PlayerPosition: {r: 87.7, g: -60, b: -100.5, a: 0}
+    - _PlayerPosition: {r: 87.7, g: -100.2, b: -100.5, a: 0}
     - _WaveA: {r: 1, g: 0, b: 0.4, a: 50}
     - _WaveB: {r: 0, g: 1, b: 0.25, a: 40}
     - _WaveC: {r: 1, g: 1, b: 0.15, a: 20}

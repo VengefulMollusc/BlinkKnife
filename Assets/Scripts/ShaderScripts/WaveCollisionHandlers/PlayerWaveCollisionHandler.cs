@@ -9,11 +9,13 @@ public class PlayerWaveCollisionHandler : WaveCollisionHandler
     public float velocityDampenStrength;
 
     private Rigidbody rb;
+    private JumpCollider jumpCollider;
     private float footDist;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        jumpCollider = GetComponentInChildren<JumpCollider>();
         footDist = GetComponent<MeshFilter>().mesh.bounds.size.y;
     }
 
@@ -25,6 +27,8 @@ public class PlayerWaveCollisionHandler : WaveCollisionHandler
         float waveOverlap = waveInfo.position.y - colFootPosition.y;
         if (waveOverlap < 0f)
             return;
+
+        jumpCollider.Grounded(true);
 
         // inside wave volume
         if (waveOverlap > footDepth)

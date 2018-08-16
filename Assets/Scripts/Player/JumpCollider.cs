@@ -5,7 +5,7 @@ public class JumpCollider : MonoBehaviour
 {
     private static bool colliding;
 
-    private float colExitDelay = 0.1f; 
+    private float colExitDelay = 0.1f;
     private Coroutine colExitCoroutine;
 
     // Static method to check if player is 'grounded'
@@ -20,16 +20,39 @@ public class JumpCollider : MonoBehaviour
         colliding = false;
     }
 
+    public void ForceGrounded()
+    {
+
+    }
+
+    public void Grounded(bool isGrounded)
+    {
+        if (colExitCoroutine != null)
+            StopCoroutine(colExitCoroutine);
+
+        if (isGrounded)
+        {
+            colliding = true;
+        }
+        else
+        {
+            // Start delay coroutine
+            colExitCoroutine = StartCoroutine(ColExitDelay());
+        }
+    }
+
     // Collision methods
     void OnTriggerStay(Collider col)
     {
         if (col.isTrigger)
             return;
 
-        if (colExitCoroutine != null)
-            StopCoroutine(colExitCoroutine);
+        Grounded(true);
 
-        colliding = true;
+        //if (colExitCoroutine != null)
+        //    StopCoroutine(colExitCoroutine);
+
+        //colliding = true;
     }
 
     void OnTriggerExit(Collider col)
@@ -37,11 +60,13 @@ public class JumpCollider : MonoBehaviour
         if (col.isTrigger)
             return;
 
-        if (colExitCoroutine != null)
-            StopCoroutine(colExitCoroutine);
+        Grounded(false);
 
-        // Start delay coroutine
-        colExitCoroutine = StartCoroutine(ColExitDelay());
+        //if (colExitCoroutine != null)
+        //    StopCoroutine(colExitCoroutine);
+
+        //// Start delay coroutine
+        //colExitCoroutine = StartCoroutine(ColExitDelay());
     }
 
     // Delays switching colliding to false
