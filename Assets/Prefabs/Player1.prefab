@@ -544,7 +544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dca4086526fa8847a860fcbdf8ef89d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  footDepth: 0.1
+  footDepth: 0
   velocityDampenStrength: 1
 --- !u!114 &114550902150594042
 MonoBehaviour:

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerWaveCollisionHandler : WaveCollisionHandler
 {
-    [Header("Physics interactions")]
-    public float footDepth;
     public float velocityDampenStrength;
+
+    private float footDepth = 0f;
 
     private Rigidbody rb;
     private LightSensor lightSensor;
