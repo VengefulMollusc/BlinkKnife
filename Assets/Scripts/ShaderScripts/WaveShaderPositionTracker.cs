@@ -194,7 +194,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
     {
         Rigidbody colRigidbody = col.GetComponent<Rigidbody>();
 
-        if (colRigidbody == null)
+        if (colRigidbody == null || col.transform == targetObjectTransform || col.transform.IsChildOf(targetObjectTransform))
             return;
 
         Vector3 colPosition = colRigidbody.position;
@@ -208,6 +208,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
         // inside wave volume
         if (waveOverlap > footDepth)
         {
+            // move rigidbody to align with surface
             colRigidbody.MovePosition(colPosition + Vector3.up * (waveOverlap - footDepth));
         }
 
@@ -218,10 +219,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
             colRigidbody.velocity -= velocityAlongWaveNormal;
         }
 
+        // Dampen velocity while in contact
         colRigidbody.velocity *= 1 - (Time.fixedDeltaTime * velocityDampenStrength);
-
-        //colRigidbody.position += Vector3.up * waveOverlap;
-        //colRigidbody.velocity -= colRigidbody.velocity * Time.fixedDeltaTime * velocityDampen;
     }
 }
 
