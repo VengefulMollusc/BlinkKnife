@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 54168542565116268}
   - component: {fileID: 114030497866692244}
   - component: {fileID: 114582212362343882}
+  - component: {fileID: 114639052905512264}
   m_Layer: 8
   m_Name: BounceKnife
   m_TagString: Knife
@@ -503,6 +504,7 @@ MonoBehaviour:
   throwStrengthMod: 1
   rb: {fileID: 0}
   warpTimer: 0
+  autoWarp: 0
   returning: 0
   mustBounceToWarp: 1
   bounceWarpWaitTime: 0.2
@@ -536,6 +538,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 148481
   skinWidth: 0.1
+--- !u!114 &114639052905512264
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1252273106319224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208e4d8d657631b44820cbad242e16b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!123 &123851809478215228
 LensFlare:
   m_ObjectHideFlags: 1

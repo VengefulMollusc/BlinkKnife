@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 54694238066598660}
   - component: {fileID: 114968147039411874}
   - component: {fileID: 114848270002936760}
+  - component: {fileID: 114614438945407612}
   m_Layer: 8
   m_Name: BoomerangKnife
   m_TagString: Knife
@@ -502,6 +503,17 @@ MonoBehaviour:
   collisionOffsetLayerMask:
     serializedVersion: 2
     m_Bits: 82945
+--- !u!114 &114614438945407612
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1278214883471884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208e4d8d657631b44820cbad242e16b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114848270002936760
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -533,6 +545,7 @@ MonoBehaviour:
   throwStrengthMod: 0.6
   rb: {fileID: 0}
   warpTimer: 0
+  autoWarp: 0
   returning: 0
   boomerangDuration: 1.5
 --- !u!123 &123041678788244074
