@@ -5,6 +5,7 @@
 		_SpecularStr ("Specular Strength", Range(0,1)) = 0.5
 		_SmoothnessStr ("Smoothness Strength", Range(0,1)) = 0.5
 		_SpecularTex ("Specular", 2D) = "black" {}
+		_BumpMap ("Bump Map", 2D) = "bump" {}
 
 		[Header(SandSea Settings)]
 		_SeaDepth ("SandSea Depth", Float) = 10
@@ -38,10 +39,12 @@
 
 		sampler2D _MainTex;
 		sampler2D _SpecularTex;
+		sampler2D _BumpMap;
 
 		struct Input {
 			float2 uv_MainTex;
 			float2 uv_SpecularTex;
+			float2 uv_BumpMap;
 		};
 
 		half _SpecularStr;
@@ -184,6 +187,9 @@
 			// Smoothness come from slider variables
 			o.Smoothness = specTex.r * _SmoothnessStr;
 			o.Alpha = c.a;
+
+			// bump map
+			o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
 		}
 		ENDCG
 	}

@@ -19,8 +19,8 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 71a7037cdd8e6cc429d8fed17d8f9975, type: 3}
+        m_Scale: {x: 0.1, y: 0.1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
@@ -48,7 +48,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: c3b0ee543802f2845aef2da3255ca64c, type: 3}
-        m_Scale: {x: 0.01, y: 0.01}
+        m_Scale: {x: 0.05, y: 0.05}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -63,8 +63,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecularTex:
-        m_Texture: {fileID: 2800000, guid: e80c3c84ea861404d8a427db8b7abf04, type: 3}
-        m_Scale: {x: 0.1, y: 0.1}
+        m_Texture: {fileID: 2800000, guid: 0b1d703036dbab74cbf369b50bf92a2b, type: 3}
+        m_Scale: {x: 0.2, y: 0.2}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
@@ -84,7 +84,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SeaDepth: 12.5
-    - _SmoothnessStr: 0.81
+    - _SmoothnessStr: 0.36
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularStr: 0
