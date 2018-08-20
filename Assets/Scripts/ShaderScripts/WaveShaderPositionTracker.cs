@@ -200,7 +200,8 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
 
     // TEST CODE FOR BOUNDS MODIFICATION
-    public bool _bIsSelected = true;
+#if UNITY_EDITOR
+    private bool _bIsSelected = true;
 
     void OnDrawGizmos()
     {
@@ -218,6 +219,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
             Gizmos.DrawWireCube(renderer.bounds.center, renderer.bounds.size);
         }
     }
+#endif
 }
 
 public class WavePositionInfo
