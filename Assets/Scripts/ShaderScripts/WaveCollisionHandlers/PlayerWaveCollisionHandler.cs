@@ -30,7 +30,16 @@ public class PlayerWaveCollisionHandler : WaveCollisionHandler
         if (waveOverlap < 0f)
             return;
 
-        // TODO: alter logic based on lightsensor status (Sink if not lit)
+        /*
+         * SINKING
+         *
+         * Use a maxSinkDepth value to make sure we never sink the camera below the sand.
+         * Essentially transition footDepth from 0-maxSinkDepth over time
+         *
+         * TODO: need to implement respawning at some point
+         */
+
+        // TODO: alter logic based on lightsensor status (Sink)
         bool isLit = lightSensor.GetCurrentIntensity() > 0f;
 
         // Tell jumpCollider player is grounded

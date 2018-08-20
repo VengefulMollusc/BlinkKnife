@@ -175,7 +175,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
     }
 
     /*
-     * Code for colliding objects
+     * Call collision handler code when colliding objects have wave collision handlers
      */
     void OnTriggerEnter(Collider col)
     {
