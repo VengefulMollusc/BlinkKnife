@@ -47,7 +47,7 @@ public class PlayerWaveCollisionHandler : WaveCollisionHandler
         Vector3 velocity = rb.velocity;
         if (Vector3.Dot(velocity.normalized, waveInfo.normal) < 0f)
         {
-            Vector3 velocityAlongWaveNormal = Vector3.Project(rb.velocity, waveInfo.normal);
+            Vector3 velocityAlongWaveNormal = Vector3.Project(velocity, waveInfo.normal);
             rb.velocity -= velocityAlongWaveNormal;
         }
 

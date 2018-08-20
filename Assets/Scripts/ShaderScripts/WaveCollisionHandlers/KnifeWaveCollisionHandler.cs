@@ -5,6 +5,7 @@ using UnityEngine;
 public class KnifeWaveCollisionHandler : WaveCollisionHandler
 {
     private KnifeController knifeController;
+    private const float depthToRecall = 0.2f;
 
     // Use this for initialization
     void Start()
@@ -14,7 +15,7 @@ public class KnifeWaveCollisionHandler : WaveCollisionHandler
 
     public override void CollideWithWave(WavePositionInfo waveInfo)
     {
-        if (waveInfo.position.y > transform.position.y)
+        if (waveInfo.position.y - transform.position.y > depthToRecall)
         {
             knifeController.ReturnKnifeTransition();
         }
