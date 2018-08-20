@@ -15303,7 +15303,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 127
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &959457709
 Transform:
@@ -86114,6 +86114,7 @@ MonoBehaviour:
   waveMaterial: {fileID: 2100000, guid: b97c950eada04a848a78b478dacb2c6e, type: 2}
   targetObjectTransform: {fileID: 675032310}
   heightOffset: -5
+  _bIsSelected: 1
 --- !u!43 &967767019
 Mesh:
   m_ObjectHideFlags: 0
@@ -92013,7 +92014,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh-376792
+  m_Name: pb_Mesh13960
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -100240,7 +100241,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh13708
+  m_Name: pb_Mesh13748
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -103213,7 +103214,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh13940
+  m_Name: pb_Mesh13996
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2

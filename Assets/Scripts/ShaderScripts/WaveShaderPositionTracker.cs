@@ -50,6 +50,7 @@ public class WaveShaderPositionTracker : MonoBehaviour
             // TODO: extend size to account for wave height etc.
             Vector3 boundsCenter = new Vector3(bCenter.x, bCenter.y - halfDepth, bCenter.z);
             Vector3 boundsSize = new Vector3(bSize.x, seaDepth, bSize.z);
+
             mesh.bounds = new Bounds(boundsCenter, boundsSize);
         }
     }
@@ -195,6 +196,27 @@ public class WaveShaderPositionTracker : MonoBehaviour
 
         WavePositionInfo waveInfo = CalculateDepthAndNormalAtPoint(col.transform.position);
         waveCollisionHandler.CollideWithWave(waveInfo);
+    }
+
+
+    // TEST CODE FOR BOUNDS MODIFICATION
+    public bool _bIsSelected = true;
+
+    void OnDrawGizmos()
+    {
+        if (_bIsSelected)
+            OnDrawGizmosSelected();
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            Gizmos.DrawSphere(renderer.bounds.center, 1f);  //center sphere
+            Gizmos.DrawWireCube(renderer.bounds.center, renderer.bounds.size);
+        }
     }
 }
 
