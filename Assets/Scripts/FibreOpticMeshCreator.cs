@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using ProBuilder2.Common;
+using System.Linq;
 using UnityEngine;
 
 public class FibreOpticMeshCreator : MonoBehaviour
@@ -172,8 +171,8 @@ public class FibreOpticMeshCreator : MonoBehaviour
         if (!doubleSided)
             mesh.vertices = vertexList;
 
-        Vector3[] tempList = (capFibreEnds) ? innerVertexList.Concat(capVertexList) : innerVertexList;
-        mesh.vertices = vertexList.Concat(tempList);
+        Vector3[] tempList = capFibreEnds ? Utilities.ConcatArrays(innerVertexList, capVertexList) : innerVertexList;
+        mesh.vertices = Utilities.ConcatArrays(vertexList, tempList);
     }
 
     /*
@@ -206,7 +205,8 @@ public class FibreOpticMeshCreator : MonoBehaviour
                 innerMeshTriangles[t + 2] = innerMeshTriangles[t + 3] = (mod) ? i + 1 - radiusSegmentCount : i + 1;
                 innerMeshTriangles[t + 5] = (mod) ? i + 1 : i + radiusSegmentCount + 1;
             }
-            meshTriangles = meshTriangles.Concat(innerMeshTriangles);
+            UnityEditor.ArrayUtility.AddRange(ref meshTriangles, innerMeshTriangles);
+            //meshTriangles = Utilities.ConcatArrays(meshTriangles, innerMeshTriangles);
 
             if (capFibreEnds)
                 CreateMeshEndCaps();
@@ -245,6 +245,7 @@ public class FibreOpticMeshCreator : MonoBehaviour
             endTriangles[t + 2] = vertexListIndex;
         }
 
-        meshTriangles = meshTriangles.Concat(endTriangles);
+        UnityEditor.ArrayUtility.AddRange(ref meshTriangles, endTriangles);
+        //meshTriangles = Utilities.ConcatArrays(meshTriangles, endTriangles);
     }
 }

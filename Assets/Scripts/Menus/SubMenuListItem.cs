@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using ProBuilder2.Common;
 using UnityEngine;
 
 public class SubMenuListItem : MenuListItem
@@ -12,7 +11,8 @@ public class SubMenuListItem : MenuListItem
     {
         base.Start();
         subMenuItems = GetComponentsInChildren<MenuListItem>();
-        subMenuItems = subMenuItems.RemoveAt(0);
+        UnityEditor.ArrayUtility.RemoveAt(ref subMenuItems, 0);
+        //subMenuItems = subMenuItems.RemoveAt(0);
     }
 
     public override void Select()

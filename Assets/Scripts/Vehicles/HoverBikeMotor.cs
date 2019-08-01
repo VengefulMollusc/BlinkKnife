@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using ProBuilder2.Common;
 using UnityEngine;
 
 public class HoverBikeMotor : VehicleMotor
@@ -82,8 +81,10 @@ public class HoverBikeMotor : VehicleMotor
     private void Hover()
     {
         RaycastHit[] hits = Physics.RaycastAll(position, Vector3.down, hoverHeight, hoverCastMask, QueryTriggerInteraction.Collide);
-        hits.AddRange(Physics.RaycastAll(position, forward + Vector3.down, hoverHeight, hoverCastMask,
+        UnityEditor.ArrayUtility.AddRange(ref hits, Physics.RaycastAll(position, forward + Vector3.down, hoverHeight, hoverCastMask,
             QueryTriggerInteraction.Collide));
+        //hits.AddRange(Physics.RaycastAll(position, forward + Vector3.down, hoverHeight, hoverCastMask,
+        //    QueryTriggerInteraction.Collide));
 
         if (hits.Length <= 0)
             return;

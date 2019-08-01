@@ -3,6 +3,20 @@ using System.Collections;
 
 public class Utilities : MonoBehaviour {
 
+    /**
+     * Concatenates two arrays
+     * 
+     * Replaces Array.Concat() method from old code
+     */
+    public static T[] ConcatArrays<T> (T[] firstArray, T[] secondArray)
+    {
+        T[] resultArray = new T[firstArray.Length + secondArray.Length];
+        firstArray.CopyTo(resultArray, 0);
+        secondArray.CopyTo(resultArray, firstArray.Length);
+        return resultArray;
+
+    }
+
     /*
      * Ignores or allows collisions between multiple colliders at once
      */
