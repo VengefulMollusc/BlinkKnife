@@ -21,7 +21,7 @@ public class FibreOpticMeshCreator : MonoBehaviour
     private static bool doubleSided = true; // TRUE
     private static bool capFibreEnds = true; // TRUE
     private static float doubleSidedThickness = 0f; // 0f
-    private static float autoCreateResolution = 0.01f; // 0.1f
+    private static float autoCreateResolution = 0.001f; // 0.1f
     private static float autoCreateTangentAngleThreshold = 10f; // 10f
     private static float autoCreateMaxSegmentLength = 10f; // 10f
     private static float radius = 0.5f; // 0.5f
