@@ -49,8 +49,9 @@ public class BounceKnifeController : KnifeController
     void OnWarpNotification(object sender, object args)
     {
         warpVelocity = rb.velocity;
-        rb.velocity = Vector3.zero;
+        rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
         rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
     }
 
     void Update()

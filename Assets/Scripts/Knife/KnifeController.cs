@@ -132,6 +132,7 @@ public class KnifeController : MonoBehaviour
     public virtual void StickToSurface(Vector3 _position, Vector3 _normal, GameObject _other, bool _cancelNotifications = false)
     {
         // disable rigidbody
+        rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
         rb.isKinematic = true;
         dontGoThroughThings.enabled = false;
         stuckInSurface = true;
@@ -230,8 +231,9 @@ public class KnifeController : MonoBehaviour
     private IEnumerator ReturnKnifeAnimation()
     {
         // freeze knife and disable collisions
-        rb.velocity = Vector3.zero;
+        rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
         rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
         rb.detectCollisions = false;
         Vector3 startPos = transform.position;
         float dist = (ownerTransform.position - startPos).magnitude;
