@@ -57,8 +57,18 @@ public class BoostRing : MonoBehaviour
         
         BoomerangKnifeController boom = col.GetComponent<BoomerangKnifeController>();
         Vector3 vel = (boom != null) ? boom.GetVelocity() : rb.velocity;
-        vel = Vector3.Project(vel, transform.up);
 
+        // Check if knife - knives should not lose speed when boosting in another direction
+        KnifeController knife = (boom != null) ? boom : col.GetComponent<KnifeController>();
+
+        if (knife != null)
+        {
+            vel = (Vector3.Dot(transform.up, vel) > 0f) ? transform.up * vel.magnitude : -transform.up * vel.magnitude;
+        } else
+        {
+            vel = Vector3.Project(vel, transform.up);
+        }
+        
         Vector3 boostDirection;
         float magnitude = Mathf.Max(vel.magnitude + boostStrength, minMagnitude);
 
