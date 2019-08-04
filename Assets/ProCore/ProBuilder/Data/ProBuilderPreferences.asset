@@ -14,22 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Bool_keys:
   - pbEnableBackfaceSelection
+  - pbIconGUI
+  - pbCollapseVertexToFirst
   m_Int_keys:
   - pbHandleAlignment
   - pb_GIWorkflowMode
   - pbDefaultEditLevel
   - pbDefaultSelectionMode
+  - pbMirrorObjectScale
   m_Float_keys:
   - pbEditorScroll.x
   - pbEditorScroll.y
+  - pbBevelAmount
   m_String_keys: []
   m_Color_keys: []
   m_Material_keys: []
-  m_Bool_values: 00
-  m_Int_values: 02000000010000000000000000000000
+  m_Bool_values: 000000
+  m_Int_values: 020000000100000001000000020000000a000000
   m_Float_values:
   - 0
   - 0
+  - 0.22127932
   m_String_values: []
   m_Color_values: []
   m_Material_values: []
