@@ -16,24 +16,24 @@ public class LightFlashWave : MonoBehaviour {
 
 	// get the light
 	public GameObject lightObject;
-	private Light light;
+	private Light lightComponent;
 
 	// Keep a copy of the original color
 	private Color originalColor;
 
 	// Store the original color
 	void Start () {
-		light = lightObject.GetComponent<Light>();
+		lightComponent = lightObject.GetComponent<Light>();
 
-		if (light == null){
+		if (lightComponent == null){
 			Debug.LogError ("No light object found");
 		}
 
-		originalColor = light.color;
+		originalColor = lightComponent.color;
 	}
 
 	void Update () {
-		light.color = originalColor * (EvalWave());
+		lightComponent.color = originalColor * (EvalWave());
 	}
 
 	private float EvalWave () {

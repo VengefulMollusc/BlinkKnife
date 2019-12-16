@@ -7,7 +7,7 @@ public class SafeWarpCollider : MonoBehaviour
 
     private KnifeController knifeController;
 
-    private Collider collider;
+    private Collider warpCollider;
 
     private bool safeToWarp;
 
@@ -23,7 +23,7 @@ public class SafeWarpCollider : MonoBehaviour
     void Start()
     {
         knifeController = transform.parent.GetComponent<KnifeController>();
-        collider = GetComponent<Collider>();
+        warpCollider = GetComponent<Collider>();
         safeToWarp = true;
         lastKnifePosition = knifeController.GetPosition();
     }
@@ -109,7 +109,7 @@ public class SafeWarpCollider : MonoBehaviour
         else if (dot < -0.001)
             closestPointBase += (up * 0.5f);
 
-        Vector3 closestPointOnCollider = collider.ClosestPoint(closestPointBase - collisionNormal);
+        Vector3 closestPointOnCollider = warpCollider.ClosestPoint(closestPointBase - collisionNormal);
 
         Vector3 pointDiff = closestPointOnCollider - position;
 
@@ -133,8 +133,8 @@ public class SafeWarpCollider : MonoBehaviour
         Vector3 forward = rotateToNormal * Vector3.forward;
         Vector3 right = rotateToNormal * Vector3.right;
         
-        float forwardDist = Vector3.Distance(position, collider.ClosestPoint(position + forward));
-        float rightDist = Vector3.Distance(position, collider.ClosestPoint(position + right));
+        float forwardDist = Vector3.Distance(position, warpCollider.ClosestPoint(position + forward));
+        float rightDist = Vector3.Distance(position, warpCollider.ClosestPoint(position + right));
 
         RaycastHit hitInfo;
 

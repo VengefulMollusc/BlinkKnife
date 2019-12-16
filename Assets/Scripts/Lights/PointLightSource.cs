@@ -10,11 +10,11 @@ public class PointLightSource : LightSource
     {
         litObjects = new List<GameObject>();
 
-        if (!light.enabled)
+        if (!lightComponent.enabled)
             return;
 
         Vector3 position = transform.position;
-        float range = light.range;
+        float range = lightComponent.range;
         Collider[] cols = Physics.OverlapSphere(position, range, layerMask,
             QueryTriggerInteraction.Ignore);
 
