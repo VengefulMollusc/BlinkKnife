@@ -100,6 +100,6 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlayerPosition: {r: 87.7, g: -100.2, b: -100.5, a: 0}
     - _SpecularColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _WaveA: {r: 1, g: 0, b: 0.1, a: 80}
+    - _WaveA: {r: 1, g: 0, b: 0.3, a: 80}
     - _WaveB: {r: 0, g: 1, b: 0.1, a: 40}
     - _WaveC: {r: 1, g: 1, b: 0.1, a: 20}

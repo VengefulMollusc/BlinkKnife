@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5794011, g: 0.6408068, b: 0.71201855, a: 1}
+  m_IndirectSpecularColor: {r: 0.5794011, g: 0.6408059, b: 0.7120186, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1312,24 +1312,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f462b5d094bbfc24fa3350a5adc35d94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &420005496 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1823225968937884, guid: c339e6e102667e342ae6d90d1b3de80f,
-    type: 3}
-  m_PrefabInstance: {fileID: 993958415}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &420005497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420005496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931aecf721681844d9f7edabb67cbafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &430250616
@@ -4748,6 +4730,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1823225968937884, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
+      propertyPath: m_Name
+      value: HoverBike
+      objectReference: {fileID: 0}
     - target: {fileID: 4084622425935990, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 90.9
@@ -4779,6 +4765,22 @@ PrefabInstance:
     - target: {fileID: 4084622425935990, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
       propertyPath: m_RootOrder
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084622425935990, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084622425935990, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084622425935990, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 420005497, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c339e6e102667e342ae6d90d1b3de80f, type: 3}
