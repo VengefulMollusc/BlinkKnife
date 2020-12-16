@@ -217,7 +217,7 @@ public class MissileController : MonoBehaviour {
         // detach rocket trail
         rocketTrail.Stop();
         rocketTrail.transform.SetParent(null);
-        Destroy(rocketTrail.gameObject, rocketTrail.duration);
+        Destroy(rocketTrail.gameObject, rocketTrail.main.duration);
 
         // freeze position
         rb.isKinematic = true;
@@ -242,7 +242,7 @@ public class MissileController : MonoBehaviour {
         uiMarker.DestroyMarker();
 
 		// destroy after exploding
-		Destroy(gameObject, explosion.duration);
+		Destroy(gameObject, explosion.main.duration);
     }
 
     private void OnCollisionEnter(Collision col)

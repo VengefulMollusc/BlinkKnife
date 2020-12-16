@@ -10,13 +10,13 @@ public class SpotLightSource : LightSource
     {
         litObjects = new List<GameObject>();
 
-        if (!light.enabled)
+        if (!lightComponent.enabled)
             return;
 
         Vector3 position = transform.position;
         Vector3 forward = transform.forward;
-        float lightAngle = light.spotAngle * 0.5f;
-        float lightRange = light.range;
+        float lightAngle = lightComponent.spotAngle * 0.5f;
+        float lightRange = lightComponent.range;
         float radius = Mathf.Tan(lightAngle * Mathf.Deg2Rad) * lightRange;
         float coneHyp = Mathf.Sqrt(lightRange * lightRange + radius * radius);
 
